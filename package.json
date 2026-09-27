@@ -1,0 +1,5 @@
+{
+  "name": "reports-site",
+  "private": true,
+  "scripts": { "build": "node scripts/build-index.mjs" }
+}

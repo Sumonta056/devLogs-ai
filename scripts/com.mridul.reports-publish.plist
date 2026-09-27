@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- macOS watcher: runs publish.sh whenever a report lands in one of the folders.
+     Replace YOURNAME, then:
+       cp scripts/com.mridul.reports-publish.plist ~/Library/LaunchAgents/
+       launchctl load ~/Library/LaunchAgents/com.mridul.reports-publish.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.mridul.reports-publish</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/YOURNAME/Projects/reports-site/scripts/publish.sh</string>
+  </array>
+  <key>WatchPaths</key>
+  <array>
+    <string>/Users/YOURNAME/Projects/reports-site/ai-update-weekly</string>
+    <string>/Users/YOURNAME/Projects/reports-site/vue-nuxt-weekly-news</string>
+    <string>/Users/YOURNAME/Projects/reports-site/java-spring-weekly-news</string>
+    <string>/Users/YOURNAME/Projects/reports-site/personal-guide</string>
+  </array>
+  <key>ThrottleInterval</key><integer>30</integer>
+  <key>StandardOutPath</key><string>/tmp/reports-publish.log</string>
+  <key>StandardErrorPath</key><string>/tmp/reports-publish.log</string>
+</dict>
+</plist>
