@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { SITE, PROFILE, REPORTS } from './site-config.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const BASE = (process.env.BASE_PATH || '').replace(/\/+$/, '');
 
 const esc = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -92,15 +93,15 @@ const layout = (title, description, body) => `<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="${BASE}/assets/site.css">
 </head><body style="--tri:${tri}">${body}</body></html>`;
 
 const nav = (active) => `
 <nav class="a-nav"><div class="a-nav-in">
-  <a class="a-brand" href="/"><b>${icon('newspaper')}</b><span>${esc(SITE.title)}</span></a>
+  <a class="a-brand" href="${BASE}/"><b>${icon('newspaper')}</b><span>${esc(SITE.title)}</span></a>
   <div class="a-links">
-    <a href="/"${active === 'home' ? ' aria-current="page"' : ''}>Home</a>
-    ${PUBLIC.map((r) => `<a style="${cv(r)}" href="/${r.dir}/"${active === r.dir ? ' aria-current="page"' : ''}>${icon(r.icon)}${esc(r.short)}</a>`).join('')}
+    <a href="${BASE}/"${active === 'home' ? ' aria-current="page"' : ''}>Home</a>
+    ${PUBLIC.map((r) => `<a style="${cv(r)}" href="${BASE}/${r.dir}/"${active === r.dir ? ' aria-current="page"' : ''}>${icon(r.icon)}${esc(r.short)}</a>`).join('')}
   </div>
 </div></nav>`;
 
@@ -112,7 +113,7 @@ const side = () => `
     <h3>${esc(PROFILE.name)}</h3>
     <p class="a-role">${esc(PROFILE.role)}</p>
     <p class="a-bio">${esc(PROFILE.bio)}</p>
-    <h4>How often I post</h4>
+    <h4>When the agent runs</h4>
     <ul class="a-sched">${PUBLIC.map((r) => `<li style="${cv(r)}"><span>${badge(r)}${esc(r.short)}</span><em>${esc(r.cadence)}</em></li>`).join('')}</ul>
     <h4>Find me</h4>
     <div class="a-social">${PROFILE.links.map((l) => `<a href="${esc(l.href)}">${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>
@@ -129,7 +130,7 @@ const homePage = () => {
       ? `<b>${plural(r.editions.length, 'issue')}</b> · Latest: ${esc(e.title)} · ${short(e.date)}`
       : 'No issues yet';
     return `
-    <a class="a-cat" style="${cv(r)}" href="/${r.dir}/">
+    <a class="a-cat" style="${cv(r)}" href="${BASE}/${r.dir}/">
       ${badge(r)}
       <div>
         <h2>${esc(r.title)}</h2>
@@ -155,14 +156,14 @@ const archivePage = (r) => {
     ? byMonth(list).map(([month, items]) => `
       <div class="a-month">${month}<span>${plural(items.length, 'issue')}</span></div>
       ${items.map((e) => `
-        <a class="a-row" href="/${r.dir}/${encodeURIComponent(e.file)}">
+        <a class="a-row" href="${BASE}/${r.dir}/${encodeURIComponent(e.file)}">
           <div class="a-date"><b>${fmt(e.date, { day: 'numeric' })}</b><span>${fmt(e.date, { weekday: 'short' })}</span></div>
           <div><h3>${esc(e.title)}${e === list[0] ? '<span class="a-new">New</span>' : ''}</h3>${tags(e.topics)}</div>
           <span class="a-go">→</span>
         </a>`).join('')}`).join('')
     : '<div class="a-empty">No issues yet.</div>';
   return layout(`${r.title} · ${SITE.title}`, r.about, `${nav(r.dir)}<div class="a-wrap" style="${cv(r)}"><main>
-    <div class="a-crumb"><a href="/">Home</a> / ${esc(r.short)}</div>
+    <div class="a-crumb"><a href="${BASE}/">Home</a> / ${esc(r.short)}</div>
     <header class="a-head"><h1>${badge(r)}${esc(r.title)}</h1><p>${esc(r.about)}</p></header>
     ${stats([[list.length, `${list.length === 1 ? 'issue' : 'issues'} published`], [short(list[0]?.date), 'last update'], [short(list.at(-1)?.date), 'first issue'], [topics, `${topics === 1 ? 'topic' : 'topics'} covered`]], true)}
     ${months}

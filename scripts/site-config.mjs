@@ -1,6 +1,6 @@
 export const SITE = {
   title: 'The Weekly Report',
-  intro: 'Weekly notes on the tools I use at work. Pick a newsletter below to see all its issues.',
+  intro: 'A Claude agent reads the news on 3 topics each week and writes a short report for each one. Pick a topic below to read all its reports.',
 };
 
 export const PROFILE = {
@@ -8,7 +8,7 @@ export const PROFILE = {
   initials: 'SM',
   photo: 'https://avatars.githubusercontent.com/u/61287791?v=4',
   role: 'Software Engineer at Cefalo',
-  bio: 'My Claude write short weekly notes on the tools I use at work: AI coding agents, Vue & Nuxt, and Java & Spring. Each issue is what I learned that week.',
+  bio: 'I built a Claude agent that runs every week on 3 topics I use at work: AI coding agents, Vue & Nuxt, and Java & Spring. It finds the news of the week and writes a short report for me and for you.',
   links: [
     { label: 'GitHub', icon: 'github', href: '#' },
     { label: 'LinkedIn', icon: 'linkedin', href: '#' },
@@ -26,7 +26,7 @@ export const REPORTS = [
     color: '#fcd34d', on: '#3d2e00', ink: '#8a6400',
     icon: 'sparkles',
     cadence: 'Every Sunday',
-    about: 'Weekly notes on AI coding agents: new tools, real workflows, prompt tips, and the most-starred GitHub projects of the week.',
+    about: "Every Sunday, my Claude agent collects the week's news on AI coding agents: new tools, real workflows, prompt tips, and the top GitHub projects.",
     tags: ['Coding agents', 'MCP', 'Prompting', 'GitHub picks'],
   },
   {
@@ -37,7 +37,7 @@ export const REPORTS = [
     color: '#2b8a3e', on: '#ffffff', ink: '#237032',
     icon: 'vuedotjs',
     cadence: 'Every Tuesday',
-    about: 'Releases, upgrade guides, and patterns for Vue 3 and Nuxt, with notes on what matters for real projects.',
+    about: 'Every Tuesday, my Claude agent collects Vue 3 and Nuxt releases, upgrade guides, and patterns, with notes on what matters for real projects.',
     tags: ['Vue 3', 'Nuxt', 'Upgrades', 'Performance'],
   },
   {
@@ -48,7 +48,7 @@ export const REPORTS = [
     color: '#1c4fa0', on: '#ffffff', ink: '#1c4fa0',
     icon: 'openjdk',
     cadence: 'Every Thursday',
-    about: 'JDK and Spring Boot releases, backend practice, and performance notes for Java developers.',
+    about: 'Every Thursday, my Claude agent collects JDK and Spring Boot releases, backend practice, and performance notes for Java developers.',
     tags: ['Spring Boot', 'JDK', 'Virtual threads', 'Observability'],
   },
   {
