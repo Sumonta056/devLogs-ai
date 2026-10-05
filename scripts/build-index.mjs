@@ -1,25 +1,19 @@
-// Regenerates index.html pages.
-//   /                           → home (public reports only)
-//   /<report>/                  → archive list, newest first
-//   /<report>/YYYY-MM-DD.html   → one edition
-//   /personal-guide/*           → login required (see middleware.js)
-import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, existsSync, statSync, mkdirSync, utimesSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, PROFILE, REPORTS } from './site-config.mjs';
+import {
+  isEntryFile, resolveDate, parseDates, serializeDates, titleOf, topicsOf, sortEntries, entryHref,
+  injectWidget, navData, allowSelf,
+} from './lib.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = (process.env.BASE_PATH || '').replace(/\/+$/, '');
+const DATES_FILE = join(ROOT, 'scripts/dates.json');
 
 const esc = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
-const decode = (s) => s
-  .replace(/<[^>]*>/g, '')
-  .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&amp;/g, '&')
-  .replace(/\s+/g, ' ').trim();
 
 const icons = {};
 const icon = (name) => {
@@ -35,48 +29,68 @@ const icon = (name) => {
   return icons[name];
 };
 
-// Files are named YYYY-MM-DD.html or <prefix>-YYYY-MM-DD.html → newest first
-const EDITION = /^(?:.+-)?(\d{4}-\d{2}-\d{2})\.html$/;
-const dateOf = (f) => f.match(EDITION)[1];
-
-const readEdition = (r, file) => {
-  const html = readFileSync(join(ROOT, r.dir, file), 'utf8');
-  const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-  const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  const meta = (html.match(/<meta\b[^>]*>/gi) || []).find((m) => /name=["']keywords["']/i.test(m));
-  const keywords = meta?.match(/content=["']([^"']*)["']/i)?.[1];
-  const topics = keywords
-    ? decode(keywords).split(',').map((t) => t.trim()).filter(Boolean)
-    : [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)].map((m) => decode(m[1])).filter(Boolean).slice(0, 4);
-  return {
-    file,
-    date: dateOf(file),
-    title: (h1 && decode(h1[1])) || (title && decode(title[1])) || r.title,
-    topics,
-  };
+const loadDates = () => {
+  if (!existsSync(DATES_FILE)) {
+    console.warn('warn: scripts/dates.json not found, starting from {}');
+    return {};
+  }
+  const { dates, ok } = parseDates(readFileSync(DATES_FILE, 'utf8'));
+  if (!ok) console.warn('warn: scripts/dates.json is not valid JSON, starting from {}');
+  return dates;
 };
 
-const editions = (r) => {
+const SAVED = loadDates();
+const NEXT = {};
+
+let added = 0;
+
+const readEntry = (r, file) => {
+  const abs = join(ROOT, r.dir, file);
+  const html = readFileSync(abs, 'utf8');
+  const st = statSync(abs);
+  const key = `${r.dir}/${file}`;
+  const { date, source } = resolveDate(file, SAVED[key], st.mtimeMs);
+  if (source !== 'name') NEXT[key] = date;
+  const csp = allowSelf(html);
+  const next = injectWidget(csp ?? html) ?? csp;
+  if (next !== null) {
+    writeFileSync(abs, next);
+    utimesSync(abs, st.atime, st.mtime);
+    added += 1;
+  }
+  return { file, date, title: titleOf(html, file), topics: topicsOf(html) };
+};
+
+const load = (r) => {
   const abs = join(ROOT, r.dir);
-  if (!existsSync(abs)) return [];
-  return readdirSync(abs)
-    .filter((f) => EDITION.test(f))
-    .sort((a, b) => dateOf(b).localeCompare(dateOf(a)) || b.localeCompare(a))
-    .map((f) => readEdition(r, f));
+  const files = existsSync(abs) ? readdirSync(abs).filter(isEntryFile) : [];
+  const { placed, unplaced, missing } = sortEntries(r.kind, files.map((f) => readEntry(r, f)), r.order);
+  for (const e of unplaced) console.warn(`warn: ${r.dir}/${e.file} is not in order`);
+  for (const f of missing) console.warn(`warn: ${r.dir} order item ${f} not found`);
+  return { ...r, entries: placed, unplaced, all: [...placed, ...unplaced] };
 };
 
-const DATA = REPORTS.map((r) => ({ ...r, editions: editions(r) }));
+const DATA = REPORTS.map(load);
 const PUBLIC = DATA.filter((r) => r.visibility === 'public');
-const POSTS = PUBLIC.flatMap((r) => r.editions.map((e) => ({ r, e }))).sort((a, b) => b.e.date.localeCompare(a.e.date));
+const NEWS = PUBLIC.filter((r) => r.kind === 'news');
+const LEARN = PUBLIC.filter((r) => r.kind !== 'news');
+const pairs = (list) => list
+  .flatMap((r) => r.all.map((e) => ({ r, e })))
+  .sort((a, b) => b.e.date.localeCompare(a.e.date));
+const POSTS = pairs(NEWS);
+const GUIDES = pairs(LEARN);
+const ITEMS = pairs(PUBLIC);
 
 const fmt = (s, o) => new Date(s + 'T00:00:00Z').toLocaleDateString('en-GB', { timeZone: 'UTC', ...o });
 const short = (s) => (s ? fmt(s, { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const word = (n, one) => (n === 1 ? one : `${one}s`);
 const cv = (r) => `--c:${r.color};--on:${r.on};--ink:${r.ink}`;
 const badge = (r) => `<span class="a-badge">${icon(r.icon)}</span>`;
 const tri = `linear-gradient(90deg,${PUBLIC.map((r, i) => `${r.color} ${(i * 100 / PUBLIC.length).toFixed(1)}% ${((i + 1) * 100 / PUBLIC.length).toFixed(1)}%`).join(',')})`;
 const tags = (list) => (list.length ? `<div class="a-tags">${list.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : '');
-const stats = (items, colored) => `<div class="a-stats${colored ? ' colored' : ''}">${items.map(([v, l]) => `<div class="a-stat"><b>${esc(v)}</b><span>${l}</span></div>`).join('')}</div>`;
+const stats = (items, colored) => `<div class="a-stats${colored ? ' colored' : ''}" style="--n:${items.length}">${items.map(([v, l]) => `<div class="a-stat"><b>${esc(v)}</b><span>${l}</span></div>`).join('')}</div>`;
+const topicCount = (list) => new Set(list.flatMap((e) => e.topics)).size;
 const byMonth = (list) => {
   const groups = new Map();
   for (const e of list) {
@@ -114,63 +128,127 @@ const side = () => `
     <p class="a-role">${esc(PROFILE.role)}</p>
     <p class="a-bio">${esc(PROFILE.bio)}</p>
     <h4>When the agent runs</h4>
-    <ul class="a-sched">${PUBLIC.map((r) => `<li style="${cv(r)}"><span>${badge(r)}${esc(r.short)}</span><em>${esc(r.cadence)}</em></li>`).join('')}</ul>
+    <ul class="a-sched">${NEWS.map((r) => `<li style="${cv(r)}"><span>${badge(r)}${esc(r.short)}</span><em>${esc(r.cadence)}</em></li>`).join('')}</ul>
     <h4>Find me</h4>
     <div class="a-social">${PROFILE.links.map((l) => `<a href="${esc(l.href)}">${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>
-    ${POSTS.length ? `<div class="a-total"><b>${plural(POSTS.length, 'issue')}</b> since ${fmt(POSTS.at(-1).e.date, { month: 'short', year: 'numeric' })}</div>` : ''}
+    ${ITEMS.length ? `<div class="a-total"><b>${plural(POSTS.length, 'issue')} · ${plural(GUIDES.length, 'guide')}</b> since ${fmt(ITEMS.at(-1).e.date, { month: 'short', year: 'numeric' })}</div>` : ''}
   </div>
 </div></aside>`;
 
-const homePage = () => {
-  const last = POSTS[0]?.e.date;
-  const thisMonth = last ? POSTS.filter((p) => p.e.date.slice(0, 7) === last.slice(0, 7)).length : 0;
-  const cards = PUBLIC.map((r) => {
-    const e = r.editions[0];
-    const meta = e
-      ? `<b>${plural(r.editions.length, 'issue')}</b> · Latest: ${esc(e.title)} · ${short(e.date)}`
-      : 'No issues yet';
-    return `
+const cardMeta = (r) => {
+  if (r.kind === 'roadmap') return `<b>Roadmap</b> · ${plural(r.entries.length, 'step')}`;
+  const e = r.entries[0];
+  const unit = r.kind === 'news' ? 'issue' : 'guide';
+  if (!e) return `No ${unit}s yet`;
+  return `<b>${plural(r.entries.length, unit)}</b> · Latest: ${esc(e.title)} · ${short(e.date)}`;
+};
+
+const card = (r) => `
     <a class="a-cat" style="${cv(r)}" href="${BASE}/${r.dir}/">
       ${badge(r)}
       <div>
         <h2>${esc(r.title)}</h2>
         <p class="desc">${esc(r.about)}</p>
         ${tags(r.tags)}
-        <div class="a-meta">${meta}</div>
+        <div class="a-meta">${cardMeta(r)}</div>
       </div>
       <span class="a-go">→</span>
     </a>`;
-  }).join('');
+
+const homePage = () => {
+  const last = ITEMS[0]?.e.date;
+  const thisMonth = last ? ITEMS.filter((p) => p.e.date.slice(0, 7) === last.slice(0, 7)).length : 0;
+  const group = (label, list) => (list.length ? `<div class="a-label">${label}</div>${list.map(card).join('')}` : '');
   return layout(SITE.title, SITE.intro, `${nav('home')}<div class="a-wrap"><main>
     <header class="a-head"><h1>${esc(SITE.title)}</h1><p>${esc(SITE.intro)}</p></header>
-    ${stats([[POSTS.length, `${POSTS.length === 1 ? 'issue' : 'issues'} published`], [PUBLIC.length, PUBLIC.length === 1 ? 'newsletter' : 'newsletters'], [short(last), 'last update'], [thisMonth, `${thisMonth === 1 ? 'issue' : 'issues'} this month`]], false)}
-    <div class="a-label">Newsletters</div>
-    ${cards}
+    ${stats([
+      [POSTS.length, `${word(POSTS.length, 'issue')} published`],
+      [GUIDES.length, word(GUIDES.length, 'guide')],
+      [short(last), 'last update'],
+      [thisMonth, `${word(thisMonth, 'item')} this month`],
+    ], false)}
+    ${group('Weekly news', NEWS)}
+    ${group('Learning', LEARN)}
   </main>${side()}</div>`);
 };
 
-const archivePage = (r) => {
-  const list = r.editions;
-  const topics = new Set(list.flatMap((e) => e.topics)).size;
-  const months = list.length
+const sectionPage = (r, statItems, body) => layout(`${r.title} · ${SITE.title}`, r.about, `${nav(r.dir)}<div class="a-wrap" style="${cv(r)}"><main>
+    <div class="a-crumb"><a href="${BASE}/">Home</a> / ${esc(r.short)}</div>
+    <header class="a-head"><h1>${badge(r)}${esc(r.title)}</h1><p>${esc(r.about)}</p></header>
+    ${stats(statItems, true)}
+    ${body}
+  </main>${side()}</div>`);
+
+const newsPage = (r) => {
+  const list = r.entries;
+  const topics = topicCount(list);
+  const body = list.length
     ? byMonth(list).map(([month, items]) => `
       <div class="a-month">${month}<span>${plural(items.length, 'issue')}</span></div>
       ${items.map((e) => `
-        <a class="a-row" href="${BASE}/${r.dir}/${encodeURIComponent(e.file)}">
+        <a class="a-row" href="${entryHref(BASE, r.dir, e.file)}">
           <div class="a-date"><b>${fmt(e.date, { day: 'numeric' })}</b><span>${fmt(e.date, { weekday: 'short' })}</span></div>
           <div><h3>${esc(e.title)}${e === list[0] ? '<span class="a-new">New</span>' : ''}</h3>${tags(e.topics)}</div>
           <span class="a-go">→</span>
         </a>`).join('')}`).join('')
     : '<div class="a-empty">No issues yet.</div>';
-  return layout(`${r.title} · ${SITE.title}`, r.about, `${nav(r.dir)}<div class="a-wrap" style="${cv(r)}"><main>
-    <div class="a-crumb"><a href="${BASE}/">Home</a> / ${esc(r.short)}</div>
-    <header class="a-head"><h1>${badge(r)}${esc(r.title)}</h1><p>${esc(r.about)}</p></header>
-    ${stats([[list.length, `${list.length === 1 ? 'issue' : 'issues'} published`], [short(list[0]?.date), 'last update'], [short(list.at(-1)?.date), 'first issue'], [topics, `${topics === 1 ? 'topic' : 'topics'} covered`]], true)}
-    ${months}
-  </main>${side()}</div>`);
+  return sectionPage(r, [
+    [list.length, `${word(list.length, 'issue')} published`],
+    [short(list[0]?.date), 'last update'],
+    [short(list.at(-1)?.date), 'first issue'],
+    [topics, `${word(topics, 'topic')} covered`],
+  ], body);
 };
 
-for (const r of DATA) writeFileSync(join(ROOT, r.dir, 'index.html'), archivePage(r));
+const guideRow = (r, e, label = '') => `
+  <a class="a-row a-guide" href="${entryHref(BASE, r.dir, e.file)}">
+    <div><h3>${esc(e.title)}${label ? `<span class="a-new">${label}</span>` : ''}</h3>${tags(e.topics)}<div class="a-meta">Added ${short(e.date)}</div></div>
+    <span class="a-go">→</span>
+  </a>`;
+
+const guidesPage = (r) => {
+  const list = r.entries;
+  const topics = topicCount(list);
+  const body = list.length
+    ? `<div class="a-list">${list.map((e) => guideRow(r, e)).join('')}</div>`
+    : '<div class="a-empty">No guides yet.</div>';
+  return sectionPage(r, [
+    [list.length, word(list.length, 'guide')],
+    [short(list[0]?.date), 'last added'],
+    [topics, `${word(topics, 'topic')} covered`],
+  ], body);
+};
+
+const roadmapPage = (r) => {
+  const steps = r.entries;
+  const topics = topicCount(r.all);
+  const latest = [...r.all].sort((a, b) => b.date.localeCompare(a.date))[0];
+  const list = steps.length
+    ? `<ol class="a-steps">${steps.map((e, i) => `<li class="a-step"><span class="a-num">${i + 1}</span>${guideRow(r, e, i === 0 ? 'Start here' : '')}</li>`).join('')}</ol>`
+    : '<div class="a-empty">No steps yet.</div>';
+  const rest = r.unplaced.length
+    ? `<div class="a-month">Not placed yet<span>${plural(r.unplaced.length, 'guide')}</span></div>${r.unplaced.map((e) => guideRow(r, e)).join('')}`
+    : '';
+  return sectionPage(r, [
+    [steps.length, word(steps.length, 'step')],
+    [topics, `${word(topics, 'topic')} covered`],
+    [short(latest?.date), 'last added'],
+  ], list + rest);
+};
+
+const PAGES = { news: newsPage, guides: guidesPage, roadmap: roadmapPage };
+
+for (const r of DATA) {
+  mkdirSync(join(ROOT, r.dir), { recursive: true });
+  writeFileSync(join(ROOT, r.dir, 'index.html'), PAGES[r.kind](r));
+}
 writeFileSync(join(ROOT, 'index.html'), homePage());
 
-console.log('Indexes rebuilt:', DATA.map((r) => `${r.dir}=${r.editions.length}`).join(', '));
+const writeIfChanged = (path, text) => {
+  if (!existsSync(path) || readFileSync(path, 'utf8') !== text) writeFileSync(path, text);
+};
+writeIfChanged(DATES_FILE, serializeDates(NEXT));
+writeIfChanged(join(ROOT, 'assets/nav-data.json'), `${JSON.stringify(navData(DATA))}\n`);
+
+console.log('Indexes rebuilt:', DATA.map((r) => `${r.dir}=${r.all.length}`).join(', '));
+if (added) console.log(`Widget updated: ${plural(added, 'file')}`);

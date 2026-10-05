@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Basics — What Actually Slows Things Down</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface2: #ede9e0;
+  --border: #d8d2c4;
+  --accent: #1a472a;
+  --accent2: #c0392b;
+  --accent3: #2471a3;
+  --warm: #d4a017;
+  --text: #1a1a18;
+  --muted: #6b6560;
+  --code-bg: #1e1e18;
+  --code-text: #d4d0c4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* PAPER TEXTURE */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245,243,238,0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.875rem 2rem;
+  display: flex; align-items: center; gap: 2rem;
+}
+.nav-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--accent);
+  letter-spacing: 0.05em; font-weight: 600;
+}
+.nav-links { display: flex; gap: 1.75rem; margin-left: auto; }
+.nav-links a {
+  font-size: 13px; color: var(--muted);
+  text-decoration: none; transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* HERO */
+.hero {
+  padding: 5rem 0 4rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: end;
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 3rem;
+}
+.hero-left {}
+.hero-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  color: var(--muted); margin-bottom: 1rem;
+  display: block;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600; line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.hero h1 em { font-style: italic; color: var(--accent2); }
+.hero p { font-size: 1rem; color: var(--muted); max-width: 480px; }
+.hero-stat {
+  text-align: right; flex-shrink: 0;
+}
+.hero-stat .big { font-size: 4rem; font-weight: 300; line-height: 1; color: var(--accent); }
+.hero-stat .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+
+/* SECTIONS */
+.section { padding: 3.5rem 0; }
+.section-marker {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.section-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.section-line { flex: 1; height: 1px; background: var(--border); }
+.section-title { font-size: 1.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+.section-sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+/* TWO-COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem;
+}
+.card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+.card p { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
+
+/* CODE BLOCKS */
+.code-block {
+  background: var(--code-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1.25rem 0;
+  border: 1px solid #333;
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid #2a2a22;
+}
+.code-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: #6b6b5a; letter-spacing: 0.05em;
+}
+.copy-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: #6b6b5a;
+  background: none; border: 1px solid #333;
+  padding: 3px 10px; border-radius: 2px;
+  cursor: pointer; transition: all 0.15s;
+}
+.copy-btn:hover { color: #d4d0c4; border-color: #555; }
+pre {
+  padding: 1.25rem 1.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; line-height: 1.75;
+  color: var(--code-text);
+  overflow-x: auto; white-space: pre;
+}
+.k { color: #9cdcfe; }
+.s { color: #ce9178; }
+.c { color: #6a9955; }
+.f { color: #dcdcaa; }
+.n { color: #4ec9b0; }
+.kw { color: #569cd6; }
+.num { color: #b5cea8; }
+.bad { color: #f48771; }
+.good { color: #7ec894; }
+
+/* INDEX VISUALIZER */
+.index-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.index-demo-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 0.08em; margin-bottom: 1.25rem;
+}
+.scan-viz { margin-bottom: 1.5rem; }
+.scan-label { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; }
+.badge-slow { background: rgba(192,57,43,0.12); color: var(--accent2); border: 1px solid rgba(192,57,43,0.2); }
+.badge-fast { background: rgba(26,71,42,0.12); color: var(--accent); border: 1px solid rgba(26,71,42,0.2); }
+.rows { display: flex; gap: 4px; flex-wrap: wrap; }
+.row-block {
+  width: 28px; height: 28px;
+  border-radius: 2px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted); transition: all 0.1s;
+}
+.row-block.scanning { background: rgba(212,160,23,0.15); border-color: var(--warm); color: var(--warm); }
+.row-block.found { background: rgba(26,71,42,0.2); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.row-block.skipped { background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.2); }
+.controls { display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap; align-items: center; }
+.ctrl-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 2px; cursor: pointer;
+  background: var(--bg); color: var(--text);
+  transition: all 0.15s;
+}
+.ctrl-btn:hover { background: var(--surface2); }
+.ctrl-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.speed-info {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--muted);
+  padding: 8px 12px;
+  background: var(--surface2);
+  border-radius: 2px;
+}
+
+/* N+1 VISUALIZER */
+.n1-viz {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+.n1-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.n1-tab {
+  padding: 12px 20px; font-size: 13px;
+  color: var(--muted); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.n1-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.n1-pane { display: none; padding: 1.5rem; }
+.n1-pane.active { display: block; }
+.query-stream { display: flex; flex-direction: column; gap: 6px; max-height: 240px; overflow-y: auto; }
+.query-item {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; padding: 6px 10px;
+  border-radius: 2px; background: var(--bg);
+  border: 1px solid var(--border);
+  opacity: 0;
+  animation: appear 0.2s forwards;
+}
+.query-item .qi-num { color: var(--muted); min-width: 20px; }
+.query-item.main-query { border-color: var(--accent); background: rgba(26,71,42,0.06); }
+.query-item.sub-query { border-color: var(--accent2); background: rgba(192,57,43,0.04); color: #c0392b; }
+.query-item .qi-sql { flex: 1; }
+.query-item .qi-badge { font-size: 10px; padding: 2px 6px; border-radius: 2px; white-space: nowrap; }
+@keyframes appear { to { opacity: 1; } }
+.n1-stat { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 1rem; }
+.n1-stat strong { color: var(--accent2); }
+.n1-stat.good strong { color: var(--accent); }
+
+/* EXPLAIN OUTPUT */
+.explain-visual {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.explain-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--surface2);
+}
+.explain-row:last-child { border-bottom: none; }
+.explain-key { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); min-width: 140px; }
+.explain-val { font-size: 13px; font-weight: 500; }
+.explain-bar { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.explain-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+/* SELECT STAR DEMO */
+.select-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.col-grid { display: flex; gap: 6px; flex-wrap: wrap; margin: 1rem 0; }
+.col-chip {
+  padding: 6px 12px; border-radius: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.col-chip.used { background: rgba(26,71,42,0.12); border-color: rgba(26,71,42,0.3); color: var(--accent); }
+.col-chip.wasted { background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.15); color: var(--accent2); opacity: 0.6; }
+.col-chip.neutral { background: var(--bg); color: var(--muted); }
+.size-bar { display: flex; align-items: center; gap: 12px; margin: 1rem 0; }
+.size-label { font-size: 13px; font-weight: 500; min-width: 80px; }
+.size-track { flex: 1; height: 20px; background: var(--surface2); border-radius: 2px; overflow: hidden; position: relative; }
+.size-fill { height: 100%; border-radius: 2px; display: flex; align-items: center; padding-left: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: white; transition: width 0.8s ease; }
+
+/* QUIZ */
+.quiz-section { background: var(--surface2); border-radius: 4px; padding: 2rem; margin-top: 2rem; }
+.quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem; margin-bottom: 1rem; }
+.quiz-q { font-weight: 600; margin-bottom: 1rem; font-size: 15px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 2px;
+  padding: 10px 14px; font-size: 13px; cursor: pointer;
+  text-align: left; color: var(--text); font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.quiz-opt:hover { border-color: var(--accent); }
+.quiz-opt.correct { border-color: var(--accent); background: rgba(26,71,42,0.08); color: var(--accent); }
+.quiz-opt.wrong { border-color: var(--accent2); background: rgba(192,57,43,0.06); color: var(--accent2); }
+.quiz-feedback { margin-top: 0.75rem; font-size: 13px; display: none; padding: 10px 14px; border-radius: 2px; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.good { background: rgba(26,71,42,0.08); color: var(--accent); border: 1px solid rgba(26,71,42,0.2); }
+.quiz-feedback.bad { background: rgba(192,57,43,0.06); color: var(--accent2); border: 1px solid rgba(192,57,43,0.15); }
+
+/* TIP */
+.tip {
+  border-left: 3px solid var(--warm);
+  background: rgba(212,160,23,0.07);
+  padding: 1rem 1.25rem; border-radius: 0 4px 4px 0;
+  margin: 1.5rem 0; font-size: 0.9rem; color: var(--muted);
+}
+.tip strong { color: #8a6500; }
+
+/* FOOTER */
+footer {
+  border-top: 2px solid var(--text);
+  padding: 2rem; text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--muted);
+  margin-top: 2rem;
+}
+
+/* DIVIDER */
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">SELECT * FROM knowledge</div>
+  <div class="nav-links">
+    <a href="#indexes">Indexes</a>
+    <a href="#n1">N+1 Problem</a>
+    <a href="#select">SELECT *</a>
+    <a href="#bonus">Bonus</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-left">
+      <span class="hero-tag">WEEK 3–4 · DATABASE BASICS</span>
+      <h1>What actually<br>makes your DB <em>slow</em></h1>
+      <p>Three patterns every junior dev should recognize. You don't need to optimize queries — you need to know when they're wrong.</p>
+    </div>
+    <div class="hero-stat">
+      <div class="big">3</div>
+      <div class="label">ROOT CAUSES<br>OF 80% OF<br>DB PROBLEMS</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: INDEXES -->
+  <section class="section" id="indexes">
+    <div class="section-marker">
+      <span class="section-num">01 / 03</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="section-title">Indexes — the table of contents</div>
+    <div class="section-sub">Without an index, the database reads every single row. With one, it jumps straight to the answer.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>📖 The book analogy</h3>
+        <p>A database without indexes is like a book without a table of contents. To find "Chapter 7," you read every page from page 1. An index is the table of contents — you go straight to page 142.</p>
+      </div>
+      <div class="card">
+        <h3>⚡ What it looks like in EXPLAIN</h3>
+        <p><strong>Seq Scan</strong> = sequential scan = reads all rows. Slow on big tables.<br><strong>Index Scan</strong> = uses the index. Jumps directly. Fast.</p>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE INDEX SIMULATOR -->
+    <div class="index-demo">
+      <div class="index-demo-title">// INTERACTIVE: SEE A FULL TABLE SCAN VS INDEX SCAN</div>
+      <div class="scan-viz">
+        <div class="scan-label">
+          <span id="scan-mode-label">Sequential Scan (no index)</span>
+          <span class="badge badge-slow" id="scan-badge">SLOW</span>
+        </div>
+        <div class="rows" id="rows-container"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" onclick="runSeqScan()">▶ Run Seq Scan</button>
+        <button class="ctrl-btn primary" onclick="runIndexScan()">⚡ Run Index Scan</button>
+        <button class="ctrl-btn" onclick="resetScan()">↺ Reset</button>
+        <span class="speed-info" id="scan-stat">Rows checked: 0 / 30</span>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-label">index-demo.sql</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="c">-- STEP 1: See a slow query (full table scan)</span>
+<span class="kw">EXPLAIN ANALYZE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email = <span class="s">'user500@example.com'</span>;
+<span class="c">-- Output includes: Seq Scan on users (cost=...) rows=10000</span>
+<span class="c">--                  Execution Time: 8.231 ms</span>
+
+<span class="c">-- STEP 2: Add an index</span>
+<span class="kw">CREATE INDEX</span> idx_users_email <span class="kw">ON</span> users(email);
+
+<span class="c">-- STEP 3: Same query — now uses the index</span>
+<span class="kw">EXPLAIN ANALYZE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email = <span class="s">'user500@example.com'</span>;
+<span class="c">-- Output includes: Index Scan using idx_users_email</span>
+<span class="c">--                  Execution Time: 0.081 ms  ← ~100x faster</span></pre>
+    </div>
+
+    <!-- EXPLAIN OUTPUT VISUALIZER -->
+    <div class="explain-visual">
+      <p style="font-size:12px; color:var(--muted); font-family:'IBM Plex Mono',monospace; margin-bottom:1rem;">// READING EXPLAIN ANALYZE OUTPUT</p>
+      <div class="explain-row">
+        <div class="explain-key">Scan type</div>
+        <div class="explain-val" id="ev-scan">Seq Scan</div>
+        <div class="explain-bar"><div class="explain-bar-fill" id="ev-bar" style="width:90%; background:#c0392b;"></div></div>
+      </div>
+      <div class="explain-row">
+        <div class="explain-key">Rows examined</div>
+        <div class="explain-val" id="ev-rows">10,000</div>
+      </div>
+      <div class="explain-row">
+        <div class="explain-key">Rows returned</div>
+        <div class="explain-val">1</div>
+      </div>
+      <div class="explain-row">
+        <div class="explain-key">Execution time</div>
+        <div class="explain-val" id="ev-time">8.231 ms</div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:1.25rem;">
+        <button class="ctrl-btn" onclick="showExplainBefore()">Without index</button>
+        <button class="ctrl-btn primary" onclick="showExplainAfter()">With index</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>When to add an index:</strong> If you search, filter, or join on a column frequently, it likely needs an index. The most common ones: user email for login, foreign keys like <code>user_id</code> on posts, and any column you put in a WHERE clause regularly.
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- SECTION 2: N+1 -->
+  <section class="section" id="n1">
+    <div class="section-marker">
+      <span class="section-num">02 / 03</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="section-title">The N+1 problem</div>
+    <div class="section-sub">The most common junior mistake. Running 1 query to get a list, then 1 query per item to get related data.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>🐌 N+1 pattern</h3>
+        <p>Get 10 posts (1 query). Loop through them, fetching each post's author (10 more queries). Total: <strong>11 queries</strong> for what should be 1.</p>
+      </div>
+      <div class="card">
+        <h3>🚀 JOIN pattern</h3>
+        <p>Get 10 posts WITH their authors in one JOIN query. Total: <strong>1 query</strong>. Same result. Database handles the relationship, not your loop.</p>
+      </div>
+    </div>
+
+    <!-- N+1 INTERACTIVE -->
+    <div class="n1-viz">
+      <div class="n1-tabs">
+        <button class="n1-tab active" onclick="switchN1(this, 'bad')">The N+1 way (bad)</button>
+        <button class="n1-tab" onclick="switchN1(this, 'good')">The JOIN way (good)</button>
+      </div>
+      <div class="n1-pane active" id="bad">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Watch the queries pile up — one per post:</p>
+        <div class="query-stream" id="bad-stream"></div>
+        <div class="n1-stat" id="bad-stat">Press simulate to see what happens</div>
+        <div style="display:flex; gap:10px; margin-top:1rem;">
+          <button class="ctrl-btn" onclick="simulateBad()">▶ Simulate N+1</button>
+          <button class="ctrl-btn" onclick="resetBad()">↺ Reset</button>
+        </div>
+      </div>
+      <div class="n1-pane" id="good">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">One query. All data. Done.</p>
+        <div class="query-stream" id="good-stream"></div>
+        <div class="n1-stat good" id="good-stat"></div>
+        <div style="display:flex; gap:10px; margin-top:1rem;">
+          <button class="ctrl-btn primary" onclick="simulateGood()">▶ Simulate JOIN</button>
+          <button class="ctrl-btn" onclick="resetGood()">↺ Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-label">n-plus-one.sql</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="c">-- ❌ THE BAD WAY (N+1)</span>
+<span class="c">-- Query 1: get posts</span>
+<span class="kw">SELECT</span> id, user_id, title <span class="kw">FROM</span> posts <span class="kw">LIMIT</span> <span class="num">10</span>;
+
+<span class="c">-- Then your application code loops and runs THIS for each post:</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> users <span class="kw">WHERE</span> id = <span class="num">3</span>;   <span class="c">-- query 2</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> users <span class="kw">WHERE</span> id = <span class="num">7</span>;   <span class="c">-- query 3</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> users <span class="kw">WHERE</span> id = <span class="num">12</span>;  <span class="c">-- query 4</span>
+<span class="c">-- ... 10 posts = 11 queries total</span>
+
+
+<span class="c">-- ✅ THE GOOD WAY (JOIN)</span>
+<span class="kw">SELECT</span>
+  p.id,
+  p.title,
+  u.name <span class="kw">AS</span> author_name
+<span class="kw">FROM</span> posts p
+<span class="kw">JOIN</span> users u <span class="kw">ON</span> p.user_id = u.id
+<span class="kw">LIMIT</span> <span class="num">10</span>;
+<span class="c">-- 1 query. Same data. The database does the joining.</span>
+
+<span class="c">-- Run EXPLAIN ANALYZE on both to see the difference yourself:</span>
+<span class="kw">EXPLAIN ANALYZE SELECT</span> p.id, p.title, u.name
+<span class="kw">FROM</span> posts p <span class="kw">JOIN</span> users u <span class="kw">ON</span> p.user_id = u.id <span class="kw">LIMIT</span> <span class="num">10</span>;</pre>
+    </div>
+
+    <div class="tip">
+      <strong>How to spot N+1 in your own code:</strong> If you see a loop that runs a database query inside it, that's likely N+1. The fix is almost always a JOIN or a bulk fetch (get all the IDs, then <code>WHERE id IN (...)</code>).
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- SECTION 3: SELECT * -->
+  <section class="section" id="select">
+    <div class="section-marker">
+      <span class="section-num">03 / 03</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="section-title">The cost of SELECT *</div>
+    <div class="section-sub">It feels convenient. At scale, it's transferring data your app never even looks at.</div>
+
+    <div class="select-demo">
+      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Your app only needs <strong>id</strong> and <strong>title</strong> to show a post list. But SELECT * fetches everything:</p>
+      <div class="col-grid" id="col-grid">
+        <span class="col-chip used">id</span>
+        <span class="col-chip used">title</span>
+        <span class="col-chip neutral">user_id</span>
+        <span class="col-chip neutral">body</span>
+        <span class="col-chip neutral">created_at</span>
+        <span class="col-chip neutral">updated_at</span>
+        <span class="col-chip neutral">deleted_at</span>
+        <span class="col-chip neutral">view_count</span>
+        <span class="col-chip neutral">metadata</span>
+        <span class="col-chip neutral">thumbnail_url</span>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin:0.75rem 0; font-family:'IBM Plex Mono',monospace;">data transferred per row, 50,000 posts × 500 concurrent users:</p>
+      <div class="size-bar">
+        <div class="size-label">SELECT *</div>
+        <div class="size-track">
+          <div class="size-fill" style="width:90%; background:#c0392b;" id="bar-star">~2,400 bytes</div>
+        </div>
+      </div>
+      <div class="size-bar">
+        <div class="size-label">SELECT id, title</div>
+        <div class="size-track">
+          <div class="size-fill" style="width:15%; background:#1a472a;" id="bar-specific">~48 bytes</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:1.25rem;">
+        <button class="ctrl-btn" onclick="showSelectStar()">Show SELECT *</button>
+        <button class="ctrl-btn primary" onclick="showSelectSpecific()">Show SELECT id, title</button>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-label">select-comparison.sql</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="c">-- ❌ Fetches EVERYTHING — most of it unused</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> posts <span class="kw">WHERE</span> user_id = <span class="num">42</span>;
+
+<span class="c">-- ✅ Only fetch what you actually use</span>
+<span class="kw">SELECT</span> id, title <span class="kw">FROM</span> posts <span class="kw">WHERE</span> user_id = <span class="num">42</span>;
+
+<span class="c">-- Run EXPLAIN ANALYZE on both — notice the width difference:</span>
+<span class="kw">EXPLAIN ANALYZE</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> posts <span class="kw">WHERE</span> user_id = <span class="num">42</span>;
+<span class="c">-- width=452 (bytes per row transferred)</span>
+
+<span class="kw">EXPLAIN ANALYZE</span> <span class="kw">SELECT</span> id, title <span class="kw">FROM</span> posts <span class="kw">WHERE</span> user_id = <span class="num">42</span>;
+<span class="c">-- width=36 (bytes per row transferred)  ← much less network load</span></pre>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- BONUS -->
+  <section class="section" id="bonus">
+    <div class="section-marker">
+      <span class="section-num">BONUS</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="section-title">The function trap</div>
+    <div class="section-sub">Wrapping a column in a function silently disables its index. This catches everyone at least once.</div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-label">function-trap.sql</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="c">-- You have an index on email. This query IGNORES it:</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> <span class="bad">LOWER(email)</span> = <span class="s">'user@example.com'</span>;
+<span class="c">-- → Seq Scan. Reads all rows. Index is useless here.</span>
+<span class="c">-- Why? The index stores "User@Example.com" — not its lowercased version.</span>
+
+<span class="c">-- Better approach: store emails lowercase AT INSERT TIME</span>
+<span class="kw">INSERT INTO</span> users (email) <span class="kw">VALUES</span> (<span class="f">LOWER</span>(<span class="s">'User@Example.com'</span>));
+<span class="c">-- Now your indexed query works normally:</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> <span class="good">email</span> = <span class="s">'user@example.com'</span>;
+<span class="c">-- → Index Scan. Fast.</span>
+
+<span class="c">-- Alternative: create a functional index (more advanced)</span>
+<span class="kw">CREATE INDEX</span> idx_users_email_lower <span class="kw">ON</span> users(<span class="f">LOWER</span>(email));
+<span class="c">-- Now LOWER(email) in WHERE will use this index</span></pre>
+    </div>
+
+    <div class="tip">
+      <strong>General rule:</strong> If you transform a column in a WHERE clause (<code>LOWER()</code>, <code>DATE()</code>, <code>CAST()</code>, etc.), the index on that column stops working. Transform at insert time instead, or create a functional index.
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="section" id="quiz">
+    <div class="section-marker">
+      <span class="section-num">✓ CHECKPOINT</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="section-title">Quick check</div>
+
+    <div class="quiz-section">
+      <div class="quiz-card">
+        <div class="quiz-q">1. You search users by email constantly but the query is slow. Your table has 1 million rows. What should you do?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q1', 'Caching helps, but it treats the symptom, not the cause. The database still does a full scan on cache misses.')">Add a Redis cache layer</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q1', 'Correct! A missing index on a frequently-searched column is the most common database performance problem. CREATE INDEX idx_users_email ON users(email);')">Create an index on the email column</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q1', 'More hardware delays the problem. It doesn\\'t fix the missing index — you\\'ll just hit the same wall later at a higher scale.')">Upgrade the database server</button>
+        </div>
+        <div class="quiz-feedback" id="q1"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-q">2. Your code fetches 20 blog posts, then loops to get each post's author. How many database queries is this?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q2', 'One query fetches the posts. Then the loop runs one query per post. 1 + 20 = 21 total.')">1 query</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q2', 'Close — 1 for posts + 20 for authors = 21. The N in N+1 is the number of items.')">20 queries</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q2', 'Correct! 1 query for the posts list, then 1 per post = 21 total. A JOIN would do this in 1 query.')">21 queries</button>
+        </div>
+        <div class="quiz-feedback" id="q2"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-q">3. You run <code>EXPLAIN ANALYZE</code> and see "Seq Scan" with 500,000 rows examined for a query returning 1 row. What does this mean?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q3', 'Seq Scan means sequential scan — no index involved. The query planner chose to read every row.')">The query is using an index efficiently</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q3', 'Correct! Seq Scan means the database read all 500,000 rows to find 1. A missing index on the WHERE column is almost certainly the cause.')">The database is reading every row in the table — no index is being used</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q3', 'Seq Scan has nothing to do with network speed — it\\'s about how the database reads its own data internally.')">The network connection to the database is slow</button>
+        </div>
+        <div class="quiz-feedback" id="q3"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>database-learning · week 3–4 · junior dev roadmap</p>
+  <p style="margin-top:0.5rem">SELECT wisdom FROM experience WHERE mistakes > 0;</p>
+</footer>
+
+<script>
+// ========= INDEX SCAN SIMULATOR =========
+const totalRows = 30;
+const targetRow = 17;
+let seqInterval, seqIdx = 0, scanRunning = false;
+
+function renderRows() {
+  const c = document.getElementById('rows-container');
+  c.innerHTML = '';
+  for (let i = 1; i <= totalRows; i++) {
+    const d = document.createElement('div');
+    d.className = 'row-block';
+    d.id = 'row-' + i;
+    d.textContent = i;
+    c.appendChild(d);
+  }
+}
+renderRows();
+
+function runSeqScan() {
+  if (scanRunning) return;
+  resetScan();
+  scanRunning = true;
+  document.getElementById('scan-mode-label').textContent = 'Sequential Scan (no index)';
+  document.getElementById('scan-badge').textContent = 'SLOW';
+  document.getElementById('scan-badge').className = 'badge badge-slow';
+  let i = 1;
+  seqInterval = setInterval(() => {
+    if (i > totalRows) { clearInterval(seqInterval); scanRunning = false; document.getElementById('scan-stat').textContent = `Checked: ${totalRows} rows to find 1`; return; }
+    if (i > 1) document.getElementById('row-' + (i-1)).className = i-1 === targetRow ? 'row-block found' : 'row-block skipped';
+    document.getElementById('row-' + i).className = 'row-block scanning';
+    document.getElementById('scan-stat').textContent = `Rows checked: ${i} / ${totalRows}`;
+    i++;
+  }, 80);
+}
+
+function runIndexScan() {
+  if (scanRunning) return;
+  resetScan();
+  scanRunning = true;
+  document.getElementById('scan-mode-label').textContent = 'Index Scan';
+  document.getElementById('scan-badge').textContent = 'FAST';
+  document.getElementById('scan-badge').className = 'badge badge-fast';
+  setTimeout(() => {
+    document.getElementById('row-' + targetRow).className = 'row-block found';
+    document.getElementById('scan-stat').textContent = `Rows checked: 1 / ${totalRows} — jumped directly!`;
+    scanRunning = false;
+  }, 200);
+}
+
+function resetScan() {
+  clearInterval(seqInterval);
+  scanRunning = false;
+  renderRows();
+  document.getElementById('scan-stat').textContent = 'Rows checked: 0 / 30';
+}
+
+// ========= EXPLAIN ANALYZER =========
+function showExplainBefore() {
+  document.getElementById('ev-scan').textContent = 'Seq Scan';
+  document.getElementById('ev-scan').style.color = '#c0392b';
+  document.getElementById('ev-rows').textContent = '10,000';
+  document.getElementById('ev-time').textContent = '8.231 ms';
+  document.getElementById('ev-bar').style.width = '90%';
+  document.getElementById('ev-bar').style.background = '#c0392b';
+}
+function showExplainAfter() {
+  document.getElementById('ev-scan').textContent = 'Index Scan';
+  document.getElementById('ev-scan').style.color = '#1a472a';
+  document.getElementById('ev-rows').textContent = '1';
+  document.getElementById('ev-time').textContent = '0.081 ms';
+  document.getElementById('ev-bar').style.width = '2%';
+  document.getElementById('ev-bar').style.background = '#1a472a';
+}
+
+// ========= N+1 SIMULATOR =========
+function switchN1(btn, pane) {
+  document.querySelectorAll('.n1-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.n1-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(pane).classList.add('active');
+}
+
+let badTimer;
+function simulateBad() {
+  document.getElementById('bad-stream').innerHTML = '';
+  document.getElementById('bad-stat').innerHTML = 'Running queries...';
+  clearInterval(badTimer);
+  const queries = [
+    { type: 'main-query', sql: 'SELECT id, user_id, title FROM posts LIMIT 10', badge: '1st query', bc: '#1a472a' },
+    ...Array.from({length: 10}, (_, i) => ({
+      type: 'sub-query',
+      sql: `SELECT name FROM users WHERE id = ${[3,7,12,1,9,5,2,14,8,11][i]}`,
+      badge: `query ${i+2}`,
+      bc: '#c0392b'
+    }))
+  ];
+  let i = 0;
+  badTimer = setInterval(() => {
+    if (i >= queries.length) {
+      clearInterval(badTimer);
+      document.getElementById('bad-stat').innerHTML = '<strong>Total: 11 queries</strong> for 10 posts. At 1000 posts/sec traffic, this is 11,000 db queries/sec.';
+      return;
+    }
+    const q = queries[i];
+    const el = document.createElement('div');
+    el.className = `query-item ${q.type}`;
+    el.style.animationDelay = '0s';
+    el.innerHTML = `<span class="qi-num">${i+1}</span><span class="qi-sql">${q.sql}</span><span class="qi-badge" style="background:rgba(0,0,0,0.06); color:${q.bc}">${q.badge}</span>`;
+    const stream = document.getElementById('bad-stream');
+    stream.appendChild(el);
+    stream.scrollTop = stream.scrollHeight;
+    i++;
+  }, 300);
+}
+
+function resetBad() { clearInterval(badTimer); document.getElementById('bad-stream').innerHTML = ''; document.getElementById('bad-stat').textContent = 'Press simulate to see what happens'; }
+
+function simulateGood() {
+  document.getElementById('good-stream').innerHTML = '';
+  setTimeout(() => {
+    const el = document.createElement('div');
+    el.className = 'query-item main-query';
+    el.innerHTML = `<span class="qi-num">1</span><span class="qi-sql">SELECT p.id, p.title, u.name FROM posts p JOIN users u ON p.user_id = u.id LIMIT 10</span><span class="qi-badge" style="background:rgba(26,71,42,0.12); color:#1a472a;">1 query ✓</span>`;
+    document.getElementById('good-stream').appendChild(el);
+    document.getElementById('good-stat').innerHTML = '<strong>Total: 1 query.</strong> Same 10 posts with authors. The database does the joining — that\'s what it\'s optimized for.';
+  }, 200);
+}
+function resetGood() { document.getElementById('good-stream').innerHTML = ''; document.getElementById('good-stat').textContent = ''; }
+
+// ========= SELECT * DEMO =========
+function showSelectStar() {
+  document.querySelectorAll('.col-chip').forEach(c => {
+    if (c.textContent === 'id' || c.textContent === 'title') c.className = 'col-chip used';
+    else c.className = 'col-chip wasted';
+  });
+}
+function showSelectSpecific() {
+  document.querySelectorAll('.col-chip').forEach(c => {
+    if (c.textContent === 'id' || c.textContent === 'title') c.className = 'col-chip used';
+    else c.className = 'col-chip neutral';
+  });
+}
+
+// ========= COPY =========
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 2000);
+  });
+}
+
+// ========= QUIZ =========
+function checkQuiz(btn, correct, qid, msg) {
+  btn.closest('.quiz-card').querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById(qid);
+  fb.textContent = msg;
+  fb.className = 'quiz-feedback show ' + (correct ? 'good' : 'bad');
+}
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

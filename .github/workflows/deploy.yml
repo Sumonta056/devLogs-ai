@@ -33,7 +33,7 @@ jobs:
 
       - run: |
           mkdir _site
-          cp -r index.html robots.txt assets ai-update-weekly vue-nuxt-weekly-news java-spring-weekly-news _site/
+          cp -r index.html robots.txt assets $(node scripts/public-dirs.mjs) _site/
           find _site -name .gitkeep -delete
 
       - uses: actions/upload-pages-artifact@v3

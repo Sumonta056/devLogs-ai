@@ -1,5 +1,8 @@
 {
-  "name": "reports-site",
+  "name": "devlogs-ai-sumonta056",
   "private": true,
-  "scripts": { "build": "node scripts/build-index.mjs" }
+  "scripts": {
+    "build": "node scripts/build-index.mjs",
+    "test": "node --test scripts/lib.test.mjs"
+  }
 }

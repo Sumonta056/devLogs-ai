@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comment Analysis — Code & Career Golpo</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f8f7f4;--card:#fff;--border:#e5e3dc;--text:#1a1a18;--muted:#6b6a64;
+    --teal:#1D9E75;--tealb:#E1F5EE;--tealt:#085041;
+    --blue:#185FA5;--blueb:#E6F1FB;--bluet:#042C53;
+    --amber:#854F0B;--amberb:#FAEEDA;--ambert:#412402;
+    --purple:#534AB7;--purpleb:#EEEDFE;--purplet:#26215C;
+    --coral:#993C1D;--coralb:#FAECE7;--coralt:#4A1B0C;
+    --green:#3B6D11;--greenb:#EAF3DE;--greent:#173404;
+    --red:#A32D2D;--redb:#FCEBEB;--redt:#501313;
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+  
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+  .nav-logo{font-weight:600;font-size:13px;color:var(--teal);padding:12px 12px 12px 0;border-right:1px solid var(--border);margin-right:8px;flex-shrink:0}
+  .nav a{display:inline-block;padding:12px 10px;font-size:12px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:.15s;flex-shrink:0}
+  .nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--teal)}
+
+  /* LAYOUT */
+  .page{display:none;max-width:960px;margin:0 auto;padding:24px 20px}
+  .page.active{display:block}
+
+  /* HERO */
+  .hero{background:var(--tealb);border:1px solid #9FE1CB;border-radius:12px;padding:20px 24px;margin-bottom:24px}
+  .hero h1{font-size:20px;font-weight:600;color:var(--tealt);margin-bottom:4px}
+  .hero p{font-size:13px;color:var(--teal)}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .stat .lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .stat .val{font-size:22px;font-weight:600;color:var(--text)}
+  .stat .sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+  /* SECTION */
+  .section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  
+  /* TOPIC BLOCKS */
+  .topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  .topic-card{border-radius:10px;padding:14px 16px;border:1px solid transparent}
+  .topic-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
+  .topic-card p{font-size:12px;line-height:1.5}
+  .topic-card .count{font-size:18px;font-weight:700;margin-bottom:6px}
+
+  /* TABLE */
+  .tbl-wrap{overflow-x:auto;margin-bottom:20px}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--border)}
+  td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafaf8}
+  .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+  .b-teal{background:var(--tealb);color:var(--tealt)}
+  .b-blue{background:var(--blueb);color:var(--bluet)}
+  .b-amber{background:var(--amberb);color:var(--amber)}
+  .b-purple{background:var(--purpleb);color:var(--purplet)}
+  .b-coral{background:var(--coralb);color:var(--coral)}
+  .b-green{background:var(--greenb);color:var(--green)}
+  .b-red{background:var(--redb);color:var(--red)}
+
+  /* COMMENT CARDS */
+  .comment-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+  .comment-meta{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+  .comment-author{font-size:12px;font-weight:600;color:var(--teal)}
+  .comment-text{font-size:13px;line-height:1.6;color:var(--text)}
+  .reply-card{background:var(--bg);border-left:3px solid var(--teal);padding:10px 14px;margin:8px 0 0 16px;border-radius:0 8px 8px 0}
+  .reply-author{font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px}
+  .reply-text{font-size:12px;line-height:1.5;color:var(--muted)}
+
+  /* VIDEO PLAN CARDS */
+  .video-plan-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .vp-header{padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+  .vp-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+  .vp-title-block{flex:1}
+  .vp-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:4px}
+  .vp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:2px}
+  .vp-body{padding:0 20px 16px}
+  .vp-section{margin-bottom:12px}
+  .vp-section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px}
+  .vp-section-content{font-size:12px;line-height:1.6;color:var(--text)}
+  .vp-desc{background:var(--bg);border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.7;color:var(--muted)}
+  .vp-points{list-style:none;padding:0}
+  .vp-points li{padding:3px 0 3px 16px;position:relative;font-size:12px;line-height:1.5}
+  .vp-points li::before{content:"→";position:absolute;left:0;color:var(--teal);font-size:11px;top:4px}
+
+  /* ULTIMATE PLAN */
+  .plan-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .plan-row:last-child{border-bottom:none}
+  .plan-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .plan-info{flex:1}
+  .plan-title{font-size:13px;font-weight:500;line-height:1.4}
+  .plan-meta{font-size:11px;color:var(--muted);margin-top:2px}
+  .priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .p-high{background:#E24B4A}
+  .p-med{background:#EF9F27}
+  .p-low{background:#1D9E75}
+
+  /* INSIGHT BOX */
+  .insight{border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;gap:12px}
+  .insight-icon{font-size:18px;flex-shrink:0}
+  .insight-text{font-size:13px;line-height:1.6}
+  .insight-text strong{display:block;margin-bottom:2px}
+
+  @media(max-width:600px){
+    .stats-row{grid-template-columns:1fr 1fr}
+    .topic-grid{grid-template-columns:1fr}
+    .vp-header{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-logo">Code & Career Golpo</div>
+  <a href="#" class="active" onclick="show('overview',this)">📊 Overview</a>
+  <a href="#" onclick="show('comments',this)">💬 Raw Comments</a>
+  <a href="#" onclick="show('analysis',this)">🔍 Analysis</a>
+  <a href="#" onclick="show('videos',this)">🎬 Video Ideas</a>
+  <a href="#" onclick="show('plan',this)">🗓️ Ultimate Plan</a>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div id="page-overview" class="page active">
+  <div class="hero">
+    <h1>Comment Analysis: "A Day in the Life of a Bangladeshi Software Engineer"</h1>
+    <p>Video ID: oqSgYUIeQeE · 163 total comments · scraped April 2026</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="lbl">Total Comments</div><div class="val">163</div><div class="sub">incl. replies</div></div>
+    <div class="stat"><div class="lbl">Your Replies</div><div class="val">60+</div><div class="sub">excellent engagement rate</div></div>
+    <div class="stat"><div class="lbl">Top Topic</div><div class="val">Career</div><div class="sub">job/internship questions</div></div>
+    <div class="stat"><div class="lbl">Sentiment</div><div class="val">85%</div><div class="sub">positive / supportive</div></div>
+  </div>
+
+  <div class="section-title">Comment topics breakdown</div>
+  <div class="topic-grid">
+    <div class="topic-card" style="background:var(--tealb);border-color:#9FE1CB">
+      <div class="count" style="color:var(--tealt)">42</div>
+      <h4 style="color:var(--tealt)">Job & Internship Advice</h4>
+      <p style="color:var(--teal)">How to get hired, what skills matter, internship process at Cefalo, fresher tips</p>
+    </div>
+    <div class="topic-card" style="background:var(--blueb);border-color:#85B7EB">
+      <div class="count" style="color:var(--bluet)">28</div>
+      <h4 style="color:var(--bluet)">AI & Future of SE</h4>
+      <p style="color:var(--blue)">Is SE dying? AI impact on junior devs, vibe coding, which stack to learn</p>
+    </div>
+    <div class="topic-card" style="background:var(--amberb);border-color:#FAC775">
+      <div class="count" style="color:var(--ambert)">24</div>
+      <h4 style="color:var(--ambert)">University & Education</h4>
+      <p style="color:var(--amber)">SUST vs BRAC, CSE vs non-CSE, CGPA importance, which university</p>
+    </div>
+    <div class="topic-card" style="background:var(--purpleb);border-color:#AFA9EC">
+      <div class="count" style="color:var(--purplet)">18</div>
+      <h4 style="color:var(--purplet)">Tech Stack Questions</h4>
+      <p style="color:var(--purple)">Java vs JS, .NET demand, MERN vs Python AI, what language to start</p>
+    </div>
+    <div class="topic-card" style="background:var(--coralb);border-color:#F0997B">
+      <div class="count" style="color:var(--coralt)">16</div>
+      <h4 style="color:var(--coralt)">Work Culture & Salary</h4>
+      <p style="color:var(--coral)">Office hours, flexibility, salary range, work-life balance at Cefalo</p>
+    </div>
+    <div class="topic-card" style="background:var(--greenb);border-color:#C0DD97">
+      <div class="count" style="color:var(--greent)">35</div>
+      <h4 style="color:var(--greent)">General Appreciation + Location</h4>
+      <p style="color:var(--green)">Narayanganj connection, commute curiosity, praise & encouragement</p>
+    </div>
+  </div>
+
+  <div class="section-title">Key insights from comments</div>
+  <div class="insight" style="background:var(--tealb)">
+    <div class="insight-icon">🔥</div>
+    <div class="insight-text" style="color:var(--tealt)"><strong>Non-CSE audience is massive & underserved</strong>The most upvoted thread is from a non-CSE person asking for a full guideline video. Your reply promised one — this is your next viral video waiting to happen.</div>
+  </div>
+  <div class="insight" style="background:var(--blueb)">
+    <div class="insight-icon">🤖</div>
+    <div class="insight-text" style="color:var(--bluet)"><strong>AI fear is real among your audience</strong>Multiple commenters genuinely scared about "CSE era ending" and AI replacing jobs. Your long reply in comments is your best content — make it a video.</div>
+  </div>
+  <div class="insight" style="background:var(--amberb)">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text" style="color:var(--ambert)"><strong>Audience wants your Notion template</strong>At least 3 people asked for the Notion template you used in the video. A free resource like this could 10x your email list / newsletter signups.</div>
+  </div>
+  <div class="insight" style="background:var(--purpleb)">
+    <div class="insight-icon">🏫</div>
+    <div class="insight-text" style="color:var(--purplet)"><strong>University choice paralysis is common</strong>Several students stuck between SUST vs private uni, Southeast vs Green. A dedicated university comparison video would rank well in search.</div>
+  </div>
+  <div class="insight" style="background:var(--coralb)">
+    <div class="insight-icon">📍</div>
+    <div class="insight-text" style="color:var(--coralt)"><strong>Narayanganj commute is a conversation starter</strong>The commute story got 8 likes on a single comment — highest in the thread. Your commute story is relatable content. Make a full "commute life" video.</div>
+  </div>
+</div>
+
+<!-- ===== RAW COMMENTS ===== -->
+<div id="page-comments" class="page">
+  <div class="hero">
+    <h1>Raw Comments with Replies</h1>
+    <p>Organized by topic · All significant comments + your replies included</p>
+  </div>
+
+  <div class="section-title">Career & Internship Questions</div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@Harry_Potter-o5e</span><span class="badge b-teal">Career</span><span class="badge b-amber">1 yr to grad</span></div>
+    <div class="comment-text">Bhai if someone has around 1 year left before graduating, what should they focus on to get a job like yours? I am solving problems on Codeforces (from 2nd semester), should I do leetcode? Besides problem solving, what else would you suggest?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Keep doing problem solving in a structured way. Ask clarifying questions, discuss requirements. Find brute force first, then optimize. Also learn to use AI tools like Claude structurally to build features faster. Deploy and publish your projects — end-to-end management matters more than just building.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@HamimHaq-v4t</span><span class="badge b-teal">Career</span></div>
+    <div class="comment-text">আপনার কম্পানিতে জুনিয়র সফটওয়্যার ইঞ্জিনিয়ার জব বা ইন্টার্ন পেতে কি লাগে? বলে ভালো হয়।</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">The most important skills Cefalo looks for in freshers are problem-solving and communication. Once hired, they will train you on the specific tech stack required by the client. I have a blog post about Cefalo's hiring process — feel free to inbox me!</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@IamDshizar</span><span class="badge b-teal">Internship</span></div>
+    <div class="comment-text">Vai is there any intern opportunity, please help 😓</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">I already have a video in my channel about how to get internship opportunities. If you still need clarification, ask me on LinkedIn or WhatsApp anytime.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@nilipu3762</span><span class="badge b-teal">Internship</span></div>
+    <div class="comment-text">Cefalo তে ইন্টার্ন বা জুনিয়র সফটওয়্যার ইঞ্জিনিয়ার হিসেবে জব পেতে কোন স্কিল গুলো থাকা প্রয়োজন? ইন্টারভিউ প্রসেসটা কি? কিভাবে কি করলে Cefalo এর মতো কম্পানিতে ঢুকতে পারবো?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Problem solving + communication are the most important. Thanks for the suggestion, I'll keep that in mind for future content.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@sarowar023</span><span class="badge b-teal">Fresh Graduate</span><span style="font-size:11px;color:var(--muted)">3 replies</span></div>
+    <div class="comment-text">brother need guide for fresh graduate</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">I would love to share thoughts. Feel free to ask questions here. I will reply all of your questions.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@Moon713Stone</span><span class="badge b-teal">Career</span><span class="badge b-amber">Final Year</span></div>
+    <div class="comment-text">ভাই বর্তমানের এই কঠিন সময়ে কি শিখবো! ভার্সিটির শেষ বর্ষে আছি। যারা খুবই ভালো তাদের তো চাকরি হবেই। কিন্তু আমাদের মত এভারেজ প্রোফাইলদের জন্য কি করা উচিত?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">If you think you are average, make yourself the best. Master one tech stack. Build a real-life project that matters. Just get into a company first, no matter the salary. Get one year of industry experience, then decide where to go.</div></div>
+  </div>
+
+  <div class="section-title">AI & Future of Software Engineering</div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@thebat4242</span><span class="badge b-blue">AI Fear</span><span style="font-size:11px;color:var(--muted)">👍 3</span></div>
+    <div class="comment-text">Vaiya is doing Software engineering course in 2026 still worth it?? Will AI tools become a danger for new software engineers? Whats your pov?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Software engineering will always be worth it but survival will be tougher. AI is currently a danger only for junior engineers because clients prefer to give their AI tools to seniors. But in 3–4 years, companies will realise they need juniors again — there won't be future seniors if no juniors are trained now.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@asikulislamsiyam8601</span><span class="badge b-blue">AI + CSE Future</span><span style="font-size:11px;color:var(--muted)">👍 2</span></div>
+    <div class="comment-text">Bro everyone said that cse era is end. There will be no vacancy for cse job in market... what do you think about this? I have learned nothing in 1.5 years except basic code/DSA to pass the exam...</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">The Computer Science era isn't ending, but we're in a slowdown. Entry-level roles are shifting. Most clients are hesitant to hire juniors right now — but this is temporary. Companies still hiring! Focus on getting better, not on market panic.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@toasinnibir8850</span><span class="badge b-blue">AI at Work</span><span style="font-size:11px;color:var(--muted)">👍 2</span></div>
+    <div class="comment-text">Do you use any AI models or agent for your project? Could you share the approximate percentage of AI usage for code generation?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">I use AI but only sometimes for code generation. Coding is only 10% of the job — the other 90% is communicating with stakeholders, planning, investigating. For coding specifically, I'd say 40–50% AI-assisted. But my main job is end-to-end task ownership, not just writing code.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@noitrealian9960</span><span class="badge b-blue">Vibe Coding</span><span style="font-size:11px;color:var(--muted)">👍 3</span></div>
+    <div class="comment-text">did i just witness a vibe coder? oh my eyes 😭</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Yes, just a desi vibe coder having a chill day! People like you should at least try to get a little knowledge about vibe coding and using AI to plan and investigate things.</div></div>
+  </div>
+
+  <div class="section-title">University & Education</div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@md.atikullah6076</span><span class="badge b-amber">University Choice</span><span style="font-size:11px;color:var(--muted)">👍 3</span></div>
+    <div class="comment-text">Vai sust software engineer naki brac CSE which is best for my career?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">SUST gives mandatory internship, great networking with seniors at good companies, but has session jam and fewer teachers. BRAC CSE is top-ranked private university. Both are among Bangladesh's best. The only real difference is the financial requirement for private university.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@Mehedi-WP</span><span class="badge b-amber">Non-CSE</span><span style="font-size:11px;color:var(--muted)">👍 4 · 7 replies</span></div>
+    <div class="comment-text">Bro are you CSE holder? Plz guidelines for non CSE... I'm a non-CSE aspiring SWE with Python. How can I land a job locally or remotely? BD system too strict — 90% recruiters want CSE. Make a full guidelines & motivational video!</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Yes, I graduated from Software Engineering, SUST. I will make a guidance video for Non-CSE holders soon! Feel free to ask questions here.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@abdullahistiyak2655</span><span class="badge b-amber">CGPA</span></div>
+    <div class="comment-text">Job er jono ki CGPA matter kore?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">CGPA doesn't matter that much. A good CGPA leaves a good impression, but some companies actually hesitate to hire top scorers — they assume the person won't stay long. Skills is the first priority!</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@ruhinsamdanee5204</span><span class="badge b-amber">University Life</span><span style="font-size:11px;color:var(--muted)">👍 2</span></div>
+    <div class="comment-text">Bhai apni university life ae thakte ki korsilen jeta apnake software engineering track ae ashte help korse? CP ba any development ba onno kisu?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Best thing I did: hackathons, coding competitions, project showcasing and idea competitions in 3rd and 4th year. I was NOT good at CP but I was good at problem-solving — there's a huge difference. I love building projects, and that changed my track.</div></div>
+  </div>
+
+  <div class="section-title">Tech Stack & Skill Questions</div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@atking7678</span><span class="badge b-purple">Stack Choice</span></div>
+    <div class="comment-text">I'm confused. I know React, Next.js, Node, Express, NestJS, MongoDB, PostgreSQL, Mongoose, Prisma. For companies like KAZ, Cefalo, Enosis, Brain Station 23... Should I go: (1) .NET + DSA or (2) deepen MERN + Python + AI/LLM engineering?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Don't be an all-rounder. You cannot master .NET + MERN + Python + LLM. That is the most destructive thing you can do to yourself. Pick ONE path: MERN, .NET, or Python/AI. Go all-in on it. You already know MERN — try to get a job first with that, get industry experience, then consider switching stacks.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@TanjimBhuyian51</span><span class="badge b-purple">Beginner Stack</span><span style="font-size:11px;color:var(--muted)">👍 2</span></div>
+    <div class="comment-text">ভাইয়া আপনি কোন coding language use করেন? আর beginner দের জন্য কোন coding language শেখা উচিত? আমি HSC 27 এর student। Python শেখার try করছি। Software engineer হতে হলে কি কি করতে হয় সেইটা নিয়ে একটা guideline ভিডিও তৈরি করলে উপকৃত হতাম।</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">My current stack: Java + Spring Boot (backend), Vue + Nuxt (frontend). As a beginner, master the basics and fundamentals. The stack doesn't matter much — as an SE you will work on different stacks based on project demands. I will make a guideline video soon!</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@MahediHasanEmon-f3f</span><span class="badge b-purple">CP / CF Rating</span></div>
+    <div class="comment-text">Cefalo তে ঢুকতে CF rating কি রকম হতে হয়? 1300+ enough or specialist (1400+) or expert (1600+)?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">They don't judge you directly on CF rating. You can have a lower rating but be a very good problem solver — that's what matters most. There is no specific range; the target is problem-solving ability, not the rating itself.</div></div>
+  </div>
+
+  <div class="section-title">Work Culture, Salary & Office Life</div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@nahidhossain7580</span><span class="badge b-coral">Reality Check</span><span style="font-size:11px;color:var(--muted)">👍 5</span></div>
+    <div class="comment-text">I wish all days in office be chill like this. Most days are stressful. I have seen few days like this in every year.</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">I agree. All days are not chill; most are stressful. I just showed you a small part. But in Cefalo we at least have flexibility. Dream life == stressful life. 😅</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@strangerman3099</span><span class="badge b-coral">Work Hours</span></div>
+    <div class="comment-text">daily office hour kotokkhon vaiya? daily tasks complete kore leave nite hoy?</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Daily office hours are 8–9 hours with flexibility. When given a task, you provide an estimate (2–3 days). It's not that you can only leave when the task is complete — but there can be emergency deadlines. Most of the time you have flexibility and freedom.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@musicplanet9771</span><span class="badge b-coral">Salary</span><span style="font-size:11px;color:var(--muted)">👍 2</span></div>
+    <div class="comment-text">share your position and salary range idea please</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Position: Associate Software Engineer. Salary: A healthy and good amount as just a fresh graduate.</div></div>
+  </div>
+
+  <div class="comment-card">
+    <div class="comment-meta"><span class="comment-author">@allthingscoding0</span><span class="badge b-coral">Commute</span><span style="font-size:11px;color:var(--muted)">👍 8 ⭐ Highest liked</span></div>
+    <div class="comment-text">Gotta give props to this guy for coming to work from outside Dhaka.</div>
+    <div class="reply-card"><div class="reply-author">@codecareergolpo5638 replied:</div><div class="reply-text">Thank you! It actually takes a little less time than commuting from some places inside Dhaka, but still almost 3 hours of journey daily. Here's my blog on it: [commute cost-cutting article on Medium]</div></div>
+  </div>
+</div>
+
+<!-- ===== ANALYSIS ===== -->
+<div id="page-analysis" class="page">
+  <div class="hero">
+    <h1>Trend Analysis & What Your Audience Wants</h1>
+    <p>Based on 163 comments from the Day in the Life video</p>
+  </div>
+
+  <div class="section-title">Most common questions (with frequency)</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Question</th><th>Frequency</th><th>Category</th><th>Urgency</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>How do I get a job/internship at companies like Cefalo as a fresher?</td><td>12+ comments</td><td><span class="badge b-teal">Career</span></td><td><span class="badge b-red">Very High</span></td></tr>
+        <tr><td>2</td><td>Is software engineering still worth it in 2026 with AI?</td><td>8+ comments</td><td><span class="badge b-blue">AI Fear</span></td><td><span class="badge b-red">Very High</span></td></tr>
+        <tr><td>3</td><td>Guide for non-CSE people trying to get into software engineering</td><td>7+ comments</td><td><span class="badge b-amber">Non-CSE</span></td><td><span class="badge b-red">Very High</span></td></tr>
+        <tr><td>4</td><td>SUST vs BRAC / private vs public university for CSE/SE</td><td>6+ comments</td><td><span class="badge b-amber">University</span></td><td><span class="badge b-amber">High</span></td></tr>
+        <tr><td>5</td><td>What tech stack should I learn to get a job at top BD companies?</td><td>6+ comments</td><td><span class="badge b-purple">Stack</span></td><td><span class="badge b-amber">High</span></td></tr>
+        <tr><td>6</td><td>Which programming language to start as a complete beginner?</td><td>5+ comments</td><td><span class="badge b-purple">Beginner</span></td><td><span class="badge b-amber">High</span></td></tr>
+        <tr><td>7</td><td>Does CGPA matter for software jobs in Bangladesh?</td><td>4+ comments</td><td><span class="badge b-amber">University</span></td><td><span class="badge b-amber">High</span></td></tr>
+        <tr><td>8</td><td>What exactly do you do daily as an ASE? What is your real role?</td><td>4+ comments</td><td><span class="badge b-coral">Work Life</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>9</td><td>How much do you use AI in your actual coding job?</td><td>3+ comments</td><td><span class="badge b-blue">AI at Work</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>10</td><td>Can you share your Notion template?</td><td>3 comments</td><td><span class="badge b-teal">Resource</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>11</td><td>What did you do in university that helped you get this job?</td><td>3+ comments</td><td><span class="badge b-amber">University</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>12</td><td>Is web dev still worth learning in 2026?</td><td>3 comments</td><td><span class="badge b-purple">Stack</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>13</td><td>CF rating requirement for Cefalo?</td><td>2 comments</td><td><span class="badge b-teal">Career</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>14</td><td>What is the salary / position at Cefalo for freshers?</td><td>3 comments</td><td><span class="badge b-coral">Salary</span></td><td><span class="badge b-green">Medium</span></td></tr>
+        <tr><td>15</td><td>Videos about Bangladesh IT company culture</td><td>2 comments</td><td><span class="badge b-coral">Work Life</span></td><td><span class="badge b-green">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Feedback & suggestions from viewers</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Feedback Type</th><th>Comment</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-green">Positive</span></td><td>Video is inspiring, keeps it real, honest about stress</td><td>Continue authentic storytelling approach</td></tr>
+        <tr><td><span class="badge b-green">Positive</span></td><td>Commute from Narayanganj is admirable (8 likes — highest comment)</td><td>Make a dedicated commute story video</td></tr>
+        <tr><td><span class="badge b-amber">Suggestion</span></td><td>Make a full guide for non-CSE people (most upvoted request)</td><td>✅ Priority video #1</td></tr>
+        <tr><td><span class="badge b-amber">Suggestion</span></td><td>Make a guidelines video for HSC/beginner students</td><td>✅ Priority video</td></tr>
+        <tr><td><span class="badge b-amber">Suggestion</span></td><td>More videos about Bangladesh IT companies</td><td>Monthly "Inside BD Tech" series</td></tr>
+        <tr><td><span class="badge b-amber">Suggestion</span></td><td>Share Notion template publicly</td><td>Create free resource / lead magnet</td></tr>
+        <tr><td><span class="badge b-red">Criticism</span></td><td>Timestamps showed AM/PM errors (minor)</td><td>Double-check timestamps before publish</td></tr>
+        <tr><td><span class="badge b-red">Criticism</span></td><td>"Vibe coder" jab — audience questioning AI-assisted coding</td><td>Make a dedicated "I use AI at work — here's how" video</td></tr>
+        <tr><td><span class="badge b-blue">Request</span></td><td>Video on what skills are needed to get job like yours</td><td>✅ Priority video</td></tr>
+        <tr><td><span class="badge b-blue">Request</span></td><td>Real salary discussion for BD SE freshers</td><td>Salary expectations video (anonymised)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">What your audience demographic looks like</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Segment</th><th>Profile</th><th>Size</th><th>What They Want</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-teal">Core</span></td><td>CSE/SE students in BD universities (2nd–4th year)</td><td>~40%</td><td>Career roadmap, internship tips, what to build</td></tr>
+        <tr><td><span class="badge b-blue">Growth</span></td><td>Non-CSE people trying to break into tech</td><td>~20%</td><td>Is it possible for me? Where to start?</td></tr>
+        <tr><td><span class="badge b-amber">Core</span></td><td>HSC graduates / freshers just starting CS</td><td>~20%</td><td>Which university, which language, what roadmap</td></tr>
+        <tr><td><span class="badge b-purple">Engaged</span></td><td>Junior devs already in BD tech industry</td><td>~15%</td><td>AI impact, career growth, salary benchmarks</td></tr>
+        <tr><td><span class="badge b-coral">Niche</span></td><td>People from Narayanganj / SUST alumni</td><td>~5%</td><td>Local connection, relatable commute stories</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== VIDEO IDEAS ===== -->
+<div id="page-videos" class="page">
+  <div class="hero">
+    <h1>Video Ideas — Directly from Your Comments</h1>
+    <p>Every video below is backed by real audience demand from this comment section</p>
+  </div>
+
+  <!-- VIDEO 1 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--tealb);color:var(--tealt)">01</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-red">🔥 Most Requested</span><span class="badge b-teal">Career</span><span class="badge b-amber">Bangla</span></div>
+        <div class="vp-title">Non-CSE হয়েও Software Engineer? | বাংলাদেশে কিভাবে Tech Job পাওয়া যায় | Real Roadmap 2026</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">Why this will perform</div>
+        <div class="vp-section-content">The non-CSE comment got 4 likes + 7 replies — highest engagement ratio in the whole video. You promised this video in your reply. Massive underserved audience: EEE, BBA, Physics graduates all trying to switch to tech.</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover in the video</div>
+        <ul class="vp-points">
+          <li>Your honest take: can non-CSE people actually get SE jobs in Bangladesh? (answer: yes, but here's what you need)</li>
+          <li>The 3 things that matter more than your degree: problem solving, portfolio, communication</li>
+          <li>Which paths work: frontend dev, QA, data analyst, DevOps — entry points for non-CSE</li>
+          <li>How to build a portfolio when you have no CS background</li>
+          <li>Real example: a BBA grad who learned Python and got a tech job — interview someone or share a story</li>
+          <li>How to handle the "CSE required" filter on job postings — practical workarounds</li>
+          <li>Resources: free courses, communities, where to learn</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description (copy-paste ready)</div>
+        <div class="vp-desc">বাংলাদেশে কি Non-CSE হয়েও Software Engineer হওয়া সম্ভব? অনেকেই মনে করেন CSE ছাড়া IT Job পাওয়া অসম্ভব — কিন্তু সত্যিটা সম্পূর্ণ আলাদা। এই ভিডিওতে আমি explain করব কিভাবে একজন non-CSE background থেকে আসা মানুষ 2026 সালে Bangladesh এর top IT companies তে job crack করতে পারে। Real roadmap, real examples, and no sugarcoating.<br><br>📌 Topics: Non-CSE to Software Engineer path | Portfolio for career switchers | How to bypass the "CSE required" filter | Which tech stacks to pick<br><br>#NonCSE #SoftwareEngineer #BangladeshTech #CodeAndCareerGolpo</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Format & length</div>
+        <div class="vp-section-content">12–15 min · Bangla with English subtitles · Personal story + structured roadmap · End with free resource (checklist)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 2 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--blueb);color:var(--bluet)">02</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-red">🔥 High Demand</span><span class="badge b-blue">AI</span><span class="badge b-teal">Bangla+English</span></div>
+        <div class="vp-title">AI কি সত্যিই Software Engineer দের Job নষ্ট করছে? | Honest Answer from a BD SE | 2026 Reality</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">Why this will perform</div>
+        <div class="vp-section-content">8+ comments directly asked this question. You already wrote a perfect answer in the comments — just expand it into a video. "Is CSE dead" is a top-searched query right now in Bangladesh.</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>The honest truth: AI IS making it harder for junior devs — but why this is temporary</li>
+          <li>What AI actually replaces vs what it can't: coding is 10% of an SE job</li>
+          <li>The 90% AI can't replace: stakeholder communication, planning, investigation, team dynamics</li>
+          <li>How YOU use AI at work (real demo — Claude, GitHub Copilot, etc.)</li>
+          <li>Why companies will need juniors again in 3–5 years (the senior shortage problem)</li>
+          <li>What junior devs should do right now to stay relevant</li>
+          <li>Your verdict: worth studying SE in 2026? Yes — but here's what changes</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">2026 সালে AI কি আমাদের Software Engineering career শেষ করে দেবে? এই প্রশ্নটা এখন লাখো CSE student এর মনে। একজন Bangladeshi Software Engineer হিসেবে আমি আজকে honestly বলব — AI exactly কোথায় আমাদের replace করছে, কোথায় পারছে না, আর একজন junior dev হিসেবে এখন আমাদের কি করা উচিত।<br><br>📌 Topics: AI vs Software Engineers | How I use AI at work | Why juniors are still needed | Career advice for 2026<br><br>#AIvsEngineers #SoftwareEngineer2026 #BangladeshTech #CodeCareerGolpo</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Format & length</div>
+        <div class="vp-section-content">10–12 min · Mix of Bangla and English · Opinion piece with data points · Show actual AI tools you use at work</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 3 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--amberb);color:var(--ambert)">03</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-amber">University</span><span class="badge b-amber">Bangla</span><span class="badge b-green">Evergreen</span></div>
+        <div class="vp-title">SUST vs BRAC vs Private University — Software Engineering এ কোনটা Best? | Honest Comparison 2026</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>Tuition fees, scholarship options, cost comparison</li>
+          <li>Networking & alumni connections — how much does it matter?</li>
+          <li>Mandatory internship at SUST vs private placement programs</li>
+          <li>Session jam at public universities — realistic graduation timelines</li>
+          <li>Teaching quality, lab facilities, club activities</li>
+          <li>Real talk: do companies ask where you graduated from?</li>
+          <li>Your personal recommendation based on different student profiles</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">SUST, BRAC, DIU, NSU, Southeast — Bangladesh এ Software Engineering পড়তে গেলে কোন university choose করবেন? এই ভিডিওতে আমি একজন SUST SE graduate হিসেবে honest comparison করব — fees, networking, internship opportunities, teaching quality, আর career outcome সব দিক দিয়ে। HSC শেষে যারা admission নিতে যাচ্ছ তাদের জন্য এই ভিডিও must watch.<br><br>#BangladeshUniversity #SUST #BRAC #CSEAdmission #CodeCareerGolpo</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Format & length</div>
+        <div class="vp-section-content">12 min · Bangla · Comparison table visual in video · Guest: 1 BRAC/private university grad for balance</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 4 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--purpleb);color:var(--purplet)">04</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-purple">Fresher Guide</span><span class="badge b-teal">Career</span><span class="badge b-green">Evergreen</span></div>
+        <div class="vp-title">Cefalo তে Job পাওয়ার Real Process | Skills, Interview, CV — সব কিছু A to Z | BD Software Company Guide</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>The full Cefalo hiring process — application to offer letter</li>
+          <li>What skills they actually test (problem solving > CP rating)</li>
+          <li>What to put in your CV for a company like Cefalo</li>
+          <li>Interview experience: what questions were asked?</li>
+          <li>How to prepare in 3 months if you're a final-year student</li>
+          <li>Internship vs direct hire: which is easier?</li>
+          <li>Salary expectation for freshers at top BD companies</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">Cefalo, KAZ Software, Brain Station 23, Enosis — Bangladesh এর top IT companies তে কিভাবে job পাওয়া যায়? একজন Cefalo Associate Software Engineer হিসেবে আমি আজকে পুরো process টা explain করব — CV থেকে শুরু করে offer letter পাওয়া পর্যন্ত। যারা fresher এবং top BD company তে ঢুকতে চাও তাদের জন্য এই ভিডিও।<br><br>#Cefalo #BDITJob #SoftwareEngineerBD #FresherGuide #CodeCareerGolpo</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Format & length</div>
+        <div class="vp-section-content">15 min · Bangla · Screen recording of CV review + interview tips · Very searchable title</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 5 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--coralb);color:var(--coralt)">05</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-coral">Stack Guide</span><span class="badge b-purple">Beginner</span><span class="badge b-amber">Bangla</span></div>
+        <div class="vp-title">2026 সালে কোন Tech Stack শিখবো? | Java vs JavaScript vs Python | BD Job Market Reality</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>What stacks are actually in demand at BD IT companies (data from job listings)</li>
+          <li>Java + Spring Boot — why it dominates enterprise/client projects</li>
+          <li>JavaScript (MERN/Next.js) — still the fastest way to get a first job</li>
+          <li>Python — when to choose it (data science, AI/LLM path)</li>
+          <li>.NET — demand in Bangladesh, pros and cons</li>
+          <li>The golden rule: stack doesn't matter as much as fundamentals</li>
+          <li>Your honest recommendation based on different goals</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">Java নাকি JavaScript? Python নাকি .NET? 2026 সালে Bangladesh এর job market এ কোন programming language এবং tech stack শেখা সবচেয়ে smart decision? একজন working Software Engineer হিসেবে আমি honest answer দেব — market data দিয়ে, personal experience দিয়ে।<br><br>#TechStack2026 #JavaVsJavaScript #BangladeshDev #LearnProgramming #CodeCareerGolpo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 6 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--greenb);color:var(--greent)">06</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-green">Story</span><span class="badge b-coral">Commute</span><span class="badge b-teal">Relatable</span></div>
+        <div class="vp-title">Narayanganj থেকে Dhaka Office — প্রতিদিন 3 ঘণ্টার Journey of a Software Engineer | Commute Life Vlog</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">Why this will perform</div>
+        <div class="vp-section-content">The single highest-liked comment (8 likes) was about your commute. Multiple people from Narayanganj commented. This is a relatable story for millions of Bangladeshis commuting to Dhaka for work. Great thumbnail potential.</div>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>A real morning vlog: 6am wake up to reaching office</li>
+          <li>Cost breakdown: how you cut commute cost by 56% (your Medium article)</li>
+          <li>What you do during the commute: learning, podcasts, planning</li>
+          <li>Why you choose to stay in Narayanganj (family, cost of living)</li>
+          <li>Honest pros and cons of commuting vs renting in Dhaka</li>
+          <li>Tips for others who commute long distances to Dhaka</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">প্রতিদিন Narayanganj থেকে Dhaka তে office করা — এটা কেমন লাগে? একজন Software Engineer হিসেবে আমি প্রতিদিন প্রায় 3 ঘণ্টা commute করি। এই ভিডিওতে দেখাবো আমার real morning routine, commute cost কিভাবে 56% কমালাম, আর কেন Dhaka তে shift না করে Narayanganj এই থাকি।<br><br>#CommuteLife #NarayanganjToDhaka #SoftwareEngineerLife #BangladeshTech</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 7 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--tealb);color:var(--tealt)">07</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-teal">University Life</span><span class="badge b-amber">Story</span></div>
+        <div class="vp-title">University তে যা করেছিলাম সেটাই আমাকে Cefalo তে নিয়ে গেছে | SUST SE Journey + Hackathons + Job</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>Your actual SUST university journey — 1st year to graduation</li>
+          <li>Why you chose hackathons over CP (and why that worked)</li>
+          <li>6–7 hackathons: which ones, what you won, what you learned</li>
+          <li>Project showcasing competitions — how they changed your mindset</li>
+          <li>What 3rd and 4th year students should focus on vs 1st and 2nd</li>
+          <li>The internship story — how you got the Cefalo internship</li>
+          <li>Advice for current SUST students and university students in general</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">CP না করেও কিভাবে top Software company তে job পেলাম? আমার SUST Software Engineering journey তে hackathon, project showcase, open source — এগুলো আমার career কে কিভাবে shape করেছে সেটা নিয়ে আজকে honest গল্প বলব। University students দের জন্য এটা একটা real roadmap।<br><br>#SUSTLife #UniversityToJob #HackathonBD #SoftwareEngineerJourney #CodeCareerGolpo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 8 -->
+  <div class="video-plan-card">
+    <div class="vp-header">
+      <div class="vp-num" style="background:var(--blueb);color:var(--bluet)">08</div>
+      <div class="vp-title-block">
+        <div class="vp-tags"><span class="badge b-blue">AI at Work</span><span class="badge b-purple">Demo</span></div>
+        <div class="vp-title">আমি Office এ AI কিভাবে Use করি? | Real Workflow of a Software Engineer | Claude + Copilot at Work</div>
+      </div>
+    </div>
+    <div class="vp-body">
+      <div class="vp-section">
+        <div class="vp-section-label">What to cover</div>
+        <ul class="vp-points">
+          <li>A real screen recording of your daily AI usage at work</li>
+          <li>Claude for code review, investigation, planning tasks</li>
+          <li>GitHub Copilot for autocomplete — when it helps, when it hurts</li>
+          <li>The honest breakdown: coding is only 10% of the job</li>
+          <li>How Cefalo as a company adopted AI (workshops, free tools)</li>
+          <li>What you NEVER use AI for at work (and why)</li>
+          <li>Tips for junior devs: how to use AI to accelerate, not crutch</li>
+        </ul>
+      </div>
+      <div class="vp-section">
+        <div class="vp-section-label">Video description</div>
+        <div class="vp-desc">একজন Software Engineer হিসেবে আমি daily কতটুকু AI use করি? সত্যি কথা হল — coding মাত্র 10% কাজ, বাকি 90% হল planning, communication, investigation। এই ভিডিওতে real screen recording দিয়ে দেখাবো আমি Claude, GitHub Copilot কিভাবে actually কাজে use করি — আর কোথায় করি না।<br><br>#AIatWork #ClaudeAI #GitHubCopilot #SoftwareEngineerWorkflow #CodeCareerGolpo</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== ULTIMATE PLAN ===== -->
+<div id="page-plan" class="page">
+  <div class="hero">
+    <h1>🗓️ The Ultimate Video Plan</h1>
+    <p>All 8 videos prioritised by audience demand, search potential, and your available time</p>
+  </div>
+
+  <div class="section-title">Master video list — priority order</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Title</th><th>Priority</th><th>Type</th><th>Length</th><th>Language</th><th>When to Post</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>01</strong></td>
+          <td><strong>Non-CSE হয়েও Software Engineer?</strong><br><span style="font-size:11px;color:var(--muted)">Real Roadmap 2026</span></td>
+          <td><span class="badge b-red">🔥 Must Do First</span></td>
+          <td><span class="badge b-teal">Guide</span></td>
+          <td>12–15 min</td>
+          <td>Bangla</td>
+          <td>Month 1</td>
+        </tr>
+        <tr>
+          <td><strong>02</strong></td>
+          <td><strong>AI কি Software Engineer দের Job নষ্ট করছে?</strong><br><span style="font-size:11px;color:var(--muted)">Honest Answer from a BD SE</span></td>
+          <td><span class="badge b-red">🔥 Must Do First</span></td>
+          <td><span class="badge b-blue">Opinion</span></td>
+          <td>10–12 min</td>
+          <td>Bangla+English</td>
+          <td>Month 1</td>
+        </tr>
+        <tr>
+          <td><strong>03</strong></td>
+          <td><strong>Cefalo তে Job পাওয়ার Real Process</strong><br><span style="font-size:11px;color:var(--muted)">Skills, Interview, CV — A to Z</span></td>
+          <td><span class="badge b-amber">High</span></td>
+          <td><span class="badge b-teal">Career</span></td>
+          <td>15 min</td>
+          <td>Bangla</td>
+          <td>Month 1–2</td>
+        </tr>
+        <tr>
+          <td><strong>04</strong></td>
+          <td><strong>SUST vs BRAC vs Private — কোন University Best?</strong><br><span style="font-size:11px;color:var(--muted)">Honest Comparison 2026</span></td>
+          <td><span class="badge b-amber">High</span></td>
+          <td><span class="badge b-amber">Comparison</span></td>
+          <td>12 min</td>
+          <td>Bangla</td>
+          <td>Month 2</td>
+        </tr>
+        <tr>
+          <td><strong>05</strong></td>
+          <td><strong>University তে যা করেছিলাম সেটাই আমাকে Cefalo নিয়ে গেছে</strong><br><span style="font-size:11px;color:var(--muted)">SUST Journey + Hackathons</span></td>
+          <td><span class="badge b-amber">High</span></td>
+          <td><span class="badge b-green">Story</span></td>
+          <td>12–15 min</td>
+          <td>Bangla</td>
+          <td>Month 2</td>
+        </tr>
+        <tr>
+          <td><strong>06</strong></td>
+          <td><strong>2026 সালে কোন Tech Stack শিখবো?</strong><br><span style="font-size:11px;color:var(--muted)">Java vs JS vs Python — BD Market</span></td>
+          <td><span class="badge b-blue">Medium</span></td>
+          <td><span class="badge b-purple">Guide</span></td>
+          <td>10–12 min</td>
+          <td>Bangla</td>
+          <td>Month 3</td>
+        </tr>
+        <tr>
+          <td><strong>07</strong></td>
+          <td><strong>আমি Office এ AI কিভাবে Use করি?</strong><br><span style="font-size:11px;color:var(--muted)">Real Workflow — Claude + Copilot</span></td>
+          <td><span class="badge b-blue">Medium</span></td>
+          <td><span class="badge b-blue">Demo</span></td>
+          <td>10–12 min</td>
+          <td>Bangla+English</td>
+          <td>Month 3</td>
+        </tr>
+        <tr>
+          <td><strong>08</strong></td>
+          <td><strong>Narayanganj → Dhaka Office — 3 ঘণ্টার Journey</strong><br><span style="font-size:11px;color:var(--muted)">Commute Life Vlog</span></td>
+          <td><span class="badge b-green">When Ready</span></td>
+          <td><span class="badge b-coral">Vlog</span></td>
+          <td>8–10 min</td>
+          <td>Bangla</td>
+          <td>Month 2–3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Shorts to make from each video</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>From Video</th><th>Short Idea (60 sec)</th><th>Hook</th></tr></thead>
+      <tbody>
+        <tr><td>Video 01</td><td>Non-CSE থেকে Software Engineer — possible না impossible?</td><td>"90% চাকরির ad এ লেখা CSE required — কিন্তু এটা মিথ্যা কেন?"</td></tr>
+        <tr><td>Video 02</td><td>AI তোমার job নেবে না — কিন্তু একটা কাজ করতে হবে</td><td>"Coding is only 10% of a software engineer's job"</td></tr>
+        <tr><td>Video 03</td><td>Cefalo Interview এ কি জিজ্ঞেস করে? (1 min answer)</td><td>"CF rating 1600 ছাড়াও Cefalo তে ঢোকা যায়"</td></tr>
+        <tr><td>Video 04</td><td>CGPA 4.0 vs CGPA 2.5 — কে চাকরি পাবে?</td><td>"অনেক company actually high CGPA দেখলে ভয় পায়"</td></tr>
+        <tr><td>Video 05</td><td>CP না করেও top company — how?</td><td>"আমার CF rating ভালো না, তবু Cefalo তে job পেলাম"</td></tr>
+        <tr><td>Video 06</td><td>MERN নাকি Java — 2026 তে কোনটা শিখবে?</td><td>"Stack doesn't matter — এটা কতটা সত্য?"</td></tr>
+        <tr><td>Video 07</td><td>আমি AI দিয়ে কোড লিখি — কিন্তু এই ভুলটা করি না</td><td>"AI কে ভুলভাবে use করলে তুমি আসলে slower হয়ে যাও"</td></tr>
+        <tr><td>Video 08</td><td>Narayanganj → Dhaka: commute cost ৫৬% কমালাম কিভাবে?</td><td>"Daily 3 ঘণ্টা commute করেও YouTube channel চালাই"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Quick wins — do these this week</div>
+  <div class="comment-card">
+    <div class="comment-text">
+      <strong>1. Pin a comment</strong> on the Day in the Life video that says: "আমি Non-CSE guide ভিডিও বানাচ্ছি — comment এ বলো তুমি কোন background থেকে এসেছ!" This builds anticipation and gives you content ideas.<br><br>
+      <strong>2. Publish your Notion template</strong> as a free Gumroad or Notion page. Link it in the video description. Every comment asking for it is a lost lead — capture them.<br><br>
+      <strong>3. Change the video title</strong> to: "A Day in the Life of a Bangladeshi Software Engineer | Cefalo, Dhaka | Real 9-5" — adds the "Real 9-5" signal and removes the ugly handle format.<br><br>
+      <strong>4. Add chapters / timestamps</strong> to the existing video — more chapters = more searchable moments = more views from Google.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    el.classList.add('active');
+    window.scrollTo(0, 0);
+    return false;
+  }
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>
