@@ -28,6 +28,14 @@ span{flex:1;min-width:0}
 @media (prefers-color-scheme:dark){.panel{background:#151515;color:#f3f3f3;border-color:#262626}a:hover,a:focus-visible{background:#1b1b1b}h2{color:#9a9a9a}}
 @media print{.btn,.panel{display:none!important}}`;
 
+  if (!document.querySelector('link[rel~="icon"]')) {
+    const icon = document.createElement('link');
+    icon.rel = 'icon';
+    icon.type = 'image/svg+xml';
+    icon.href = `${root}assets/favicon.svg`;
+    document.head.appendChild(icon);
+  }
+
   const host = document.createElement('div');
   host.setAttribute('data-devlogs-nav-host', '');
   host.style.cssText = 'all:initial!important';

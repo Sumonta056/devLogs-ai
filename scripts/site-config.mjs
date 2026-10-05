@@ -8,13 +8,12 @@ export const PROFILE = {
   name: 'Sumonta Saha Mridul',
   initials: 'SM',
   photo: 'https://avatars.githubusercontent.com/u/61287791?v=4',
-  role: 'Software Engineer at Cefalo',
+  role: 'Software Engineer at Cefalo · AI Coach',
   bio: 'I built a Claude agent that writes a weekly report on AI coding agents, Vue & Nuxt, and Java & Spring. I also keep my learning guides here: an AI coach roadmap, deep dives on databases, Git and Spring Boot, and notes on investing in Bangladesh.',
   links: [
-    { label: 'GitHub', icon: 'github', href: '#' },
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/Sumonta056' },
     { label: 'LinkedIn', icon: 'linkedin', href: '#' },
-    { label: 'X', icon: 'x', href: '#' },
-    { label: 'Email', icon: 'mail', href: '#' },
+    { label: 'YouTube', icon: 'youtube', href: '#' },
   ],
 };
 

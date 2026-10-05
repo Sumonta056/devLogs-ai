@@ -77,6 +77,7 @@ const LEARN = PUBLIC.filter((r) => r.kind !== 'news');
 const pairs = (list) => list
   .flatMap((r) => r.all.map((e) => ({ r, e })))
   .sort((a, b) => b.e.date.localeCompare(a.e.date));
+const COACH = LEARN.find((r) => r.kind === 'roadmap');
 const POSTS = pairs(NEWS);
 const GUIDES = pairs(LEARN);
 const ITEMS = pairs(PUBLIC);
@@ -103,6 +104,7 @@ const byMonth = (list) => {
 const layout = (title, description, body) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
+<link rel="icon" type="image/svg+xml" href="${BASE}/assets/favicon.svg">
 <meta name="description" content="${esc(description)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,6 +131,8 @@ const side = () => `
     <p class="a-bio">${esc(PROFILE.bio)}</p>
     <h4>When the agent runs</h4>
     <ul class="a-sched">${NEWS.map((r) => `<li style="${cv(r)}"><span>${badge(r)}${esc(r.short)}</span><em>${esc(r.cadence)}</em></li>`).join('')}</ul>
+    ${COACH?.entries.length ? `<h4>${esc(COACH.title)}</h4>
+    <ol class="a-steps">${COACH.entries.map((e, i) => `<li style="${cv(COACH)}"><a href="${entryHref(BASE, COACH.dir, e.file)}"><b>${i + 1}</b>${esc(e.title)}</a></li>`).join('')}</ol>` : ''}
     <h4>Find me</h4>
     <div class="a-social">${PROFILE.links.map((l) => `<a href="${esc(l.href)}">${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>
     ${ITEMS.length ? `<div class="a-total"><b>${plural(POSTS.length, 'issue')} · ${plural(GUIDES.length, 'guide')}</b> since ${fmt(ITEMS.at(-1).e.date, { month: 'short', year: 'numeric' })}</div>` : ''}
