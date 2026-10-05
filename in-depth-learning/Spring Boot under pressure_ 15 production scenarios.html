@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spring Boot under pressure: 15 production scenarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1F5;--surface:#FFFFFF;--ink:#16213A;--muted:#566178;--line:#D3DAE4;--accent:#2D5BD6;
+  --ok:#17805F;--bad:#C2364A;--warn:#9A6508;--ok-soft:#E1F2EA;--bad-soft:#FBE6E9;--warn-soft:#FBF0D9;--accent-soft:#E6ECFB;
+  --con:#121C33;--con-2:#1A2744;--con-line:#2A3A5E;--con-ink:#E3E9F5;--con-muted:#8D9AB7;
+  --c-ok:#4FD1A5;--c-bad:#FF6B7F;--c-warn:#FFC24B;--c-acc:#86A6FF;--c-vio:#C59BFF;
+  --font-d:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --font-b:'IBM Plex Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-m:'JetBrains Mono',ui-monospace,SFMono-Regular,Consolas,monospace;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1420;--surface:#161F31;--ink:#E4EAF4;--muted:#9AA6BC;--line:#2A3650;--accent:#86A6FF;
+  --ok:#4FD1A5;--bad:#FF7A8C;--warn:#FFC24B;--ok-soft:#173329;--bad-soft:#3A1C25;--warn-soft:#3A2E14;--accent-soft:#1F2B4D;
+  --con:#0A1222;--con-2:#111C33;--con-line:#24345A;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E1420;--surface:#161F31;--ink:#E4EAF4;--muted:#9AA6BC;--line:#2A3650;--accent:#86A6FF;
+  --ok:#4FD1A5;--bad:#FF7A8C;--warn:#FFC24B;--ok-soft:#173329;--bad-soft:#3A1C25;--warn-soft:#3A2E14;--accent-soft:#1F2B4D;
+  --con:#0A1222;--con-2:#111C33;--con-line:#24345A;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--font-b);-webkit-font-smoothing:antialiased}
+img,svg,canvas{max-width:100%}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+code{font-family:var(--font-m);font-size:.88em;background:var(--accent-soft);padding:.05em .35em;border-radius:4px}
+
+/* header */
+.top{max-width:1240px;margin:0 auto;padding:40px 24px 8px}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+h1{font-family:var(--font-d);font-weight:800;font-size:clamp(2.1rem,5.4vw,3.7rem);line-height:1.02;letter-spacing:-.025em;margin:0 0 12px;max-width:16ch}
+.lede{color:var(--muted);max-width:60ch;margin:0 0 28px;font-size:1.05rem}
+.theme-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;white-space:nowrap}
+
+/* route map: the learning flow */
+.route{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-bottom:8px}
+.stop{position:relative;padding:22px 14px 14px 0}
+.stop::before{content:"";position:absolute;top:8px;left:0;right:0;height:3px;background:var(--line)}
+.stop::after{content:attr(data-n);position:absolute;top:-2px;left:0;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font:600 12px/22px var(--font-b);text-align:center}
+.stop.done::before{background:var(--ok)}
+.stop h3{font-family:var(--font-d);font-weight:700;font-size:1rem;margin:10px 0 2px;line-height:1.2}
+.stop p{margin:0 0 8px;color:var(--muted);font-size:.85rem;line-height:1.4}
+.stop .qs{display:flex;flex-wrap:wrap;gap:6px}
+.qchip{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:2px 9px;font-size:.85rem;cursor:pointer;font-weight:500}
+.qchip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.qchip.done:not(.on){border-color:var(--ok);color:var(--ok)}
+.progress{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+
+/* layout */
+.shell{max-width:1240px;margin:0 auto;padding:18px 24px 80px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px}
+nav.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 32px);overflow:auto;padding-right:4px}
+nav.side h4{font-family:var(--font-d);font-size:.95rem;margin:18px 0 6px;color:var(--muted);font-weight:700}
+nav.side h4:first-child{margin-top:0}
+nav.side button{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:7px 8px;cursor:pointer;font-size:.9rem;line-height:1.35;color:var(--ink)}
+nav.side button:hover{background:var(--surface)}
+nav.side button.on{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+nav.side button .n{font-weight:600;color:var(--muted);min-width:28px}
+nav.side button.done .n{color:var(--ok)}
+.mobile-pick{display:none}
+
+/* question page */
+.qhead{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+.qmeta{color:var(--muted);font-size:.9rem;margin:0 0 6px}
+h2.qtitle{font-family:var(--font-d);font-weight:700;font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.15;letter-spacing:-.015em;margin:0}
+section.blk{margin:0 0 40px}
+section.blk>h3{font-family:var(--font-d);font-weight:700;font-size:1.3rem;margin:0 0 12px;letter-spacing:-.01em}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.eli5{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.eli5 .em{font-size:2.4rem;line-height:1}
+.eli5 h4,.answer h4{margin:0 0 6px;font-family:var(--font-d);font-size:1.05rem}
+.eli5 p,.answer p{margin:0;max-width:62ch}
+.answer{border-left:4px solid var(--accent);border-radius:4px 14px 14px 4px}
+
+/* demo console */
+.demo{background:var(--con);color:var(--con-ink);border-radius:16px;overflow:hidden;border:1px solid var(--con-line)}
+.demo-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--con-2);border-bottom:1px solid var(--con-line)}
+.seg{display:inline-flex;background:var(--con);border:1px solid var(--con-line);border-radius:10px;padding:3px}
+.seg button{border:0;background:none;color:var(--con-muted);padding:6px 14px;border-radius:7px;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:8px}
+.seg button::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.seg button[data-m="before"].on{background:#3A1C27;color:var(--c-bad)}
+.seg button[data-m="after"].on{background:#123227;color:var(--c-ok)}
+.demo-title{font-size:.9rem;color:var(--con-muted)}
+.restart{border:1px solid var(--con-line);background:none;color:var(--con-ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+.demo-body{padding:18px;min-height:280px;background-image:linear-gradient(var(--con-line) 1px,transparent 1px),linear-gradient(90deg,var(--con-line) 1px,transparent 1px);background-size:28px 28px;background-position:-1px -1px;background-color:var(--con)}
+.demo-body>*{position:relative}
+.d-ctrl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-bottom:14px}
+.d-btn{background:var(--c-acc);color:#0A1222;border:0;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer}
+.d-btn.ghost{background:none;color:var(--con-ink);border:1px solid var(--con-line)}
+.d-btn:disabled{opacity:.45;cursor:default}
+.d-hint,.d-sub{color:var(--con-muted);font-size:.85rem}
+.d-sub{margin-bottom:6px}
+.d-range{display:flex;align-items:center;gap:10px;font-size:.9rem;flex-wrap:wrap}
+.d-range input{accent-color:var(--c-acc);width:180px}
+.d-range output{font-family:var(--font-m);color:var(--c-warn);min-width:56px}
+.d-ctrl select{background:var(--con-2);border:1px solid var(--con-line);border-radius:8px;padding:6px 8px;color:var(--con-ink)}
+.d-note{margin:14px 0 0;color:var(--con-ink);background:rgba(10,18,34,.75);border-left:3px solid var(--c-acc);padding:8px 12px;border-radius:0 8px 8px 0;max-width:72ch;font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chip{background:var(--con-2);border:1px solid var(--con-line);border-radius:10px;padding:8px 12px;min-width:110px}
+.chip b{display:block;font-family:var(--font-m);font-size:1.15rem;font-weight:600}
+.chip span{font-size:.78rem;color:var(--con-muted)}
+.chip.bad b{color:var(--c-bad)}.chip.ok b{color:var(--c-ok)}.chip.warn b{color:var(--c-warn)}
+.c-bad{background:var(--c-bad)}.c-ok{background:var(--c-ok)}.c-acc{background:var(--c-acc)}.c-vio{background:var(--c-vio)}.c-warn{background:var(--c-warn)}
+.log{margin-top:12px;font:12.5px/1.55 var(--font-m);background:rgba(5,10,20,.8);border:1px solid var(--con-line);border-radius:8px;padding:8px 10px;min-height:60px;max-height:170px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.log .e{color:var(--c-bad)}.log .w{color:var(--c-warn)}.log .i{color:var(--con-muted)}.log .g{color:var(--c-ok)}
+canvas.ch{width:100%;height:240px;display:block;background:rgba(5,10,20,.6);border:1px solid var(--con-line);border-radius:8px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--con-muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+/* Q1 trace */
+.tr-row{display:grid;grid-template-columns:200px 1fr 70px;gap:10px;align-items:center;margin:8px 0;font-size:.88rem}
+.tr-track{position:relative;height:22px;background:rgba(5,10,20,.6);border-radius:4px;border:1px solid var(--con-line)}
+.tr-bar{position:absolute;top:2px;bottom:2px;width:0;border-radius:3px;transition:width .7s ease}
+.tr-ms{font-family:var(--font-m);color:var(--con-muted);text-align:right}
+/* Q2 pipe */
+.stage{display:grid;grid-template-columns:170px 1fr 150px;gap:12px;align-items:center;margin:10px 0}
+.stage .bar{height:18px;background:rgba(5,10,20,.6);border:1px solid var(--con-line);border-radius:4px;overflow:hidden}
+.stage .bar i{display:block;height:100%;transition:width .3s}
+.stage .w{font-family:var(--font-m);font-size:.82rem;color:var(--con-muted)}
+.stage.neck .nm::after{content:"  bottleneck";color:var(--c-bad);font-size:.78rem;font-weight:600}
+/* Q3/Q4 slots */
+.slots{display:grid;grid-template-columns:repeat(5,44px);gap:8px}
+.slot{height:44px;border-radius:8px;border:1px solid var(--con-line);background:rgba(5,10,20,.6);display:grid;place-items:center;font:600 11px var(--font-m);transition:background .2s}
+.slot.busy{background:var(--c-acc);color:#0A1222}.slot.leak{background:var(--c-bad);color:#0A1222}.slot.warnb{background:var(--c-warn);color:#0A1222}
+.pool-wrap{display:grid;grid-template-columns:auto 1fr;gap:24px}
+.queue{display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start;min-height:44px}
+.queue i{width:10px;height:10px;border-radius:50%;background:var(--c-warn)}
+.queue i.old{background:var(--c-bad)}
+.threads{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-width:420px}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font:600 12px var(--font-m)}
+.badge.CLOSED{background:#123227;color:var(--c-ok)}.badge.OPEN{background:#3A1C27;color:var(--c-bad)}.badge.HALF_OPEN{background:#3A2E14;color:var(--c-warn)}
+/* sequences */
+.seq{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+.seq ol{list-style:none;margin:0;padding:0;font-size:.9rem}
+.seq li{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:7px 0;border-bottom:1px dashed var(--con-line);animation:pop .3s ease}
+.seq li .k{font:600 11px/22px var(--font-m);width:22px;height:22px;border-radius:50%;text-align:center;background:var(--con-2);border:1px solid var(--con-line)}
+.seq li.bad{color:var(--c-bad)}.seq li.good{color:var(--c-ok)}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.tbl{width:100%;border-collapse:collapse;font-size:.85rem;font-family:var(--font-m)}
+.tbl th,.tbl td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--con-line)}
+.tbl th{color:var(--con-muted);font-weight:400;font-family:var(--font-b)}
+.box{background:rgba(5,10,20,.6);border:1px solid var(--con-line);border-radius:10px;padding:12px}
+.box h5{margin:0 0 8px;font-size:.9rem;font-weight:600}
+/* Q6 */
+.race{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.race .box{text-align:center}
+.race .big{font:600 1.6rem var(--font-m)}
+.race .sub{color:var(--con-muted);font-size:.8rem}
+/* Q7 */
+.suspects{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.suspects button{background:var(--con-2);border:1px solid var(--con-line);color:var(--con-ink);border-radius:8px;padding:10px 8px;cursor:pointer;font-size:.85rem}
+.suspects button.no{opacity:.5;text-decoration:line-through}
+.suspects button.yes{background:#123227;border-color:var(--c-ok);color:var(--c-ok)}
+/* Q8 */
+.tx-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative}
+.tx-box{background:var(--con-2);border:1px solid var(--con-line);border-radius:10px;padding:10px;font-size:.9rem;font-weight:600;transition:all .25s;min-height:84px}
+.tx-box small{display:block;font-weight:400;color:var(--con-muted);font-size:.78rem;margin-top:4px}
+.tx-box.hot{border-color:var(--c-acc);box-shadow:0 0 0 3px rgba(134,166,255,.25)}
+.tx-box.skip{opacity:.35;border-style:dashed}
+.tx-box.badx{border-color:var(--c-bad);box-shadow:0 0 0 3px rgba(255,107,127,.25)}
+.tx-box.goodx{border-color:var(--c-ok);box-shadow:0 0 0 3px rgba(79,209,165,.25)}
+pre.mini{margin:14px 0 0;background:rgba(5,10,20,.8);border:1px solid var(--con-line);border-radius:8px;padding:10px 12px;font:12.5px/1.55 var(--font-m);overflow-x:auto}
+/* Q10 */
+svg.graph{width:100%;height:auto;display:block}
+svg.graph text{font-family:var(--font-b);font-size:13px;fill:var(--con-ink);pointer-events:none}
+svg.graph .node{cursor:pointer}
+svg.graph rect{stroke-width:1.5}
+/* Q11 */
+.parts{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}
+.part{background:rgba(5,10,20,.6);border:1px solid var(--con-line);border-radius:8px;padding:6px;font-size:.78rem;text-align:center}
+.part .lagbar{height:36px;display:flex;align-items:flex-end;margin:4px 0}
+.part .lagbar i{width:100%;background:var(--c-warn);border-radius:3px 3px 0 0;transition:height .2s}
+.part b{font-family:var(--font-m);font-weight:600}
+/* Q12 */
+.dash{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.tile{background:var(--con-2);border:1px solid var(--con-line);border-radius:10px;padding:10px;transition:border-color .2s}
+.tile b{display:block;font:600 1.25rem var(--font-m)}
+.tile span{font-size:.75rem;color:var(--con-muted)}
+.tile em{display:block;font-style:normal;font-size:.72rem;color:var(--con-muted);margin-top:2px}
+.tile.bad{border-color:var(--c-bad)}.tile.bad b{color:var(--c-bad)}
+.tile.warn{border-color:var(--c-warn)}.tile.warn b{color:var(--c-warn)}
+.tile.ok b{color:var(--c-ok)}
+/* Q14 */
+.pods{display:grid;gap:10px}
+.pod{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center}
+.pod .lane{height:30px;border-radius:6px;background:rgba(5,10,20,.6);border:1px solid var(--con-line);display:flex;align-items:center;padding:0 10px;font-size:.82rem;transition:background .3s}
+.pod .lane.run{background:#123227;color:var(--c-ok)}.pod .lane.dup{background:#3A1C27;color:var(--c-bad)}.pod .lane.skip{color:var(--con-muted)}
+.clock{font:600 1.8rem var(--font-m);color:var(--c-warn)}
+.inbox div{padding:5px 8px;border-bottom:1px solid var(--con-line);font-size:.85rem;animation:pop .3s}
+/* Q15 */
+.ids{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.ids button{font:12px var(--font-m);background:var(--con-2);border:1px solid var(--con-line);color:var(--con-ink);border-radius:6px;padding:4px 8px;cursor:pointer}
+.ids button.on{border-color:var(--c-acc);color:var(--c-acc)}
+.wf{margin-top:12px}
+.wf-row{display:grid;grid-template-columns:190px 1fr 64px;gap:8px;align-items:center;font-size:.82rem;margin:4px 0}
+.wf-row .trk{position:relative;height:16px}
+.wf-row .trk i{position:absolute;top:0;bottom:0;border-radius:3px;background:var(--c-acc)}
+.wf-row .trk i.err{background:var(--c-bad)}.wf-row .trk i.slow{background:var(--c-warn)}
+.wf-row .ms{font-family:var(--font-m);color:var(--con-muted);text-align:right}
+
+/* steps, code, tables */
+ol.flow{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.flow li{counter-increment:s;position:relative;padding:0 0 18px 46px;max-width:72ch}
+ol.flow li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;border:2px solid var(--accent);color:var(--accent);font:600 14px/26px var(--font-b);text-align:center;background:var(--bg)}
+ol.flow li::after{content:"";position:absolute;left:14px;top:32px;bottom:2px;width:2px;background:var(--line)}
+ol.flow li:last-child::after{display:none}
+ol.flow b{display:block;font-weight:600}
+ol.flow span{color:var(--muted);overflow-wrap:anywhere}
+.card p,.card li{overflow-wrap:anywhere}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:0;flex-wrap:wrap}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 14px;cursor:pointer;font-weight:500;color:var(--muted)}
+.tabs button.on[data-t="before"]{color:var(--bad);border-color:var(--bad)}
+.tabs button.on[data-t="after"]{color:var(--ok);border-color:var(--ok)}
+.codeblk{margin-top:14px}
+.codeblk .cap{font-size:.85rem;color:var(--muted);margin:0 0 6px}
+pre.code{margin:0;background:var(--con);color:var(--con-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;font:13px/1.65 var(--font-m);border:1px solid var(--con-line)}
+.k-kw{color:#C59BFF}.k-an{color:#FFC24B}.k-str{color:#7FE0B5}.k-com{color:#7C89A6;font-style:italic}.k-num{color:#FF9E7A}
+.cmp{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cmp th,.cmp td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp th{font-weight:600;font-size:.9rem;background:var(--bg)}
+.cmp td.b{color:var(--bad);background:var(--bad-soft)}
+.cmp td.a{color:var(--ok);background:var(--ok-soft)}
+.cmp tr:last-child td{border-bottom:0}
+.tblwrap{overflow-x:auto}
+.pc ul{margin:0;padding-left:20px}
+.pc li{margin:0 0 8px}
+.pc h4{margin:0 0 10px;font-family:var(--font-d);font-size:1.05rem}
+.pc .pro{border-top:4px solid var(--ok)}.pc .con{border-top:4px solid var(--bad)}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px;align-items:center}
+.pager button{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer;max-width:320px;text-align:left}
+.pager button small{display:block;color:var(--muted)}
+.pager button:disabled{opacity:.4;cursor:default}
+.mark{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500}
+.mark input{width:18px;height:18px;accent-color:var(--ok)}
+
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  nav.side{display:none}
+  .mobile-pick{display:block;margin-bottom:22px}
+  .mobile-pick select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+  .route{grid-template-columns:1fr 1fr}
+  .two,.seq{grid-template-columns:minmax(0,1fr)}
+  .dash{grid-template-columns:repeat(2,1fr)}
+  .suspects{grid-template-columns:repeat(2,1fr)}
+  .tx-flow{grid-template-columns:1fr 1fr}
+  .pool-wrap{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .top,.shell{padding-left:16px;padding-right:16px}
+  .route{grid-template-columns:1fr}
+  .tr-row,.stage,.wf-row{grid-template-columns:1fr;gap:4px}
+  .tr-ms,.wf-row .ms{text-align:left}
+  .race{grid-template-columns:1fr}
+  .parts{grid-template-columns:repeat(3,1fr)}
+  .demo-body{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <div>
+      <h1>Spring Boot under pressure</h1>
+      <p class="lede">Fifteen things that go wrong in production, in the order worth learning them. Every question has a simulation you can break and fix, the code, the trade-offs, and a version a five-year-old would get.</p>
+    </div>
+    <button class="theme-btn" id="theme" aria-label="Toggle light or dark theme">Theme</button>
+  </div>
+  <div class="route" id="route"></div>
+  <p class="progress" id="progress"></p>
+</header>
+<div class="shell">
+  <nav class="side" id="side" aria-label="Questions"></nav>
+  <main id="main">
+    <div class="mobile-pick"><select id="pick" aria-label="Pick a question"></select></div>
+    <div id="page"></div>
+  </main>
+</div>
+<script>
+const STAGES=[
+ {name:"Find the problem",desc:"Measure before you fix.",qs:[1,12,9,7]},
+ {name:"Know your limits",desc:"Every system has a narrowest pipe.",qs:[2,3]},
+ {name:"Survive bad neighbours",desc:"Slow or dead dependencies.",qs:[4,10,13]},
+ {name:"Keep data correct",desc:"Duplicates, races, rollbacks.",qs:[5,6,8]},
+ {name:"Many instances, many services",desc:"Scale out without surprises.",qs:[14,11,15]}
+];
+const ORDER=STAGES.flatMap(s=>s.qs);
+
+const Q={
+1:{short:"Slow API",q:"Your Spring Boot API suddenly becomes slow. How would you find the bottleneck?",
+ eli5:["🍔","A burger shop is slow. Instead of shouting at everyone, you hold a stopwatch at each station: cashier, grill, packing. The grill takes 9 minutes because the cook walks to the fridge once for every single slice of cheese. Fix that walk, and the whole shop is fast."],
+ answer:"I don't guess. First I confirm the scope with p95/p99 latency per endpoint and check what changed (deploy, traffic, data size). Then I split the request time with tracing or an APM: DB, downstream HTTP, CPU, or waiting on locks. Each slice has a tool: slow-query log and EXPLAIN for the DB, thread dumps for blocking, async-profiler or JFR for CPU, GC logs for pauses. I fix the biggest slice and measure again.",
+ steps:[["Confirm and scope","Which endpoints, since when, all users or some? Compare p95/p99 before and after. Check recent deploys, config changes and data growth."],["Split the time","Use traces (Micrometer Tracing, Zipkin, Tempo) or an APM to see how much time goes to DB, HTTP calls, CPU and waiting."],["Database first, it's usually there","Count queries per request (Hibernate statistics), look for N+1, check the slow-query log, EXPLAIN plans and missing indexes."],["Look inside the JVM","Take 3 thread dumps a few seconds apart (jstack or jcmd Thread.print). Same stack every time means a hotspot or a lock. Check GC pauses and CPU with JFR or async-profiler."],["Fix the biggest slice, then re-measure","Change one thing, compare the same percentiles. Add an alert so you notice next time."]],
+ code:{before:[["OrderController.java","@GetMapping(\"/orders\")\npublic List<OrderDto> orders() {\n    return orderRepo.findAll().stream()            // 1 query\n        .map(o -> new OrderDto(o, o.getItems()))    // +1 query per order: N+1\n        .toList();\n}"]],
+ after:[["OrderRepository.java","public interface OrderRepository extends JpaRepository<Order, Long> {\n\n    @EntityGraph(attributePaths = \"items\")         // load items in the same query\n    @Query(\"select o from Order o\")\n    List<Order> findAllWithItems();\n}"],["application.yml (make the slow part visible)","management:\n  endpoints.web.exposure.include: health,metrics,prometheus\n  metrics.distribution.percentiles-histogram.http.server.requests: true\nspring.jpa.properties.hibernate.generate_statistics: true   # dev/staging only\nlogging.level.org.hibernate.stat: debug"]]},
+ metrics:[["p95 latency for GET /orders","1.3 s","70 ms"],["SQL queries per request","101","1"],["DB CPU","70%","12%"],["How the cause was found","Guessing, restarting pods","Trace span pointed straight at the repository"]],
+ pros:["Decisions come from data, so you fix the real cause instead of adding hardware.","One join or entity graph replaces N round trips, which also lowers DB load for everyone.","The observability you add stays and catches the next regression early."],
+ cons:["Tracing and profilers add a little overhead; sample in production.","Fetch joins plus pagination can make Hibernate paginate in memory; prefer @BatchSize or two queries for paged lists.","Needs metrics and tracing set up before the incident, not during it."]},
+
+2:{short:"5,000 concurrent requests",q:"5,000 requests hit your API simultaneously. What could become the bottleneck?",
+ eli5:["🏪","A shop has 200 cashiers but only 10 card machines. When 5,000 customers arrive, the cashiers just stand there holding customers while they wait for a card machine. Adding cashiers won't help. More card machines, or letting regulars pay with a saved card (a cache), will."],
+ answer:"Anything with a fixed size on the request path: load balancer connections, Tomcat worker threads (200 by default), the Hikari connection pool (10 by default), the database's CPU and locks, downstream services, and memory or GC. Usually the connection pool is the narrowest pipe: 200 threads compete for 10 connections. I'd load test to find it, then reduce the work per request (cache, fewer queries), size the pool against what the DB can take, and shed load with a rate limiter instead of letting everything time out.",
+ steps:[["List every fixed-size resource on the path","Ingress connections, Tomcat threads, Hikari pool, DB max_connections and CPU, HTTP client pools for downstream calls, heap."],["Do the maths with Little's law","Concurrency = throughput × latency. 5,000 requests at 50 ms each need about 250 requests in flight. With 10 connections you can only do 200 DB queries per second."],["Load test to prove it","k6, Gatling or JMeter against a staging copy. Watch which metric hits its ceiling first: hikaricp.connections.pending, tomcat.threads.busy, DB CPU."],["Reduce work first","Cache hot reads, remove N+1 queries, make slow external calls async. Less work beats more capacity."],["Then add capacity and protection","Right-size the pool (more is not always better for the DB), scale instances, use a rate limiter to return fast 429s instead of slow timeouts."]],
+ code:{before:[["ProductController.java","@GetMapping(\"/products/{id}\")\npublic Product get(@PathVariable Long id) {\n    return repo.findById(id).orElseThrow();   // every single call hits the DB\n}\n// defaults: 200 Tomcat threads, 10 Hikari connections, 30 s connection timeout"]],
+ after:[["ProductService.java","@Cacheable(cacheNames = \"products\", key = \"#id\")   // 80% of reads never reach the DB\n@RateLimiter(name = \"products\")                     // excess gets a fast 429\npublic Product get(Long id) {\n    return repo.findById(id).orElseThrow();\n}"],["application.yml","spring:\n  threads.virtual.enabled: true        # Java 21: threads stop being the cap\n  datasource.hikari:\n    maximum-pool-size: 30              # sized against DB capacity, not 'as big as possible'\n    connection-timeout: 2000           # fail in 2 s, not 30 s\nresilience4j.ratelimiter.instances.products:\n  limit-for-period: 6000\n  limit-refresh-period: 1s\n  timeout-duration: 0"]]},
+ metrics:[["Worst latency at 5,000 concurrent","25 s","1.7 s"],["Requests over a 5 s client timeout","80%","0%"],["DB queries per second needed","5,000","1,000"],["Bottleneck","10-connection pool","None at this load"]],
+ pros:["Caching cuts load at the source and helps every layer below it.","A rate limiter turns an overload into fast, honest 429s that clients can retry later.","Virtual threads remove thread count as an artificial limit for I/O-heavy code."],
+ cons:["Caches can serve stale data; you need TTLs or eviction on writes.","A bigger pool multiplied by many instances can exceed the DB's max_connections.","Virtual threads don't help CPU-bound work and can pin on synchronized blocks in older JDKs."]},
+
+3:{short:"Connection pool exhausted",q:"Your database connection pool is exhausted. What would you check first?",
+ eli5:["📚","The class library has 10 books. Some kids borrow a book and then go play outside for an hour while holding it, and one kid forgot to return his at all. Everyone else waits in line. The fix is not more books first. It's making kids give the book back as soon as they finish reading."],
+ answer:"First the Hikari metrics: active, idle, pending and acquire time, so I know if connections are busy or leaked. Then a thread dump to see who is holding connections and what they're doing. The usual causes are long transactions that hold a connection while calling another service, slow queries or DB locks, connection leaks from manual JDBC, and open-in-view keeping connections for the whole request. I'd enable leak detection, shorten transactions, fix slow queries, and only then consider pool size.",
+ steps:[["Read the pool metrics","hikaricp.connections.active, .idle, .pending, .acquire. Active = max and pending > 0 means exhaustion. Active stuck at max with low DB activity smells like a leak."],["Find who holds the connections","Thread dumps: look for threads inside JDBC calls or inside @Transactional methods that are waiting on HTTP. Enable leak-detection-threshold to get a stack trace of the borrower."],["Check the database side","pg_stat_activity or the Mongo currentOp: long-running queries, idle-in-transaction sessions, lock waits."],["Look for long transactions","@Transactional methods that call slow APIs, send emails or generate files. Set spring.jpa.open-in-view=false so a connection isn't held while rendering the response."],["Size last","pool size × instances must fit under the DB's max_connections. A small pool with short transactions beats a big pool with long ones."]],
+ code:{before:[["ReportService.java","@Transactional\npublic Report build(Long id) {\n    var data = repo.load(id);              // connection borrowed here...\n    var pdf  = pdfClient.render(data);     // ...and held during a 5 s HTTP call\n    return repo.save(new Report(pdf));\n}\n\n// manual JDBC elsewhere: leaks if executeQuery throws\nConnection c = dataSource.getConnection();\nResultSet rs = c.prepareStatement(sql).executeQuery();"]],
+ after:[["ReportService.java","public Report build(Long id) {\n    var data = tx.execute(s -> repo.load(id));       // short transaction\n    var pdf  = pdfClient.render(data);                // no connection held\n    return tx.execute(s -> repo.save(new Report(pdf)));\n}\n\ntry (Connection c = dataSource.getConnection();      // always returned\n     PreparedStatement ps = c.prepareStatement(sql)) {\n    ...\n}"],["application.yml","spring:\n  jpa.open-in-view: false\n  datasource.hikari:\n    maximum-pool-size: 10\n    connection-timeout: 2000\n    leak-detection-threshold: 5000   # logs the borrower's stack after 5 s"]]},
+ metrics:[["Time a connection is held","~7 s (incl. HTTP call)","~40 ms"],["Pending threads at peak","20+","0"],["Request timeouts","Dozens per minute","None"],["Leaks","Silent","Logged with stack trace"]],
+ pros:["Short transactions multiply the effective capacity of the same pool.","Leak detection points to the exact line that forgot to close.","Disabling open-in-view makes connection usage predictable."],
+ cons:["Splitting one transaction into two loses atomicity; you may need compensation or an outbox.","Leak detection adds a small overhead and can flag legitimately long queries.","open-in-view=false surfaces LazyInitializationException in code that relied on it."]},
+
+4:{short:"Slow downstream service",q:"A downstream service takes 10 seconds to respond. How would you protect your API?",
+ eli5:["📞","You call a friend to ask what time the movie starts. He doesn't pick up. You don't sit with the phone to your ear all day. You hang up after a few rings, check the poster on the wall instead, and if he keeps not answering, you stop calling for a while."],
+ answer:"Never call anything without a timeout. I'd set connect and read timeouts based on the downstream's normal latency, wrap the call in a circuit breaker so repeated failures stop the calls for a while, isolate it with a bulkhead so it can only use a few threads, and return a fallback such as cached data or a 'pending' status. If the business allows it, I'd move the call off the request path entirely with async messaging.",
+ steps:[["Add timeouts everywhere","Connect and read timeouts on RestClient/WebClient. Default HTTP clients may wait forever. Base the value on the downstream's p99, not on hope."],["Circuit breaker","Resilience4j: after X% failures in a window, open the circuit and fail fast for a cool-down period, then let a few trial calls through."],["Bulkhead","Limit concurrent calls to that dependency (semaphore or a small thread pool) so it can't eat all Tomcat threads."],["Fallback","Cached value, default, or a degraded response like 'price unavailable'. Decide with the product owner what's acceptable."],["Consider async","If the user doesn't need the answer now, publish an event and process it later."]],
+ code:{before:[["PricingClient.java","public Price price(String sku) {\n    // no timeout: each call can hold a Tomcat thread for 10 s or more\n    return new RestTemplate().getForObject(url, Price.class, sku);\n}"]],
+ after:[["PricingClient.java","@CircuitBreaker(name = \"pricing\", fallbackMethod = \"cachedPrice\")\n@Bulkhead(name = \"pricing\")\npublic Price price(String sku) {\n    return restClient.get().uri(\"/prices/{sku}\", sku).retrieve().body(Price.class);\n}\n\nPrice cachedPrice(String sku, Throwable t) {\n    return priceCache.getOrDefault(sku, Price.unavailable());\n}\n\n@Bean RestClient restClient(RestClient.Builder b) {\n    var f = new SimpleClientHttpRequestFactory();\n    f.setConnectTimeout(Duration.ofMillis(500));\n    f.setReadTimeout(Duration.ofSeconds(1));\n    return b.baseUrl(pricingUrl).requestFactory(f).build();\n}"],["application.yml","resilience4j:\n  circuitbreaker.instances.pricing:\n    sliding-window-size: 10\n    failure-rate-threshold: 50\n    slow-call-duration-threshold: 1s\n    wait-duration-in-open-state: 20s\n    permitted-number-of-calls-in-half-open-state: 2\n  bulkhead.instances.pricing:\n    max-concurrent-calls: 5"]]},
+ metrics:[["Thread held per pricing call","10 s","≤ 1 s, then 0 when open"],["Unrelated endpoints (/products)","Start failing: no free threads","Unaffected"],["User sees","Spinner, then 504","Page with 'price unavailable'"],["Load on the struggling service","Keeps piling up","Paused while it recovers"]],
+ pros:["One slow dependency can't take down the whole API.","Failing fast frees threads and gives users a quick answer.","An open circuit gives the downstream breathing room to recover."],
+ cons:["Fallbacks are business decisions; a wrong default (e.g. price 0) is worse than an error.","Thresholds need tuning; too sensitive and it opens on normal blips.","More moving parts to test, monitor and explain to the team."]},
+
+5:{short:"Idempotency",q:"The same request reaches your API twice. How would you make it idempotent?",
+ eli5:["🛗","Pressing the elevator button five times still brings one elevator. Your API should work the same way: the client puts a sticker with a unique number on its request. If a request with the same sticker shows up again, you hand back the receipt from the first time instead of doing the job again."],
+ answer:"GET, PUT and DELETE should already be idempotent by design. For POST, the client sends an Idempotency-Key header (a UUID). The server stores the key with the result, protected by a unique constraint. A repeat with the same key returns the stored response without running the action again; a concurrent duplicate hits the constraint and gets a 409. Keys expire after a sensible time, and the key is tied to the request body so a reused key with different data is rejected.",
+ steps:[["Use HTTP semantics","PUT /orders/42 with the full state is naturally idempotent. POST is not, so it needs help."],["Client generates a key","A UUID per logical action, reused on every retry of that action. Send it as Idempotency-Key."],["Store the key atomically","A table or collection with a unique index on the key. Insert first (status IN_PROGRESS), so two parallel duplicates can't both pass."],["Save the response","After the action succeeds, store status code and body. Replays return it unchanged."],["Expire and validate","TTL of 24 hours is common. Hash the request body; same key with a different body is a client bug, return 422."]],
+ code:{before:[["PaymentController.java","@PostMapping(\"/payments\")\npublic Payment pay(@RequestBody PayRequest req) {\n    return paymentService.charge(req);   // a retry after a lost response charges again\n}"]],
+ after:[["PaymentController.java","@PostMapping(\"/payments\")\npublic ResponseEntity<Payment> pay(@RequestHeader(\"Idempotency-Key\") String key,\n                                   @RequestBody PayRequest req) {\n    return store.find(key)\n        .map(saved -> ResponseEntity.ok(saved))          // replay: no second charge\n        .orElseGet(() -> {\n            store.reserve(key, hash(req));               // unique index: parallel dup -> 409\n            Payment p = paymentService.charge(req);\n            store.complete(key, p);\n            return ResponseEntity.status(201).body(p);\n        });\n}"],["IdempotencyRecord.java (MongoDB)","@Document(\"idempotency_keys\")\npublic class IdempotencyRecord {\n    @Id String key;                                  // _id is unique by definition\n    String requestHash;\n    Status status;                                   // IN_PROGRESS, DONE\n    Payment response;\n    @Indexed(expireAfter = \"24h\") Instant createdAt; // TTL cleanup\n}"]]},
+ metrics:[["Charges after a retried payment","2 (৳1,000)","1 (৳500)"],["Parallel duplicate requests","Both processed","One processed, one gets 409"],["Client retry safety","Risky, so clients avoid retrying","Safe to retry any time"],["Support tickets for double charges","Regular","None"]],
+ pros:["Clients and gateways can retry freely, which makes the whole system more reliable.","The unique index makes correctness the database's job, not a race in Java.","Stored responses make replays fast and consistent."],
+ cons:["Extra write per request and a store to maintain.","Clients must generate and reuse keys correctly; documentation matters.","Deciding what to do with IN_PROGRESS keys after a crash needs care."]},
+
+6:{short:"Concurrent updates",q:"Two users update the same record simultaneously. How would you handle it?",
+ eli5:["🖍️","Two kids colour the same picture. Each takes a photo copy, colours it, and puts their copy back on the wall. The second kid's copy covers the first kid's work. Fix: the picture has a version sticker. When you put your copy back, the sticker must still match the one you started with. If it changed, you look at the new picture and colour again."],
+ answer:"Without control you get a lost update: last writer wins. The default fix is optimistic locking with @Version: the UPDATE includes WHERE version = ?, so the second writer updates 0 rows and gets an OptimisticLockException, which I map to a retry or a 409. For hot rows with lots of contention, pessimistic locking (SELECT ... FOR UPDATE) or a single atomic UPDATE like stock = stock - 2 WHERE stock >= 2 is better. In MongoDB @Version works the same way.",
+ steps:[["Recognise the lost update","Both read stock = 10. Alice writes 7, Bob writes 8. Final 8, but should be 5."],["Add a version column","@Version on the entity. JPA adds version to every UPDATE's WHERE clause and increments it."],["Decide what a conflict means","Retry automatically for computed changes (stock), return 409 for user edits (a form) so the user sees the new data."],["Pick the right lock for the contention","Optimistic for low contention. Pessimistic FOR UPDATE for short, hot sections. Atomic UPDATE for simple counters."],["Test it","Two threads, a CountDownLatch, assert the final value. Races don't show up in single-user manual testing."]],
+ code:{before:[["ProductService.java","@Entity class Product { @Id Long id; int stock; }\n\n@Transactional\npublic void buy(Long id, int qty) {\n    Product p = repo.findById(id).orElseThrow();\n    p.setStock(p.getStock() - qty);     // based on a value that may be stale\n}                                        // UPDATE product SET stock=? WHERE id=?"]],
+ after:[["ProductService.java","@Entity class Product { @Id Long id; int stock; @Version Long version; }\n\n@Retryable(retryFor = ObjectOptimisticLockingFailureException.class, maxAttempts = 3)\n@Transactional\npublic void buy(Long id, int qty) {\n    Product p = repo.findById(id).orElseThrow();\n    if (p.getStock() < qty) throw new OutOfStockException();\n    p.setStock(p.getStock() - qty);\n}   // UPDATE product SET stock=?, version=version+1 WHERE id=? AND version=?"],["Alternative for hot counters","@Modifying\n@Query(\"update Product p set p.stock = p.stock - :qty where p.id = :id and p.stock >= :qty\")\nint decrement(Long id, int qty);    // returns 0 when not enough stock"]]},
+ metrics:[["Final stock after 3 + 2 sold from 10","8 (wrong)","5 (correct)"],["Conflicts","Silent data loss","Detected, retried or 409"],["Locks held while users think","None","None (optimistic)"],["Behaviour under heavy contention","Wrong answers","Retries; switch to atomic update if frequent"]],
+ pros:["No database locks held, so it scales well when conflicts are rare.","Conflicts become visible instead of silently losing data.","Works the same in JPA and Spring Data MongoDB."],
+ cons:["Under high contention many retries waste work.","Users editing forms need a good 'someone changed this' experience.","Retry must wrap the whole transaction, not just the save call."]},
+
+7:{short:"Works locally, fails in prod",q:"Your API works locally but fails in production. What would you investigate?",
+ eli5:["🎂","Your cake recipe works in your kitchen but flops at grandma's. Same recipe, different kitchen: her oven is hotter, her flour is different, and she's up in the mountains. You compare the kitchens one thing at a time instead of rewriting the recipe."],
+ answer:"I start from evidence, the production logs and the exact error, not from the code. Then I diff the environments: active profile and config, environment variables and secrets, network (DNS, firewalls, TLS certificates, proxies), the database (schema migrations, permissions, data volume), runtime (Java version, container memory and CPU limits, timezone, read-only file system), and the built artifact itself. To prevent repeats, I keep config out of code, run migrations automatically, and test against prod-like infrastructure with Testcontainers.",
+ steps:[["Get the real error","Logs with stack traces, the HTTP status, pod events (kubectl describe pod for OOMKilled). Make sure logs aren't hiding the cause."],["Diff configuration","Active profile, application-prod.yml, env vars, secrets. Actuator /actuator/env (secured) shows what was really loaded."],["Diff the surroundings","DNS names, firewall rules, TLS truststores, proxies, DB schema version, permissions, data size."],["Diff the runtime","Java version, dependency versions in the actual jar, container limits, timezone, locale, writable paths."],["Reproduce and lock it in","Reproduce with docker compose or Testcontainers using prod-like settings, then add a test or a startup check so it can't happen silently again."]],
+ code:{before:[["InventoryClient.java","private final String url = \"http://localhost:8081/inventory\";   // hard-coded\nprivate final String password = \"secret\";                      // works on my machine"]],
+ after:[["InventoryProps.java","@Validated\n@ConfigurationProperties(\"clients.inventory\")\npublic record InventoryProps(@NotBlank String url, @NotNull Duration timeout) {}\n// app fails at startup with a clear message if prod config is missing"],["application-prod.yml","clients.inventory:\n  url: \${INVENTORY_URL}\n  timeout: 2s\nspring.datasource.password: \${DB_PASSWORD}\nspring.flyway.enabled: true          # schema always matches the code\nmanagement.info.git.mode: full       # /actuator/info shows the exact commit"]]},
+ metrics:[["Time to find the cause","Hours of guessing","Minutes, from the first log line"],["Missing config detected","At first request in prod","At startup, deploy fails fast"],["Schema drift","Manual SQL, forgotten in prod","Flyway migration on deploy"],["Confidence the jar is the same","Rebuilt per environment","One artifact promoted through environments"]],
+ pros:["A systematic diff finds the cause faster than reading code.","Typed, validated config catches mistakes before traffic arrives.","Testcontainers makes 'local' much closer to production."],
+ cons:["Needs access to prod logs and config, which may require process and approvals.","Prod-like local setups are heavier and slower to run.","Some issues (traffic, data volume) only reproduce at scale."]},
+
+8:{short:"@Transactional didn't roll back",q:"A @Transactional operation partially fails. Why might the rollback not happen as expected?",
+ eli5:["💂","A guard stands at the front door and writes down everyone who enters. If something breaks, the guard undoes everything those people did. But people who walk from room to room inside the house never pass the guard, and the guard only reacts to loud alarms, not quiet ones. So some mistakes don't get undone."],
+ answer:"@Transactional works through a Spring proxy, so it's skipped on self-invocation (this.method()) and on private or final methods. By default it only rolls back on unchecked exceptions, so a checked exception commits. If the code catches and swallows the exception, the proxy never sees it. Work done on another thread (@Async, CompletableFuture) is outside the transaction. Other causes: REQUIRES_NEW inner transactions that commit independently, the wrong transaction manager, or MongoDB without a replica set and MongoTransactionManager.",
+ steps:[["Check the call path","Is the method called from another bean (through the proxy)? Self-calls and private methods bypass it."],["Check the exception type","Checked exceptions commit by default. Use rollbackFor = Exception.class or throw unchecked exceptions."],["Check for swallowed exceptions","A catch block that logs and continues means the proxy sees success."],["Check threads and propagation","@Async and executors run outside the transaction. REQUIRES_NEW commits on its own."],["Check the infrastructure","Right transaction manager for the datasource. MongoDB needs a replica set and a MongoTransactionManager bean. Turn on logging.level.org.springframework.transaction=debug to see begin/commit/rollback."]],
+ code:{before:[["OrderService.java","@Service\npublic class OrderService {\n\n    public void placeOrder(Order o) {\n        this.saveAndCharge(o);            // self-invocation: proxy bypassed\n    }\n\n    @Transactional\n    public void saveAndCharge(Order o) throws PaymentException {\n        orderRepo.save(o);\n        try {\n            payment.charge(o);\n        } catch (RuntimeException e) {\n            log.error(\"charge failed\", e);   // swallowed: proxy sees success\n        }\n    }\n}"]],
+ after:[["CheckoutFacade.java + OrderService.java","@Service\npublic class CheckoutFacade {\n    private final OrderService orders;      // another bean -> call goes through proxy\n    public void placeOrder(Order o) { orders.saveAndCharge(o); }\n}\n\n@Service\npublic class OrderService {\n    @Transactional(rollbackFor = Exception.class)\n    public void saveAndCharge(Order o) throws PaymentException {\n        orderRepo.save(o);\n        payment.charge(o);                  // let it propagate\n    }\n}"],["MongoDB transactions","@Bean\nMongoTransactionManager txManager(MongoDatabaseFactory f) {\n    return new MongoTransactionManager(f);  // plus a replica set, even a 1-node one\n}"]]},
+ metrics:[["Order saved when payment fails","Yes (inconsistent)","No (rolled back)"],["Exceptions seen by the proxy","Swallowed or checked","Propagated, rollback rule matches"],["Visibility","Silent","Transaction debug log shows rollback"],["Data cleanup needed","Manual scripts","None"]],
+ pros:["Declarative transactions keep business code clean once you know the rules.","rollbackFor makes intent explicit and survives refactoring to checked exceptions.","Splitting into beans clarifies boundaries."],
+ cons:["Proxy rules are invisible in the code; reviewers must know them.","Extra beans just to cross a proxy can feel artificial.","Cross-thread or cross-service work still needs other patterns (outbox, saga)."]},
+
+9:{short:"Memory keeps growing",q:"Your Java application suddenly consumes too much memory. How would you debug it?",
+ eli5:["🧸","Your toy room gets messy every day, and every night mum tidies it. That's normal. But you also put one new toy in a box you never empty. Every night the room is a bit fuller even after tidying, until one day you can't open the door. Find the box that never gets emptied."],
+ answer:"First I decide which memory: heap, or non-heap such as metaspace, thread stacks and direct buffers, because container RSS isn't only heap. For heap I look at the used-after-GC line: a rising floor means a leak, a sawtooth that returns to the same floor is fine. Then I take a heap dump with jcmd, open it in Eclipse MAT, and follow the dominator tree to the biggest retainer. Usual suspects: unbounded caches or static maps, ThreadLocals in pools, loading huge result sets, and listeners never removed. I make caches bounded and set MaxRAMPercentage so the JVM respects the container limit.",
+ steps:[["Which memory?","Compare jvm.memory.used by area (heap, metaspace, code cache) with the container's RSS. If RSS is far above heap, use Native Memory Tracking."],["Read the heap after GC","GC logs or Grafana: does the floor after each GC keep rising? Rising floor = leak. High but flat = undersized or just busy."],["Capture evidence","jcmd <pid> GC.heap_dump /tmp/heap.hprof, or start with -XX:+HeapDumpOnOutOfMemoryError so you get one automatically."],["Analyse the dump","Eclipse MAT: Leak Suspects report and dominator tree. Follow the biggest retained size to the GC root (often a static field or a cache)."],["Fix and guard","Bound the cache (Caffeine with maximumSize and expiry), stream or page big queries, clean ThreadLocals, set -XX:MaxRAMPercentage=75."]],
+ code:{before:[["QuoteCache.java","@Component\npublic class QuoteCache {\n    private static final Map<String, Quote> CACHE = new HashMap<>();   // never evicts\n\n    public Quote get(String key) {\n        return CACHE.computeIfAbsent(key, this::load);   // one entry per unique key, forever\n    }\n}"]],
+ after:[["QuoteCache.java","@Component\npublic class QuoteCache {\n    private final Cache<String, Quote> cache = Caffeine.newBuilder()\n        .maximumSize(10_000)\n        .expireAfterWrite(Duration.ofMinutes(10))\n        .recordStats()                        // hit rate and evictions in metrics\n        .build();\n\n    public Quote get(String key) { return cache.get(key, this::load); }\n}"],["JVM flags","JAVA_TOOL_OPTIONS=\"-XX:MaxRAMPercentage=75\n  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dumps\n  -Xlog:gc*:file=/logs/gc.log:time,uptime\""]]},
+ metrics:[["Heap floor after GC","Climbs after every GC","Flat around 230 MB"],["Outcome after 2 hours","OutOfMemoryError, pod restart","Stable"],["Cache size","Unbounded","10,000 entries max"],["GC pauses","Longer and more frequent","Short, regular"]],
+ pros:["The heap dump shows the exact object graph, no guessing.","Bounded caches give predictable memory with most of the speed benefit.","Automatic dumps on OOM mean you always have evidence."],
+ cons:["Heap dumps pause the JVM and can be as large as the heap; handle them carefully (they may contain personal data).","Too small a cache lowers the hit rate and moves load to the DB.","Native memory leaks need different tools and are harder to read."]},
+
+10:{short:"One microservice is down",q:"A microservice goes down while other services are healthy. How should your system handle it?",
+ eli5:["🏬","One shop in the mall closes for the day. The mall doesn't close. People see a sign that says 'closed, come back later', and keep shopping everywhere else. Only if every shop panicked and locked its doors would the whole mall stop."],
+ answer:"Contain it. Callers use timeouts and circuit breakers so they fail fast instead of waiting, with a fallback that degrades the feature rather than the page: cached data, a default, or accepting the request and finishing later. Where the caller doesn't need an immediate answer, communicate through a queue so messages wait until the service is back. Kubernetes health probes restart or remove the bad instance, and alerts tell the team. The goal is that a dead recommendations service means no recommendations, not no checkout.",
+ steps:[["Fail fast","Timeouts and a circuit breaker on every call to the failing service."],["Degrade gracefully","Per dependency, decide the fallback: cached, default, hide the widget, or accept now and process later."],["Decouple with messaging","Notifications, analytics, emails: publish to Kafka. The broker buffers while the consumer is down."],["Let the platform help","Liveness and readiness probes, multiple replicas, PodDisruptionBudgets, so one crash doesn't mean zero instances."],["Know about it","Alerts on circuit state and error rate per dependency, plus a dashboard showing which features are degraded."]],
+ code:{before:[["ProductPageService.java","public ProductPage page(Long id) {\n    var product = catalog.get(id);\n    var recs = recommendationClient.forProduct(id);  // if this hangs, the page hangs\n    return new ProductPage(product, recs);\n}"]],
+ after:[["ProductPageService.java","public ProductPage page(Long id) {\n    var product = catalog.get(id);\n    return new ProductPage(product, recommendations(id));\n}\n\n@CircuitBreaker(name = \"recs\", fallbackMethod = \"popularItems\")\nList<Product> recommendations(Long id) { return recommendationClient.forProduct(id); }\n\nList<Product> popularItems(Long id, Throwable t) {\n    return popularCache.top(8);                      // page still renders\n}"],["Async instead of sync","// order-service no longer calls notification-service directly\nkafkaTemplate.send(\"order-placed\", order.id().toString(), event);\n// notification-service consumes when it's healthy again"]]},
+ metrics:[["Product page when recs is down","Times out (whole page fails)","Loads, with popular items"],["Checkout when notifications is down","Fails","Works; emails sent later"],["Blast radius","Cascades to the gateway","Contained to one feature"],["Recovery","Manual restarts in order","Automatic as circuits close"]],
+ pros:["Users keep using most of the product during partial outages.","Queues absorb downtime without losing work.","Clear per-dependency fallbacks make incidents calmer."],
+ cons:["Every fallback is code to write, test and keep correct.","Eventual consistency (emails later) must be acceptable to the business.","Hidden degradation can go unnoticed without good alerts."]},
+
+11:{short:"Kafka consumer lag",q:"Kafka consumer lag keeps increasing. What would you investigate?",
+ eli5:["📬","Letters come down six conveyor belts faster than the one person sorting them. The pile grows. You can add more sorters, but only up to six, one per belt. Or make each sorter faster by sorting a whole bundle at once instead of walking to the shelf for every letter."],
+ answer:"Lag grows when produce rate exceeds consume rate, so I compare the two and look at lag per partition. If one partition is hot, it's key skew. If all grow, I check processing time per record: blocking HTTP calls or one DB write per message are typical. I check consumer count versus partitions, since consumers beyond the partition count sit idle, and look for rebalance loops caused by processing longer than max.poll.interval.ms, and for poison messages being retried forever. Fixes: batch processing, more partitions and consumers, async enrichment, and a dead-letter topic.",
+ steps:[["Measure both rates","Producer messages per second versus consumer records per second. Lag = the integral of the difference."],["Lag per partition","One hot partition means skewed keys. Even lag means the whole group is too slow."],["Time per record","Timer around the listener. Blocking HTTP or per-record DB writes are the usual cause."],["Group health","Consumers vs partitions (extra consumers are idle). Frequent rebalances from exceeding max.poll.interval.ms. Errors and retries on a poison message."],["Fix","Batch listener with bulk writes, concurrency up to partition count, more partitions if needed, DefaultErrorHandler with a dead-letter topic."]],
+ code:{before:[["OrderListener.java","@KafkaListener(topics = \"orders\")\npublic void on(OrderEvent e) {\n    var enriched = customerClient.fetch(e.customerId());  // blocking HTTP, ~15 ms\n    repo.save(toEntity(e, enriched));                     // one DB write per record\n}"]],
+ after:[["OrderListener.java","@KafkaListener(topics = \"orders\", concurrency = \"6\", batch = \"true\")\npublic void on(List<OrderEvent> events) {\n    var customers = customerCache.getAll(ids(events));    // one lookup for the batch\n    repo.saveAll(events.stream().map(e -> toEntity(e, customers)).toList());\n}"],["application.yml + error handling","spring.kafka.consumer:\n  max-poll-records: 500\n  properties.max.poll.interval.ms: 300000\n\n@Bean DefaultErrorHandler errors(KafkaTemplate<Object, Object> t) {\n    return new DefaultErrorHandler(new DeadLetterPublishingRecoverer(t),\n                                   new FixedBackOff(1000, 3));\n}"]]},
+ metrics:[["Consume rate","50 msg/s","~3,000 msg/s"],["Lag after 1 minute at 300 msg/s","~15,000 and rising","0"],["Active consumers","1 of 6 partitions","6 of 6"],["Poison message","Blocks the partition","Moved to orders.DLT"]],
+ pros:["Batching cuts per-record overhead dramatically.","Concurrency up to partition count scales linearly for independent work.","A dead-letter topic keeps one bad message from stopping everything."],
+ cons:["Partitions can be added but not removed, and adding them changes key-to-partition mapping.","Batch failures need careful partial-failure handling.","Higher concurrency moves load to the database; check it can keep up."]},
+
+12:{short:"Slow only at peak",q:"Your API becomes slow only during peak traffic. Which metrics would you check?",
+ eli5:["🚗","Your car is fine in the morning but struggles going uphill with five people in it. You look at the dashboard: speed, engine temperature, fuel. The one gauge in the red tells you what's struggling. Your API has a dashboard too."],
+ answer:"I use RED for the service and USE for resources. RED: request rate, error rate, and latency as p95/p99 (averages hide the pain). USE for each resource: utilisation, saturation (queues) and errors. Concretely: Tomcat busy threads, Hikari active and pending connections, CPU and throttling, GC pause time and heap, DB CPU, locks and slow queries, downstream latency, and queue lag. The metric that saturates first as traffic rises is the bottleneck. Then I load test at that level to confirm.",
+ steps:[["RED for the endpoint","Rate (req/s), errors (5xx, timeouts), duration as p50/p95/p99 histograms. Compare peak vs off-peak."],["USE for each resource","Threads: tomcat.threads.busy vs max. Pool: hikaricp.connections.pending. CPU and container throttling. Memory and GC pause."],["Dependencies","DB CPU, lock waits, slow queries. Downstream p99. Kafka lag. Cache hit rate (does it drop at peak?)."],["Correlate","Put them on one time axis. The first metric to bend as traffic rises is the cause; the rest are symptoms."],["Confirm","Reproduce with a load test at peak rate and verify the fix moves that metric."]],
+ code:{before:[["application.yml","# nothing exported, only logs and an average response time somewhere\nmanagement.endpoints.web.exposure.include: health"]],
+ after:[["application.yml","management:\n  endpoints.web.exposure.include: health,prometheus\n  metrics:\n    tags.application: order-service\n    distribution:\n      percentiles-histogram.http.server.requests: true\n      slo.http.server.requests: 100ms,300ms,1s\nserver.tomcat.mbeanregistry.enabled: true   # exposes tomcat.threads.busy"],["Useful PromQL","histogram_quantile(0.99, sum by (le, uri) (rate(http_server_requests_seconds_bucket[5m])))\nhikaricp_connections_pending\ntomcat_threads_busy_threads / tomcat_threads_config_max_threads\nrate(jvm_gc_pause_seconds_sum[5m])"]]},
+ metrics:[["What you see at peak","'It's slow' and an average of 200 ms","p99 3 s on /checkout, pool pending 40"],["Time to locate cause","Hours","Minutes, one dashboard"],["Capacity at acceptable p99","~500 req/s","~1,900 req/s after fixing the pool"],["Alerting","Users complain first","SLO burn alert fires first"]],
+ pros:["Percentiles show the users who are actually suffering.","A standard RED/USE dashboard works for every service.","Saturation metrics warn before latency explodes."],
+ cons:["Histograms add metric cardinality and storage cost.","Too many dashboards and alerts lead to noise; choose a few SLOs.","Metrics tell you where, not always why; you still need traces and profiling."]},
+
+13:{short:"Retry storm",q:"A retry mechanism is making a downstream outage worse. Why?",
+ eli5:["☎️","The pizza place's phone line is jammed. Everyone keeps hitting redial instantly, so the line stays jammed even after the pizza place fixes its phone. If everyone waited a random little while before calling again, the line would clear."],
+ answer:"Retries multiply load exactly when the downstream has the least capacity. Immediate retries with no backoff, many attempts, and retries at several layers (gateway, service, client, each doing 3) can turn 1 request into 27. Synchronised retries create waves, and retrying non-transient errors or non-idempotent calls adds load or duplicates. Even after the downstream recovers, the retry backlog keeps it overloaded. The fix: exponential backoff with jitter, few attempts, retry only on transient errors, a retry budget, retries at one layer only, and a circuit breaker in front.",
+ steps:[["See the amplification","Compare requests sent to the downstream with user requests. A ratio well above 1 during an outage means retries are the load."],["Count the layers","Gateway, service mesh, HTTP client, application code. Retries multiply across layers."],["Check the policy","Backoff? Jitter? How many attempts? Which errors? Retrying a 400 or a timeout on a non-idempotent POST is wrong."],["Add a budget and a breaker","Allow retries up to ~10% of traffic. A circuit breaker stops calls entirely while the downstream is unhealthy."],["Keep one layer responsible","Usually the closest caller retries; everything else fails fast."]],
+ code:{before:[["Client.java","for (int i = 0; i < 5; i++) {\n    try {\n        return client.call();\n    } catch (Exception e) {\n        // retry immediately, on any error, five times\n    }\n}\nthrow new ServiceUnavailableException();"]],
+ after:[["application.yml","resilience4j:\n  retry.instances.inventory:\n    max-attempts: 3\n    wait-duration: 200ms\n    enable-exponential-backoff: true\n    exponential-backoff-multiplier: 2\n    enable-randomized-wait: true          # jitter spreads retries out\n    randomized-wait-factor: 0.5\n    retry-exceptions:\n      - java.net.SocketTimeoutException\n      - org.springframework.web.client.HttpServerErrorException$ServiceUnavailable\n  circuitbreaker.instances.inventory:\n    failure-rate-threshold: 50\n    wait-duration-in-open-state: 10s"],["InventoryClient.java","@CircuitBreaker(name = \"inventory\")      // outer: stops calls when unhealthy\n@Retry(name = \"inventory\")               // inner: few, spaced retries\npublic Stock stock(String sku) { ... }"]]},
+ metrics:[["Load on downstream during outage","Up to 4× normal","~1.1× normal"],["Recovery after the fix is deployed","Doesn't recover (stuck overloaded)","Recovers in seconds"],["Duplicate side effects","Possible","Only idempotent calls retried"],["User-visible errors","Long timeouts","Fast fallback while open"]],
+ pros:["Backoff and jitter keep retries helpful for blips without harming recovery.","A retry budget caps the worst case no matter what.","The circuit breaker gives the downstream space to come back."],
+ cons:["Longer backoffs add latency for unlucky requests.","Tuning attempts, delays and budgets takes real traffic data.","Coordinating 'retry at one layer only' across teams is an organisational job."]},
+
+14:{short:"Scheduled job runs twice",q:"A scheduled job runs twice after scaling your application. How would you prevent it?",
+ eli5:["🐶","Three kids each have an alarm that says 'feed the dog at 7'. All three alarms ring, so the dog gets three breakfasts. Fix: a note on the fridge. The first kid writes 'I'm feeding him'. The others see the note and go back to bed."],
+ answer:"@Scheduled runs in every instance, so three pods means three runs. Use a distributed lock such as ShedLock with a lock table in the shared database (Mongo, JDBC or Redis provider): the first instance to grab the lock runs the job, the others skip. Set lockAtMostFor so a crashed instance doesn't hold the lock forever. Alternatives are running the job outside the app (Kubernetes CronJob), Quartz in clustered mode, or leader election. I'd also make the job idempotent, for example marking invoices as sent, as a second safety net.",
+ steps:[["Confirm the cause","Logs from each pod at the trigger time. Each instance has its own scheduler."],["Add a distributed lock","ShedLock: one row per job name with lock_until and locked_by, updated atomically."],["Choose lock durations","lockAtMostFor longer than the job's normal run (crash safety). lockAtLeastFor a little above clock skew so fast jobs don't run twice."],["Make the job idempotent","Process 'unsent' rows and mark them sent in the same transaction, so even a double run can't double-send."],["Or move scheduling out","A Kubernetes CronJob or a single scheduler service if jobs are heavy or numerous."]],
+ code:{before:[["InvoiceJob.java","@Scheduled(cron = \"0 0 2 * * *\")\npublic void sendInvoices() {\n    invoiceService.sendAll();   // runs once per pod\n}"]],
+ after:[["InvoiceJob.java","@Configuration\n@EnableScheduling\n@EnableSchedulerLock(defaultLockAtMostFor = \"10m\")\nclass SchedulingConfig {\n    @Bean LockProvider lockProvider(MongoClient client) {\n        return new MongoLockProvider(client.getDatabase(\"app\"));\n    }\n}\n\n@Scheduled(cron = \"0 0 2 * * *\")\n@SchedulerLock(name = \"sendInvoices\", lockAtLeastFor = \"1m\", lockAtMostFor = \"10m\")\npublic void sendInvoices() {\n    invoiceService.sendUnsent();   // idempotent as a second guard\n}"]]},
+ metrics:[["Invoice emails per customer (3 pods)","3","1"],["Runs at 02:00","One per pod","Exactly one"],["If the lock holder crashes","N/A","Lock expires after 10 min"],["Extra infrastructure","None","One small lock collection"]],
+ pros:["Tiny change, uses the database you already have.","Works for any number of instances and survives restarts.","Lock table shows who ran what and when."],
+ cons:["Depends on the lock store being available.","Wrong lockAtMostFor can allow overlap on long jobs or block reruns.","Doesn't spread work across pods; for big jobs use partitioned processing."]},
+
+15:{short:"End-to-end tracing",q:"One request passes through multiple microservices. How would you trace it end-to-end?",
+ eli5:["📦","When you send a parcel, it gets a tracking number. Every hub it passes writes down the number and the time. Later you type the number and see the whole journey, including the hub where it sat for two days."],
+ answer:"Distributed tracing with a trace ID that's created at the edge and propagated in headers (W3C traceparent) through every HTTP call and Kafka message. In Spring Boot 3 that's Micrometer Tracing with the OpenTelemetry bridge, exporting spans to Tempo, Jaeger or Zipkin. Each service creates spans for its work, and the trace ID goes into every log line via MDC, so I can jump from a slow trace to its logs. Use the auto-configured RestClient.Builder or WebClient.Builder and KafkaTemplate so propagation is automatic, and sample in production.",
+ steps:[["Add the libraries","micrometer-tracing-bridge-otel and an exporter (opentelemetry-exporter-otlp) in every service."],["Propagate context","Use Spring's auto-configured RestClient.Builder / WebClient.Builder (not new RestTemplate()). Enable observation on KafkaTemplate and listeners."],["Put IDs in logs","logging.pattern.level with traceId and spanId, so logs from all services can be filtered by one ID."],["Export and view","Send spans to an OpenTelemetry Collector, then Tempo or Jaeger. Link Grafana logs and traces."],["Sample and tag","10% sampling in production plus always-sample errors if your backend supports tail sampling. Add business tags like orderId carefully (no personal data)."]],
+ code:{before:[["CheckoutService.java","private final RestTemplate http = new RestTemplate();   // not instrumented: headers dropped\n\nlog.info(\"Calling payment\");   // which request? no way to tell"]],
+ after:[["pom.xml","<dependency>\n  <groupId>io.micrometer</groupId>\n  <artifactId>micrometer-tracing-bridge-otel</artifactId>\n</dependency>\n<dependency>\n  <groupId>io.opentelemetry</groupId>\n  <artifactId>opentelemetry-exporter-otlp</artifactId>\n</dependency>"],["application.yml","management:\n  tracing.sampling.probability: 0.1\n  otlp.tracing.endpoint: http://otel-collector:4318/v1/traces\nspring.kafka.template.observation-enabled: true\nspring.kafka.listener.observation-enabled: true\nlogging.pattern.level: \"%5p [\${spring.application.name:},%X{traceId:-},%X{spanId:-}]\""],["CheckoutService.java","CheckoutService(RestClient.Builder builder) {          // instrumented builder\n    this.payment = builder.baseUrl(paymentUrl).build();  // traceparent sent automatically\n}"]]},
+ metrics:[["Finding a failed request's logs","Grep 5 services by timestamp","Filter by one traceId"],["Seeing where time went","Guess","Waterfall shows the slow span"],["Async (Kafka) hops","Lost","Linked in the same trace"],["Overhead","None, and no visibility","Small, controlled by sampling"]],
+ pros:["One ID connects every log and span across services.","Waterfalls make slow hops and errors obvious.","Standard W3C headers work across languages and vendors."],
+ cons:["Needs a tracing backend to run and pay for.","Any client created manually breaks propagation silently.","Sampling means some requests aren't traced; tail sampling adds complexity."]}
+};
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function cv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function makeCtx(){const iv=[],to=[];return{every(ms,f){const i=setInterval(f,ms);iv.push(i);return i},after(ms,f){const t=setTimeout(f,ms);to.push(t);return t},stop(){iv.forEach(clearInterval);to.forEach(clearTimeout);iv.length=0;to.length=0}}}
+const KW='public|private|protected|class|interface|record|return|new|void|final|static|if|else|for|try|catch|throw|throws|extends|implements|var|int|long|this|null|true|false|default';
+function hl(code){
+  const re=new RegExp('(//[^\\n]*|(?:^|\\s)#[^\\n]*|/\\*[\\s\\S]*?\\*/)|("(?:[^"\\\\\\n]|\\\\.)*")|(@\\w+)|\\b('+KW+')\\b|\\b(\\d[\\d_]*)\\b','gm');
+  let out='',last=0,m;
+  while((m=re.exec(code))){out+=esc(code.slice(last,m.index));
+    const cls=m[1]?'com':m[2]?'str':m[3]?'an':m[4]?'kw':'num';
+    out+=`<span class="k-${cls}">${esc(m[0])}</span>`;last=re.lastIndex;}
+  return out+esc(code.slice(last));
+}
+function chart(canvas,o){
+  const dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;if(!w)return;
+  canvas.width=w*dpr;canvas.height=h*dpr;const g=canvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);
+  const p={l:52,r:12,t:12,b:24};const X=x=>p.l+x/o.xmax*(w-p.l-p.r),Y=y=>h-p.b-Math.min(y,o.ymax)/o.ymax*(h-p.t-p.b);
+  const mut=cv('--con-muted'),ln=cv('--con-line');g.font='11px "IBM Plex Sans", sans-serif';
+  (o.bands||[]).forEach(b=>{g.fillStyle=b.color;g.fillRect(X(b.x0),p.t,X(b.x1)-X(b.x0),h-p.t-p.b);if(b.label){g.fillStyle=mut;g.fillText(b.label,X(b.x0)+4,p.t+12)}});
+  for(let i=0;i<=4;i++){const y=o.ymax*i/4;g.strokeStyle=ln;g.lineWidth=1;g.beginPath();g.moveTo(p.l,Y(y));g.lineTo(w-p.r,Y(y));g.stroke();g.fillStyle=mut;g.textAlign='right';g.fillText(o.yfmt?o.yfmt(y):Math.round(y),p.l-6,Y(y)+4)}
+  g.textAlign='center';[0,.5,1].forEach(f=>{g.fillText(o.xfmt?o.xfmt(o.xmax*f):o.xmax*f,X(o.xmax*f),h-6)});g.textAlign='left';
+  (o.hlines||[]).forEach(l=>{g.setLineDash([5,4]);g.strokeStyle=l.color;g.lineWidth=1.5;g.beginPath();g.moveTo(p.l,Y(l.y));g.lineTo(w-p.r,Y(l.y));g.stroke();g.setLineDash([]);g.fillStyle=l.color;g.fillText(l.label,p.l+6,Y(l.y)-5)});
+  (o.series||[]).forEach(s=>{if(!s.pts.length)return;g.strokeStyle=s.color;g.lineWidth=s.width||2;g.beginPath();s.pts.forEach(([x,y],i)=>i?g.lineTo(X(x),Y(y)):g.moveTo(X(x),Y(y)));g.stroke();
+    if(s.fill){g.lineTo(X(s.pts[s.pts.length-1][0]),Y(0));g.lineTo(X(s.pts[0][0]),Y(0));g.closePath();g.fillStyle=s.fill;g.fill()}});
+  (o.marks||[]).forEach(m=>{g.fillStyle=m.color;g.beginPath();g.arc(X(m.x),Y(m.y),5,0,7);g.fill();g.font='600 12px "IBM Plex Sans", sans-serif';g.textAlign=X(m.x)>w-120?'right':'left';g.fillText(m.label,X(m.x)+(g.textAlign==='right'?-8:8),Y(m.y)+(g.textAlign==='right'?18:4));g.textAlign='left'});
+}
+const C={ok:'#4FD1A5',bad:'#FF6B7F',warn:'#FFC24B',acc:'#86A6FF',vio:'#C59BFF',muted:'#8D9AB7'};
+function chips(arr){return arr.map(([v,l,k])=>`<div class="chip ${k||''}"><b>${v}</b><span>${l}</span></div>`).join('')}
+function logLine(el,cls,txt,max=60){const d=document.createElement('div');d.className=cls;d.textContent=txt;el.appendChild(d);while(el.children.length>max)el.firstChild.remove();el.scrollTop=el.scrollHeight}
+
+const demos={};
+
+/* Q1 profiler trace */
+demos[1]=(el,mode,c)=>{
+  const B=mode==='before';
+  const segs=B?[['Controller + validation',5,'acc'],['Service logic',15,'vio'],['DB: 1 + 100 queries (N+1)',1212,'bad'],['JSON serialization',20,'acc']]
+             :[['Controller + validation',5,'acc'],['Service logic',15,'vio'],['DB: 1 query with entity graph',25,'ok'],['JSON serialization',20,'acc']];
+  const total=segs.reduce((s,x)=>s+x[1],0),scale=1300;let st=0;
+  const rows=segs.map(([n,ms,col])=>{const r=`<div class="tr-row"><div>${n}</div><div class="tr-track"><div class="tr-bar c-${col}" data-w="${Math.max(ms/scale*100,.6)}" style="left:${st/scale*100}%"></div></div><div class="tr-ms">${ms} ms</div></div>`;st+=ms;return r}).join('');
+  el.innerHTML=`<div class="d-ctrl"><button class="d-btn" data-run>Run profiler again</button><span class="d-hint">Trace of GET /orders returning 100 orders. Both modes use the same 1.3 s scale.</span></div>
+  <div>${rows}</div>
+  <div class="chips"><div class="chip"><b data-t>0 ms</b><span>total time</span></div><div class="chip ${B?'bad':'ok'}"><b data-q>0</b><span>SQL queries</span></div><div class="chip ${B?'bad':'ok'}"><b>${B?'Repository':'None'}</b><span>hotspot</span></div></div>
+  <p class="d-note">${B?'93% of the time is in the database, and it is 101 small queries, not one slow one. That shape is the N+1 problem.':'One query replaces 101 round trips. The DB slice almost disappears and the request is about 18× faster.'}</p>`;
+  const run=()=>{const bars=$$('.tr-bar',el);bars.forEach(b=>{b.style.transition='none';b.style.width='0'});
+    requestAnimationFrame(()=>requestAnimationFrame(()=>bars.forEach((b,i)=>{b.style.transition='';b.style.transitionDelay=(i*.3)+'s';b.style.width=b.dataset.w+'%'})));
+    let k=0;const id=c.every(35,()=>{k++;const f=Math.min(k/40,1);$('[data-t]',el).textContent=Math.round(total*f)+' ms';$('[data-q]',el).textContent=Math.round((B?101:1)*f);if(f>=1)clearInterval(id)})};
+  $('[data-run]',el).onclick=run;run();
+};
+
+/* Q2 capacity pipeline */
+demos[2]=(el,mode)=>{
+  const B=mode==='before';const cfg=B?{threads:200,pool:10,cache:0}:{threads:Infinity,pool:30,cache:.8};const qms=50,dbCap=800;
+  el.innerHTML=`<div class="d-ctrl"><label class="d-range">Concurrent requests <input type="range" min="100" max="10000" step="100" value="5000" data-n><output data-nv></output></label><span class="d-hint">Each DB query takes 50 ms. Clients give up after 5 s.</span></div>
+  <div data-pipe></div><div class="chips" data-chips></div><p class="d-note" data-note></p>`;
+  const draw=()=>{
+    const n=+$('[data-n]',el).value;$('[data-nv]',el).textContent=n.toLocaleString();
+    const inT=Math.min(n,cfg.threads),waitT=n-inT,db=n*(1-cfg.cache),concDb=inT*(1-cfg.cache);
+    const poolUtil=Math.min(concDb/cfg.pool,1),waitP=Math.max(0,Math.round(concDb-cfg.pool));
+    const poolTput=cfg.pool*1000/qms,dbUtil=Math.min(db,poolTput)/dbCap;
+    const worst=Math.ceil(db/cfg.pool)*qms,served5=5000/qms*cfg.pool,err=Math.max(0,db-served5)/n*100;
+    const tUtil=B?Math.min(n/200,1):Math.min(n/20000,1);
+    const neck=waitP>0?'pool':waitT>0?'threads':dbUtil>=.95?'db':'';
+    const st=(id,name,u,w,col)=>`<div class="stage ${neck===id?'neck':''}"><div class="nm">${name}</div><div class="bar"><i class="c-${u>=.99?'bad':u>.7?'warn':col}" style="width:${Math.max(u*100,1)}%"></i></div><div class="w">${Math.round(u*100)}% busy${w?`, ${w.toLocaleString()} waiting`:''}</div></div>`;
+    $('[data-pipe]',el).innerHTML=(B?'':`<div class="stage"><div class="nm">Cache (80% hits)</div><div class="bar"><i class="c-ok" style="width:80%"></i></div><div class="w">${Math.round(n*.8).toLocaleString()} answered</div></div>`)+
+      st('threads',B?'Tomcat threads (200)':'Virtual threads',tUtil,waitT,'acc')+st('pool',`Hikari pool (${cfg.pool})`,poolUtil,waitP,'acc')+st('db','Database CPU',Math.min(dbUtil,1),0,'acc');
+    $('[data-chips]',el).innerHTML=chips([[worst>=1000?(worst/1000).toFixed(1)+' s':worst+' ms','worst-case latency',worst>5000?'bad':worst>1500?'warn':'ok'],[Math.round(err)+'%','requests over 5 s',err>0?'bad':'ok'],[Math.round(Math.min(db,poolTput))+'/s','DB queries served','']]);
+    $('[data-note]',el).textContent=neck==='pool'?(B?`All ${Math.min(n,200)} threads are busy, but most are just waiting for one of 10 connections. The pool is the narrowest pipe, so adding threads would only add waiters.`:`Even with caching, ${Math.round(db).toLocaleString()} requests need the DB. The pool is still the limit at this extreme, but latency stays far lower.`):neck==='threads'?'Threads are the limit at this load.':'No resource is saturated at this load. Try moving the slider.';
+  };
+  $('[data-n]',el).oninput=draw;draw();
+};
+
+/* Q3 pool exhaustion */
+demos[3]=(el,mode,c)=>{
+  const B=mode==='before',N=10,hold=B?7:1,leakP=B?.12:0,TO=12,r=rng(11);
+  let slots=Array.from({length:N},()=>({ttl:0,leak:false})),queue=[],served=0,timeouts=0,leaks=0,t=0;
+  el.innerHTML=`<div class="pool-wrap"><div><div class="d-sub">Hikari pool, 10 connections</div><div class="slots" data-s></div><div class="legend"><span><i class="c-acc"></i>in use</span><span><i class="c-bad"></i>leaked</span><span><i style="background:var(--con-line)"></i>free</span></div></div>
+  <div><div class="d-sub">Threads waiting for a connection (red = close to timing out)</div><div class="queue" data-q></div></div></div>
+  <div class="chips" data-c></div><div class="log" data-l></div>`;
+  const L=$('[data-l]',el);
+  const tick=()=>{t++;
+    slots.forEach(s=>{if(!s.leak&&s.ttl>0)s.ttl--});
+    queue.push(0,0);
+    slots.forEach(s=>{if(!s.leak&&s.ttl===0&&queue.length){queue.shift();served++;if(r()<leakP){s.leak=true;leaks++}else s.ttl=hold}});
+    queue=queue.map(a=>a+1);const dead=queue.filter(a=>a>TO).length;queue=queue.filter(a=>a<=TO);
+    if(dead){timeouts+=dead;logLine(L,'e',`ERROR HikariPool-1 - Connection is not available, request timed out after 30000ms (total=10, active=10, idle=0, waiting=${queue.length})`)}
+    else if(!B&&t%4===0)logLine(L,'g',`INFO  GET /reports 200 in ${30+Math.round(r()*25)} ms (pool active=${slots.filter(s=>s.ttl>0).length}, waiting=0)`);
+    if(B&&t===6)logLine(L,'w','WARN  Report generation holds a DB connection while calling pdf-service (5 s)');
+    draw()};
+  const draw=()=>{
+    $('[data-s]',el).innerHTML=slots.map((s,i)=>`<div class="slot ${s.leak?'leak':s.ttl>0?'busy':''}">${s.leak?'leak':s.ttl>0?'#'+(i+1):''}</div>`).join('');
+    $('[data-q]',el).innerHTML=queue.slice(0,60).map(a=>`<i class="${a>TO*.7?'old':''}"></i>`).join('')+(queue.length>60?` +${queue.length-60}`:'')+(queue.length?'':'<span class="d-hint">Nobody waiting</span>');
+    const active=slots.filter(s=>s.leak||s.ttl>0).length;
+    $('[data-c]',el).innerHTML=chips([[active+'/10','active',active===10?'bad':'ok'],[queue.length,'pending',queue.length>5?'bad':queue.length?'warn':'ok'],[timeouts,'timeouts',timeouts?'bad':'ok'],[leaks,'leaked connections',leaks?'bad':'ok'],[served,'served','']]);
+  };
+  logLine(L,'i',B?'INFO  pool started: maximum-pool-size=10, no leak detection, open-in-view=true':'INFO  pool started: maximum-pool-size=10, leak-detection-threshold=5000, open-in-view=false');
+  draw();c.every(320,tick);
+};
+
+/* Q4 slow downstream */
+demos[4]=(el,mode,c)=>{
+  const B=mode==='before',T=16;let th=Array(T).fill(null),st='CLOSED',openT=0,win=[],trials=0,healthy=false;
+  const s={ok:0,fb:0,to:0,rej:0,pOk:0,pRej:0};
+  el.innerHTML=`<div class="d-ctrl"><label class="d-hint"><input type="checkbox" data-h> Pricing service is healthy again</label>${B?'':'<span>Circuit: <span class="badge CLOSED" data-cb>CLOSED</span></span>'}</div>
+  <div class="d-sub">16 request threads. Every half second one /price call (needs pricing service) and one /products call arrive.</div>
+  <div class="threads" data-t></div><div class="legend"><span><i class="c-warn"></i>stuck waiting on pricing</span><span><i class="c-acc"></i>/products</span><span><i style="background:var(--con-line)"></i>free</span></div>
+  <div class="chips" data-c></div><p class="d-note" data-n></p>`;
+  $('[data-h]',el).onchange=e=>{healthy=e.target.checked};
+  const free=()=>th.findIndex(x=>!x);
+  const result=ok=>{if(B)return;if(st==='HALF_OPEN'){if(ok){st='CLOSED';win=[]}else{st='OPEN';openT=12}return}win.push(ok);if(win.length>10)win.shift();
+    if(win.length>=6&&win.filter(x=>!x).length/win.length>=.5){st='OPEN';openT=12;win=[]}};
+  const tick=()=>{
+    th=th.map(x=>{if(!x)return x;x.ttl--;if(x.ttl<=0){if(x.k==='p'){if(x.fail){s.to++;result(false)}else{s.ok++;result(true)}}else s.pOk++;return null}return x});
+    if(!B&&st==='OPEN'&&--openT<=0){st='HALF_OPEN';trials=2}
+    // price
+    if(!B&&st==='OPEN')s.fb++;
+    else if(!B&&st==='HALF_OPEN'&&trials<=0)s.fb++;
+    else{const i=free();if(i<0)s.rej++;else{if(st==='HALF_OPEN')trials--;th[i]={k:'p',ttl:healthy?1:(B?20:2),fail:!healthy&&!B}}}
+    // products
+    const j=free();if(j<0)s.pRej++;else th[j]={k:'d',ttl:1};
+    draw()};
+  const draw=()=>{
+    $('[data-t]',el).innerHTML=th.map(x=>`<div class="slot ${x?(x.k==='p'?'warnb':'busy'):''}">${x?(x.k==='p'?x.ttl/2+'s':'p'):''}</div>`).join('');
+    if(!B){const b=$('[data-cb]',el);b.className='badge '+st;b.textContent=st}
+    const pr=s.pOk+s.pRej?Math.round(s.pOk/(s.pOk+s.pRej)*100):100;
+    $('[data-c]',el).innerHTML=chips([[pr+'%','/products success',pr<95?'bad':'ok'],[s.ok,'/price answered',''],[s.fb,'fallback (cached price)',s.fb?'warn':''],[s.to,'timed out after 1 s',s.to?'warn':''],[s.rej+s.pRej,'rejected, no free thread',s.rej+s.pRej?'bad':'ok']]);
+    $('[data-n]',el).textContent=B?(healthy?'Pricing answers quickly again, but threads only free up as old 10 s calls finish.':'Each /price call holds a thread for 10 s. After about 8 seconds every thread is stuck, and /products, which has nothing to do with pricing, starts failing too.')
+      :st==='OPEN'?'Circuit open: /price returns the cached price instantly without touching the pricing service. /products is unaffected.':st==='HALF_OPEN'?'Half-open: two trial calls test whether pricing has recovered.':healthy?'Pricing is healthy, the circuit is closed, calls succeed normally.':'Calls time out after 1 s. After enough failures the circuit will open.';
+  };
+  draw();c.every(300,tick);
+};
+
+/* Q5 idempotency */
+demos[5]=(el,mode,c)=>{
+  const B=mode==='before';
+  el.innerHTML=`<div class="d-ctrl"><button class="d-btn" data-go>Pay ৳500 (the reply gets lost, app retries)</button></div>
+  <div class="seq"><div class="box"><h5>What happens</h5><ol data-s></ol></div>
+  <div><div class="box"><h5>Card ledger</h5><table class="tbl"><thead><tr><th>charge</th><th>amount</th></tr></thead><tbody data-led><tr><td colspan="2" class="d-hint">No charges yet</td></tr></tbody></table></div>
+  ${B?'':'<div class="box" style="margin-top:12px"><h5>Idempotency store</h5><table class="tbl"><thead><tr><th>key</th><th>status</th><th>response</th></tr></thead><tbody data-ks><tr><td colspan="3" class="d-hint">Empty</td></tr></tbody></table></div>'}
+  <div class="chips" data-c></div></div></div>`;
+  const go=()=>{c.stop();const S=$('[data-s]',el);S.innerHTML='';const led=[],key='7f3a-91c2';$('[data-led]',el).innerHTML='<tr><td colspan="2" class="d-hint">No charges yet</td></tr>';if(!B)$('[data-ks]',el).innerHTML='<tr><td colspan="3" class="d-hint">Empty</td></tr>';$('[data-c]',el).innerHTML='';
+    const btn=$('[data-go]',el);btn.disabled=true;let n=0;
+    const step=(t,cls='')=>{n++;const li=document.createElement('li');li.className=cls;li.innerHTML=`<span class="k">${n}</span><span>${t}</span>`;S.appendChild(li)};
+    const charge=id=>{led.push(id);$('[data-led]',el).innerHTML=led.map(x=>`<tr><td>${x}</td><td>৳500</td></tr>`).join('')};
+    const ks=(st,resp)=>{$('[data-ks]',el).innerHTML=`<tr><td>${key}</td><td>${st}</td><td>${resp}</td></tr>`};
+    const seq=[
+      ()=>step(`App sends POST /payments ${B?'':`with Idempotency-Key: ${key}`}`),
+      ()=>{if(!B){step('API inserts the key (unique index) with status IN_PROGRESS');ks('IN_PROGRESS','-')}else step('API starts processing')},
+      ()=>{step('API charges the card: pay_001');charge('pay_001')},
+      ()=>{if(!B){step('API stores the response with the key');ks('DONE','201 pay_001')}else step('API returns 201 pay_001')},
+      ()=>step('Mobile network drops the reply. The app never sees it.','bad'),
+      ()=>step(`App times out and retries the same request${B?'':` with the same key`}`),
+      ()=>{if(B){step('API has no way to know this is a repeat, so it charges again: pay_002','bad');charge('pay_002')}else step('API finds the key is DONE and returns the stored 201 pay_001. No new charge.','good')},
+      ()=>{$('[data-c]',el).innerHTML=chips([[led.length,'charges',led.length>1?'bad':'ok'],['৳'+led.length*500,'customer paid',led.length>1?'bad':'ok']]);btn.disabled=false}
+    ];
+    seq.forEach((f,i)=>c.after(i*750,f))};
+  $('[data-go]',el).onclick=go;go();
+};
+
+/* Q6 lost update */
+demos[6]=(el,mode,c)=>{
+  const B=mode==='before';
+  const steps=B?[
+    ['Start: stock 10, version 1',10,1,'-','-',''],
+    ['Alice reads the product: stock 10',10,1,'10','-',''],
+    ['Bob reads the product: stock 10',10,1,'10','10',''],
+    ['Alice buys 3, writes 10 - 3 = 7',7,1,'7','10',''],
+    ['Bob buys 2, writes 10 - 2 = 8 (from his stale copy)',8,1,'7','8','bad'],
+    ['Final stock 8. 5 items were sold, so it should be 5. Alice\'s update is lost.',8,1,'7','8','bad']]
+   :[
+    ['Start: stock 10, version 1',10,1,'-','-',''],
+    ['Alice reads: stock 10, version 1',10,1,'10 (v1)','-',''],
+    ['Bob reads: stock 10, version 1',10,1,'10 (v1)','10 (v1)',''],
+    ['Alice writes 7 WHERE version = 1. 1 row updated, version becomes 2',7,2,'7 (v2)','10 (v1)','good'],
+    ['Bob writes 8 WHERE version = 1. 0 rows updated: OptimisticLockException',7,2,'7 (v2)','conflict','bad'],
+    ['@Retryable: Bob re-reads stock 7, version 2, writes 5. Version becomes 3',5,3,'7 (v2)','5 (v3)','good'],
+    ['Final stock 5. Correct.',5,3,'7 (v2)','5 (v3)','good']];
+  let i=0;
+  el.innerHTML=`<div class="d-ctrl"><button class="d-btn" data-next>Next step</button><button class="d-btn ghost" data-play>Play all</button><span class="d-hint" data-k></span></div>
+  <div class="race"><div class="box"><div class="sub">Alice's copy</div><div class="big" data-a></div></div><div class="box"><div class="sub">Database row</div><div class="big" data-db></div><div class="sub" data-v></div></div><div class="box"><div class="sub">Bob's copy</div><div class="big" data-b></div></div></div>
+  <div class="seq" style="grid-template-columns:1fr;margin-top:14px"><ol data-s></ol></div>`;
+  const show=()=>{const s=steps[i];$('[data-a]',el).textContent=s[3];$('[data-b]',el).textContent=s[4];$('[data-db]',el).textContent=s[1];$('[data-v]',el).textContent=B?'no version column':'version '+s[2];
+    $('[data-db]',el).style.color=i===steps.length-1?(B?C.bad:C.ok):'';
+    const li=document.createElement('li');li.className=s[5];li.innerHTML=`<span class="k">${i+1}</span><span>${s[0]}</span>`;$('[data-s]',el).appendChild(li);
+    $('[data-k]',el).textContent=`Step ${i+1} of ${steps.length}`;$('[data-next]',el).disabled=i>=steps.length-1};
+  $('[data-next]',el).onclick=()=>{if(i<steps.length-1){i++;show()}};
+  $('[data-play]',el).onclick=()=>{c.stop();$('[data-s]',el).innerHTML='';i=0;show();for(let k=1;k<steps.length;k++)c.after(k*900,()=>{i=k;show()})};
+  show();
+};
+
+/* Q7 environment diff */
+demos[7]=(el,mode)=>{
+  const B=mode==='before';
+  const SUS=[['config','Config & profiles'],['secrets','Secrets & env vars'],['network','Network & DNS'],['schema','DB schema'],['resources','CPU & memory limits'],['tls','TLS certificates'],['deps','Java & dependencies'],['data','Data volume']];
+  const INC=[
+    {sym:'Checkout returns 500 for every user',log:'java.net.UnknownHostException: inventory-svc\n  at InventoryClient.reserve(InventoryClient.java:42)',cul:'network',fix:'Prod calls inventory by a hostname that only exists in docker compose. Move the URL to clients.inventory.url per profile and use the Kubernetes service name.'},
+    {sym:'App never becomes ready after deploy',log:'HikariPool-1 - Exception during pool initialization.\norg.postgresql.util.PSQLException: FATAL: password authentication failed for user "app"',cul:'secrets',fix:'The DB_PASSWORD secret was rotated but the deployment still references the old secret version. Update the secret reference and restart.'},
+    {sym:'Pods restart every 20 minutes under load',log:'Last State: Terminated  Reason: OOMKilled  Exit Code: 137\nContainer limit 512Mi, JVM started with -Xmx1g',cul:'resources',fix:'The heap is allowed to be bigger than the container. Replace -Xmx1g with -XX:MaxRAMPercentage=75 so the JVM sizes itself inside the limit.'},
+    {sym:'Order history page fails, everything else works',log:'org.postgresql.util.PSQLException: ERROR: column o1_0.discount does not exist',cul:'schema',fix:'The migration adding discount ran locally but never in prod. Enable Flyway on startup so the schema always matches the code.'},
+    {sym:'Payments fail only in production',log:'javax.net.ssl.SSLHandshakeException: PKIX path building failed: unable to find valid certification path to requested target',cul:'tls',fix:'The bank uses a certificate chain missing from the prod image\'s truststore. Add the CA to the image truststore (or the platform trust bundle).'},
+    {sym:'Report export crashes on one endpoint',log:'java.lang.NoSuchMethodError: \'com.fasterxml.jackson.databind.ObjectMapper ObjectMapper.findAndRegisterModules()\'',cul:'deps',fix:'The prod image runs an older shared library jar than the one you tested. Build one artifact, pin dependency versions, and promote the same image through environments.'}];
+  let idx=0,checked={},mins=0,found=false;
+  el.innerHTML=`<div class="d-ctrl"><button class="d-btn ghost" data-new>New incident</button><span class="d-hint">Click a suspect to check it. Each check costs 10 minutes.</span></div>
+  <div class="box"><h5 data-sym></h5><div class="log" data-log style="margin-top:0"></div></div>
+  <div class="suspects" data-sus></div><div class="chips" data-c></div><p class="d-note" data-n></p>`;
+  const render=()=>{const inc=INC[idx];$('[data-sym]',el).textContent='Symptom: '+inc.sym;
+    $('[data-log]',el).innerHTML=B?'<span class="e">ERROR 500 Internal Server Error</span>\n<span class="i">(stack traces disabled in prod, no structured logs, no pod events collected)</span>':'<span class="e">'+esc(inc.log)+'</span>';
+    $('[data-sus]',el).innerHTML=SUS.map(([k,n])=>`<button data-k="${k}" class="${checked[k]===1?'yes':checked[k]===0?'no':''}" ${found?'disabled':''}>${n}</button>`).join('');
+    $$('[data-k]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k in checked)return;mins+=10;if(k===inc.cul){checked[k]=1;found=true}else checked[k]=0;render()});
+    $('[data-c]',el).innerHTML=chips([[mins+' min','spent investigating',mins>40?'bad':mins>10?'warn':'ok'],[Object.keys(checked).length,'things checked','']]);
+    $('[data-n]',el).textContent=found?'Found it. '+inc.fix:B?'The log tells you nothing, so every check is a guess. This is why the first fix is usually better logging.':'Read the log line first. It names the category almost every time.'};
+  $('[data-new]',el).onclick=()=>{idx=(idx+1)%INC.length;checked={};mins=0;found=false;render()};render();
+};
+
+/* Q8 transactional proxy */
+demos[8]=(el,mode,c)=>{
+  const B=mode==='before';
+  const CASES={
+    self:{n:'Self-invocation (this.method())',bypass:true,proxy:'never involved',code:'public void placeOrder(Order o) {\n    this.saveAndCharge(o);   // internal call skips the proxy\n}\n@Transactional\npublic void saveAndCharge(Order o) { save(o); charge(o); }',
+      fix:'// CheckoutFacade (another bean)\npublic void placeOrder(Order o) {\n    orderService.saveAndCharge(o);   // through the proxy\n}',why:'The proxy wraps the bean from the outside. A call from inside the same object never passes through it, so no transaction is started.'},
+    checked:{n:'Checked exception',bypass:false,proxy:'sees PaymentException (checked): commits',code:'@Transactional\npublic void saveAndCharge(Order o) throws PaymentException {\n    save(o);\n    charge(o);   // throws checked PaymentException\n}',
+      fix:'@Transactional(rollbackFor = Exception.class)\npublic void saveAndCharge(Order o) throws PaymentException { ... }',why:'By default Spring rolls back only for RuntimeException and Error. A checked exception is treated as a business outcome and the transaction commits.'},
+    swallow:{n:'Exception caught and logged',bypass:false,proxy:'sees no exception: commits',code:'@Transactional\npublic void saveAndCharge(Order o) {\n    save(o);\n    try { charge(o); }\n    catch (RuntimeException e) { log.error("failed", e); }\n}',
+      fix:'@Transactional\npublic void saveAndCharge(Order o) {\n    save(o);\n    charge(o);   // let it propagate (or setRollbackOnly())\n}',why:'The proxy decides after the method returns. If the method returns normally, from its point of view everything worked.'},
+    priv:{n:'Private method',bypass:true,proxy:'cannot intercept private methods',code:'@Transactional\nprivate void saveAndCharge(Order o) { save(o); charge(o); }',
+      fix:'@Transactional\npublic void saveAndCharge(Order o) { save(o); charge(o); }\n// and call it from another bean',why:'A CGLIB proxy works by overriding methods. Private (and final) methods can\'t be overridden, so the annotation is silently ignored.'},
+    async:{n:'Work on another thread',bypass:false,proxy:'tx is bound to the request thread',code:'@Transactional\npublic void saveAndCharge(Order o) {\n    save(o);\n    CompletableFuture.runAsync(() -> chargeAndRecord(o));   // other thread\n}',
+      fix:'@Transactional\npublic void saveAndCharge(Order o) {\n    save(o);\n    chargeAndRecord(o);   // same thread, same transaction\n}',why:'Transactions live in a ThreadLocal. Code on another thread runs without it, and the outer transaction commits before the async part even fails.'}};
+  el.innerHTML=`<div class="d-ctrl"><label class="d-range">Scenario <select data-c>${Object.entries(CASES).map(([k,v])=>`<option value="${k}">${v.n}</option>`).join('')}</select></label><button class="d-btn ghost" data-run>Replay</button></div>
+  <div class="tx-flow"><div class="tx-box" data-n="caller">Controller<small>calls placeOrder()</small></div><div class="tx-box" data-n="proxy">Spring proxy<small data-p></small></div><div class="tx-box" data-n="target">OrderService<small>save order, then charge card</small></div><div class="tx-box" data-n="db">Database<small data-db>waiting</small></div></div>
+  <pre class="mini" data-code></pre><div class="chips" data-r></div><p class="d-note" data-why></p>`;
+  const run=()=>{c.stop();const k=$('[data-c]',el).value,cs=CASES[k];const bypass=B&&cs.bypass;
+    const box=n=>$(`[data-n="${n}"]`,el);$$('.tx-box',el).forEach(b=>b.className='tx-box');$('[data-r]',el).innerHTML='';$('[data-db]',el).textContent='waiting';
+    $('[data-p]',el).textContent=bypass?'skipped':'BEGIN transaction';$('[data-code]',el).innerHTML=hl(B?cs.code:cs.fix);$('[data-why]',el).textContent=B?cs.why:'Fixed: the call goes through the proxy, the exception reaches it, and its rollback rule matches.';
+    c.after(100,()=>box('caller').classList.add('hot'));
+    c.after(700,()=>box('proxy').classList.add(bypass?'skip':'hot'));
+    c.after(1300,()=>{box('target').classList.add('hot');$('[data-db]',el).textContent='INSERT order #42'});
+    c.after(1900,()=>{box('target').classList.replace('hot','badx');$('[data-db]',el).textContent='INSERT order #42, charge failed'});
+    c.after(2600,()=>{const ok=!B;if(!bypass)$('[data-p]',el).textContent=ok?'sees exception: ROLLBACK':cs.proxy;
+      box('db').classList.add(ok?'goodx':'badx');$('[data-db]',el).textContent=ok?'rolled back: no order, no charge':'order #42 committed, no payment';
+      $('[data-r]',el).innerHTML=chips([[ok?'0':'1','orphan orders',ok?'ok':'bad'],[ok?'Consistent':'Inconsistent','data state',ok?'ok':'bad']])})};
+  $('[data-c]',el).onchange=run;$('[data-run]',el).onclick=run;run();
+};
+
+/* Q9 heap */
+demos[9]=(el,mode,c)=>{
+  const B=mode==='before',MAX=1024;let t=0,base=200,young=0,pts=[],floor=[],gcs=0,dead=false,entries=0;
+  el.innerHTML=`<canvas class="ch" data-cv></canvas><div class="legend"><span><i style="background:${C.acc}"></i>heap used</span><span><i style="background:${C.warn}"></i>floor after GC</span><span><i style="background:${C.bad}"></i>max heap 1 GB</span></div>
+  <div class="chips" data-c></div><div class="box" style="margin-top:12px"><h5>Heap histogram (top retained)</h5><table class="tbl"><thead><tr><th>class</th><th>instances</th><th>retained</th></tr></thead><tbody data-h></tbody></table></div>`;
+  const r=rng(5);
+  const tick=()=>{if(dead)return;t+=.5;young+=14+r()*6;
+    if(B){base+=4;entries+=420}else{base=Math.min(base+1.2,232);entries=Math.min(entries+420,10000)}
+    let used=base+young;
+    if(used>(B?Math.min(base+120,MAX):base+120)){young=0;gcs++;used=base;floor.push([t,base])}
+    pts.push([t,used]);
+    if(B&&base+20>=MAX){dead=true;pts.push([t,MAX])}
+    draw();if(t>=120||dead)c.stop()};
+  const draw=()=>{chart($('[data-cv]',el),{xmax:120,ymax:1100,xfmt:v=>Math.round(v)+'s',yfmt:v=>Math.round(v)+'MB',hlines:[{y:MAX,color:C.bad,label:'max heap'}],
+    series:[{pts,color:C.acc,width:1.5,fill:'rgba(134,166,255,.12)'},{pts:floor,color:C.warn,width:2.5}],marks:dead?[{x:t,y:MAX,color:C.bad,label:'OutOfMemoryError'}]:[]});
+    const used=pts.length?pts[pts.length-1][1]:base;
+    $('[data-c]',el).innerHTML=chips([[Math.round(used)+' MB','heap used',used>800?'bad':used>500?'warn':'ok'],[Math.round(base)+' MB','floor after GC',B?'bad':'ok'],[gcs,'GC cycles',''],[dead?'Crashed':'Running','status',dead?'bad':'ok']]);
+    const mb=B?Math.round(base-180):Math.round(Math.min(base-180,60));
+    $('[data-h]',el).innerHTML=`<tr><td>java.util.HashMap$Node</td><td>${entries.toLocaleString()}</td><td style="color:${B?C.bad:C.ok}">${Math.max(mb,1)} MB</td></tr><tr><td>com.app.Quote</td><td>${entries.toLocaleString()}</td><td>${Math.max(Math.round(mb*.6),1)} MB</td></tr><tr><td>byte[]</td><td>31,204</td><td>18 MB</td></tr>`};
+  c.every(55,tick);draw();
+};
+
+/* Q10 service graph */
+demos[10]=(el,mode)=>{
+  const B=mode==='before';
+  const N={gw:[20,125,'Gateway'],orders:[210,55,'Orders'],catalog:[210,195,'Catalog'],payments:[420,10,'Payments'],inventory:[420,80,'Inventory'],notif:[420,150,'Notifications'],recs:[420,220,'Recommendations']};
+  const E=[['gw','orders'],['gw','catalog'],['orders','payments'],['orders','inventory'],['orders','notif',1],['catalog','recs']];
+  const FB={payments:'Orders accepted as "payment pending" and charged later',inventory:'Orders uses last known stock and re-checks later',notif:'Emails wait in Kafka and go out when it\'s back',recs:'Product page shows popular items instead',catalog:'Gateway serves the cached catalog page',orders:'Checkout says "try again in a minute", browsing works'};
+  let down=new Set(['recs']);
+  el.innerHTML=`<div class="d-ctrl"><span class="d-hint">Click any service to take it down or bring it back.</span></div><svg class="graph" viewBox="0 0 580 270" data-g></svg><div class="legend"><span><i class="c-ok"></i>healthy</span><span><i class="c-warn"></i>degraded, using fallback</span><span><i class="c-bad"></i>failing</span><span><i style="background:#555"></i>down</span><span>dashed line = async via Kafka</span></div><p class="d-note" data-n></p>`;
+  const status=()=>{const s={};Object.keys(N).forEach(k=>s[k]=down.has(k)?'down':'ok');
+    if(B){let ch=true;while(ch){ch=false;E.forEach(([a,b,async])=>{if(!async&&s[a]==='ok'&&(s[b]==='down'||s[b]==='fail')){s[a]='fail';ch=true}})}}
+    else E.forEach(([a,b,async])=>{if(!async&&s[a]==='ok'&&s[b]==='down')s[a]='deg'});return s};
+  const draw=()=>{const s=status(),col={ok:C.ok,deg:C.warn,fail:C.bad,down:'#4A5368'};
+    const ln=E.map(([a,b,as])=>{const A=N[a],Bn=N[b];return `<line x1="${A[0]+140}" y1="${A[1]+20}" x2="${Bn[0]}" y2="${Bn[1]+20}" stroke="${s[b]==='down'?C.bad:'#3A4C75'}" stroke-width="2" ${as?'stroke-dasharray="6 5"':''}/>`}).join('');
+    const nd=Object.entries(N).map(([k,[x,y,n]])=>`<g class="node" data-k="${k}" tabindex="0" role="button" aria-label="${n}: ${s[k]}"><rect x="${x}" y="${y}" width="140" height="40" rx="9" fill="${s[k]==='down'?'#1A2133':'#16223D'}" stroke="${col[s[k]]}"/><circle cx="${x+16}" cy="${y+20}" r="5" fill="${col[s[k]]}"/><text x="${x+28}" y="${y+25}">${n}</text></g>`).join('');
+    $('[data-g]',el).innerHTML=ln+nd;
+    $$('.node',el).forEach(g=>{const f=()=>{const k=g.dataset.k;down.has(k)?down.delete(k):down.add(k);draw()};g.onclick=f;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f()}}});
+    const failing=Object.keys(s).filter(k=>s[k]==='fail');
+    $('[data-n]',el).textContent=!down.size?'Everything is healthy. Take a service down.':B?(failing.length?`Callers wait on the dead service until their threads run out, so ${failing.map(k=>N[k][2]).join(', ')} fail too. ${failing.includes('gw')?'The gateway is failing, so the whole site looks down.':''}`:'Only async consumers are down; messages just wait in Kafka.')
+      :[...down].map(k=>FB[k]||'').filter(Boolean).join('. ')+'. Everything else keeps working.'};
+  draw();
+};
+
+/* Q11 kafka lag */
+demos[11]=(el,mode,c)=>{
+  const B=mode==='before';const P=6;let cfg=B?{rate:300,cons:1,ms:20}:{rate:300,cons:6,ms:2};
+  el.innerHTML=`<div class="d-ctrl"><label class="d-range">Produced msg/s <input type="range" min="50" max="1500" step="50" data-r><output data-rv></output></label><label class="d-range">Consumers <input type="range" min="1" max="10" data-c><output data-cv2></output></label><label class="d-range">ms per message <input type="range" min="1" max="60" data-m><output data-mv></output></label></div>
+  <div class="parts" data-p></div><canvas class="ch" data-cv></canvas><div class="legend"><span><i style="background:${C.warn}"></i>total lag (messages)</span></div><div class="chips" data-ch></div><p class="d-note" data-n></p>`;
+  const R=$('[data-r]',el),Cn=$('[data-c]',el),M=$('[data-m]',el);R.value=cfg.rate;Cn.value=cfg.cons;M.value=cfg.ms;
+  let lag=0,t=0,pts=[];
+  const restart=()=>{cfg={rate:+R.value,cons:+Cn.value,ms:+M.value};lag=0;t=0;pts=[[0,0]];$('[data-rv]',el).textContent=cfg.rate;$('[data-cv2]',el).textContent=cfg.cons;$('[data-mv]',el).textContent=cfg.ms};
+  [R,Cn,M].forEach(x=>x.oninput=restart);restart();
+  const tick=()=>{if(t>=60)return;const active=Math.min(cfg.cons,P),tput=active*1000/cfg.ms;t+=.5;lag=Math.max(0,lag+(cfg.rate-tput)*.5);pts.push([t,lag]);draw()};
+  const draw=()=>{const active=Math.min(cfg.cons,P),tput=active*1000/cfg.ms,idle=Math.max(0,cfg.cons-P);
+    const ymax=Math.max(1000,Math.ceil(Math.max(...pts.map(p=>p[1]))/1000)*1000);
+    chart($('[data-cv]',el),{xmax:60,ymax,xfmt:v=>v+'s',yfmt:v=>v>=1000?(v/1000)+'k':v,series:[{pts,color:C.warn,fill:'rgba(255,194,75,.12)'}]});
+    $('[data-p]',el).innerHTML=Array.from({length:P},(_,i)=>{const owner=Math.floor(i*active/P)+1,pl=lag/P;return `<div class="part">P${i}<div class="lagbar"><i style="height:${Math.min(100,pl/ymax*P*100)}%"></i></div><b>${Math.round(pl).toLocaleString()}</b><div class="d-hint">C${owner}</div></div>`}).join('');
+    $('[data-ch]',el).innerHTML=chips([[Math.round(tput).toLocaleString()+'/s','consume rate',tput<cfg.rate?'bad':'ok'],[cfg.rate+'/s','produce rate',''],[Math.round(lag).toLocaleString(),'lag now',lag>1000?'bad':lag>0?'warn':'ok'],[idle,'idle consumers',idle?'warn':'']]);
+    $('[data-n]',el).textContent=(tput<cfg.rate?`Consumers handle ${Math.round(tput)} msg/s but ${cfg.rate} arrive. Lag grows by ${Math.round(cfg.rate-tput)} every second and never drains. `:'Consumers are faster than producers, so lag stays at zero. ')+(idle?`${idle} consumer(s) sit idle: a partition can only be read by one consumer in the group.`:'')};
+  c.every(80,tick);draw();
+};
+
+/* Q12 dashboard */
+demos[12]=(el,mode)=>{
+  const B=mode==='before',cap=B?520:1900;
+  el.innerHTML=`<div class="d-ctrl"><label class="d-range">Traffic <input type="range" min="100" max="2200" step="50" value="700" data-r><output data-rv></output></label><span class="d-hint">Drag towards peak and watch which tile turns red first.</span></div><div class="dash" data-d></div><p class="d-note" data-n></p>`;
+  const draw=()=>{const rps=+$('[data-r]',el).value;$('[data-rv]',el).textContent=rps+' req/s';
+    const rho=rps/cap,r=Math.min(rho,.97),wf=r/(1-r),svc=45;
+    const p50=svc*(1+.3*wf),p95=svc*(1+1.5*wf),p99=rho>1?5000:svc*(1+3*wf),err=rho>1?(1-1/rho)*100:0;
+    const busy=Math.min(200,Math.round(rps*(p50+p95)/2/1000)),pend=rho>.85?Math.round((rho-.85)*(B?80:25)*(rho>1?4:1)):0;
+    const cpu=Math.min(100,Math.round(8+rps/(B?1600:2600)*100)),gc=Math.round(4+rps*.006),heap=Math.min(98,Math.round(35+rps/2200*35));
+    const T=[['Requests/s',rps,'rate',''],['p50 latency',Math.round(p50)+' ms','duration',p50>300?'bad':p50>120?'warn':'ok'],['p95 latency',Math.round(p95)+' ms','duration',p95>1000?'bad':p95>300?'warn':'ok'],['p99 latency',p99>=5000?'5 s (timeout)':Math.round(p99)+' ms','duration',p99>1000?'bad':p99>400?'warn':'ok'],['Error rate',err.toFixed(1)+'%','errors',err>1?'bad':err>0?'warn':'ok'],
+      ['Tomcat busy threads',busy+'/200','saturation',busy>=180?'bad':busy>120?'warn':'ok'],['Hikari pending',pend,'saturation',pend>10?'bad':pend>0?'warn':'ok'],['CPU',cpu+'%','utilisation',cpu>85?'bad':cpu>70?'warn':'ok'],['GC pause',gc+' ms/s','utilisation',gc>60?'warn':'ok'],['Heap',heap+'%','utilisation',heap>85?'warn':'ok']];
+    $('[data-d]',el).innerHTML=T.map(([n,v,k,s])=>`<div class="tile ${s}"><span>${n}</span><b>${v}</b><em>${k}</em></div>`).join('');
+    const red=T.filter(x=>x[3]==='bad').map(x=>x[0]);
+    $('[data-n]',el).textContent=red.length?`In the red: ${red.join(', ')}. ${pend>0?'Hikari pending rose first; threads and latency are symptoms of waiting for connections.':''}`:pend>0?'Hikari pending is above zero: the first sign of saturation, before latency explodes.':'Everything is comfortable at this traffic level.'};
+  $('[data-r]',el).oninput=draw;draw();
+};
+
+/* Q13 retry storm */
+demos[13]=(el,mode,c)=>{
+  const B=mode==='before';const capN=100,base=80,O0=10,O1=22,TMAX=60;
+  el.innerHTML=`<div class="d-ctrl"><button class="d-btn ghost" data-run>Replay</button><span class="d-hint">The downstream is down from 10 s to 22 s, then fully healthy again.</span></div><canvas class="ch" data-cv></canvas>
+  <div class="legend"><span><i style="background:${C.warn}"></i>load sent to downstream</span><span><i style="background:${C.ok}"></i>successful responses</span><span><i style="background:${C.acc}"></i>capacity</span></div><div class="chips" data-c></div><p class="d-note" data-n></p>`;
+  let t,offPts,okPts,capPts,pend,cbOpen,cbT,recovered,peak;
+  const reset=()=>{t=0;offPts=[];okPts=[];capPts=[];pend={};cbOpen=false;cbT=0;recovered=null;peak=0};
+  const r=rng(3);
+  const step=()=>{if(t>TMAX)return;const cap=t>=O0&&t<O1?5:capN;
+    let retries=pend[t]||0;delete pend[t];
+    if(!B){retries=Math.min(retries,base*.1)}
+    let offered=cbOpen?0:base+retries;
+    let served;if(offered<=cap)served=offered;else served=cap*Math.pow(cap/offered,1.5);
+    const fail=offered-served,f=offered?fail/offered:0;
+    if(B){pend[t+1]=(pend[t+1]||0)+fail*.75}
+    else if(!cbOpen){for(let k=0;k<3;k++){const d=Math.round(Math.pow(2,k+1)*(.5+r()));pend[t+d]=(pend[t+d]||0)+fail*.1/3}
+      if(f>.5){cbOpen=true;cbT=5}}
+    if(cbOpen&&--cbT<=0)cbOpen=false;
+    if(t>=O1&&recovered===null&&served>=base*.95)recovered=t;
+    peak=Math.max(peak,offered);offPts.push([t,offered]);okPts.push([t,served]);capPts.push([t,cap]);t++;draw()};
+  const draw=()=>{chart($('[data-cv]',el),{xmax:TMAX,ymax:400,xfmt:v=>v+'s',bands:[{x0:O0,x1:O1,color:'rgba(255,107,127,.10)',label:'outage'}],
+      series:[{pts:capPts,color:C.acc,width:1.5},{pts:offPts,color:C.warn,width:2.5},{pts:okPts,color:C.ok,width:2}],marks:recovered!==null?[{x:recovered,y:base,color:C.ok,label:'recovered'}]:[]});
+    $('[data-c]',el).innerHTML=chips([[Math.round(peak),'peak req/s sent',peak>capN?'bad':'ok'],[(peak/base).toFixed(1)+'×','amplification',peak/base>1.5?'bad':'ok'],[recovered===null?(t>O1+3?'Not yet':'-'):(recovered-O1)+' s','time to recover after fix',recovered===null&&t>O1+3?'bad':'ok']]);
+    $('[data-n]',el).textContent=B?'Every failure is retried immediately, so load jumps far above capacity. When the downstream comes back, the retry backlog keeps it overloaded: most requests time out, get retried, and the cycle continues.':'Backoff with jitter spreads retries out, a 10% retry budget caps them, and the circuit breaker pauses calls. Load stays near normal and the service recovers as soon as it\'s healthy.'};
+  const run=()=>{c.stop();reset();c.every(110,step)};$('[data-run]',el).onclick=run;run();
+};
+
+/* Q14 scheduled job */
+demos[14]=(el,mode,c)=>{
+  const B=mode==='before';
+  el.innerHTML=`<div class="d-ctrl"><label class="d-range">Pods <input type="range" min="1" max="5" value="3" data-p><output data-pv>3</output></label><button class="d-btn" data-run>Fast-forward to 02:00</button><span class="clock" data-k>01:59:55</span></div>
+  <div class="pods" data-pods></div><div class="seq" style="margin-top:14px">${B?'<div></div>':'<div class="box"><h5>shedlock collection</h5><table class="tbl"><thead><tr><th>_id</th><th>lockedBy</th><th>lockUntil</th></tr></thead><tbody data-lk><tr><td colspan="3" class="d-hint">No locks</td></tr></tbody></table></div>'}<div class="box"><h5>Customer inbox</h5><div class="inbox" data-in><span class="d-hint">Empty</span></div></div></div><div class="chips" data-c></div>`;
+  const pods=()=>+$('[data-p]',el).value;
+  const lanes=()=>{$('[data-pods]',el).innerHTML=Array.from({length:pods()},(_,i)=>`<div class="pod"><div>pod-${i+1}</div><div class="lane" data-lane="${i}">idle</div></div>`).join('')};
+  $('[data-p]',el).oninput=()=>{$('[data-pv]',el).textContent=pods();lanes()};lanes();
+  const run=()=>{c.stop();lanes();const n=pods();$('[data-in]',el).innerHTML='<span class="d-hint">Empty</span>';$('[data-c]',el).innerHTML='';if(!B)$('[data-lk]',el).innerHTML='<tr><td colspan="3" class="d-hint">No locks</td></tr>';
+    let s=55;$('[data-k]',el).textContent='01:59:55';const id=c.every(200,()=>{s++;if(s>=60){clearInterval(id);$('[data-k]',el).textContent='02:00:00';fire(n)}else $('[data-k]',el).textContent='01:59:'+s})};
+  const fire=n=>{const win=Math.floor(Math.random()*n);let emails=0;const inbox=$('[data-in]',el);inbox.innerHTML='';
+    for(let i=0;i<n;i++){c.after(150+i*(B?120:220),()=>{const l=$(`[data-lane="${i}"]`,el);
+      if(B||i===win){l.className='lane '+(B&&emails>0?'dup':'run');l.textContent=B?'sendInvoices() running':'acquired lock, sendInvoices() running';emails++;const d=document.createElement('div');d.textContent=`Invoice #1001 for October${emails>1?'  (again)':''}`;if(emails>1)d.style.color=C.bad;inbox.appendChild(d);
+        if(!B)$('[data-lk]',el).innerHTML=`<tr><td>sendInvoices</td><td>pod-${i+1}</td><td>02:10:00</td></tr>`}
+      else{l.className='lane skip';l.textContent='lock held by pod-'+(win+1)+', skipped'}
+      $('[data-c]',el).innerHTML=chips([[emails,'emails sent to the customer',emails>1?'bad':'ok'],[emails,'job executions',emails>1?'bad':'ok']])})}};
+  $('[data-run]',el).onclick=run;run();
+};
+
+/* Q15 tracing */
+demos[15]=(el,mode)=>{
+  const B=mode==='before';
+  const TR={
+    '4bf92f35':{label:'checkout OK',spans:[['gateway','POST /checkout',0,310],['order-service','createOrder',12,290],['inventory-service','reserve',30,60],['payment-service','charge',100,170],['bank-api','authorize',115,140],['notification (Kafka)','order-placed',285,20]]},
+    'a3ce929d':{label:'checkout slow',spans:[['gateway','POST /checkout',0,1240],['order-service','createOrder',10,1220],['inventory-service','reserve',25,930,'slow'],['payment-service','charge',960,170],['bank-api','authorize',975,140],['notification (Kafka)','order-placed',1210,20]]},
+    'e7d3b1c0':{label:'checkout failed',spans:[['gateway','POST /checkout',0,420],['order-service','createOrder',11,400],['inventory-service','reserve',28,58],['payment-service','charge',95,310,'err'],['bank-api','authorize (502)',110,290,'err']]}};
+  const LOGS=[['order-service','4bf92f35','Creating order'],['order-service','e7d3b1c0','Creating order'],['inventory-service','a3ce929d','Reserving 2 items'],['payment-service','4bf92f35','Charging card'],['inventory-service','e7d3b1c0','Reserving 1 item'],['payment-service','e7d3b1c0','Charge failed: bank returned 502'],['order-service','a3ce929d','Creating order'],['inventory-service','4bf92f35','Reserving 3 items'],['order-service','e7d3b1c0','Payment failed, cancelling order'],['payment-service','a3ce929d','Charging card'],['notification-service','4bf92f35','Sending confirmation'],['order-service','a3ce929d','Order placed']];
+  let sel='e7d3b1c0';
+  el.innerHTML=`${B?'<p class="d-hint" style="margin-top:0">Logs from three concurrent checkouts across services. One failed. Which lines belong to it?</p>':'<div class="d-sub">Pick a trace ID to filter logs and see its waterfall.</div><div class="ids" data-ids></div>'}<div class="log" data-l style="max-height:none"></div><div class="wf" data-wf></div><p class="d-note" data-n></p>`;
+  const draw=()=>{
+    if(!B)$('[data-ids]',el).innerHTML=Object.entries(TR).map(([id,t])=>`<button data-id="${id}" class="${id===sel?'on':''}">${id} (${t.label})</button>`).join('');
+    $$('[data-id]',el).forEach(b=>b.onclick=()=>{sel=b.dataset.id;draw()});
+    $('[data-l]',el).innerHTML=LOGS.filter(l=>B||l[1]===sel).map(([svc,id,msg],i)=>{const cls=/fail|502/i.test(msg)?'e':'i';return `<span class="${cls}">10:42:0${Math.floor(i/3)}.${String(100+i*67).slice(-3)} INFO  [${svc}${B?'':','+id}] ${esc(msg)}</span>`}).join('\n');
+    if(B){$('[data-wf]',el).innerHTML='';$('[data-n]',el).textContent='Without a shared ID you can only guess by timestamps. Was "Charging card" at :01 part of the failed request or the slow one? With dozens of requests per second, you can\'t tell.';return}
+    const t=TR[sel],tot=t.spans[0][3];
+    $('[data-wf]',el).innerHTML=t.spans.map(([svc,op,s,d,k])=>`<div class="wf-row"><div>${svc}<br><span class="d-hint">${op}</span></div><div class="trk"><i class="${k||''}" style="left:${s/tot*100}%;width:${Math.max(d/tot*100,1)}%"></i></div><div class="ms">${d} ms</div></div>`).join('');
+    const bad=t.spans.find(s=>s[4]);$('[data-n]',el).textContent=bad?(bad[4]==='err'?`The failure starts in ${bad[0]}: ${bad[1]}. One click from the alert to the cause.`:`${bad[0]} takes ${bad[3]} ms of the ${tot} ms. That's where to look.`):'A healthy request: every hop is short, the async notification is linked to the same trace.'};
+  draw();
+};
+
+/* ---------- app ---------- */
+let done={};try{done=JSON.parse(localStorage.getItem('sbp-done')||'{}')||{}}catch(e){done={}}
+const saveDone=()=>{try{localStorage.setItem('sbp-done',JSON.stringify(done))}catch(e){}};
+let cur=1,mode='before',ctx=makeCtx(),codeTab='before';
+const stageOf=id=>STAGES.findIndex(s=>s.qs.includes(id));
+
+function renderChrome(){
+  $('#route').innerHTML=STAGES.map((s,i)=>`<div class="stop ${s.qs.every(q=>done[q])?'done':''}" data-n="${i+1}"><h3>${s.name}</h3><p>${s.desc}</p><div class="qs">${s.qs.map(q=>`<button class="qchip ${q===cur?'on':''} ${done[q]?'done':''}" data-go="${q}" title="${esc(Q[q].short)}">Q${q}</button>`).join('')}</div></div>`).join('');
+  $('#side').innerHTML=STAGES.map((s,i)=>`<h4>${i+1}. ${s.name}</h4>`+s.qs.map(q=>`<button data-go="${q}" class="${q===cur?'on':''} ${done[q]?'done':''}"><span class="n">${done[q]?'✓':'Q'+q}</span><span>${Q[q].short}</span></button>`).join('')).join('');
+  $('#pick').innerHTML=ORDER.map((q,i)=>`<option value="${q}" ${q===cur?'selected':''}>${i+1}. Q${q} ${Q[q].short}${done[q]?' ✓':''}</option>`).join('');
+  $$('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  const n=Object.values(done).filter(Boolean).length;$('#progress').textContent=`${n} of 15 understood. Follow the stops left to right, or jump to any question.`;
+}
+function go(id){if(id===cur&&$('#page').innerHTML)return;location.hash='q'+id}
+function renderPage(){
+  const q=Q[cur],pos=ORDER.indexOf(cur),prev=ORDER[pos-1],next=ORDER[pos+1],st=STAGES[stageOf(cur)];
+  codeTab='before';
+  $('#page').innerHTML=`
+  <div class="qhead"><p class="qmeta">Question ${cur} of 15. Stop ${stageOf(cur)+1}: ${st.name}. Step ${pos+1} in the learning flow.</p><h2 class="qtitle">${esc(q.q)}</h2></div>
+  <section class="blk two"><div class="card eli5"><div class="em" aria-hidden="true">${q.eli5[0]}</div><div><h4>Explain it like I'm 5</h4><p>${esc(q.eli5[1])}</p></div></div>
+  <div class="card answer"><h4>Your 30-second interview answer</h4><p>${esc(q.answer)}</p></div></section>
+  <section class="blk"><h3>Live demo</h3><div class="demo"><div class="demo-bar"><div class="seg" role="group" aria-label="Before or after the fix"><button data-m="before">Before fix</button><button data-m="after">After fix</button></div><span class="demo-title">${esc(q.short)}</span><button class="restart" data-restart>Restart</button></div><div class="demo-body" id="demo"></div></div></section>
+  <section class="blk"><h3>How to investigate, step by step</h3><ol class="flow">${q.steps.map(([a,b])=>`<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`).join('')}</ol></section>
+  <section class="blk"><h3>Code</h3><div class="tabs" role="tablist"><button data-t="before" role="tab">Before: the problem</button><button data-t="after" role="tab">After: the fix</button></div><div id="code"></div></section>
+  <section class="blk"><h3>What improved</h3><div class="tblwrap"><table class="cmp"><thead><tr><th>Measure</th><th>Before</th><th>After</th></tr></thead><tbody>${q.metrics.map(([m,b,a])=>`<tr><td>${esc(m)}</td><td class="b">${esc(b)}</td><td class="a">${esc(a)}</td></tr>`).join('')}</tbody></table></div></section>
+  <section class="blk two pc"><div class="card pro"><h4>Pros of the fix</h4><ul>${q.pros.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div class="card con"><h4>Cons and trade-offs</h4><ul>${q.cons.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></section>
+  <div class="pager"><button data-nav="${prev||''}" ${prev?'':'disabled'}><small>Previous</small>${prev?'Q'+prev+' '+Q[prev].short:'Start of the flow'}</button>
+  <label class="mark"><input type="checkbox" id="done" ${done[cur]?'checked':''}> I understand this one</label>
+  <button data-nav="${next||''}" ${next?'':'disabled'}><small>Next</small>${next?'Q'+next+' '+Q[next].short:'You reached the end'}</button></div>`;
+  $$('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;mountDemo()});
+  $('[data-restart]').onclick=mountDemo;
+  $$('.tabs button').forEach(b=>b.onclick=()=>{codeTab=b.dataset.t;renderCode()});
+  $$('[data-nav]').forEach(b=>b.onclick=()=>b.dataset.nav&&go(+b.dataset.nav));
+  $('#done').onchange=e=>{done[cur]=e.target.checked;saveDone();renderChrome()};
+  mode='before';mountDemo();renderCode();
+}
+function renderCode(){
+  $$('.tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.t===codeTab);b.setAttribute('aria-selected',b.dataset.t===codeTab)});
+  $('#code').innerHTML=Q[cur].code[codeTab].map(([cap,code])=>`<div class="codeblk"><p class="cap">${esc(cap)}</p><pre class="code"><code>${hl(code)}</code></pre></div>`).join('');
+}
+function mountDemo(){
+  ctx.stop();ctx=makeCtx();
+  $$('[data-m]').forEach(b=>{b.classList.toggle('on',b.dataset.m===mode);b.setAttribute('aria-pressed',b.dataset.m===mode)});
+  const el=$('#demo');el.innerHTML='';
+  try{demos[cur](el,mode,ctx)}catch(e){el.textContent='Demo failed to load: '+e.message;console.error(e)}
+}
+function route(){const m=location.hash.match(/^#q(\d+)$/);const id=m?+m[1]:ORDER[0];cur=Q[id]?id:ORDER[0];renderChrome();renderPage();if(m)window.scrollTo({top:$('#main').offsetTop-10,behavior:'smooth'})}
+$('#pick').onchange=e=>go(+e.target.value);
+window.addEventListener('hashchange',route);
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if([9,11,13].includes(cur))mountDemo()},300)});
+$('#theme').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'};
+route();
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

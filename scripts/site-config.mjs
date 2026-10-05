@@ -1,6 +1,7 @@
 export const SITE = {
-  title: 'The Weekly Report',
-  intro: 'A Claude agent reads the news on 3 topics each week and writes a short report for each one. Pick a topic below to read all its reports.',
+  title: 'DevLogs AI',
+  slug: 'devlogs-ai-sumonta056',
+  intro: 'A Claude agent writes a short news report on 3 topics each week. Next to the news are my learning guides and an AI coach roadmap. Pick a section below.',
 };
 
 export const PROFILE = {
@@ -8,7 +9,7 @@ export const PROFILE = {
   initials: 'SM',
   photo: 'https://avatars.githubusercontent.com/u/61287791?v=4',
   role: 'Software Engineer at Cefalo',
-  bio: 'I built a Claude agent that runs every week on 3 topics I use at work: AI coding agents, Vue & Nuxt, and Java & Spring. It finds the news of the week and writes a short report for me and for you.',
+  bio: 'I built a Claude agent that writes a weekly report on AI coding agents, Vue & Nuxt, and Java & Spring. I also keep my learning guides here: an AI coach roadmap, deep dives on databases, Git and Spring Boot, and notes on investing in Bangladesh.',
   links: [
     { label: 'GitHub', icon: 'github', href: '#' },
     { label: 'LinkedIn', icon: 'linkedin', href: '#' },
@@ -20,6 +21,7 @@ export const PROFILE = {
 export const REPORTS = [
   {
     dir: 'ai-update-weekly',
+    kind: 'news',
     title: 'AI Update (Agentic Dev)',
     short: 'AI Update',
     visibility: 'public',
@@ -31,6 +33,7 @@ export const REPORTS = [
   },
   {
     dir: 'vue-nuxt-weekly-news',
+    kind: 'news',
     title: 'Vue & Nuxt Weekly News',
     short: 'Vue & Nuxt',
     visibility: 'public',
@@ -42,6 +45,7 @@ export const REPORTS = [
   },
   {
     dir: 'java-spring-weekly-news',
+    kind: 'news',
     title: 'Java & Spring Weekly News',
     short: 'Java & Spring',
     visibility: 'public',
@@ -52,13 +56,47 @@ export const REPORTS = [
     tags: ['Spring Boot', 'JDK', 'Virtual threads', 'Observability'],
   },
   {
+    dir: 'ai-coach',
+    kind: 'roadmap',
+    title: 'AI Coach',
+    short: 'AI Coach',
+    visibility: 'public',
+    color: '#7c3aed', on: '#ffffff', ink: '#6d28d9',
+    icon: 'route',
+    about: 'A step-by-step roadmap to learn Claude and Claude Code, from configuration basics to advanced agent workflows. Start at step 1.',
+    tags: ['Claude Code', 'Agents', 'Configuration', 'Roadmap'],
+    order: ['Inside Claude.html', 'More Advanced Claude Deep Dive.html'],
+  },
+  {
+    dir: 'in-depth-learning',
+    kind: 'guides',
+    title: 'In-depth Learning',
+    short: 'In-depth',
+    visibility: 'public',
+    color: '#0f766e', on: '#ffffff', ink: '#0f766e',
+    icon: 'book',
+    about: 'Long guides that go deep on one topic: databases, Git, SQL query tuning, and Spring Boot in production.',
+    tags: ['Databases', 'SQL', 'Git', 'Spring Boot'],
+  },
+  {
+    dir: 'investment-bd',
+    kind: 'guides',
+    title: 'Investment BD',
+    short: 'Investment BD',
+    visibility: 'public',
+    color: '#be123c', on: '#ffffff', ink: '#9f1239',
+    icon: 'chart',
+    about: 'Beginner guides on how to invest in Bangladesh: savings, bonds, and the stock market.',
+    tags: ['Investing', 'Stock market', 'Bangladesh', 'Basics'],
+  },
+  {
     dir: 'personal-guide',
+    kind: 'guides',
     title: 'Personal Guide',
     short: 'Personal',
     visibility: 'private',
     color: '#6b7280', on: '#ffffff', ink: '#4b5563',
     icon: 'newspaper',
-    cadence: 'Private',
     about: 'Private notes. This page needs a login.',
     tags: [],
   },

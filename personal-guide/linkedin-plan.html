@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Strategy Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f8;color:#1a1a2e;line-height:1.6}
+nav{background:#0a66c2;padding:0 20px;display:flex;gap:4px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+nav button{padding:14px 18px;background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-size:13px;font-weight:500;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap}
+nav button:hover{color:white}
+nav button.active{color:white;border-bottom-color:white}
+.page{display:none;max-width:940px;margin:0 auto;padding:24px 16px}
+.page.active{display:block}
+
+/* Cards */
+.card{background:white;border-radius:12px;padding:22px;margin-bottom:18px;border:1px solid #e4e8f0}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}
+h2{font-size:16px;font-weight:700;margin-bottom:14px;color:#1a1a2e}
+h3{font-size:14px;font-weight:700;margin-bottom:8px}
+.sub{font-size:13px;color:#666;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.b-green{background:#e8f5e9;color:#2e7d32}
+.b-blue{background:#e3f2fd;color:#0d47a1}
+.b-orange{background:#fff3e0;color:#bf360c}
+.b-red{background:#fde8e8;color:#b71c1c}
+.b-purple{background:#f3e5f5;color:#6a1b9a}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f5f7ff;padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:#555;font-weight:600}
+td{padding:10px 12px;border-top:1px solid #f0f2f8;vertical-align:top}
+tr:hover td{background:#fafbff}
+.trend-up{color:#2e7d32;font-weight:600}
+.trend-down{color:#c62828}
+.trend-mid{color:#e65100;font-weight:600}
+
+/* Content cards */
+.content-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.ccard{background:white;border-radius:12px;border:1px solid #e4e8f0;overflow:hidden;transition:box-shadow 0.2s}
+.ccard:hover{box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.ccard-top{padding:14px 16px 10px;border-bottom:1px solid #f0f2f8}
+.ccard-type{font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.ccard-title{font-size:14px;font-weight:700;line-height:1.4;color:#1a1a2e}
+.ccard-body{padding:14px 16px}
+.ccard-body p{font-size:12.5px;color:#444;line-height:1.6;margin-bottom:8px}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#f0f2f8;color:#555;margin:2px}
+.priority-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#0a66c2;color:white;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* Plan table */
+.plan-row{display:grid;grid-template-columns:40px 1fr 1fr 1fr;gap:12px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px}
+.plan-row:last-child{border-bottom:none}
+.week-num{font-weight:700;color:#0a66c2;font-size:14px}
+
+/* Stat boxes */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:white;border-radius:10px;padding:14px 16px;border:1px solid #e4e8f0;text-align:center}
+.stat-num{font-size:26px;font-weight:800;color:#0a66c2}
+.stat-lbl{font-size:11px;color:#777;margin-top:2px}
+
+.insight-box{background:#f0f7ff;border-left:3px solid #0a66c2;border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:#1a2a4a;margin-bottom:12px}
+.insight-box strong{display:block;margin-bottom:3px}
+
+@media(max-width:600px){.content-grid{grid-template-columns:1fr}.plan-row{grid-template-columns:30px 1fr}.plan-row .p3,.plan-row .p4{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="active" onclick="show('overview')">📊 Overview</button>
+  <button onclick="show('posts')">📝 Posts Analysis</button>
+  <button onclick="show('audience')">👥 Audience Wants</button>
+  <button onclick="show('content')">🎬 Content Ideas</button>
+  <button onclick="show('plan')">🗓️ Master Plan</button>
+</nav>
+
+<!-- ===== PAGE 1: OVERVIEW ===== -->
+<div id="p-overview" class="page active">
+  <div class="card">
+    <h1>Content Intelligence Dashboard</h1>
+    <p class="sub">Sumonta Saha Mridul · Cross-platform analysis: LinkedIn, Medium, Dev.to, YouTube · April 2026</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">1000+</div><div class="stat-lbl">Newsletter Subscribers</div></div>
+      <div class="stat"><div class="stat-num">12+</div><div class="stat-lbl">Published Articles</div></div>
+      <div class="stat"><div class="stat-num">129</div><div class="stat-lbl">Medium Followers</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Content Themes</div></div>
+      <div class="stat"><div class="stat-num">20</div><div class="stat-lbl">Content Ideas Below</div></div>
+    </div>
+    <div class="insight-box"><strong>⚠️ Important Note on Data Source</strong>LinkedIn blocks all scrapers — raw comments/reactions cannot be extracted by any tool. This analysis is built from: publicly visible post titles &amp; snippets, your Medium article engagement (claps, responses), Dev.to post data, your newsletter topics, and deep knowledge of your audience from our conversations. Comment patterns are inferred from content resonance signals, not scraped data.</div>
+  </div>
+
+  <div class="card">
+    <h2>Platform Performance Summary</h2>
+    <table>
+      <thead><tr><th>Platform</th><th>Content Type</th><th>Estimated Reach</th><th>Engagement Signal</th><th>Best Performer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LinkedIn</strong></td><td>Posts, Articles, Newsletter</td><td>500–2000/post</td><td class="trend-up">High (career stories)</td><td>CV Review, Day in Life, Internship posts</td></tr>
+        <tr><td><strong>Medium</strong></td><td>Technical Articles</td><td>100–500/article</td><td class="trend-mid">Medium</td><td>Weird JS Series, Tutorial Hell article</td></tr>
+        <tr><td><strong>Dev.to</strong></td><td>Tech Tutorials</td><td>50–300/post</td><td class="trend-mid">Medium</td><td>GitHub README articles (bookmarked)</td></tr>
+        <tr><td><strong>YouTube</strong></td><td>Bangla Dev Videos</td><td>200+ subscribers</td><td class="trend-mid">Growing</td><td>Career & coding in Bangla</td></tr>
+        <tr><td><strong>Newsletter</strong></td><td>Weekly Byte</td><td>1000+ direct</td><td class="trend-up">High (direct subs)</td><td>AI tools, career insights</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Top Performing Content Themes (by cross-platform signal)</h2>
+    <table>
+      <thead><tr><th>#</th><th>Theme</th><th>Why It Works</th><th>Signal Strength</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Career stories & honest experiences</strong></td><td>Bengali devs are starved for honest "what it's really like" content from peers</td><td><span class="badge b-green">🔥 Highest</span></td></tr>
+        <tr><td>2</td><td><strong>JavaScript quirks (Weird JS series)</strong></td><td>Practical, shareable, instantly applicable — clapped heavily on Medium</td><td><span class="badge b-green">🔥 High</span></td></tr>
+        <tr><td>3</td><td><strong>Git & GitHub workflow</strong></td><td>Universal pain point for students and junior devs</td><td><span class="badge b-green">🔥 High</span></td></tr>
+        <tr><td>4</td><td><strong>Tutorial hell / learning struggles</strong></td><td>Emotionally resonant — everyone relates</td><td><span class="badge b-blue">Strong</span></td></tr>
+        <tr><td>5</td><td><strong>Internship & job hunting in BD</strong></td><td>High-demand topic, low quality supply in Bangla</td><td><span class="badge b-blue">Strong</span></td></tr>
+        <tr><td>6</td><td><strong>AI tools at work</strong></td><td>Trending + anxiety-driven — devs fear being replaced</td><td><span class="badge b-blue">Strong</span></td></tr>
+        <tr><td>7</td><td><strong>Code review culture</strong></td><td>Niche but high-quality signal — senior devs engage</td><td><span class="badge b-orange">Medium</span></td></tr>
+        <tr><td>8</td><td><strong>Stack migration stories</strong></td><td>Unique to you — React→Vue, NestJS→Spring Boot</td><td><span class="badge b-orange">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE 2: POSTS ANALYSIS ===== -->
+<div id="p-posts" class="page">
+  <div class="card">
+    <h2>Published Content Inventory (All Platforms)</h2>
+    <table>
+      <thead><tr><th>Title / Topic</th><th>Platform</th><th>Language</th><th>Type</th><th>Engagement Est.</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Weird JS #1: ?, ??, ||</strong></td><td>Medium / LinkedIn</td><td>English</td><td>Technical</td><td class="trend-up">High claps</td></tr>
+        <tr><td><strong>Weird JS #2: Falsy Values</strong></td><td>Medium / LinkedIn</td><td>English</td><td>Technical</td><td class="trend-up">High claps</td></tr>
+        <tr><td><strong>Tutorial Hell → Vue + Java with AI</strong></td><td>Medium / LinkedIn</td><td>English</td><td>Career story</td><td class="trend-up">High — relatable</td></tr>
+        <tr><td><strong>My Code Review Experience</strong></td><td>Medium / LinkedIn</td><td>English</td><td>Experience</td><td class="trend-up">3 responses</td></tr>
+        <tr><td><strong>Git Pruning: Keep repo clean</strong></td><td>Medium / LinkedIn</td><td>English</td><td>Tutorial</td><td class="trend-mid">Medium</td></tr>
+        <tr><td><strong>GitHub README for Internship</strong></td><td>Dev.to / Medium</td><td>English</td><td>Tutorial</td><td class="trend-up">Bookmarked heavily</td></tr>
+        <tr><td><strong>Command Design Pattern</strong></td><td>Medium</td><td>English</td><td>CS Concept</td><td class="trend-mid">Pinned article</td></tr>
+        <tr><td><strong>Memento Design Pattern</strong></td><td>Medium</td><td>English</td><td>CS Concept</td><td class="trend-mid">Pinned article</td></tr>
+        <tr><td><strong>SQL Query Execution Order</strong></td><td>LinkedIn</td><td>Bangla</td><td>Tutorial</td><td class="trend-up">Bengali audience loves this</td></tr>
+        <tr><td><strong>CV রিভিউ (Part 1)</strong></td><td>LinkedIn</td><td>Bangla</td><td>Career</td><td class="trend-up">High (CV content always spikes)</td></tr>
+        <tr><td><strong>Internship + Desk Setup post</strong></td><td>LinkedIn</td><td>Mixed</td><td>Personal/Milestone</td><td class="trend-up">High reactions</td></tr>
+        <tr><td><strong>Weekly Byte newsletters</strong></td><td>LinkedIn Newsletter</td><td>English/Mixed</td><td>Newsletter</td><td class="trend-up">1000+ direct readers</td></tr>
+        <tr><td><strong>17 VS Code Extensions</strong></td><td>Dev.to</td><td>English</td><td>List/Tool</td><td class="trend-up">High — list content performs</td></tr>
+        <tr><td><strong>Morning reading habit</strong></td><td>LinkedIn</td><td>English</td><td>Productivity</td><td class="trend-mid">Medium engagement</td></tr>
+        <tr><td><strong>AI tools dependency experience</strong></td><td>LinkedIn Newsletter</td><td>English</td><td>Reflection</td><td class="trend-up">High opens (AI = hot topic)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Inferred Comment/Reaction Patterns</h2>
+    <p style="font-size:13px;color:#666;margin-bottom:14px">Based on content type, topic, and audience behavior patterns for BD developer community</p>
+    <table>
+      <thead><tr><th>Post Type</th><th>Common Reactions</th><th>Common Comment Types</th><th>Common Questions Asked</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Career milestone posts</strong><br><span class="badge b-green">Internship, job update</span></td><td>❤️ Celebrate, 👏 Insightful</td><td>"Congratulations!", "How did you get placed?", "Which company?"</td><td>"ভাই কোথায় apply করেছিলেন?", "CGPA কত ছিল?", "Interview process কেমন ছিল?"</td></tr>
+        <tr><td><strong>Technical tutorials</strong><br><span class="badge b-blue">JS, Git, SQL</span></td><td>👍 Like, 💡 Insightful</td><td>"এটা জানতাম না", "Saved!", "What about X case?"</td><td>"Can this be used in production?", "Next.js এ কীভাবে করবো?", "Example দিলে ভালো হতো"</td></tr>
+        <tr><td><strong>Career advice / story</strong><br><span class="badge b-purple">Tutorial hell, code review</span></td><td>❤️ Love, 💡 Insightful</td><td>"Exactly my situation", "Share করার জন্য ধন্যবাদ"</td><td>"Fresh graduate হিসেবে কী করবো?", "AI কি আমাদের job নেবে?", "Roadmap কী হবে?"</td></tr>
+        <tr><td><strong>CV রিভিউ / job content</strong><br><span class="badge b-orange">Bangla posts</span></td><td>❤️ Love, 👏 Support</td><td>CV পাঠান requests, "Part 2 কবে আসবে?"</td><td>"আমার CV দেখবেন?", "BD company vs foreign?"</td></tr>
+        <tr><td><strong>AI / productivity</strong><br><span class="badge b-red">Newsletter topics</span></td><td>💡 Insightful, 🔥 Curious</td><td>"AI দিয়ে কতটুকু করা যায়?", "Prompt দেবেন?"</td><td>"Specific tools কী use করেন?", "AI কি replace করবে?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE 3: AUDIENCE WANTS ===== -->
+<div id="p-audience" class="page">
+  <div class="card">
+    <h2>What Your Audience Actually Wants</h2>
+    <table>
+      <thead><tr><th>#</th><th>Audience Need</th><th>Evidence</th><th>Urgency</th><th>Content Gap?</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Bangla-language CS career roadmap</strong><br>"SUST/BUET থেকে job পাওয়ার পথ"</td><td>CV রিভিউ post high engagement; SQL post in Bangla performed well</td><td class="trend-up">Very High</td><td>✅ You haven't done this fully</td></tr>
+        <tr><td>2</td><td><strong>Honest "1 year at a software company" story</strong><br>What it's really like at Cefalo</td><td>Your "almost a year in industry" post teaser visible in LinkedIn snippets</td><td class="trend-up">High</td><td>✅ Partially done — needs deeper version</td></tr>
+        <tr><td>3</td><td><strong>How to get a job without top CGPA</strong></td><td>CGPA anxiety is the #1 question in BD developer groups</td><td class="trend-up">Very High</td><td>✅ Not addressed yet</td></tr>
+        <tr><td>4</td><td><strong>AI tools devs actually use at work</strong></td><td>Newsletter AI issue had high opens; audience fear of AI job replacement</td><td class="trend-up">High</td><td>✅ Only touched in newsletter</td></tr>
+        <tr><td>5</td><td><strong>Practical Git workflows (team level)</strong></td><td>GitHub branches article with Promi was bookmarked; Git pruning article performed</td><td class="trend-mid">High</td><td>⚠️ Partial — more depth needed</td></tr>
+        <tr><td>6</td><td><strong>Stack switch survival guide</strong><br>React → Vue, NestJS → Spring Boot</td><td>Tutorial hell article directly addresses this; unique to your experience</td><td class="trend-mid">Medium-High</td><td>⚠️ Covered in English only</td></tr>
+        <tr><td>7</td><td><strong>How to prepare for Cefalo/local company interviews</strong></td><td>Recruitment story blog (Tahanima's site) is heavily visited</td><td class="trend-up">Very High</td><td>✅ Not done by you directly</td></tr>
+        <tr><td>8</td><td><strong>Freelancing vs job in BD</strong></td><td>Classic eternal debate in BD dev community</td><td class="trend-mid">High</td><td>✅ Not addressed</td></tr>
+        <tr><td>9</td><td><strong>How to build side projects that matter</strong></td><td>You're building AI SaaS — this is authentic content</td><td class="trend-mid">Medium</td><td>✅ Unique to your current journey</td></tr>
+        <tr><td>10</td><td><strong>Code review culture in BD companies</strong></td><td>Your code review article was one of your strongest performers</td><td class="trend-mid">Medium</td><td>⚠️ Bangla version missing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Most Frequently Asked Questions (inferred from content + BD dev community patterns)</h2>
+    <table>
+      <thead><tr><th>Category</th><th>Question (as asked in comments)</th><th>Your Answer Potential</th></tr></thead>
+      <tbody>
+        <tr><td>Career</td><td>"ভাই CGPA কম হলে কি job পাওয়া যাবে?"</td><td>✅ You got 3.84 but know people who got in with less</td></tr>
+        <tr><td>Career</td><td>"Cefalo তে কীভাবে apply করতে হয়?"</td><td>✅ You went through the process — perfect to answer</td></tr>
+        <tr><td>Technical</td><td>"Next.js vs NestJS কোনটা শিখবো?"</td><td>✅ You've used both extensively</td></tr>
+        <tr><td>Technical</td><td>"Java শেখার দরকার আছে কি ২০২৫ সালে?"</td><td>✅ You switched to Java at work — authentic answer</td></tr>
+        <tr><td>AI</td><td>"AI কি আমাদের developer job নেবে?"</td><td>✅ You've written on this — make it Bangla video</td></tr>
+        <tr><td>Learning</td><td>"Tutorial hell থেকে বের হওয়ার উপায় কী?"</td><td>✅ Your best-performing article — repurpose as Bangla post</td></tr>
+        <tr><td>Job</td><td>"Portfolio project কেমন হওয়া উচিত?"</td><td>✅ You've built multiple — can show examples</td></tr>
+        <tr><td>Productivity</td><td>"Industry তে কাজ করতে করতে কীভাবে শিখবো?"</td><td>✅ Your daily commute + side project story answers this</td></tr>
+        <tr><td>Newsletter</td><td>"Weekly Byte এ কীভাবে subscribe করবো?"</td><td>✅ Easy — just add link clearly everywhere</td></tr>
+        <tr><td>Personal</td><td>"Narayanganj থেকে Dhaka daily commute কীভাবে manage করেন?"</td><td>✅ Unique personal story — very relatable for BD audience</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE 4: CONTENT IDEAS ===== -->
+<div id="p-content" class="page">
+  <p style="font-size:13px;color:#666;margin:0 0 16px;padding:0 4px">20 content ideas for LinkedIn posts, blogs, and YouTube — bilingual titles optimized for Bengali audience virality</p>
+
+  <div class="content-grid">
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#c62828">🔥 Career · High Priority</div>
+        <div class="ccard-title">CGPA 3.5 দিয়েও Cefalo তে Job? — আমার সত্যিকারের গল্প</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Your actual Cefalo recruitment journey — behavioral interview in English, HackerRank OOP/SQL test, competitive programming. Be honest about what mattered more than CGPA. Share what they actually look for.</p>
+        <span class="tag">LinkedIn Post</span><span class="tag">Blog</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#c62828">🔥 Career · High Priority</div>
+        <div class="ccard-title">১ বছর Software Industry তে — যা শিখেছি, যা ভুল করেছি</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Your first year at Cefalo. Real mistakes: over-relying on AI, code review feedback you ignored, things university didn't teach. Include the DN Media Norway project as a highlight. Vulnerable + honest = viral.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Newsletter</span><span class="tag">Bangla-English</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#bf360c">🔥 AI · Trending</div>
+        <div class="ccard-title">AI কি আমার Developer Job নেবে? — একজন Junior Dev এর Real Experience</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> The day your AI tools stopped working and you panicked (your newsletter story). How you actually use AI at work vs what people imagine. Where AI helps, where it fails you. End with: humans who use AI beat humans who don't.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#1565c0">💡 Technical · High Demand</div>
+        <div class="ccard-title">Stack Switch Survival: React থেকে Vue, NestJS থেকে Java — কীভাবে বেঁচে ছিলাম</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Your real experience switching stacks at Cefalo. The mental model shift, what to unlearn, how AI helped you learn faster, what broke first. Include the Windows→Mac switch. This is uniquely yours — nobody else can write this.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Medium</span><span class="tag">YouTube</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#2e7d32">📋 Career · Very High Demand</div>
+        <div class="ccard-title">Bangladesh Software Engineer Roadmap 2025 — কোথা থেকে শুরু করবো?</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Step-by-step roadmap specific to BD job market. What local companies look for (Cefalo, Brain Station 23, etc.), what skills matter, which to skip, IELTS vs no IELTS, freelancing path vs job path. Make it a visual carousel post.</p>
+        <span class="tag">LinkedIn Carousel</span><span class="tag">YouTube</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#c62828">🔥 Personal Story · Viral Format</div>
+        <div class="ccard-title">Narayanganj → Dhaka Daily Commute করে কীভাবে Side Project বানাই?</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Your actual daily routine — commute time, what you do on the bus/train (podcast, reading), how you carve out time for newsletter and AI SaaS projects after 8hrs of work. Relatable to millions of BD commuters. Show your productivity system.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube Vlog</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#1565c0">💡 Technical · Series</div>
+        <div class="ccard-title">Weird JS #3: setTimeout(0) কী করে? — JavaScript এর সবচেয়ে Confusing Part</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Continue your Weird JS series. Cover the event loop, setTimeout(0) behavior, microtasks vs macrotasks. Your previous 2 Weird JS articles are your highest-performing Medium pieces — keep the series going.</p>
+        <span class="tag">Medium</span><span class="tag">LinkedIn</span><span class="tag">English</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#6a1b9a">🚀 Builder · Unique to You</div>
+        <div class="ccard-title">আমি একটা AI SaaS বানাচ্ছি — Week 1 এর Update (Build in Public)</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Start building in public for your developer productivity tool. What problem it solves, what you built this week, what broke, what you learned. Weekly format. This positions you as a founder/builder, not just an employee.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Newsletter</span><span class="tag">English-Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#2e7d32">📋 Job Hunting · High Demand</div>
+        <div class="ccard-title">আমার CV যেদিন Reject হয়েছিল — এবং আমি কী শিখেছিলাম (CV রিভিউ পার্ট ২)</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Follow-up to your CV রিভিউ Part 1. Show before/after of a real CV (with permission or anonymized). What makes a BD dev CV weak, what makes it strong. The CGPA debate, projects vs experience, GitHub link importance.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Blog</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#bf360c">🔥 Workplace · Relatable</div>
+        <div class="ccard-title">আমার প্রথম Code Review — Senior Dev যখন আমার সব Code নাকচ করলেন</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Personal story of your first brutal code review at Cefalo. The feedback about ==, ??, ||. How it felt, what you did, how you improved. The emotional journey + the technical lesson. This format (story + lesson) always outperforms pure tutorials.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube</span><span class="tag">Bangla-English</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#1565c0">💡 Technical · Practical</div>
+        <div class="ccard-title">Git Workflow: Industry তে আমরা কীভাবে কাজ করি — Feature Branch, PR, Merge</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Real Git workflow from your Cefalo experience. Feature branches, PR reviews, what a good PR description looks like, how to handle conflicts. Show actual commands. This is what students desperately want but tutorials never teach properly.</p>
+        <span class="tag">YouTube</span><span class="tag">Dev.to</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#e65100">⚡ Trending · High Shareability</div>
+        <div class="ccard-title">Norway র Client এর জন্য Code লিখি — Bangladesh থেকে International Project কেমন লাগে?</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Your DN Media Group Norway experience. Cultural differences, communication style, code quality standards, timezone management, what surprised you most. Very few BD devs can write this — it's aspirational content for your audience.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Newsletter</span><span class="tag">Bangla-English</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#2e7d32">📋 Productivity · Evergreen</div>
+        <div class="ccard-title">৫টা AI Tool যা আমি Daily Use করি — এবং কোনটা Waste of Time</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Honest review of AI tools you actually use: Claude, Cursor, GitHub Copilot, Perplexity, etc. What tasks each is good for, where they fail, which ones you'd pay for. Include your MCP server experience. Brutally honest = more shares.</p>
+        <span class="tag">LinkedIn Carousel</span><span class="tag">Newsletter</span><span class="tag">English-Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#6a1b9a">🚀 Mentorship · Unique</div>
+        <div class="ccard-title">আমি ১০+ Intern Mentor করেছি — এবং তারা যে ৫টা ভুল সবচেয়ে বেশি করে</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> From your 2 internship batches at Cefalo. The 5 most common mistakes: not reading docs, skipping error messages, not asking questions, over-relying on AI, poor Git hygiene. Include what separated the best interns from the rest.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Blog</span><span class="tag">Bangla-English</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#bf360c">🔥 Debate · Viral Format</div>
+        <div class="ccard-title">Freelancing vs Job — Bangladesh এ কোনটা Better? আমার Honest Opinion</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> The eternal BD dev debate. Your experience choosing a job over freelancing. Income stability vs freedom, skill development differences, career ceiling, what your newsletter subscribers tell you. Take a side — wishy-washy opinions don't go viral.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#1565c0">💡 Technical · Deep Dive</div>
+        <div class="ccard-title">RAG কী এবং কীভাবে আমি এটা দিয়ে একটা AI App বানালাম — Beginner's Guide</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Explain RAG (Retrieval Augmented Generation) simply using an analogy. Then show how you used it in your SaaS project. Code examples, architecture diagram, what went wrong first, final result. Combines your AI knowledge with building in public.</p>
+        <span class="tag">Medium</span><span class="tag">LinkedIn</span><span class="tag">English-Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#2e7d32">📋 Learning · Evergreen</div>
+        <div class="ccard-title">Tutorial Hell থেকে বের হওয়ার আমার ৩টা উপায় — যা Actually কাজ করেছিল</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Bangla version/expansion of your best-performing English article. Add your specific steps: building the Cefalo waste management project, using AI as a mentor (not answer machine), teaching others through newsletter. Personal examples = trust.</p>
+        <span class="tag">YouTube</span><span class="tag">LinkedIn</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#e65100">⚡ Listicle · Shareable</div>
+        <div class="ccard-title">SUST Software Engineering — আমার ৪ বছরের Honest Review</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> What SUST SE actually teaches vs what industry needs. What you wish you'd done differently (more projects, less cramming), what the degree gave you (problem-solving mindset, network), hackathon culture, how it prepared you for Cefalo.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#6a1b9a">🚀 Career · Aspirational</div>
+        <div class="ccard-title">Non-CS Background থেকে Software Engineer — কি আসলেই সম্ভব?</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> High-demand topic in BD. Interview people from your network who made the switch, or research patterns from your newsletter subscribers. What paths work (bootcamp, self-taught, CS masters), what the BD job market actually accepts, realistic timeline.</p>
+        <span class="tag">LinkedIn</span><span class="tag">YouTube Interview</span><span class="tag">Bangla</span>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-type" style="color:#c62828">🔥 Newsletter Special · High Value</div>
+        <div class="ccard-title">Code & Career Golpo র ১০০০ Subscriber হলো — এবং আমি যা শিখলাম</div>
+      </div>
+      <div class="ccard-body">
+        <p><strong>What to explain:</strong> Milestone post — how you grew to 1000 subscribers, what content worked, what flopped, your posting rhythm, how you balance it with full-time job. Include subscriber growth chart if available. This also drives new subscriptions — people want to join growing communities.</p>
+        <span class="tag">LinkedIn</span><span class="tag">Newsletter Issue</span><span class="tag">English-Bangla</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== PAGE 5: MASTER PLAN ===== -->
+<div id="p-plan" class="page">
+  <div class="card">
+    <h2>🗓️ 8-Week Master Content Plan</h2>
+    <p class="sub">Prioritized by audience demand, uniqueness to you, and virality potential</p>
+
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:10px 0;border-bottom:2px solid #e4e8f0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#666">
+      <div>#</div><div>Title</div><div>Platform</div><div>Language</div><div>Why Now</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">1</div>
+      <div><strong>১ বছর Software Industry তে — যা শিখেছি, যা ভুল করেছি</strong><br><span class="tag">Career Story</span></div>
+      <div>LinkedIn + Newsletter</div><div>Bangla-English</div>
+      <div class="trend-up">Milestone moment — write now while it's fresh</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">2</div>
+      <div><strong>AI কি আমার Developer Job নেবে?</strong><br><span class="tag">AI · Trending</span></div>
+      <div>LinkedIn + YouTube</div><div>Bangla</div>
+      <div class="trend-up">AI anxiety at peak — post now</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">3</div>
+      <div><strong>CGPA 3.5 দিয়েও Cefalo তে Job?</strong><br><span class="tag">Career</span></div>
+      <div>LinkedIn + Blog</div><div>Bangla</div>
+      <div class="trend-up">Highest audience question — address directly</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">4</div>
+      <div><strong>Norway র Client এর জন্য Code লিখি</strong><br><span class="tag">International</span></div>
+      <div>LinkedIn + Newsletter</div><div>Bangla-English</div>
+      <div class="trend-up">Unique — nobody else has this story</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">5</div>
+      <div><strong>Code & Career Golpo র ১০০০ Subscriber হলো</strong><br><span class="tag">Milestone</span></div>
+      <div>LinkedIn + Newsletter</div><div>English-Bangla</div>
+      <div class="trend-up">Drives new subscribers while celebrating</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">6</div>
+      <div><strong>Narayanganj → Dhaka Commute করে Side Project</strong><br><span class="tag">Personal</span></div>
+      <div>LinkedIn + YouTube</div><div>Bangla</div>
+      <div class="trend-mid">Highly relatable — do within 2 weeks</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">7</div>
+      <div><strong>Stack Switch Survival: React → Vue, NestJS → Java</strong><br><span class="tag">Technical Story</span></div>
+      <div>Medium + LinkedIn</div><div>English (Bangla version after)</div>
+      <div class="trend-mid">Unique experience — strong Medium article</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">8</div>
+      <div><strong>AI SaaS Build in Public — Week 1 Update</strong><br><span class="tag">Builder</span></div>
+      <div>LinkedIn + Newsletter</div><div>English-Bangla</div>
+      <div class="trend-mid">Start now — consistency is key for build-in-public</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">9</div>
+      <div><strong>আমার প্রথম Code Review — Senior Dev এর Brutal Feedback</strong><br><span class="tag">Story</span></div>
+      <div>LinkedIn + YouTube</div><div>Bangla-English</div>
+      <div class="trend-mid">High emotion + lesson = viral formula</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">10</div>
+      <div><strong>আমি ১০+ Intern Mentor করেছি — ৫টা Common Mistake</strong><br><span class="tag">Mentorship</span></div>
+      <div>LinkedIn + Blog</div><div>Bangla-English</div>
+      <div class="trend-mid">Seniority signal + practical for BD students</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">11</div>
+      <div><strong>Bangladesh Software Engineer Roadmap 2025</strong><br><span class="tag">Evergreen</span></div>
+      <div>LinkedIn Carousel + YouTube</div><div>Bangla</div>
+      <div>Evergreen — will keep getting shares for months</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">12</div>
+      <div><strong>CV রিভিউ Part 2 — Before/After Real Examples</strong><br><span class="tag">Career</span></div>
+      <div>LinkedIn + Blog</div><div>Bangla</div>
+      <div>Sequel to your high-performing Part 1</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">13</div>
+      <div><strong>Weird JS #3: Event Loop & setTimeout(0)</strong><br><span class="tag">Technical Series</span></div>
+      <div>Medium + LinkedIn</div><div>English</div>
+      <div>Series continuation — your best English performer</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">14</div>
+      <div><strong>Git Workflow: Industry তে কীভাবে কাজ করি</strong><br><span class="tag">Technical</span></div>
+      <div>YouTube + Dev.to</div><div>Bangla</div>
+      <div>Evergreen tutorial — Bangla version missing</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">15</div>
+      <div><strong>৫টা AI Tool যা Daily Use করি</strong><br><span class="tag">Tool Review</span></div>
+      <div>LinkedIn Carousel</div><div>English-Bangla</div>
+      <div>High shares — people love tool lists</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">16</div>
+      <div><strong>Freelancing vs Job in Bangladesh — Honest Take</strong><br><span class="tag">Debate</span></div>
+      <div>LinkedIn + YouTube</div><div>Bangla</div>
+      <div>Debate format drives comments</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">17</div>
+      <div><strong>Tutorial Hell থেকে বের হওয়ার ৩টা উপায়</strong><br><span class="tag">Bangla Repurpose</span></div>
+      <div>YouTube + LinkedIn</div><div>Bangla</div>
+      <div>Repurpose your best English article</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">18</div>
+      <div><strong>RAG দিয়ে AI App বানালাম — Beginner Guide</strong><br><span class="tag">AI Technical</span></div>
+      <div>Medium + LinkedIn</div><div>English-Bangla</div>
+      <div>Ties your SaaS build with teaching</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #f0f2f8;align-items:start;font-size:13px">
+      <div class="priority-num">19</div>
+      <div><strong>SUST Software Engineering — ৪ বছরের Honest Review</strong><br><span class="tag">Personal</span></div>
+      <div>LinkedIn + YouTube</div><div>Bangla</div>
+      <div>SUST alumni audience is loyal and large</div>
+    </div>
+    <div style="display:grid;grid-template-columns:30px 2fr 1fr 1fr 1fr;gap:10px;padding:12px 0;align-items:start;font-size:13px">
+      <div class="priority-num">20</div>
+      <div><strong>Non-CS Background থেকে Software Engineer — সম্ভব?</strong><br><span class="tag">Aspirational</span></div>
+      <div>YouTube + LinkedIn</div><div>Bangla</div>
+      <div>Massive underserved audience in BD</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Content Mix Recommendation (Per Month)</h2>
+    <table>
+      <thead><tr><th>Content Type</th><th>Frequency</th><th>Platform</th><th>Goal</th></tr></thead>
+      <tbody>
+        <tr><td>Personal career story (Bangla)</td><td>2× / month</td><td>LinkedIn</td><td>Virality + relatability</td></tr>
+        <tr><td>Technical tutorial (English)</td><td>1× / month</td><td>Medium / Dev.to</td><td>SEO + global reach</td></tr>
+        <tr><td>Build in Public update</td><td>Weekly</td><td>LinkedIn + Newsletter</td><td>Brand as builder</td></tr>
+        <tr><td>AI / tool opinion piece</td><td>1× / month</td><td>LinkedIn + Newsletter</td><td>Trending reach</td></tr>
+        <tr><td>YouTube video (Bangla)</td><td>2× / month</td><td>YouTube</td><td>Bengali dev community</td></tr>
+        <tr><td>Newsletter (Weekly Byte)</td><td>Weekly</td><td>LinkedIn Newsletter</td><td>Retain 1000+ subs</td></tr>
+      </tbody>
+    </table>
+    <div style="background:#e8f5e9;border-radius:8px;padding:14px;margin-top:14px;font-size:13px;color:#1b5e20">
+      <strong>💡 Golden Rule for Your Audience:</strong> Every piece of content should answer one of these questions implicitly — "How do I get a job in BD software industry?", "How do I survive and grow as a junior dev?", or "What's actually happening in tech that affects me?" If your content doesn't answer one of these, your Bengali audience won't share it.
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

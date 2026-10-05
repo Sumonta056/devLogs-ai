@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিনিয়োগ Guide — Complete Investment Guide for Bangladesh</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF7;--surface:#fff;--surface2:#F2F0EB;--card:#fff;
+  --border:#E5E2DB;--border2:#D4D0C8;
+  --ink:#1A1714;--ink2:#4A4640;--ink3:#8A857D;
+  --green:#0B6E4F;--green-bg:#E8F5EE;--green-border:#B8DFC9;
+  --red:#B82E2E;--red-bg:#FDECEC;--red-border:#F0C2C2;
+  --gold:#9A7B2F;--gold-bg:#FBF6E8;--gold-border:#E8D9A8;
+  --blue:#2B5EA7;--blue-bg:#EBF1FA;--blue-border:#B8CEE8;
+  --purple:#6B47B8;--purple-bg:#F2EEFB;--purple-border:#C9BCE8;
+  --orange:#C25B14;--orange-bg:#FFF3EB;--orange-border:#F0CEB0;
+  --teal:#0B7285;--teal-bg:#E6F6F8;--teal-border:#ADE0E8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Sora','Noto Sans Bengali',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{padding:56px 0 32px;position:relative;overflow:hidden}
+.hero::after{content:'৳';position:absolute;right:-20px;top:-40px;font-size:320px;font-weight:800;color:rgba(0,0,0,0.025);pointer-events:none;font-family:'Space Mono',monospace}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:12px}
+.hero h1 span{display:block;background:linear-gradient(135deg,var(--green),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--ink2);font-size:16px;max-width:560px;font-weight:400}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(250,250,247,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 0}
+.nav-inner{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-btn{padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;white-space:nowrap;cursor:pointer;transition:all .15s;background:transparent;color:var(--ink3);border:1px solid transparent;font-family:inherit}
+.nav-btn:hover{background:var(--surface2);color:var(--ink)}
+.nav-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* Sections */
+.sec{display:none;padding:28px 0 64px;animation:fadeUp .35s ease}
+.sec.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.sec-head{margin-bottom:28px}
+.sec-head h2{font-size:26px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.sec-head p{color:var(--ink2);font-size:14px}
+
+/* Cards */
+.crd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px;transition:box-shadow .2s}
+.crd:hover{box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.crd h3{font-size:17px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.crd p,.crd li{color:var(--ink2);font-size:14px;line-height:1.8}
+.crd ul{padding-left:18px;margin-top:8px}
+.crd li{margin-bottom:4px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;font-size:16px;flex-shrink:0}
+.bg-green{background:var(--green-bg)}.bg-gold{background:var(--gold-bg)}.bg-red{background:var(--red-bg)}
+.bg-blue{background:var(--blue-bg)}.bg-purple{background:var(--purple-bg)}.bg-orange{background:var(--orange-bg)}.bg-teal{background:var(--teal-bg)}
+
+/* Info boxes */
+.ibox{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:13.5px;display:flex;gap:10px;align-items:flex-start;line-height:1.7}
+.ibox span{font-size:16px;flex-shrink:0;margin-top:1px}
+.ibox.tip{background:var(--green-bg);border-left:3px solid var(--green)}
+.ibox.warn{background:var(--red-bg);border-left:3px solid var(--red)}
+.ibox.note{background:var(--blue-bg);border-left:3px solid var(--blue)}
+.ibox.gold{background:var(--gold-bg);border-left:3px solid var(--gold)}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.tbl th{text-align:left;padding:10px 12px;background:var(--surface2);color:var(--ink2);font-weight:600;border-bottom:2px solid var(--border);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--ink2)}
+.tbl tr:hover td{background:var(--surface2)}
+.tbl td strong{color:var(--ink)}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.t-green{background:var(--green-bg);color:var(--green)}.t-red{background:var(--red-bg);color:var(--red)}
+.t-gold{background:var(--gold-bg);color:var(--gold)}.t-blue{background:var(--blue-bg);color:var(--blue)}
+.t-purple{background:var(--purple-bg);color:var(--purple)}.t-orange{background:var(--orange-bg);color:var(--orange)}
+.t-teal{background:var(--teal-bg);color:var(--teal)}
+
+/* Steps */
+.stp{display:flex;gap:16px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.stp:last-child{border-bottom:none;margin-bottom:0}
+.stp-n{width:36px;height:36px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.stp-c h4{font-size:15px;font-weight:700;margin-bottom:2px}
+.stp-c p{color:var(--ink2);font-size:13.5px}
+
+/* Meter (safety) */
+.meter{height:8px;border-radius:4px;background:var(--surface2);margin:8px 0;overflow:hidden;position:relative}
+.meter-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.m-high{background:var(--green);width:90%}.m-med{background:var(--gold);width:60%}
+.m-low{background:var(--red);width:30%}.m-vhigh{background:var(--green);width:95%}
+
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.g2{grid-template-columns:1fr}}
+
+/* Accordion */
+.acc-item{margin-bottom:6px}
+.acc-h{background:var(--surface2);padding:12px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
+.acc-h:hover{background:var(--border)}
+.acc-b{padding:12px 16px;color:var(--ink2);font-size:13.5px;display:none;line-height:1.8}
+.acc-item.open .acc-b{display:block}
+.acc-item.open .acc-h{border-bottom-left-radius:0;border-bottom-right-radius:0;background:var(--border)}
+.acc-item.open .acc-b{background:var(--surface);border:1px solid var(--border);border-top:0;border-bottom-left-radius:8px;border-bottom-right-radius:8px}
+
+/* Comparison Matrix */
+.matrix{overflow-x:auto}
+.matrix table{min-width:700px}
+
+/* Footer */
+.foot{text-align:center;padding:40px 0;border-top:1px solid var(--border);color:var(--ink3);font-size:12px}
+
+.hl{color:var(--green);font-weight:600}
+.hl-red{color:var(--red);font-weight:600}
+.hl-gold{color:var(--gold);font-weight:600}
+.hl-blue{color:var(--blue);font-weight:600}
+
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Score card */
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.score-label{font-size:13px;font-weight:600;width:120px;flex-shrink:0;color:var(--ink2)}
+.score-bar{flex:1;height:24px;background:var(--surface2);border-radius:6px;overflow:hidden;position:relative}
+.score-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;transition:width .4s}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero">
+  <div class="hero-tag">🇧🇩 বিনিয়োগ গাইড ২০২৬</div>
+  <h1>Where Should You<br><span>Invest in Bangladesh?</span></h1>
+  <p>A complete beginner's guide covering Bank Deposits, Sanchayapatra, Mutual Funds, Agri-Tech Apps, Gold, and Land — with safety ratings, comparisons, and step-by-step instructions.</p>
+</div>
+
+<div class="nav" id="nav">
+ <div class="nav-inner">
+  <div class="nav-btn on" data-s="overview">🏠 Overview</div>
+  <div class="nav-btn" data-s="bank">🏦 Bank (FDR/DPS)</div>
+  <div class="nav-btn" data-s="sanchay">📜 Sanchayapatra</div>
+  <div class="nav-btn" data-s="mutual">📊 Mutual Funds</div>
+  <div class="nav-btn" data-s="agri">🌾 Agri-Tech Apps</div>
+  <div class="nav-btn" data-s="gold">🪙 Gold</div>
+  <div class="nav-btn" data-s="land">🏘️ Land/Real Estate</div>
+  <div class="nav-btn" data-s="compare">⚖️ Comparison</div>
+  <div class="nav-btn" data-s="plan">🗺️ Action Plan</div>
+ </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="sec on" id="overview">
+<div class="sec-head"><h2>Investment Options in Bangladesh</h2><p>তোমার জন্য কোন বিনিয়োগ সবচেয়ে ভালো — একনজরে দেখো</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📋</span> At a Glance — 6 Investment Options</h3>
+<div class="matrix">
+<table class="tbl">
+<tr><th>Option</th><th>Min. Amount</th><th>Expected Return</th><th>Risk</th><th>Liquidity</th><th>Best For</th></tr>
+<tr><td><strong>🏦 Bank FDR</strong></td><td>৳5,000+</td><td>9.5%–11.5%/yr</td><td><span class="tag t-green">Very Low</span></td><td>Low (locked)</td><td>Safe parking of lump sum</td></tr>
+<tr><td><strong>🏦 Bank DPS</strong></td><td>৳500/mo</td><td>8%–10%/yr</td><td><span class="tag t-green">Very Low</span></td><td>Low (locked)</td><td>Monthly savings habit</td></tr>
+<tr><td><strong>📜 Sanchayapatra</strong></td><td>৳10,000</td><td>11%–12%/yr</td><td><span class="tag t-green">Lowest</span></td><td>Medium</td><td>Highest guaranteed return</td></tr>
+<tr><td><strong>📊 Mutual Funds</strong></td><td>৳1,000</td><td>8%–15%/yr*</td><td><span class="tag t-gold">Medium</span></td><td>High (open-end)</td><td>Passive stock exposure</td></tr>
+<tr><td><strong>🌾 Agri-Tech Apps</strong></td><td>৳5,000+</td><td>8%–15%*</td><td><span class="tag t-orange">Medium-High</span></td><td>Low (locked)</td><td>Impact + returns</td></tr>
+<tr><td><strong>🪙 Gold</strong></td><td>Any</td><td>~10%/yr avg</td><td><span class="tag t-gold">Medium</span></td><td>Medium</td><td>Inflation hedge</td></tr>
+<tr><td><strong>🏘️ Land</strong></td><td>৳3-5 Lakh+</td><td>10%–25%/yr*</td><td><span class="tag t-red">High</span></td><td>Very Low</td><td>Long-term wealth</td></tr>
+</table>
+</div>
+<p style="font-size:12px;color:var(--ink3);margin-top:8px;">* Returns are historical/estimated and NOT guaranteed. Past performance doesn't guarantee future results.</p>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">🎯</span> Which One is Right for YOU?</h3>
+<div class="g2" style="margin-top:12px">
+  <div style="background:var(--green-bg);padding:14px;border-radius:10px;border:1px solid var(--green-border)">
+    <strong style="color:var(--green)">🛡️ "I want zero risk"</strong><br>
+    <span style="font-size:13px;color:var(--ink2)">→ Sanchayapatra or Bank FDR. Your money is 100% safe. Government-backed.</span>
+  </div>
+  <div style="background:var(--blue-bg);padding:14px;border-radius:10px;border:1px solid var(--blue-border)">
+    <strong style="color:var(--blue)">📈 "I want growth but safety"</strong><br>
+    <span style="font-size:13px;color:var(--ink2)">→ Open-end Mutual Fund (SIP ৳1,000/mo). Professional management, diversified.</span>
+  </div>
+  <div style="background:var(--gold-bg);padding:14px;border-radius:10px;border:1px solid var(--gold-border)">
+    <strong style="color:var(--gold)">🌾 "I want to try something new"</strong><br>
+    <span style="font-size:13px;color:var(--ink2)">→ iFarmer or WeGro with a small amount. Interesting, but higher risk. Start with minimum.</span>
+  </div>
+  <div style="background:var(--purple-bg);padding:14px;border-radius:10px;border:1px solid var(--purple-border)">
+    <strong style="color:var(--purple)">🪙 "I want inflation protection"</strong><br>
+    <span style="font-size:13px;color:var(--ink2)">→ Gold. Buy small amounts over time. Historically beats inflation in Bangladesh.</span>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- BANK FDR/DPS -->
+<div class="sec" id="bank">
+<div class="sec-head"><h2>🏦 Bank Deposits — FDR & DPS</h2><p>সবচেয়ে নিরাপদ বিনিয়োগ — ফিক্সড ডিপোজিট ও মাসিক সঞ্চয়</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-green">💰</span> FDR (Fixed Deposit Receipt) — Explained</h3>
+<p>You deposit a lump sum amount in a bank for a fixed period (3 months to 5 years). The bank pays you interest. At maturity, you get your money + profit back.</p>
+<div class="ibox tip"><span>✅</span><div><strong>Key point:</strong> In 2026, Bangladesh Bank's tight monetary policy has pushed FDR rates to decade-highs. Private banks are offering 9.5%–11.5% for 1-year tenures. This is a great time for FDR!</div></div>
+<table class="tbl">
+<tr><th>Bank</th><th>1-Year Rate</th><th>Min. Deposit</th><th>Special Features</th></tr>
+<tr><td><strong>BRAC Bank</strong></td><td>9.5%–10.5%</td><td>৳10,000</td><td>Monthly/annual payout option. Strong brand.</td></tr>
+<tr><td><strong>Dutch-Bangla Bank</strong></td><td>9.0%–10.5%</td><td>৳10,000</td><td>Best mobile banking. Wide ATM network.</td></tr>
+<tr><td><strong>City Bank</strong></td><td>9.5%–11.0%</td><td>৳10,000</td><td>Flexible tenures. Online FDR opening.</td></tr>
+<tr><td><strong>Bank Asia</strong></td><td>9.5%–11.0%</td><td>৳10,000</td><td>Digital-first approach. Good app.</td></tr>
+<tr><td><strong>Midland Bank</strong></td><td>10.0%–11.5%</td><td>৳10,000</td><td>Higher rates (smaller bank). Less branches.</td></tr>
+<tr><td><strong>NRBC Bank</strong></td><td>10.0%–11.5%</td><td>৳10,000</td><td>Competitive rates. Growing network.</td></tr>
+</table>
+<div class="ibox warn"><span>⚠️</span><div><strong>Tax note:</strong> Banks deduct 10% source tax on FDR interest if you have a TIN. Without TIN, they deduct 15%. So ৳1,000 interest becomes ৳900 or ৳850 in hand.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">📅</span> DPS (Deposit Pension Scheme) — Monthly Savings</h3>
+<p>You save a fixed amount <strong>every month</strong> for a set period (usually 3–10 years). At maturity, you get the total savings + compounded interest. Think of it as a forced savings habit.</p>
+<table class="tbl">
+<tr><th>Feature</th><th>Details</th></tr>
+<tr><td>Minimum monthly</td><td><strong>৳500/month</strong> (most banks)</td></tr>
+<tr><td>Typical tenure</td><td>3 years, 5 years, 7 years, or 10 years</td></tr>
+<tr><td>Interest rate</td><td>8%–10% (varies by bank & tenure)</td></tr>
+<tr><td>Missing a payment</td><td>Usually a ৳50–100 fine. Too many misses = account closed</td></tr>
+<tr><td>Early withdrawal</td><td>Possible but with penalty — you get less interest</td></tr>
+<tr><td>Loan against DPS</td><td>Most banks allow up to 80–90% loan against your DPS</td></tr>
+</table>
+<div class="ibox tip"><span>💡</span><div><strong>Example:</strong> Save ৳2,000/month in DPS at 9% for 5 years → You deposit ৳1,20,000 total → You get back approximately ৳1,55,000–1,60,000 at maturity. That's ~৳35,000–40,000 profit just from discipline!</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-gold">📝</span> How to Open FDR/DPS</h3>
+<div class="stp"><div class="stp-n">1</div><div class="stp-c"><h4>Choose a bank</h4><p>Compare rates above. Prioritize banks where you already have a savings account.</p></div></div>
+<div class="stp"><div class="stp-n">2</div><div class="stp-c"><h4>Visit the branch or app</h4><p>Many banks now allow online FDR/DPS opening through their app (BRAC Bank, City Bank, DBBL). Bring NID + photo if visiting.</p></div></div>
+<div class="stp"><div class="stp-n">3</div><div class="stp-c"><h4>Fill the application form</h4><p>Choose tenure, amount, and nominee. For DPS, set up auto-debit from your savings account so you never miss a payment.</p></div></div>
+<div class="stp"><div class="stp-n">4</div><div class="stp-c"><h4>Get your receipt</h4><p>You'll receive an FDR certificate (physical or digital). Keep it safe — you'll need it for maturity encashment.</p></div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill m-vhigh" style="width:95%;background:var(--green)">95/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:55%;background:var(--gold)">55/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:35%;background:var(--orange)">35/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:95%;background:var(--green)">95/100</div></div></div>
+</div>
+</div>
+
+<!-- SANCHAYAPATRA -->
+<div class="sec" id="sanchay">
+<div class="sec-head"><h2>📜 Sanchayapatra (National Savings)</h2><p>সরকারি সঞ্চয়পত্র — সবচেয়ে নিরাপদ ও সবচেয়ে বেশি গ্যারান্টিড রিটার্ন</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-green">🏛️</span> What is Sanchayapatra?</h3>
+<p>Sanchayapatra are government-backed savings certificates sold through post offices and some bank branches. They offer the <strong class="hl">highest guaranteed returns</strong> in Bangladesh — higher than any bank FDR. Since the government backs them, they are the safest possible investment.</p>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-gold">📋</span> Types of Sanchayapatra (Updated Rates — July 2025 revision)</h3>
+<table class="tbl">
+<tr><th>Type</th><th>Tenure</th><th>Rate (≤৳7.5L)</th><th>Rate (>৳7.5L)</th><th>Who Can Buy</th></tr>
+<tr><td><strong>5-Year Bangladesh Sanchayapatra</strong></td><td>5 years</td><td>11.83%</td><td>11.80%</td><td>Any Bangladeshi citizen (18+)</td></tr>
+<tr><td><strong>3-Month Profit Sanchayapatra</strong></td><td>3 years</td><td>11.82%</td><td>11.77%</td><td>Any Bangladeshi citizen (18+)</td></tr>
+<tr><td><strong>Paribar (Family) Sanchayapatra</strong></td><td>5 years</td><td>11.93%</td><td>11.80%</td><td>Women 18+, disabled, men/women 65+</td></tr>
+<tr><td><strong>Pensioner Sanchayapatra</strong></td><td>5 years</td><td>11.98%</td><td>11.80%</td><td>Retired govt/semi-govt employees</td></tr>
+</table>
+<div class="ibox gold"><span>🏆</span><div><strong>Best option for most people:</strong> 5-Year Bangladesh Sanchayapatra at ~11.83%. If your mother/sister is eligible, Paribar Sanchayapatra at ~11.93% is even better.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">📝</span> How to Buy Sanchayapatra</h3>
+<p><strong>Requirements:</strong> NID, passport-size photo, nominee info, bank account details, and the investment amount (minimum ৳10,000 in multiples of ৳1,000).</p>
+<div class="stp"><div class="stp-n">1</div><div class="stp-c"><h4>Go to a National Savings Bureau or designated bank branch</h4><p>Post offices, Bangladesh Bank branches, and some commercial bank branches sell Sanchayapatra. Sonali Bank, Agrani Bank, and Janata Bank branches are common sellers.</p></div></div>
+<div class="stp"><div class="stp-n">2</div><div class="stp-c"><h4>Fill the application form</h4><p>Provide NID, photo, nominee details, and bank account (where profit will be deposited). You'll also need your TIN if you have one.</p></div></div>
+<div class="stp"><div class="stp-n">3</div><div class="stp-c"><h4>Pay the amount</h4><p>By bank cheque or pay order (cash may be accepted for smaller amounts). Minimum ৳10,000.</p></div></div>
+<div class="stp"><div class="stp-n">4</div><div class="stp-c"><h4>Receive your certificate</h4><p>You'll get a physical certificate. Keep it very safe — this is your proof of investment.</p></div></div>
+<div class="ibox warn"><span>⚠️</span><div><strong>Investment ceiling:</strong> Maximum ৳50 lakh combining all Sanchayapatra types. 5% source tax is deducted on profit. Early encashment is possible but at lower rates.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill" style="width:99%;background:var(--green)">99/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:70%;background:var(--green)">70/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:40%;background:var(--orange)">40/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:85%;background:var(--green)">85/100</div></div></div>
+</div>
+</div>
+
+<!-- MUTUAL FUNDS -->
+<div class="sec" id="mutual">
+<div class="sec-head"><h2>📊 Mutual Funds in Bangladesh</h2><p>মিউচুয়াল ফান্ড কী, কীভাবে কাজ করে, কোথায় বিনিয়োগ করবে — সম্পূর্ণ গাইড</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">💡</span> What is a Mutual Fund? (Super Simple Explanation)</h3>
+<p>Imagine 100 people each put ৳1,000 into a big pot. Total = ৳1,00,000. A professional fund manager takes that pot and buys a mix of stocks, bonds, and other investments. If the pot grows to ৳1,10,000, each person's ৳1,000 is now worth ৳1,100. That's a mutual fund.</p>
+<div class="ibox tip"><span>🎯</span><div><strong>Why it's great for beginners:</strong> You don't need to pick individual stocks. A professional does it for you. You can start with as little as ৳1,000/month. Your money is spread across many companies, reducing risk.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-purple">🔄</span> Two Types of Mutual Funds in Bangladesh</h3>
+<div class="g2" style="margin-top:12px">
+<div style="background:var(--blue-bg);padding:16px;border-radius:10px;border:1px solid var(--blue-border)">
+  <strong style="color:var(--blue)">📂 Closed-End Funds</strong><br>
+  <span style="font-size:13px;color:var(--ink2)">Fixed number of units. Listed on DSE. You buy/sell through your brokerage account (like stocks). Fixed maturity (usually 10 years). Many trade at a discount to their actual value (NAV) — which means bargains!</span>
+</div>
+<div style="background:var(--green-bg);padding:16px;border-radius:10px;border:1px solid var(--green-border)">
+  <strong style="color:var(--green)">📂 Open-End Funds</strong><br>
+  <span style="font-size:13px;color:var(--ink2)">No fixed units. NOT on DSE. You buy/sell directly from the fund company at NAV. No maturity date — withdraw anytime. Can invest via SIP (Systematic Investment Plan) = ৳1,000/month. Most flexible option.</span>
+</div>
+</div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-gold">🏢</span> Top Mutual Fund Companies in Bangladesh</h3>
+<table class="tbl">
+<tr><th>Asset Manager</th><th>Notable Funds</th><th>Min. Investment</th><th>Type</th></tr>
+<tr><td><strong>ICB AMCL</strong> (govt)</td><td>Bangladesh Fund, ICB Unit Fund</td><td>৳5,000</td><td>Open & Closed</td></tr>
+<tr><td><strong>EDGE AMC</strong></td><td>EDGE Bangladesh MF</td><td>৳1,000/mo SIP</td><td>Open & Closed</td></tr>
+<tr><td><strong>Shanta AMC</strong></td><td>Shanta First Income Unit Fund</td><td>৳10,000</td><td>Open & Closed</td></tr>
+<tr><td><strong>LankaBangla AMC</strong></td><td>LBAMCL Growth Fund, Shariah Fund</td><td>৳5,000</td><td>Open & Closed</td></tr>
+<tr><td><strong>IDLC AMC</strong></td><td>IDLC Balanced Fund</td><td>৳5,000</td><td>Open-End</td></tr>
+<tr><td><strong>LR Global BD</strong></td><td>LR Global MF One</td><td>৳10,000</td><td>Open & Closed</td></tr>
+</table>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📝</span> How to Invest in Mutual Funds</h3>
+<p style="font-weight:600;color:var(--ink);margin-bottom:8px;">Option A: Closed-End Funds (via DSE)</p>
+<div class="stp"><div class="stp-n">1</div><div class="stp-c"><h4>Open a BO Account</h4><p>Same process as buying stocks. You need a brokerage account.</p></div></div>
+<div class="stp"><div class="stp-n">2</div><div class="stp-c"><h4>Search for mutual fund codes on DSE</h4><p>Example: 1JANATAMF trades at ~৳3, 1STPRIMFMF at ~৳19. Very affordable!</p></div></div>
+<div class="stp"><div class="stp-n">3</div><div class="stp-c"><h4>Buy through your trading app</h4><p>Just like buying a regular stock. Place a limit order.</p></div></div>
+
+<p style="font-weight:600;color:var(--ink);margin-top:16px;margin-bottom:8px;">Option B: Open-End Funds (directly from fund company)</p>
+<div class="stp"><div class="stp-n">1</div><div class="stp-c"><h4>Contact the Asset Management Company</h4><p>Visit EDGE AMC, Shanta AMC, or LankaBangla AMC website/office.</p></div></div>
+<div class="stp"><div class="stp-n">2</div><div class="stp-c"><h4>Fill KYC form and provide documents</h4><p>NID, photo, bank details, nominee info.</p></div></div>
+<div class="stp"><div class="stp-n">3</div><div class="stp-c"><h4>Set up SIP (monthly auto-investment)</h4><p>Most allow ৳1,000–5,000/month via auto-debit. This is the best way for beginners.</p></div></div>
+<div class="stp"><div class="stp-n">4</div><div class="stp-c"><h4>Monitor quarterly NAV reports</h4><p>Check your fund's NAV weekly on DSE website or the fund company's site.</p></div></div>
+
+<div class="ibox tip"><span>💡</span><div><strong>Tax benefit:</strong> Mutual fund investments are eligible for income tax rebate in Bangladesh. You can claim up to 15% tax rebate on your investment amount. This is a significant advantage over bank deposits!</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill" style="width:70%;background:var(--gold)">70/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:72%;background:var(--green)">72/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:75%;background:var(--green)">75/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:80%;background:var(--green)">80/100</div></div></div>
+</div>
+</div>
+
+<!-- AGRI-TECH APPS -->
+<div class="sec" id="agri">
+<div class="sec-head"><h2>🌾 Agri-Tech Investment Apps</h2><p>কৃষিতে বিনিয়োগ করো অ্যাপের মাধ্যমে — iFarmer, WeGro, Biniyog</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-orange">🌱</span> How These Apps Work</h3>
+<p>These platforms connect <strong>urban investors</strong> (like you) with <strong>rural farmers</strong> who need capital. You invest money → the platform gives it to a farmer for livestock/crops → farmer sells the produce → you get your investment + profit share back.</p>
+<div class="ibox note"><span>🔄</span><div><strong>The cycle:</strong> You invest ৳10,000 in a cow farming project → Farmer raises the cow for 4-6 months → Cow is sold at market → You get back ৳10,000 + 8-15% profit. The farmer also keeps their share.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📱</span> Platform Comparison</h3>
+<table class="tbl">
+<tr><th>Platform</th><th>Founded</th><th>Min. Investment</th><th>Typical Return</th><th>Cycle Length</th><th>Insurance</th></tr>
+<tr><td><strong>iFarmer</strong><br><span style="font-size:11px;color:var(--ink3)">ifarmer.asia</span></td><td>2018</td><td>৳5,000–40,000</td><td>8%–15%</td><td>3–6 months</td><td><span class="tag t-green">Yes (Green Delta)</span></td></tr>
+<tr><td><strong>WeGro</strong><br><span style="font-size:11px;color:var(--ink3)">wegro.global</span></td><td>2021</td><td>৳5,000+</td><td>8%–14%</td><td>3–8 months</td><td><span class="tag t-green">Default insurance</span></td></tr>
+<tr><td><strong>Biniyog.io</strong><br><span style="font-size:11px;color:var(--ink3)">biniyog.io</span></td><td>Recent</td><td>Varies</td><td>Varies</td><td>Varies</td><td><span class="tag t-gold">Shariah-compliant</span></td></tr>
+</table>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-red">⚠️</span> Risks You MUST Know</h3>
+<div class="acc-item">
+  <div class="acc-h" onclick="tog(this)"><span>🐄 Animal death / crop failure</span><span>▼</span></div>
+  <div class="acc-b">Even with insurance, natural disasters, disease outbreaks, or market price drops can affect returns. Insurance may not cover 100% of your investment.</div>
+</div>
+<div class="acc-item">
+  <div class="acc-h" onclick="tog(this)"><span>📜 Not BSEC regulated</span><span>▼</span></div>
+  <div class="acc-b">These platforms are NOT regulated by BSEC (the stock market regulator). They operate under different legal frameworks. This means less investor protection compared to bank deposits or Sanchayapatra.</div>
+</div>
+<div class="acc-item">
+  <div class="acc-h" onclick="tog(this)"><span>⏰ Locked money</span><span>▼</span></div>
+  <div class="acc-b">Your money is locked for the entire farming cycle (3-8 months). You cannot withdraw early. If you might need the money, this is not for you.</div>
+</div>
+<div class="acc-item">
+  <div class="acc-h" onclick="tog(this)"><span>🔍 Transparency concerns</span><span>▼</span></div>
+  <div class="acc-b">Unlike banks, there's limited visibility into exactly how your money is being used. You're trusting the platform's vetting of farmers. Start very small to test.</div>
+</div>
+<div class="ibox warn"><span>🔑</span><div><strong>Golden Rule:</strong> Never invest more than 10-15% of your total savings in agri-tech apps. Start with the minimum amount for your first cycle. Only increase after a successful return.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">📝</span> How to Start</h3>
+<div class="stp"><div class="stp-n">1</div><div class="stp-c"><h4>Download the app</h4><p>iFarmer or WeGro from Google Play / App Store.</p></div></div>
+<div class="stp"><div class="stp-n">2</div><div class="stp-c"><h4>Create account & verify</h4><p>NID verification, mobile number, email. Some may require TIN.</p></div></div>
+<div class="stp"><div class="stp-n">3</div><div class="stp-c"><h4>Browse available projects</h4><p>You'll see projects like "Cow Farming Sirajganj — 10% return in 5 months — Min ৳10,000".</p></div></div>
+<div class="stp"><div class="stp-n">4</div><div class="stp-c"><h4>Invest in a project</h4><p>Pay via bKash, bank transfer. You'll receive a digital contract.</p></div></div>
+<div class="stp"><div class="stp-n">5</div><div class="stp-c"><h4>Wait for the cycle to complete</h4><p>Track updates on the app. At cycle end, profit is distributed to your account.</p></div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-orange">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill" style="width:45%;background:var(--orange)">45/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:68%;background:var(--green)">68/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:20%;background:var(--red)">20/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:65%;background:var(--gold)">65/100</div></div></div>
+</div>
+</div>
+
+<!-- GOLD -->
+<div class="sec" id="gold">
+<div class="sec-head"><h2>🪙 Gold Investment in Bangladesh</h2><p>সোনায় বিনিয়োগ — ঐতিহ্যবাহী ও মূল্যস্ফীতির বিরুদ্ধে সুরক্ষা</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-gold">💎</span> Current Gold Prices (April 2026)</h3>
+<table class="tbl">
+<tr><th>Type</th><th>Per Gram</th><th>Per Bhori (11.664g)</th><th>Use</th></tr>
+<tr><td><strong>22 Karat</strong> (most popular)</td><td>~৳21,260</td><td>~৳2,47,977</td><td>Jewelry & investment</td></tr>
+<tr><td><strong>21 Karat</strong></td><td>~৳20,295</td><td>~৳2,36,721</td><td>Jewelry</td></tr>
+<tr><td><strong>18 Karat</strong></td><td>~৳17,395</td><td>~৳2,02,895</td><td>Affordable jewelry</td></tr>
+<tr><td><strong>Traditional</strong></td><td>~৳14,170</td><td>~৳1,65,279</td><td>Used/old gold</td></tr>
+</table>
+<div class="ibox gold"><span>📈</span><div><strong>Historical performance:</strong> Gold has returned approximately 9.7% annually in USD and even higher in BDT (because Taka depreciates against USD over time). Gold prices in Bangladesh have increased dramatically over the past decade.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">🔄</span> Ways to Invest in Gold in Bangladesh</h3>
+<div class="g2" style="margin-top:12px">
+<div style="background:var(--gold-bg);padding:16px;border-radius:10px;border:1px solid var(--gold-border)">
+  <strong style="color:var(--gold)">🪙 Physical Gold (Jewelry/Coins/Bars)</strong><br>
+  <span style="font-size:13px;color:var(--ink2)">Buy from BAJUS-registered jewelers. Get hallmarked gold. Store in bank locker (৳3,000–8,000/year). Most traditional method. Making charge: 5-15% on jewelry (wasted on resale).</span>
+</div>
+<div style="background:var(--teal-bg);padding:16px;border-radius:10px;border:1px solid var(--teal-border)">
+  <strong style="color:var(--teal)">📱 Digital Gold (Emerging)</strong><br>
+  <span style="font-size:13px;color:var(--ink2)">Some apps allow fractional gold investment. Still limited in BD compared to India. bKash and some fintech platforms are exploring this space. Check if available when you're ready.</span>
+</div>
+</div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-red">⚠️</span> Pros and Cons</h3>
+<div class="g2">
+<div>
+<p style="font-weight:700;color:var(--green);margin-bottom:6px">✅ Pros</p>
+<ul><li>Universal store of value</li><li>Beats inflation long-term</li><li>No counterparty risk (you own it)</li><li>Culturally valuable in Bangladesh</li><li>Can be gifted/inherited easily</li></ul>
+</div>
+<div>
+<p style="font-weight:700;color:var(--red);margin-bottom:6px">❌ Cons</p>
+<ul><li>Making charges lost on jewelry (5-15%)</li><li>Storage risk — theft, loss</li><li>No regular income (no dividends/interest)</li><li>Price can drop short-term</li><li>Buying 1 bhori requires ~৳2.5 lakh — expensive entry</li></ul>
+</div>
+</div>
+<div class="ibox tip"><span>💡</span><div><strong>Beginner tip:</strong> With your budget, buying gold jewelry isn't practical (too expensive per bhori). Instead, consider buying small gold coins (1-2 grams) or saving up for gold over time. Some jewelers sell 1-gram gold bars starting at ~৳21,000.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-gold">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill" style="width:80%;background:var(--green)">80/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:62%;background:var(--gold)">62/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:65%;background:var(--gold)">65/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:50%;background:var(--orange)">50/100</div></div></div>
+</div>
+</div>
+
+<!-- LAND -->
+<div class="sec" id="land">
+<div class="sec-head"><h2>🏘️ Land / Real Estate (জমি-জমা)</h2><p>জমিতে বিনিয়োগ — বাংলাদেশের সবচেয়ে জনপ্রিয় কিন্তু জটিল বিনিয়োগ</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-purple">🏘️</span> The Reality of Land Investment</h3>
+<p>In Bangladesh, land is culturally considered the most prestigious investment. Prices in Dhaka and surrounding areas have appreciated significantly over decades. However, it comes with serious complexity and risk that most beginners underestimate.</p>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">💰</span> Approximate Land Prices (2026)</h3>
+<table class="tbl">
+<tr><th>Location</th><th>Price Range (per katha)</th><th>Trend</th></tr>
+<tr><td><strong>Dhaka City (Gulshan/Banani)</strong></td><td>৳2-5 Crore+</td><td>Stable/Slow growth</td></tr>
+<tr><td><strong>Dhaka Suburbs (Uttara/Purbachal)</strong></td><td>৳20-80 Lakh</td><td>Growing</td></tr>
+<tr><td><strong>Narayanganj area</strong></td><td>৳5-20 Lakh</td><td>Moderate growth</td></tr>
+<tr><td><strong>Gazipur/Savar</strong></td><td>৳3-15 Lakh</td><td>Growing (industry)</td></tr>
+<tr><td><strong>District towns</strong></td><td>৳1-5 Lakh</td><td>Slow but steady</td></tr>
+</table>
+<div class="ibox warn"><span>⚠️</span><div><strong>Budget reality:</strong> With ৳3,000–4,000, you absolutely cannot buy land directly. Land investment typically requires at least ৳3-5 Lakh minimum. This section is for your future knowledge and long-term planning.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-red">⛔</span> Critical Risks with Land</h3>
+<div class="acc-item"><div class="acc-h" onclick="tog(this)"><span>📜 Title disputes & forgery</span><span>▼</span></div><div class="acc-b">Bangladesh has a complex land ownership system. Fake documents, multiple claims on the same land, and inheritance disputes are extremely common. ALWAYS hire a lawyer to verify land documents (mutation, khatian, deed). Never buy based on trust alone.</div></div>
+<div class="acc-item"><div class="acc-h" onclick="tog(this)"><span>🏗️ Illegal encroachment</span><span>▼</span></div><div class="acc-b">Someone might occupy your land if you're not physically present. Land grabbing (jomi dakhal) is a real problem, especially in semi-urban and rural areas. You need to visit regularly or have trusted local contacts.</div></div>
+<div class="acc-item"><div class="acc-h" onclick="tog(this)"><span>💸 Hidden costs</span><span>▼</span></div><div class="acc-b">Registration fees (1-3% of deed value), stamp duty, lawyer fees, surveyor fees, annual land tax, and potential development costs. These can add 10-15% to the purchase price.</div></div>
+<div class="acc-item"><div class="acc-h" onclick="tog(this)"><span>⏰ Extremely illiquid</span><span>▼</span></div><div class="acc-b">Selling land in Bangladesh can take months to years. You can't quickly sell land if you need cash urgently. This is the least liquid investment option.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">📋</span> Must-Know Documents for Land Purchase</h3>
+<table class="tbl">
+<tr><th>Document</th><th>What it Is</th><th>Why Important</th></tr>
+<tr><td><strong>Deed (দলিল)</strong></td><td>Legal sale document</td><td>Proves ownership transfer</td></tr>
+<tr><td><strong>Khatian (খতিয়ান)</strong></td><td>Govt land record / RS-SA-BS khatian</td><td>Confirms govt-recorded owner</td></tr>
+<tr><td><strong>Mutation (নামজারি)</strong></td><td>Transfer record in land office</td><td>Updates govt records with new owner</td></tr>
+<tr><td><strong>DCR (Duplicate Carbon Receipt)</strong></td><td>Land tax payment receipt</td><td>Proves taxes are paid</td></tr>
+<tr><td><strong>Porcha (পর্চা)</strong></td><td>Copy of khatian from land office</td><td>Verifies land details</td></tr>
+</table>
+<div class="ibox tip"><span>⚖️</span><div><strong>Non-negotiable rule:</strong> NEVER buy land without hiring a lawyer (advocate) to do a full title search going back at least 25 years. Budget ৳5,000–15,000 for this. It can save you lakhs.</div></div>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-red">📊</span> Safety Rating</h3>
+<div class="score-row"><span class="score-label">Safety</span><div class="score-bar"><div class="score-fill" style="width:40%;background:var(--orange)">40/100</div></div></div>
+<div class="score-row"><span class="score-label">Returns</span><div class="score-bar"><div class="score-fill" style="width:82%;background:var(--green)">82/100</div></div></div>
+<div class="score-row"><span class="score-label">Liquidity</span><div class="score-bar"><div class="score-fill" style="width:10%;background:var(--red)">10/100</div></div></div>
+<div class="score-row"><span class="score-label">Beginner-Friendly</span><div class="score-bar"><div class="score-fill" style="width:15%;background:var(--red)">15/100</div></div></div>
+</div>
+</div>
+
+<!-- COMPARISON -->
+<div class="sec" id="compare">
+<div class="sec-head"><h2>⚖️ Complete Comparison Matrix</h2><p>সব বিনিয়োগের তুলনা একসাথে — সিদ্ধান্ত নেওয়ার জন্য</p></div>
+
+<div class="crd">
+<h3><span class="badge bg-blue">📊</span> Full Comparison Table</h3>
+<div class="matrix">
+<table class="tbl">
+<tr><th>Criteria</th><th>🏦 Bank FDR</th><th>📜 Sanchayapatra</th><th>📊 Mutual Fund</th><th>🌾 Agri-App</th><th>🪙 Gold</th><th>🏘️ Land</th></tr>
+<tr><td><strong>Safety</strong></td><td><span class="tag t-green">95</span></td><td><span class="tag t-green">99</span></td><td><span class="tag t-gold">70</span></td><td><span class="tag t-orange">45</span></td><td><span class="tag t-green">80</span></td><td><span class="tag t-orange">40</span></td></tr>
+<tr><td><strong>Return (%/yr)</strong></td><td>9.5-11.5%</td><td>11-12%</td><td>8-15%*</td><td>8-15%*</td><td>~10%</td><td>10-25%*</td></tr>
+<tr><td><strong>Min. Investment</strong></td><td>৳5-10K</td><td>৳10K</td><td>৳1K/mo</td><td>৳5K</td><td>৳21K/gram</td><td>৳3-5 Lakh</td></tr>
+<tr><td><strong>Liquidity</strong></td><td>Low</td><td>Medium</td><td>High</td><td>Very Low</td><td>Medium</td><td>Very Low</td></tr>
+<tr><td><strong>Guaranteed?</strong></td><td><span class="tag t-green">Yes</span></td><td><span class="tag t-green">Yes</span></td><td><span class="tag t-red">No</span></td><td><span class="tag t-red">No</span></td><td><span class="tag t-red">No</span></td><td><span class="tag t-red">No</span></td></tr>
+<tr><td><strong>Regulated?</strong></td><td>Bangladesh Bank</td><td>Govt</td><td>BSEC</td><td>Limited</td><td>BAJUS</td><td>Land Ministry</td></tr>
+<tr><td><strong>Tax Benefit</strong></td><td>10-15% tax on interest</td><td>5% source tax</td><td><span class="tag t-green">Tax rebate!</span></td><td>No</td><td>No</td><td>Capital gains</td></tr>
+<tr><td><strong>Complexity</strong></td><td>Very Easy</td><td>Easy</td><td>Medium</td><td>Medium</td><td>Easy</td><td>Very Complex</td></tr>
+</table>
+</div>
+<p style="font-size:11px;color:var(--ink3);margin-top:8px">*Estimated/historical. Not guaranteed. Returns can be negative.</p>
+</div>
+
+<div class="crd">
+<h3><span class="badge bg-green">🏆</span> My Recommendation for Your Situation</h3>
+<p>Given that you're a beginner with a starting budget of ৳3,000-4,000 and want safety, here's the ideal split as you grow:</p>
+<table class="tbl">
+<tr><th>Priority</th><th>What</th><th>Allocation</th><th>Why</th></tr>
+<tr style="background:var(--green-bg)"><td><strong>🥇 First</strong></td><td>Bank DPS (৳1,000-2,000/mo)</td><td>40%</td><td>Build savings discipline. Zero risk. Guaranteed returns.</td></tr>
+<tr style="background:var(--blue-bg)"><td><strong>🥈 Second</strong></td><td>Open-End Mutual Fund SIP (৳1,000/mo)</td><td>30%</td><td>Professional stock exposure. Tax rebate. Low entry.</td></tr>
+<tr style="background:var(--gold-bg)"><td><strong>🥉 Third</strong></td><td>Sanchayapatra (when you have ৳10K+)</td><td>20%</td><td>Highest guaranteed return. Government-backed.</td></tr>
+<tr><td><strong>4th</strong></td><td>iFarmer/WeGro (trial)</td><td>10%</td><td>Small experimental investment. Try 1 cycle.</td></tr>
+</table>
+<div class="ibox tip"><span>🎯</span><div><strong>The Strategy:</strong> Start with DPS + Mutual Fund SIP (both monthly). Once you've accumulated ৳10,000+ from savings, put a lump sum into Sanchayapatra. Try iFarmer with minimum amount after 3-6 months of experience. Gold and land are long-term goals for when your income and savings grow significantly.</div></div>
+</div>
+</div>
+
+<!-- ACTION PLAN -->
+<div class="sec" id="plan">
+<div class="sec-head"><h2>🗺️ Your Action Plan</h2><p>আজ থেকে শুরু — তোমার সম্পূর্ণ বিনিয়োগ রোডম্যাপ</p></div>
+
+<div class="crd" style="border-left:4px solid var(--green)">
+<h3><span class="badge bg-green">📅</span> Month 1: Foundation</h3>
+<ul>
+<li><strong>Open a DPS</strong> at your bank (BRAC Bank / DBBL / City Bank) — even ৳1,000/month is fine</li>
+<li>Set up <strong>auto-debit</strong> from salary account so you never miss</li>
+<li><strong>Research mutual funds</strong> — visit EDGE AMC or Shanta AMC website</li>
+<li><strong>Open a bank savings account</strong> if you don't have one (needed for everything)</li>
+<li>This month's investment: <strong>DPS auto-debit starts</strong></li>
+</ul>
+</div>
+
+<div class="crd" style="border-left:4px solid var(--blue)">
+<h3><span class="badge bg-blue">📅</span> Month 2-3: Add Mutual Fund</h3>
+<ul>
+<li>Contact an asset management company (EDGE AMC, Shanta, LankaBangla)</li>
+<li><strong>Start SIP at ৳1,000/month</strong> in an open-end fund</li>
+<li>Or open a BO account and buy closed-end MF units on DSE</li>
+<li>Keep DPS running on auto-pilot</li>
+<li>Study AmarStock and DSE — watch market without investing yet</li>
+</ul>
+</div>
+
+<div class="crd" style="border-left:4px solid var(--gold)">
+<h3><span class="badge bg-gold">📅</span> Month 4-6: First Milestone</h3>
+<ul>
+<li>By now your DPS has 4-6 months of deposits building up</li>
+<li>If you've saved ৳10,000+ separately, <strong>buy your first Sanchayapatra</strong></li>
+<li>Go to nearest Sonali Bank or post office with NID + cheque</li>
+<li>Consider trying <strong>iFarmer with ৳5,000</strong> (1 project, minimum amount)</li>
+<li>Track all investments in a simple spreadsheet or notebook</li>
+</ul>
+</div>
+
+<div class="crd" style="border-left:4px solid var(--purple)">
+<h3><span class="badge bg-purple">📅</span> Month 6-12: Growing</h3>
+<ul>
+<li>Review your DPS and mutual fund performance</li>
+<li>Collect first Sanchayapatra quarterly profit (if 3-month type)</li>
+<li>Evaluate iFarmer cycle completion — did it return as promised?</li>
+<li>Start learning about stocks for your next level</li>
+<li>Increase DPS or SIP amount as your income allows</li>
+<li>Consider your first gold purchase (even 1 gram coin) if budget allows</li>
+</ul>
+</div>
+
+<div class="crd" style="border-left:4px solid var(--teal)">
+<h3><span class="badge bg-teal">📅</span> Year 2+: Diversify & Grow</h3>
+<ul>
+<li>You now have 4-5 investment streams running</li>
+<li>Add direct stock investment (use your stock market guide!)</li>
+<li>Increase Sanchayapatra holdings as lump sums become available</li>
+<li>Start a small gold accumulation plan</li>
+<li>Begin researching land for 5-10 year future</li>
+<li><strong>Target: By year 2, have at least 3 active investments</strong></li>
+</ul>
+</div>
+
+<div class="crd" style="border-color:var(--green)">
+<h3><span class="badge bg-green">🔑</span> Universal Rules</h3>
+<table class="tbl">
+<tr><th>Rule</th><th>Why</th></tr>
+<tr><td>Never invest borrowed money</td><td>Debt + investment risk = financial disaster</td></tr>
+<tr><td>Keep 3 months expenses as emergency fund FIRST</td><td>Don't invest what you might need urgently</td></tr>
+<tr><td>Diversify across at least 3 types</td><td>If one fails, others protect you</td></tr>
+<tr><td>Automate monthly investments</td><td>Discipline beats timing</td></tr>
+<tr><td>Review quarterly, not daily</td><td>Reduces anxiety, better decisions</td></tr>
+<tr><td>Increase investment amount with income growth</td><td>Even ৳500/month more makes a huge difference compounded</td></tr>
+<tr><td>Never follow "hot tips" from social media</td><td>If it sounds too good to be true, it is</td></tr>
+<tr><td>Keep records of everything</td><td>For tax, tracking, and peace of mind</td></tr>
+</table>
+</div>
+
+<div class="ibox tip" style="margin-top:20px">
+<span>🚀</span>
+<div><strong>Final thought:</strong> You don't need to do everything at once. Start with just ONE thing — a DPS or mutual fund SIP. The most important step is the first one. Even ৳1,000/month invested consistently will grow into something significant over 5-10 years. The best time to start investing was 5 years ago. The second best time is today. শুভ কামনা, Mridul! 🇧🇩</div>
+</div>
+</div>
+
+<div class="foot">
+<p>📊 Data sourced from Bangladesh Bank, BSEC, DSE, BAJUS, bank websites, iFarmer, WeGro & news reports (April 2026)</p>
+<p style="margin-top:6px">Interest rates and prices change frequently. Always verify current rates before investing.</p>
+<p style="margin-top:6px">This is an educational guide, not professional financial advice. পুঁজিবাজার ঝুঁকিপূর্ণ — জেনে বুঝে বিনিয়োগ করুন।</p>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('.nav-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.sec').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById(b.dataset.s).classList.add('on');
+    window.scrollTo({top:200,behavior:'smooth'});
+  });
+});
+function tog(h){h.parentElement.classList.toggle('open')}
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

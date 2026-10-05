@@ -1,0 +1,812 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Job Radar 4 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+
+:root{
+  --bg:#F4F6F2; --surface:#FCFCFB; --surface-2:#EEF1EC;
+  --ink:#16201C; --ink-2:#4E5752; --muted:#7D847F; --line:#DFE3DC; --axis:#C3C8C1;
+  --accent:#006A4E; --accent-ink:#FFFFFF; --accent-soft:#DDEEE6;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --good:#0ca30c; --good-ink:#006300; --warn:#fab219; --warn-ink:#8a5a00; --crit:#d03b3b;
+  --good-bg:#E3F3E3; --warn-bg:#FCF1D6; --crit-bg:#F9E3E3;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1311; --surface:#161C19; --surface-2:#1D2521;
+    --ink:#EEF2EF; --ink-2:#BCC4BE; --muted:#8A918C; --line:#2A322E; --axis:#3A433E;
+    --accent:#3FB68B; --accent-ink:#06140E; --accent-soft:#16372B;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    --good-ink:#35c235; --warn-ink:#f3c14f;
+    --good-bg:#15301A; --warn-bg:#3A2E10; --crit-bg:#3A1A1A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1311; --surface:#161C19; --surface-2:#1D2521;
+  --ink:#EEF2EF; --ink-2:#BCC4BE; --muted:#8A918C; --line:#2A322E; --axis:#3A433E;
+  --accent:#3FB68B; --accent-ink:#06140E; --accent-soft:#16372B;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --good-ink:#35c235; --warn-ink:#f3c14f;
+  --good-bg:#15301A; --warn-bg:#3A2E10; --crit-bg:#3A1A1A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:700}
+h3{font-size:17px;font-weight:600;font-family:var(--body)}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)} .ink2{color:var(--ink-2)}
+.num{font-variant-numeric:tabular-nums}
+
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;padding-block:32px 24px;border-bottom:1px solid var(--line)}
+.stamp{display:flex;flex-direction:column;gap:4px;align-items:flex-end;text-align:right}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.lede{max-width:66ch;color:var(--ink-2);margin-top:12px}
+
+section{padding-block:36px 8px;display:flex;flex-direction:column;gap:18px}
+.sec-head{display:flex;flex-direction:column;gap:6px;max-width:72ch}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.tile .v{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.1}
+.tile .l{font-size:13px;color:var(--ink-2)}
+.tile.hl{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tile.hl .l,.tile.hl .eyebrow{color:var(--accent-ink);opacity:.85}
+
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:16px 18px;max-width:80ch}
+
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.pick{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.pick .meta{font-size:13px;color:var(--ink-2)}
+.pick .why{font-size:14px}
+.pick .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.chart-box{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.note{font-size:13px;color:var(--muted);max-width:90ch}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters button{font:500 13px var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filters .sep{width:1px;height:20px;background:var(--line);margin-inline:4px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface-2);position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+td.role{min-width:220px} td.skills{min-width:240px} td.sal{min-width:130px}
+.co{color:var(--ink-2);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:5px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.chip.have{background:var(--good-bg);color:var(--good-ink)}
+.chip.gap{background:var(--crit-bg);color:var(--crit)}
+.fit{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.fit::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.fit.strong{background:var(--good-bg);color:var(--good-ink)}
+.fit.good{background:var(--accent-soft);color:var(--accent)}
+.fit.stretch{background:var(--warn-bg);color:var(--warn-ink)}
+.due{color:var(--crit);font-weight:600}
+
+.skillcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.skillcol{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.skillcol ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.tag.crit{color:var(--crit)} .tag.warn{color:var(--warn-ink)} .tag.good{color:var(--good-ink)}
+
+.ladder{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.rung{padding:16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.rung:last-child{border-right:none}
+.rung .v{font-family:var(--display);font-size:22px;font-weight:700}
+.rung .when{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.step .wk{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500}
+.step ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px;font-size:14px}
+.links div{padding-block:6px;border-bottom:1px solid var(--line)}
+.sources{font-size:13px;color:var(--ink-2);columns:2 320px;column-gap:32px}
+.sources li{margin-bottom:6px;break-inside:avoid}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.glance .col{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.glance ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.glance li strong{display:block}
+.tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.track{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;border-top:4px solid var(--c)}
+.track .pay{font-family:var(--display);font-size:24px;font-weight:700;line-height:1.1}
+.track .sub{font-size:13px;color:var(--ink-2)}
+.track dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.track dt{color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.track dd{margin:0}
+.mx-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.mx{border-collapse:separate;border-spacing:3px;width:100%;min-width:720px;font-size:13px}
+.mx th{background:none;position:static;text-align:center;padding:8px 4px;font-size:10.5px;vertical-align:bottom}
+.mx th.rowh{text-align:left}
+.mx td{border:none;padding:0;text-align:center;vertical-align:middle}
+.mx td.sk{text-align:left;padding:6px 8px;white-space:nowrap;font-weight:500}
+.mx td.lv{padding:6px 8px;white-space:nowrap}
+.cell{height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px}
+.d0{background:var(--surface-2);color:var(--muted)}
+.d1{background:color-mix(in srgb,var(--s1) 22%,var(--surface))}
+.d2{background:color-mix(in srgb,var(--s1) 50%,var(--surface))}
+.d3{background:var(--s1);color:#fff}
+.mx tfoot td{padding:8px 4px;font-family:var(--display);font-size:18px;font-weight:700}
+.lvl{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.lvl i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.lvl.s i{background:var(--good)} .lvl.p i{background:var(--warn)} .lvl.g i{background:var(--crit)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.open{font-size:12px;font-weight:600;white-space:nowrap}
+.open.yes{color:var(--good-ink)} .open.visa{color:var(--s1)} .open.no{color:var(--crit)}
+td.sal strong{display:block}
+.coach{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}
+.cj{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.cj .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.cj .pay{font-weight:600}
+.prof{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.jl{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+.jl li{display:flex;flex-direction:column;gap:1px}
+.jl span{color:var(--muted);font-size:12px}
+.fix{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;max-width:85ch}
+
+/* weekly additions */
+.chip.new{background:var(--accent);color:var(--accent-ink);font-weight:500}
+.delta{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:12px}
+.delta .col{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.delta ol,.delta ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.delta li span.m{display:block;color:var(--ink-2);font-size:13px}
+.st{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:5px;white-space:nowrap;margin-left:6px}
+.st.no{background:var(--crit-bg);color:var(--crit)}
+.st.part{background:var(--warn-bg);color:var(--warn-ink)}
+.st.ok{background:var(--good-bg);color:var(--good-ink)}
+.assume{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:12px 16px;max-width:90ch}
+.open.unclear{color:var(--warn-ink)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="eyebrow">Weekly job radar · full-stack, AI-native &amp; AI coaching</div>
+    <h1>Job Radar for Sumonta Saha Mridul</h1>
+    <p class="lede">Built around what you do today: Vue/Nuxt and Java Spring Boot on DN Media Group, Next.js and NestJS on Cefalo ATS, and AI coaching on agentic development at Cefalo. Salary is shown on every job, with a ৳/month conversion.</p>
+  </div>
+  <div class="stamp">
+    <span class="pill">Weekly report · 4 Oct</span>
+    <span class="eyebrow num">Sun 4 Oct 2026 · 20:15 BST</span>
+    <span class="muted" style="font-size:13px">Current pay ৳80k/month · ~1.8 yrs</span>
+  </div>
+</header>
+
+<!-- NEW SINCE LAST WEEK -->
+<section id="new">
+  <div class="sec-head">
+    <div class="eyebrow">New since last week · 24 Sep → 4 Oct</div>
+    <h2>What changed in the last 10 days</h2>
+    <p class="ink2">Compared with the approved report of 24 Sep 2026, the only earlier report. Every link below was opened on 4 Oct 2026.</p>
+  </div>
+  <div class="tiles">
+    <div class="tile hl"><span class="eyebrow">New postings</span><span class="v num" id="nNew">36</span><span class="l" id="nNewSplit">across the three tracks</span></div>
+    <div class="tile"><span class="eyebrow">Closed or no longer open to you</span><span class="v num">4</span><span class="l">ReliSource, Vantum, KATIX, G2i via BD Tech Jobs</span></div>
+    <div class="tile"><span class="eyebrow">Closing by 18 Oct</span><span class="v num">4</span><span class="l">Sticker Mule ×2, DNB, Circle</span></div>
+    <div class="tile"><span class="eyebrow">Profile fixes done</span><span class="v num">0 / 5</span><span class="l">Worktree Switcher installs 9 → 13</span></div>
+  </div>
+  <div class="delta">
+    <div class="col">
+      <span class="tag good">Best new matches</span>
+      <ol>
+        <li><a href="https://himalayas.app/companies/s-pro/jobs/senior-full-stack-engineer-frontend-focused-ai" target="_blank" rel="noopener"><strong>Senior Full-Stack Engineer (Frontend, AI) · S-PRO</strong></a><span class="m">Vue 3 + TypeScript with Claude Code daily. Remote worldwide. Salary not stated. Asks 5+ yrs. Closest skill match this week.</span></li>
+        <li><a href="https://himalayas.app/companies/nodeworthy/jobs/full-stack-developer" target="_blank" rel="noopener"><strong>Full Stack Developer · Nodeworthy</strong></a><span class="m">$4,000–6,000/mo (৳492–738k). React/Vue, Node, Docker, K8s; MCP a plus. 3+ yrs. DeFi knowledge is the gap.</span></li>
+        <li><a href="https://www.tokyodev.com/companies/piece/jobs/full-stack-developer" target="_blank" rel="noopener"><strong>Full Stack Developer · Piece</strong></a><span class="m">¥9–12M/yr (≈ ৳584–779k/mo). Remote from Dhaka, no move. NestJS + Vue/React. 5+ yrs.</span></li>
+        <li><a href="https://himalayas.app/companies/powerprozesse/jobs/fullstack-developer-100-remote" target="_blank" rel="noopener"><strong>Fullstack Developer · Powerprozesse</strong></a><span class="m">$1,000–3,000/mo (৳123–369k). Next.js + Claude, "almost all code with AI". 1+ yrs. Most likely to land.</span></li>
+        <li><a href="https://jobs.lever.co/fieldnation/6bf76790-47ff-4006-bed6-617921e03aaf" target="_blank" rel="noopener"><strong>Senior SE, Data Team · Field Nation</strong></a><span class="m">৳160–210k/mo, Dhaka hybrid. Agents, RAG and AI coding assistants by name; Python-heavy, 5+ yrs.</span></li>
+        <li><a href="https://serpapi.com/careers" target="_blank" rel="noopener"><strong>Developer Advocate · SerpApi</strong></a><span class="m">$100–125k/yr + profit share, remote worldwide. The first DevRel role this radar found that is open from Dhaka with pay stated.</span></li>
+      </ol>
+    </div>
+    <div class="col">
+      <span class="tag crit">Closing within 14 days</span>
+      <ul>
+        <li><a href="https://weworkremotely.com/remote-jobs/sticker-mule-software-engineer-3" target="_blank" rel="noopener"><strong>Sticker Mule · Software Engineer</strong></a><span class="m due">Closes Sun 11 Oct (7 days) · $150–250k/yr</span></li>
+        <li><a href="https://www.finn.no/job/ad/477055359" target="_blank" rel="noopener"><strong>DNB · Software Engineer, Channel Services</strong></a><span class="m due">Deadline Mon 12 Oct · Oslo, visa support not stated</span></li>
+        <li><a href="https://himalayas.app/companies/circle/jobs/senior-full-stack-software-engineer-ai-core" target="_blank" rel="noopener"><strong>Circle · Senior Full-Stack, AI Core</strong></a><span class="m due">Apply by Wed 14 Oct · $130–140k/yr · 6+ yrs, Rails</span></li>
+        <li><a href="https://weworkremotely.com/remote-jobs/sticker-mule-ai-agent-engineer" target="_blank" rel="noopener"><strong>Sticker Mule · AI Agent Engineer</strong></a><span class="m due">Closes Fri 16 Oct · $150–250k/yr</span></li>
+      </ul>
+      <span class="tag warn">Just after that</span>
+      <ul>
+        <li>Canonical DevRel Engineer closes 20 Oct · Adventure Travel 365 closes 21 Oct · Steuart "AI Coding" closes 23 Oct · ReliSource Senior Agentic AI closes 31 Oct</li>
+      </ul>
+    </div>
+    <div class="col">
+      <span class="tag crit">Closed, dropped or changed</span>
+      <ul>
+        <li><strong>ReliSource AI Automation Engineer</strong> · closed (deadline 30 Sep passed, page gone). ReliSource now lists a Senior Agentic AI Engineer instead.</li>
+        <li><strong>Vantum Backend Engineer (AI agents)</strong> · "Job expired", although its listed deadline was 22 Oct.</li>
+        <li><strong>KATIX Full Stack, Tech Lead Track</strong> · now Japan residents only, so dropped.</li>
+        <li><strong>G2i AI Interaction Evaluator</strong> · the BD Tech Jobs link now shows a different job. G2i's own AI Training role is listed below instead.</li>
+        <li><strong>Money Forward Java/Spring</strong> and <strong>Senacor Junior Java</strong> · dropped; residents and German speakers only.</li>
+        <li><strong>Pay changes</strong> · Anthropic's Developer Education Lead rose to $290–365k. Kernel and Interview Resources no longer show pay. Enveritas was reposted in the October HN thread.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="assume"><strong>Assumptions.</strong> "Last week" means the 24 Sep report. Conversions use ৳122.95 per US$ (Trading Economics, 1–2 Oct). Hourly contracts are converted at 160 h/month for full-time and about 86 h/month (20 h/week) for side work, and are labelled as estimates. Dates are Dhaka time.</p>
+</section>
+
+<!-- AT A GLANCE -->
+<section id="glance">
+  <div class="sec-head">
+    <div class="eyebrow">Summary</div>
+    <h2>What you're good at, and what to improve</h2>
+  </div>
+  <div class="glance">
+    <div class="col">
+      <span class="tag good">Already ahead of most 2-year engineers</span>
+      <ol>
+        <li><strong>Two production stacks at once</strong>Vue/Nuxt and Spring Boot microservices for DN Media Group (personalised front page task force, GDPR, API work), plus Next.js/NestJS on Cefalo ATS. Most peers know one.</li>
+        <li><strong>You ship end to end</strong>Vortibhai is designed, built and deployed by you on AWS, with GitHub Actions CI/CD and an admin app.</li>
+        <li><strong>Agentic development, with proof</strong>Claude Certified Architect (815/1000), daily Claude Code/MCP/worktree workflow, and a published VS Code extension. This week three new postings named Claude Code outright (S-PRO, Invest4Kids, Powerprozesse).</li>
+        <li><strong>You already teach</strong>AI Coach for Cefalo engineering teams, internship mentor, 172 Medium followers, 15 dev.to posts, and the Code &amp; Career Golpo channel.</li>
+      </ol>
+    </div>
+    <div class="col">
+      <span class="tag crit">Fix or build next</span>
+      <ol>
+        <li><strong>Your GitHub still looks like a student's</strong>The same six university and hackathon repos are pinned. Pin Vortibhai, Worktree Switcher and one Vue + Spring Boot showcase.</li>
+        <li><strong>Old portfolio and mismatched numbers</strong>sumonta056.github.io still says "Looking For Internship Opportunity" and shows your phone number. CodeChef shows 2★ (max 1553) against 3★ on your CV.</li>
+        <li><strong>Coaching has no public record</strong>No talks, recorded workshops or numbers (engineers trained, adoption). SerpApi, Canonical and Tether all ask for public content.</li>
+        <li><strong>The years line</strong>Most good postings ask 3–5+ yrs; you pass 2 years in Dec 2026. Python + RAG as a <em>second</em> skill opens the Field Nation Data and evaluator roles.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKS -->
+<section id="tracks">
+  <div class="sec-head">
+    <div class="eyebrow">What your skills can get you</div>
+    <h2>Three career tracks that fit your profile</h2>
+    <p class="ink2">Pay is from stated salaries in postings open on 4 Oct, converted at ৳122.95/USD.</p>
+  </div>
+  <div class="tracks">
+    <article class="track" style="--c:var(--s1)">
+      <span class="eyebrow">Track 1 · your main job</span>
+      <h3>Full-stack engineer (Vue + Spring Boot / Next)</h3>
+      <span class="pay num">৳80–210k → ৳490k–1.1M</span>
+      <span class="sub">Dhaka product company now → remote USD roles</span>
+      <dl><dt>Best now</dt><dd>Field Nation SE, Dhaka (৳80–120k stated)</dd><dt>Remote</dt><dd>Nodeworthy ($4–6k/mo), Piece (¥9–12M, from Dhaka)</dd><dt>Relocate</dt><dd>Picnic Warehouse (Java 21 + Spring Boot, 1–5 yrs), Visual Alpha (Tokyo)</dd></dl>
+    </article>
+    <article class="track" style="--c:var(--s2)">
+      <span class="eyebrow">Track 2 · the multiplier</span>
+      <h3>AI-native product engineer</h3>
+      <span class="pay num">$12–36k → $150k+/yr</span>
+      <span class="sub">Full-stack roles that name Claude Code or agents</span>
+      <dl><dt>Best now</dt><dd>S-PRO (Vue + Claude Code), Powerprozesse (1+ yrs), Steuart (closes 23 Oct)</dd><dt>Watch</dt><dd>Sticker Mule AI Agent (closes 16 Oct), Aline ($100k, Claude Agent SDK + MCP)</dd><dt>Edge</dt><dd>Certification + daily agentic workflow already on your CV</dd></dl>
+    </article>
+    <article class="track" style="--c:var(--s3)">
+      <span class="eyebrow">Track 3 · teaching &amp; sharing</span>
+      <h3>AI coach, DevRel, educator, writer</h3>
+      <span class="pay num">$500/article → $100–125k/yr</span>
+      <span class="sub">Side income today; a full-time role at 3–5 yrs</span>
+      <dl><dt>Best now</dt><dd>DigitalOcean Ripple ($500/article), OpenTrain evaluator ($30–100/hr, Bangladesh eligible)</dd><dt>Target</dt><dd>SerpApi Developer Advocate (worldwide), Udacity Claude mentor</dd><dt>Edge</dt><dd>You already do the job internally at Cefalo</dd></dl>
+    </article>
+  </div>
+</section>
+
+<!-- SKILL MAP -->
+<section id="skills">
+  <div class="sec-head">
+    <div class="eyebrow">Skill map</div>
+    <h2>Your profile against what each track asks for</h2>
+    <p class="ink2">Scores 0–5 are my assessment from your CV and public profile; unchanged from last week. Where your shape reaches past a role's line, you're ahead of what that role needs.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="legend" style="margin-bottom:8px"><span><i style="background:var(--s1)"></i>You</span><span><i style="background:var(--s2)"></i>Full-stack roles ask</span><span><i style="background:var(--s3)"></i>Coach / DevRel roles ask</span></div>
+      <div class="chart-box" style="height:400px"><canvas id="radar" role="img" aria-label="Radar chart of your skills compared with full-stack and coaching role requirements"></canvas></div>
+    </div>
+    <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+      <h3>Reading the shape</h3>
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <li><strong>Frontend, backend and agentic dev</strong> are at or above what full-stack roles ask. Apply there now.</li>
+        <li><strong>Teaching and coaching</strong> already match what coaching roles need. What's missing is <strong>public content and talks</strong> (2.5 vs 4.5).</li>
+        <li><strong>Experience and system design</strong> is your main gap for both tracks. It closes with time and with one written system-design doc from your DN work.</li>
+        <li><strong>Python and AI engineering</strong> is low. This week it blocked Field Nation Data, OpenTrain's Python contract and Next Solution Lab. Enough RAG and FastAPI to demo is the target.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel" style="padding:0;border:none;background:none">
+    <h3 style="margin-bottom:8px">Skill × role matrix</h3>
+    <p class="note" style="margin-bottom:10px">Darker cells mean the role asks for that skill more. The bottom row is your fit: how much of each role's demand you already cover.</p>
+    <div class="mx-wrap"><table class="mx" id="mx"></table></div>
+    <div class="legend" style="margin-top:10px"><span class="lvl s"><i></i>Strong</span><span class="lvl p"><i></i>Partial</span><span class="lvl g"><i></i>Gap</span><span><i style="background:var(--surface-2)"></i>Not needed</span><span><i style="background:var(--s1)"></i>Core requirement</span></div>
+  </div>
+</section>
+
+<!-- SALARY -->
+<section id="salary">
+  <div class="sec-head">
+    <div class="eyebrow">Pay by path</div>
+    <h2>What each path pays, in ৳ per month</h2>
+    <p class="ink2">From stated salaries in this week's postings. Log scale; the dashed line is your ৳80k. Colours match the three tracks.</p>
+  </div>
+  <div class="panel">
+    <div class="legend" style="margin-bottom:8px"><span><i style="background:var(--s1)"></i>Full-stack</span><span><i style="background:var(--s2)"></i>AI-native</span><span><i style="background:var(--s3)"></i>Coaching &amp; content</span></div>
+    <div class="chart-box" style="height:560px"><canvas id="salChart" role="img" aria-label="Salary ranges by career path, thousands of taka per month"></canvas></div>
+  </div>
+  <p class="note">Conversions: €1 ≈ $1.126, ¥1 ≈ $0.00634, CA$1 ≈ $0.70, US$1 ≈ ৳122.95. Gross pay before tax. The evaluator bar is an estimate at 20 h/week. Dhaka medians are far lower than these bands: Glassdoor puts the Dhaka full-stack median near ৳54k/month, and BD Tech Jobs' 2026 guide puts mid-level at MNCs at ৳60–150k. Bangladeshi edtech teaching pays ৳19–23k (Programming Hero, Glassdoor), so treat teaching as side income or a global role.</p>
+</section>
+
+<!-- JOBS -->
+<section id="jobs">
+  <div class="sec-head">
+    <div class="eyebrow">Openings checked 4 Oct</div>
+    <h2 id="jobsTitle">Jobs matched to your skills</h2>
+    <p class="ink2">Sorted with stated salaries first. "From Dhaka" says whether you can take the job while living in Bangladesh. The green "New" chip marks postings added this week.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Openings by track</h3>
+      <div class="legend" style="margin-block:8px 4px"><span><i style="background:var(--good)"></i>Open from Dhaka</span><span><i style="background:var(--s1)"></i>With visa / relocation</span><span><i style="background:var(--warn)"></i>Unclear</span><span><i style="background:var(--crit)"></i>Not open from Dhaka</span></div>
+      <div class="chart-box" style="height:220px"><canvas id="trkChart" role="img" aria-label="Openings per track by whether they are open from Dhaka"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>How many state a salary</h3>
+      <div class="legend" style="margin-block:8px 4px"><span><i style="background:var(--s1)"></i>Salary stated</span><span><i style="background:var(--axis)"></i>Not stated</span></div>
+      <div class="chart-box" style="height:220px"><canvas id="salStated" role="img" aria-label="Share of postings with stated salary per track"></canvas></div>
+    </div>
+  </div>
+  <div class="filters" role="group" aria-label="Filter openings">
+    <button type="button" id="t-all" data-t="all" aria-pressed="true">All tracks</button>
+    <button type="button" id="t-fs" data-t="Full-stack" aria-pressed="false">Full-stack</button>
+    <button type="button" id="t-ai" data-t="AI-native" aria-pressed="false">AI-native</button>
+    <button type="button" id="t-co" data-t="Coaching & content" aria-pressed="false">Coaching &amp; content</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" id="t-new" data-n="1" aria-pressed="false">New this week</button>
+    <button type="button" id="t-dhaka" data-o="1" aria-pressed="false">Open from Dhaka only</button>
+    <button type="button" id="t-sal" data-s="1" aria-pressed="false">Salary stated only</button>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Salary</th><th>Role &amp; company</th><th>Where</th><th>From Dhaka</th><th>Posted / deadline</th><th>Skills asked</th><th>Fit</th></tr></thead>
+      <tbody id="jobRows"></tbody>
+    </table>
+  </div>
+  <p class="note">Green chips are on your CV, red chips are gaps. Fit is my estimate. LinkedIn and bdjobs block automated reading. SELISE, Enosis, Pathao, bKash and nextjobz pages couldn't be opened this week; every Optimizely Dhaka role I opened says "filled"; Craftsmen and Vivasoft have nothing open. Check those by hand.</p>
+</section>
+
+<!-- COACHING -->
+<section id="coaching">
+  <div class="sec-head">
+    <div class="eyebrow">Coaching, learning &amp; sharing jobs</div>
+    <h2>Jobs that pay you to teach what you already teach at Cefalo</h2>
+    <p class="ink2">Full-time coaching roles are still mostly in the US and Europe and ask 3–5+ years. From Dhaka, the paid options now are mentoring marketplaces, Udacity mentor contracts, evaluator contracts, writing and courses. Every link was re-opened on 4 Oct 2026.</p>
+  </div>
+  <div class="coach">
+    <div class="cj"><div class="top"><h3>AI Coach / AI Enablement Engineer</h3><span class="fit good">Target in 2–3 yrs</span></div><p class="ink2">Trains engineering teams to adopt Claude Code, Copilot and agents. Exactly your Cefalo role.</p><p class="pay num">$120–225k/yr where stated (US)</p>
+      <ul class="jl">
+        <li><a href="https://himalayas.app/companies/mindera/jobs/ai-coach-agentic-engineering" target="_blank" rel="noopener">AI Coach, Agentic Engineering · Mindera</a><span>Open · Portugal only · 6+ yrs · closes 23 Nov</span></li>
+        <li><a href="https://freehire.me/jobs/ai-coach-software-engineering-ai-adoption-arhs-qoymdvjk" target="_blank" rel="noopener">AI Coach, SE &amp; AI Adoption · ARHS (Accenture)</a><span>Open · Belgium · English + French</span></li>
+        <li><a href="https://builtin.com/job/ai-enablement-engineer/7470703" target="_blank" rel="noopener">Applied AI Engineer · Cognition</a><span>Reposted · US offices · $180–225k</span></li>
+        <li><a href="https://job-boards.greenhouse.io/answerrocket/jobs/5248490008" target="_blank" rel="noopener">AI Adoption &amp; Enablement Consultant · AnswerRocket</a><span>New · US only · 5+ yrs</span></li>
+        <li><a href="https://remotive.com/remote/jobs/artificial-intelligence/ai-mentor-5538717" target="_blank" rel="noopener">AI Mentor · Cambridge Spark</a><span>Probably stale · UK only</span></li>
+      </ul></div>
+    <div class="cj"><div class="top"><h3>Developer Advocate / DevRel</h3><span class="fit stretch">3+ yrs</span></div><p class="ink2">Builds demos, writes, talks and runs workshops for a dev tool. MCP and agent experience is asked for by name.</p><p class="pay num">Worldwide $100–125k; US mid $137k median</p>
+      <ul class="jl">
+        <li><a href="https://serpapi.com/careers" target="_blank" rel="noopener">Developer Advocate · SerpApi</a><span>New · remote worldwide · $100–125k + profit share</span></li>
+        <li><a href="https://himalayas.app/companies/canonical/jobs/developer-relations-engineer" target="_blank" rel="noopener">Developer Relations Engineer · Canonical</a><span>New · remote, EMEA/Americas first · closes 20 Oct</span></li>
+        <li><a href="https://tyk.io/jobs/developer-relations-advocate" target="_blank" rel="noopener">Junior Developer Relations Advocate · Tyk</a><span>New · EMEA, travel in Europe · junior level</span></li>
+        <li><a href="https://himalayas.app/companies/autodesk/jobs/senior-developer-advocate-ai" target="_blank" rel="noopener">Sr Developer Advocate, AI · Autodesk</a><span>Open to 17 Nov · Canada · CA$123–180k</span></li>
+        <li><a href="https://jobs.ashbyhq.com/supabase/a1320bbf-bfae-49a8-a1b7-12eeccaf39ca" target="_blank" rel="noopener">Developer Relations Engineer · Supabase</a><span>Open · needs SF presence</span></li>
+        <li><a href="https://jobs.ashbyhq.com/usekernel/5a4e70ee-666c-4cd0-affb-701b186e1aa8" target="_blank" rel="noopener">Developer Advocate · Kernel</a><span>Open · SF/NY/Seattle · pay no longer shown</span></li>
+      </ul></div>
+    <div class="cj"><div class="top"><h3>Developer Educator / Content</h3><span class="fit stretch">Aspirational</span></div><p class="ink2">Designs labs, courses and video demos on AI and developer platforms. Wants a portfolio of things you made.</p><p class="pay num">$290–365k at the top end</p>
+      <ul class="jl">
+        <li><a href="https://job-boards.greenhouse.io/anthropic/jobs/5311465008" target="_blank" rel="noopener">Developer Education Lead, Claude · Anthropic</a><span>Open · SF/NYC/Seattle · $290–365k (was $270–310k)</span></li>
+        <li><a href="https://himalayas.app/companies/tether-operations-limited/jobs/technical-content-creator-pear-bare-p2p-100-remote-worldwide" target="_blank" rel="noopener">Technical Content Creator · Tether</a><span>New · remote worldwide · 3–6+ yrs · apply by 9 Nov</span></li>
+        <li><a href="https://therap.hire.trakstar.com/jobs/fk0hwee/" target="_blank" rel="noopener">Associate Training &amp; Content Specialist · Therap</a><span>New · Dhaka · pay not stated, likely below ৳80k</span></li>
+        <li><a href="https://cursor.com/careers/head-of-product-education-engineering" target="_blank" rel="noopener">Head of Product Education · Cursor</a><span>Open · NY/SF/EMEA · 7+ yrs</span></li>
+        <li><a href="https://hyperskill.org/contribution" target="_blank" rel="noopener">Content contributor · Hyperskill (JetBrains)</a><span>Open · remote from anywhere · paid per unit</span></li>
+      </ul></div>
+    <div class="cj"><div class="top"><h3>Paid technical writer</h3><span class="fit strong">Start now</span></div><p class="ink2">Write tutorials on your own blog or Medium for a fee. You already publish in Level Up Coding.</p><p class="pay num">$300–800 per article (৳37–98k)</p>
+      <ul class="jl">
+        <li><a href="https://www.digitalocean.com/ripple-writers-program" target="_blank" rel="noopener">Ripple Writers · DigitalOcean</a><span>Accepting pitches · $500/article</span></li>
+        <li><a href="https://draft.dev/write" target="_blank" rel="noopener">Write for Draft.dev</a><span>Form live · $315–578 per a third-party list</span></li>
+        <li><a href="https://docs.vultr.com/platform/vultr-creator-program" target="_blank" rel="noopener">Vultr Creator Program</a><span>Status unclear · "up to $800" per a third-party list</span></li>
+        <li><a href="https://github.com/skillsch/paid-tech-writing" target="_blank" rel="noopener">Paid tech writing list (checked 30 Sep)</a><span>GitHub · per-article rates</span></li>
+      </ul></div>
+    <div class="cj"><div class="top"><h3>Course creator</h3><span class="fit strong">Start now</span></div><p class="ink2">A Bangla course on agentic development with Claude Code. Your own audience gets the best rate.</p><p class="pay num">Udemy: 37% organic marketplace share</p>
+      <ul class="jl">
+        <li><a href="https://ostad.app/apply-as-instructor" target="_blank" rel="noopener">Apply as instructor · Ostad</a><span>Open · Bangladesh · live batch, recorded or corporate training</span></li>
+        <li><a href="https://www.udemy.com/teaching/" target="_blank" rel="noopener">Teach on Udemy</a><span>Global</span></li>
+        <li><a href="https://teach.udemy.com/enabling-investment-subscription-terms-update/" target="_blank" rel="noopener">Udemy terms update</a><span>Subscription share now 15%; marketplace 37%</span></li>
+      </ul></div>
+    <div class="cj"><div class="top"><h3>AI code evaluator (contract)</h3><span class="fit good">Side income</span></div><p class="ink2">Writes coding tasks and grades AI coding output from Claude Code and Codex for AI labs.</p><p class="pay num">$30–200/hr listed</p>
+      <ul class="jl">
+        <li><a href="https://www.opentrain.ai/jobs/backend-coding-task-creator-and-ai-evaluator--cmurzv8ev000d04l2dhhowh7y/" target="_blank" rel="noopener">Backend Task Creator &amp; AI Evaluator · OpenTrain</a><span>New · Bangladesh eligible · $30–100/hr · 20 h/wk</span></li>
+        <li><a href="https://www.opentrain.ai/jobs/python-backend-ai-agent-developer--cmupes372000206p152bcpycd/" target="_blank" rel="noopener">Python Backend AI Agent Developer · OpenTrain</a><span>New · worldwide · $300 per approved task</span></li>
+        <li><a href="https://jobs.ashbyhq.com/g2i/6ea6a53a-7689-45f2-b429-1146965d3cd7" target="_blank" rel="noopener">Senior SE, AI Training · G2i</a><span>New · $100–200/hr · Bangladesh eligibility unclear</span></li>
+      </ul>
+      <p class="muted" style="font-size:13px">Check your Cefalo contract before taking outside paid work.</p></div>
+  </div>
+
+  <div class="sec-head" style="margin-top:12px">
+    <div class="eyebrow">Mentorship jobs</div>
+    <h2>Paid mentoring you can do from Dhaka</h2>
+    <p class="ink2">You already mentor internship batches and coach teams on Claude Code. These pay for the same thing. Jobs with a salary are mostly outside Bangladesh; marketplaces let you set your own rate.</p>
+  </div>
+  <div class="filters" role="group" aria-label="Filter mentorship">
+    <button type="button" id="m-all" data-mk="all" aria-pressed="true">All</button>
+    <button type="button" id="m-bd" data-mk="yes" aria-pressed="false">Open from Dhaka</button>
+    <button type="button" id="m-job" data-mt="Contract job" aria-pressed="false">Mentor jobs</button>
+    <button type="button" id="m-mkt" data-mt="Marketplace" aria-pressed="false">Marketplaces</button>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Pay</th><th>Opportunity</th><th>Type</th><th>From Dhaka</th><th>What they ask</th></tr></thead>
+      <tbody id="mentorRows"></tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h3>Where to start</h3>
+    <ol class="fix" style="margin-top:8px">
+      <li><strong>Apply to Udacity's Claude AI Engineer and Agentic AI mentor pools.</strong> All three are still open and cover APAC time zones. They ask 5+ years, so lead with your AI Coach work, the CCAR-F certificate and your intern batches.</li>
+      <li><strong>Apply to OpenTrain's backend evaluator role</strong> (Bangladesh is on the eligible list). It pays for the code review you already do, at 20 h/week.</li>
+      <li><strong>Open MentorCruise and Topmate profiles</strong> for Vue/Nuxt, Spring Boot and Claude Code workflows. Share the Topmate link with your Code &amp; Career Golpo audience (10% fee on your own link).</li>
+    </ol>
+  </div>
+</section>
+
+<!-- PUBLIC PROFILE -->
+<section id="profile">
+  <div class="sec-head">
+    <div class="eyebrow">What recruiters find when they search you</div>
+    <h2>Your public profile today</h2>
+    <p class="ink2">Re-checked 4 Oct. Only the extension moved this week.</p>
+  </div>
+  <div class="prof">
+    <div class="tile"><span class="eyebrow">GitHub</span><span class="v num">269</span><span class="l">followers · 148 repos · 69 stars · no change</span></div>
+    <div class="tile"><span class="eyebrow">Medium</span><span class="v num">172</span><span class="l">followers · "How I Became a Claude Certified Architect…" listed</span></div>
+    <div class="tile"><span class="eyebrow">dev.to</span><span class="v num">15</span><span class="l">posts · latest 13 Sep (Worktree Switcher)</span></div>
+    <div class="tile hl"><span class="eyebrow">Worktree Switcher</span><span class="v num">13</span><span class="l">installs · up from 9 · v1.1.1</span></div>
+    <div class="tile"><span class="eyebrow">Talks</span><span class="v num">0</span><span class="l">none found online</span></div>
+  </div>
+  <div class="panel">
+    <h3>Five fixes, in order</h3>
+    <ol class="fix" style="margin-top:8px">
+      <li>Take down or redirect <a href="https://sumonta056.github.io/" target="_blank" rel="noopener">sumonta056.github.io</a>. It still says "Looking For Internship Opportunity", shows your phone number and calls you a student.<span class="st no">Not done</span></li>
+      <li>Make <a href="https://sumonta056.vercel.app/" target="_blank" rel="noopener">sumonta056.vercel.app</a> render without JavaScript (Nuxt SSR/SSG). Without JS it shows only "You need to enable JavaScript".<span class="st no">Not done</span></li>
+      <li>Re-pin GitHub: Vortibhai, Worktree Switcher, a Vue + Spring Boot sample, and an "agentic dev setup" repo with your CLAUDE.md and workflows.<span class="st no">Not done</span></li>
+      <li>Align CV numbers with live profiles. CodeChef shows 2★ (max 1553, 146 problems); 3★ needs 1600+. Add a usage figure for Vortibhai.<span class="st part">Mismatch remains</span></li>
+      <li>Give one recorded talk on agentic development at a Dhaka meetup or SUST, and post it. You could turn your Claude Certified Architect Medium post into that talk.<span class="st no">Not done</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- EXPECTATIONS -->
+<section id="expect">
+  <div class="sec-head">
+    <div class="eyebrow">Salary expectations</div>
+    <h2>What to ask for, and when</h2>
+    <p class="ink2">My estimates from this week's stated pay. Use them as negotiating anchors.</p>
+  </div>
+  <div class="ladder">
+    <div class="rung"><span class="when">Now · Dhaka switch</span><span class="v num">৳100–130k</span><span class="ink2" style="font-size:14px">Foreign-owned product companies. Field Nation's senior band (৳160–210k) is the next step at 4+ yrs.</span></div>
+    <div class="rung"><span class="when">Now · side income</span><span class="v num">+৳60–120k</span><span class="ink2" style="font-size:14px">One or two paid articles a month at $500, or a few evaluator hours a week (estimate).</span></div>
+    <div class="rung"><span class="when">Dec 2026+ · remote full-stack</span><span class="v num">$25–72k/yr</span><span class="ink2" style="font-size:14px">≈ ৳256–738k/month. AT365, Steuart and Nodeworthy sit in this band.</span></div>
+    <div class="rung"><span class="when">3–5 yrs · coach or DevRel</span><span class="v num">$72–130k/yr</span><span class="ink2" style="font-size:14px">SerpApi pays $100–125k worldwide. Needs talks, courses and articles.</span></div>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section id="plan">
+  <div class="sec-head">
+    <div class="eyebrow">What to do next · day 10 of 90</div>
+    <h2>A 90-day plan across all three tracks</h2>
+    <p class="ink2">Started 24 Sep 2026. You are in week 2. Weeks 5–8 begin 22 Oct, weeks 9–12 begin 19 Nov, and the plan ends 22 Dec, right after your 2-year mark.</p>
+  </div>
+  <div class="plan">
+    <div class="step" style="border-color:var(--accent)"><span class="wk">Weeks 1–4 · now · until 21 Oct</span><strong>Clean up and apply</strong><ul><li>Do the five profile fixes (0 of 5 so far)</li><li>Apply this week: S-PRO, Powerprozesse, Field Nation SE; Steuart before 23 Oct</li><li>Submit one article pitch to DigitalOcean Ripple</li><li>Apply to OpenTrain evaluator and the Udacity Claude mentor pool</li></ul></div>
+    <div class="step"><span class="wk">Weeks 5–8 · from 22 Oct</span><strong>Full-stack showcase</strong><ul><li>Public Vue 3 + Spring Boot repo with tests, Docker and CI</li><li>Write the design doc for it in English</li><li>Add a small RAG "ask about departments" feature to Vortibhai (Python/FastAPI)</li></ul></div>
+    <div class="step"><span class="wk">Weeks 9–12 · from 19 Nov</span><strong>Coaching portfolio</strong><ul><li>Turn your Cefalo AI Coach sessions into a public workshop (slides + repo)</li><li>Give it once as a meetup talk and record it</li><li>Track numbers: engineers trained, adoption before and after</li></ul></div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+  <div class="sec-head"><div class="eyebrow">Where to search and learn</div><h2>Platforms and resources</h2></div>
+  <div class="grid2">
+    <div class="panel"><h3>Job boards</h3><div class="links" style="grid-template-columns:1fr;margin-top:8px">
+      <div><a href="https://himalayas.app" target="_blank" rel="noopener">Himalayas</a> <span class="muted">· most new worldwide roles this week</span></div>
+      <div><a href="https://weworkremotely.com" target="_blank" rel="noopener">We Work Remotely</a> <span class="muted">· "Anywhere" filter, salaries listed</span></div>
+      <div><a href="https://arc.dev/remote-jobs" target="_blank" rel="noopener">Arc.dev</a> <span class="muted">· remote roles with pay bands</span></div>
+      <div><a href="https://www.tokyodev.com" target="_blank" rel="noopener">TokyoDev</a> <span class="muted">· Japan roles with salaries, some fully remote</span></div>
+      <div><a href="https://relocate.me" target="_blank" rel="noopener">Relocate.me</a> · <a href="https://www.arbeitnow.com/jobs-with-visa-sponsorship" target="_blank" rel="noopener">Arbeitnow</a> <span class="muted">· visa-sponsored roles</span></div>
+      <div><a href="https://news.ycombinator.com/item?id=49922569" target="_blank" rel="noopener">HN Who is Hiring, October 2026</a> <span class="muted">· founders directly</span></div>
+      <div><a href="https://www.devreljob.com/locations/remote" target="_blank" rel="noopener">devreljob.com</a> <span class="muted">· DevRel and educator roles</span></div>
+      <div><a href="https://www.bdtechjobs.com" target="_blank" rel="noopener">BD Tech Jobs</a> <span class="muted">· Dhaka roles; job IDs get reused, so save the page</span></div>
+    </div></div>
+    <div class="panel"><h3>Reading this week</h3><div class="links" style="grid-template-columns:1fr;margin-top:8px">
+      <div><a href="https://addyosmani.com/blog/brownfield-agentic-engineering/" target="_blank" rel="noopener">Brownfield Agentic Engineering</a> <span class="muted">· Addy Osmani, 14 Sep 2026 · agents in legacy code, like DN</span></div>
+      <div><a href="https://addyosmani.com/blog/agentic-skill-decay/" target="_blank" rel="noopener">Agentic Skill Decay</a> <span class="muted">· Addy Osmani, 31 Aug 2026 · material for your coaching sessions</span></div>
+      <div><a href="https://arize.com/blog/wearedevelopers-north-america-ai-agents-2026/" target="_blank" rel="noopener">What everyone talked about at WeAreDevelopers NA</a> <span class="muted">· Arize, 29 Sep 2026 · talk-topic ideas</span></div>
+      <div><a href="https://www.cncf.io/blog/2026/09/09/how-cloud-native-goes-ai-native/" target="_blank" rel="noopener">How cloud native goes AI native</a> <span class="muted">· CNCF, 9 Sep 2026</span></div>
+      <div><a href="https://angelhack.com/blog/developer-relations/" target="_blank" rel="noopener">Developer Relations in 2026</a> <span class="muted">· AngelHack, May 2026</span></div>
+      <div><a href="https://roadmap.sh/full-stack" target="_blank" rel="noopener">roadmap.sh full-stack</a> · <a href="https://roadmap.sh/devrel" target="_blank" rel="noopener">DevRel</a></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section id="sources">
+  <div class="sec-head"><div class="eyebrow">Sources</div><h2>Where the numbers come from</h2></div>
+  <ul class="sources">
+    <li><a href="https://www.glassdoor.com/Salaries/dhaka-bangladesh-software-engineer-salary-SRCH_IL.0,16_IM1237_KO17,34.htm" target="_blank" rel="noopener">Glassdoor · Dhaka SE salaries</a></li>
+    <li><a href="https://www.glassdoor.com/Salaries/dhaka-bangladesh-full-stack-software-engineer-salary-SRCH_IL.0,16_IM1237_KO17,45.htm" target="_blank" rel="noopener">Glassdoor · Dhaka full-stack salaries</a></li>
+    <li><a href="https://www.bdtechjobs.com/blog/software-engineer-salary-bangladesh" target="_blank" rel="noopener">BD Tech Jobs · 2026 salary guide</a></li>
+    <li><a href="https://www.glassdoor.com/Salary/Programming-Hero-Dhaka-Salaries-EI_IE3960754.0,16_IL.17,22_IC2267834.htm" target="_blank" rel="noopener">Glassdoor · Programming Hero salaries</a></li>
+    <li><a href="https://www.glassdoor.com/Salaries/developer-advocate-salary-SRCH_KO0,18.htm" target="_blank" rel="noopener">Glassdoor · Developer Advocate (US)</a></li>
+    <li><a href="https://www.glassdoor.com/Job/remote-ai-enablement-lead-jobs-SRCH_IL.0,6_IS11047_KO7,25.htm" target="_blank" rel="noopener">Glassdoor · remote AI enablement roles</a></li>
+    <li><a href="https://www.index.dev/blog/remote-developer-rates" target="_blank" rel="noopener">Index.dev · 2026 remote developer rates</a></li>
+    <li><a href="https://teach.udemy.com/enabling-investment-subscription-terms-update/" target="_blank" rel="noopener">Udemy · instructor terms update</a></li>
+    <li><a href="https://tradingeconomics.com/bangladesh/currency" target="_blank" rel="noopener">Trading Economics · USD/BDT</a> · <a href="https://tradingeconomics.com/currencies" target="_blank" rel="noopener">other currencies</a></li>
+    <li><a href="https://github.com/Sumonta056" target="_blank" rel="noopener">GitHub · Sumonta056</a></li>
+    <li><a href="https://sumontasaha80.medium.com/" target="_blank" rel="noopener">Medium · Sumonta Saha</a></li>
+    <li><a href="https://dev.to/sumonta056" target="_blank" rel="noopener">dev.to · sumonta056</a></li>
+    <li><a href="https://www.codechef.com/users/sumonta056" target="_blank" rel="noopener">CodeChef · sumonta056</a></li>
+    <li><a href="https://marketplace.visualstudio.com/items?itemName=SumontaSahaMridul.worktree-switcher" target="_blank" rel="noopener">VS Code Marketplace · Worktree Switcher</a></li>
+  </ul>
+  <p class="note">Every job link was opened on 4 Oct 2026. Skill scores, fit labels and hourly-to-monthly conversions are my estimates, not measured data. The HN thread was read through the HN search API because the site blocked direct reading.</p>
+</section>
+
+<footer>Generated by Claude for Sumonta Saha Mridul · Weekly run, Sun 4 Oct 2026 · Compared with the 24 Sep report. Next week's run compares with this one.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function(){
+const MY=["vue","nuxt","java","spring","mongodb","react","next.js","nestjs","node","express","typescript","javascript","mysql","postgres","sql","prisma","aws","docker","kubernetes","k8s","ci/cd","github actions","claude code","claude","mcp","agents","agentic","ai-assisted","ai coding","rest","microservices","workshops","mentoring","coaching","writing","sdks","apis","tutorials","cloud","ai tools","playbooks","training","code review","supabase","serverless"];
+const PARTIAL=["python","rag","langchain","video","talks","llm","fastapi","django","pytorch","mlops","langgraph"];
+function cls(s){const k=s.toLowerCase();if(PARTIAL.some(m=>k.includes(m)))return /python|rag|fastapi|django|pytorch|mlops|langchain|langgraph/.test(k)?"gap":"";if(k==="ai"||MY.some(m=>k.includes(m)))return"have";return"gap";}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// t=track, o=open (yes|visa|unclear|no), n=new this week, pay=stated, bdt=৳ conversion (null if not stated)
+const FS="Full-stack",AI="AI-native",CO="Coaching & content";
+const J=[
+ {t:FS,fit:"strong",o:"yes",role:"Software Engineer",co:"Field Nation",where:"Uttara, Dhaka · hybrid",date:"Open 4 Oct · 2+ yrs",pay:"৳80–120k/mo",bdt:"stated in BDT",sk:["TypeScript","NestJS","React","MySQL","PHP"],url:"https://jobs.lever.co/fieldnation/6a0bb6af-674c-4691-9976-f591d2b81642"},
+ {t:FS,fit:"stretch",o:"yes",role:"Senior Software Engineer (Full stack)",co:"Field Nation",where:"Uttara, Dhaka · hybrid",date:"Open 4 Oct · 4+ yrs",pay:"৳160–210k/mo",bdt:"stated in BDT",sk:["NestJS","React","Microservices","Docker","AI tools"],url:"https://jobs.lever.co/fieldnation/2f84fe38-8c6d-4a85-b887-af459dd8f10d"},
+ {n:1,t:FS,fit:"stretch",o:"yes",role:"Staff Software Engineer",co:"Field Nation",where:"Uttara, Dhaka · hybrid",date:"Open · 7+ yrs (pay ceiling)",pay:"৳220–285k/mo",bdt:"stated in BDT",sk:["React","Node","Go","MySQL","Microservices"],url:"https://jobs.lever.co/fieldnation/4fefe9f0-5bd5-441d-b22e-3f837e91d88a"},
+ {t:FS,fit:"good",o:"yes",role:"Software Engineer (full-stack)",co:"Sticker Mule",where:"Remote, anywhere",date:"Closes 11 Oct",due:true,pay:"$150–250k/yr + $20k",bdt:"৳1.54–2.56M/mo",sk:["TypeScript","Go","React","Postgres"],url:"https://weworkremotely.com/remote-jobs/sticker-mule-software-engineer-3"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Senior Full-Stack Engineer",co:"Tarteel AI",where:"Remote worldwide · online 6–10pm Dhaka, Mon–Thu",date:"Posted 3 Oct · apply by 2 Dec · 5+ yrs",pay:"$90–110k/yr",bdt:"৳922k–1.13M/mo",sk:["React","Next.js","Python","Django","Postgres"],url:"https://himalayas.app/companies/tarteel-ai/jobs/senior-full-stack-engineer"},
+ {n:1,t:FS,fit:"stretch",o:"yes",role:"Senior Full Stack Engineer (contract)",co:"Credo Health",where:"Remote worldwide · US Eastern hours (night in Dhaka)",date:"Posted 2 Oct · apply by 1 Dec · 7+ yrs",pay:"$40–60/hr",bdt:"≈ ৳787k–1.18M/mo at 160 h (est.)",sk:["Vue","Python","Django","Postgres","AI tools"],url:"https://himalayas.app/companies/credo/jobs/senior-full-stack-engineer"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Full Stack Developer",co:"Nodeworthy",where:"Remote worldwide",date:"Posted 2 Oct · apply by 2 Dec · 3+ yrs",pay:"$4,000–6,000/mo",bdt:"৳492–738k/mo",sk:["TypeScript","Vue","React","Node","Kubernetes","DeFi"],url:"https://himalayas.app/companies/nodeworthy/jobs/full-stack-developer"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Junior Full-Stack Developer (Arc exclusive)",co:"UNIPREP",where:"Remote anywhere",date:"~28 Sep · 1–3 yrs · 1,300+ applicants",pay:"$50–100k/yr",bdt:"৳512k–1.02M/mo",sk:["Node","JavaScript","Python","AWS"],url:"https://arc.dev/remote-jobs/details/remote-software-developer-pnbwza8npq"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Senior Full-Stack Developer, Marketplace",co:"Adventure Travel 365",where:"Remote, anywhere",date:"~21 Sep · closes 21 Oct",pay:"$25–49k/yr",bdt:"৳256–502k/mo",sk:["APIs","Cloud","Payments","AI tools"],url:"https://weworkremotely.com/remote-jobs/adventure-travel-365-senior-full-stack-developer-marketplace-web-mobile-platform"},
+ {t:FS,fit:"stretch",o:"yes",role:"Backend Software Engineer",co:"Enveritas",where:"Remote, global",date:"Reposted in Oct HN · 1 Oct",pay:"$135–155k/yr",bdt:"৳1.38–1.59M/mo",sk:["Python","PostgreSQL","Docker","AWS","Terraform"],url:"https://enveritas.org/jobs/backend-software-eng/"},
+ {n:1,t:FS,fit:"stretch",o:"no",role:"Senior Full Stack",co:"Toggl",where:"Remote · UTC−4 to UTC+4 only",date:"~27 Sep · closes 27 Oct",pay:"€83k/yr",bdt:"≈ ৳957k/mo",sk:["TypeScript","React","Go","AI tools"],url:"https://weworkremotely.com/remote-jobs/toggl-senior-full-stack"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Full Stack Developer",co:"Piece",where:"Remote from anywhere · Japanese company, no Japanese",date:"Posted 26 Aug · 5+ yrs",pay:"¥9–12M/yr",bdt:"≈ ৳584–779k/mo",sk:["Node","NestJS","Vue","React","Serverless"],url:"https://www.tokyodev.com/companies/piece/jobs/full-stack-developer"},
+ {t:FS,fit:"good",o:"visa",role:"Senior Full-Stack Software Engineer",co:"Visual Alpha",where:"Tokyo · apply from abroad, no Japanese",date:"Reposted 3 Oct · 3+ yrs",pay:"¥6–10M/yr",bdt:"≈ ৳389–649k/mo",sk:["Node","React","PHP","SQL"],url:"https://www.tokyodev.com/companies/visual-alpha/jobs/senior-full-stack-software-engineer"},
+ {n:1,t:FS,fit:"stretch",o:"visa",role:"Senior Product Engineer, Employee Platform",co:"Money Forward",where:"Kyoto · apply from abroad · TOEIC 700+",date:"Posted 28 Sep · 3+ yrs",pay:"¥7–11M/yr",bdt:"≈ ৳454–714k/mo",sk:["Go","React","TypeScript","GraphQL","AI tools"],url:"https://www.tokyodev.com/companies/moneyforward/jobs/senior-product-engineer-employee-platform-department-ppd-kyoto"},
+ {n:1,t:FS,fit:"stretch",o:"visa",role:"Senior Software Engineer",co:"MeetsMore",where:"Tokyo · apply from abroad, no Japanese",date:"Posted 28 Sep · 7+ yrs",pay:"¥7–11M/yr",bdt:"≈ ৳454–714k/mo",sk:["TypeScript","React","NestJS","Prisma","MongoDB","AWS"],url:"https://www.tokyodev.com/companies/meetsmore/jobs/senior-software-engineer"},
+ {t:FS,fit:"stretch",o:"visa",role:"Fullstack Engineer",co:"WOVN",where:"Tokyo · relocation offered",date:"Posted 18 Sep · 7+ yrs",pay:"¥6–9M/yr",bdt:"≈ ৳389–584k/mo",sk:["Vue.js","TypeScript","Rails"],url:"https://www.tokyodev.com/companies/wovn/jobs/fullstack-engineer"},
+ {t:FS,fit:"stretch",o:"no",role:"Full Stack Engineer",co:"BoWatt",where:"Germany · must already have work permit",date:"Posted 24 Sep · 2+ yrs",pay:"€65–100k/yr",bdt:"≈ ৳750k–1.15M/mo",sk:["React","TypeScript","Go","Java"],url:"https://www.arbeitnow.com/jobs/companies/bowatt/full-stack-engineer-germany-based-426645"},
+ {n:1,t:FS,fit:"strong",o:"visa",role:"Software Engineer, Warehouse Systems",co:"Picnic",where:"Amsterdam · visa + relocation · English",date:"Open · 1–5 yrs · Master's or equivalent",pay:"Not stated",bdt:null,sk:["Java","Spring Boot","PostgreSQL","Kafka","AWS","Kubernetes"],url:"https://relocate.me/netherlands/amsterdam/picnic/software-engineer-warehouse-systems-10298"},
+ {t:FS,fit:"strong",o:"visa",role:"Backend Engineer (Java / Spring Boot)",co:"PayPay Card",where:"Tokyo · visa + relocation",date:"Open 4 Oct",pay:"Not stated",bdt:null,sk:["Java","Spring Boot","AWS","Microservices"],url:"https://relocate.me/japan/tokyo/paypay-card/backend-engineer-10180"},
+ {t:FS,fit:"strong",o:"visa",role:"Junior Backend Software Engineer",co:"Zalando",where:"Berlin · visa + relocation",date:"Open 4 Oct · junior",pay:"Not stated",bdt:null,sk:["Java","Scala","AWS"],url:"https://relocate.me/germany/berlin/zalando/junior-backend-software-engineer-972"},
+ {t:FS,fit:"good",o:"visa",role:"Software Engineer, Channel Services",co:"DNB Bank",where:"Oslo · English OK · visa support not stated",date:"Deadline 12 Oct 2026",due:true,pay:"Not stated",bdt:null,sk:["Java","Kotlin","AWS","Postgres","Kubernetes"],url:"https://www.finn.no/job/ad/477055359"},
+ {t:FS,fit:"stretch",o:"visa",role:"Frontend Engineer",co:"PayPay",where:"Tokyo · apply from abroad",date:"Reposted 3 Oct · 5+ yrs",pay:"Not stated",bdt:null,sk:["React","TypeScript","Security"],url:"https://www.tokyodev.com/companies/paypay/jobs/frontend-engineer"},
+ {n:1,t:FS,fit:"good",o:"visa",role:"FullStack Engineer, Satellite Operation Planning",co:"Synspective",where:"Tokyo · apply from abroad, no Japanese",date:"Posted 18 Sep · 3+ yrs",pay:"Not stated",bdt:null,sk:["Vue","React","TypeScript","Go","AWS"],url:"https://www.tokyodev.com/companies/synspective/jobs/fullstack-engineer-satellite-operation-planning"},
+ {n:1,t:FS,fit:"good",o:"visa",role:"Fullstack Engineer, Growth",co:"Metanomaly (PixAI)",where:"Tokyo · apply from abroad, no Japanese",date:"Posted 29 Jul · 3+ yrs",pay:"Not stated",bdt:null,sk:["React","TypeScript","Node","GraphQL","PostgreSQL"],url:"https://www.tokyodev.com/companies/metanomaly/jobs/fullstack-engineer-growth"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Full Stack TypeScript Developer",co:"Crewfare",where:"Remote, all countries · US Eastern overlap",date:"Posted 20 Sep · apply by 19 Nov · 5+ yrs",pay:"Not stated",bdt:null,sk:["TypeScript","React","Next.js","Node","Postgres","AWS"],url:"https://himalayas.app/companies/crewfare/jobs/full-stack-typescript-developer"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Java Full Stack Developer (contract)",co:"TechBiz Global",where:"Remote worldwide",date:"Posted 9 Sep · apply by 8 Nov · 5+ yrs",pay:"Not stated",bdt:null,sk:["Java","Spring Boot","Microservices","React"],url:"https://himalayas.app/companies/techbiz-global/jobs/java-full-stack-developer-6675322764"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Senior Full Stack Engineer",co:"Polygon Technology",where:"Dhaka · on-site",date:"Open · 5+ yrs",pay:"Not stated",bdt:null,sk:["Next.js","NestJS","TypeScript","PostgreSQL","Kubernetes","Terraform"],url:"https://www.bdtechjobs.com/jobs/332"},
+ {n:1,t:FS,fit:"good",o:"yes",role:"Software Engineer / Sr. SE (Java/Spring)",co:"BRAC IT",where:"Dhaka · on-site",date:"Posted 30+ days ago · 2–6 yrs",pay:"Not stated",bdt:null,sk:["Java","Spring Boot","PostgreSQL","RabbitMQ"],url:"https://www.iitjobs.com/job/software-engineer-sr-software-engineer-javaspringpostgresql-dhaka-bangladesh-243701"},
+ {t:FS,fit:"good",o:"yes",role:"Experienced React Developer",co:"Therap BD",where:"Banani, Dhaka · partly remote",date:"Open 4 Oct · 2+ yrs",pay:"Not stated",bdt:null,sk:["React","JavaScript","Webpack"],url:"https://therap.hire.trakstar.com/jobs/fk0xsl4/"},
+
+ {t:AI,fit:"strong",o:"yes",role:"Software Developer, AI Coding",co:"Steuart Nutrition",where:"Remote, anywhere · 4h US-East overlap",date:"Posted 23 Sep · closes 23 Oct · 3+ yrs",pay:"$25–49k/yr",bdt:"৳256–502k/mo",sk:["AI coding","Claude","TypeScript","APIs"],url:"https://weworkremotely.com/remote-jobs/steuart-nutrition-software-developer-ai-coding"},
+ {t:AI,fit:"good",o:"yes",role:"AI Agent Engineer",co:"Sticker Mule",where:"Remote, anywhere",date:"Closes 16 Oct",due:true,pay:"$150–250k/yr + $20k",bdt:"৳1.54–2.56M/mo",sk:["Agents","Claude","TypeScript","Go","GraphQL"],url:"https://weworkremotely.com/remote-jobs/sticker-mule-ai-agent-engineer"},
+ {n:1,t:AI,fit:"good",o:"yes",role:"Senior Software Engineer, Data Team",co:"Field Nation",where:"Dhaka · hybrid",date:"Open · 5+ yrs",pay:"৳160–210k/mo",bdt:"stated in BDT",sk:["Python","AI coding","Agents","RAG","Docker","AWS"],url:"https://jobs.lever.co/fieldnation/6bf76790-47ff-4006-bed6-617921e03aaf"},
+ {n:1,t:AI,fit:"strong",o:"yes",role:"Fullstack Developer (100% remote)",co:"Powerprozesse",where:"Remote worldwide · employed via Deel",date:"Posted 26 Sep · apply by 30 Nov · 1+ yrs",pay:"$1,000–3,000/mo",bdt:"৳123–369k/mo",sk:["TypeScript","Next.js","React","Convex","Claude"],url:"https://himalayas.app/companies/powerprozesse/jobs/fullstack-developer-100-remote"},
+ {n:1,t:AI,fit:"stretch",o:"yes",role:"Senior Full-Stack Software Engineer, AI Core",co:"Circle",where:"Remote worldwide · C2 English",date:"Apply by 14 Oct · 6+ yrs",due:true,pay:"$130–140k/yr",bdt:"৳1.33–1.43M/mo",sk:["Rails","React","Postgres","LLM","RAG","Agents"],url:"https://himalayas.app/companies/circle/jobs/senior-full-stack-software-engineer-ai-core"},
+ {n:1,t:AI,fit:"good",o:"yes",role:"Software Engineer (AI & Agentic Solutions)",co:"Aline",where:"Remote worldwide",date:"Posted 10 Sep · apply by 9 Nov · 4 yrs",pay:"$100k/yr",bdt:"৳1.02M/mo",sk:["C#/.NET","Azure","Claude","MCP","Agents"],url:"https://himalayas.app/companies/aline/jobs/engineering-software-engineer-ai-agentic-solutions"},
+ {n:1,t:AI,fit:"strong",o:"yes",role:"Senior Full-Stack Engineer (Frontend-Focused, AI)",co:"S-PRO",where:"Remote worldwide",date:"Posted 2 Oct · apply by 1 Dec · 5+ yrs",pay:"Not stated",bdt:null,sk:["Vue","TypeScript","Claude Code","Django","LLM","Playwright"],url:"https://himalayas.app/companies/s-pro/jobs/senior-full-stack-engineer-frontend-focused-ai"},
+ {n:1,t:AI,fit:"good",o:"yes",role:"AI-native Full-Stack Developer",co:"Invest4Kids GmbH",where:"Remote worldwide · posting partly German",date:"Posted 20 Sep · apply by 19 Nov",pay:"Not stated",bdt:null,sk:["TypeScript","Next.js","Supabase","Claude Code","Python"],url:"https://himalayas.app/companies/invest4kids-gmbh/jobs/ai-native-full-stack-developer-m-w-d"},
+ {n:1,t:AI,fit:"stretch",o:"yes",role:"AI Harness Engineer",co:"Tether",where:"Remote worldwide",date:"Open · 5+ yrs",pay:"Not stated",bdt:null,sk:["TypeScript","JavaScript","Agents","P2P"],url:"https://careers.tether.io/o/ai-harness-engineer-100-remote-worldwide"},
+ {n:1,t:AI,fit:"stretch",o:"yes",role:"Senior Agentic AI Engineer",co:"ReliSource",where:"Gulshan-1, Dhaka",date:"Deadline 31 Oct 2026 · 5+ yrs",pay:"Not stated",bdt:null,sk:["Agents","MCP","RAG","Python","C#"],url:"https://www.relisource.com/job-post/senior-agentic-ai-engineer/"},
+ {n:1,t:AI,fit:"stretch",o:"yes",role:"AI/ML Engineer",co:"Next Solution Lab",where:"Mirpur DOHS, Dhaka",date:"Open · 2–3 yrs · pay negotiable",pay:"Not stated",bdt:null,sk:["LangChain","LangGraph","PyTorch","AWS","MLOps"],url:"https://www.nextsolutionlab.com/jobdetails/22"},
+ {n:1,t:AI,fit:"good",o:"visa",role:"Backend Engineer",co:"PayPay",where:"Tokyo · visa + relocation · Business English",date:"Open · 4+ yrs",pay:"Not stated",bdt:null,sk:["Java","Kotlin","AWS","AI tools","LLM"],url:"https://relocate.me/japan/tokyo/paypay/backend-engineer-10205"},
+ {t:AI,fit:"good",o:"visa",role:"Software Engineer, Consumer Products",co:"Picnic",where:"Amsterdam · visa + relocation",date:"Open 4 Oct · 2–5 yrs · Master's",pay:"Not stated",bdt:null,sk:["Java","Spring Boot","React","TypeScript","Agentic"],url:"https://relocate.me/netherlands/amsterdam/picnic/software-engineer-consumer-products-10256"},
+ {n:1,t:AI,fit:"stretch",o:"visa",role:"Senior Full Stack Developer",co:"think-cell",where:"Berlin · relocation support, visa not stated",date:"~1 month old · senior",pay:"Not stated",bdt:null,sk:["TypeScript","Node","AI tools","Python"],url:"https://www.arbeitnow.com/jobs/companies/think-cell/senior-full-stack-developer-478553"},
+ {t:AI,fit:"good",o:"yes",role:"Full Stack AI Engineer",co:"Interview Resources",where:"Remote worldwide",date:"Form live · 4+ yrs",pay:"Not stated",bdt:null,sk:["TypeScript","Node","Postgres","LLM APIs"],url:"https://www.interviewresources.app/careers/full-stack-ai-engineer-backend"},
+ {t:AI,fit:"stretch",o:"no",role:"AI-native Product Engineer (Vue)",co:"Lotum",where:"Bad Nauheim, DE · German needed",date:"Posted 27 Jun 2026",pay:"€80–120k/yr",bdt:"≈ ৳923k–1.38M/mo",sk:["Vue.js","TypeScript","Agentic","RAG"],url:"https://germantechjobs.de/jobs/Lotum-AI-native-Product-Engineer-wmd"},
+
+ {t:CO,fit:"strong",o:"yes",role:"Ripple Writers (paid articles)",co:"DigitalOcean",where:"Remote · your own blog or Medium",date:"Accepting pitches 4 Oct",pay:"$500 per article",bdt:"৳61.5k per article",sk:["Writing","Tutorials","Cloud","AI"],url:"https://www.digitalocean.com/ripple-writers-program"},
+ {n:1,t:CO,fit:"strong",o:"yes",role:"Backend Coding Task Creator & AI Evaluator",co:"OpenTrain AI",where:"Remote · Bangladesh eligible · 20+ h/wk",date:"Posted 3 Oct",pay:"$30–100/hr",bdt:"≈ ৳317k–1.06M/mo at 20 h/wk (est.)",sk:["Java","Node","TypeScript","APIs","AI coding"],url:"https://www.opentrain.ai/jobs/backend-coding-task-creator-and-ai-evaluator--cmurzv8ev000d04l2dhhowh7y/"},
+ {n:1,t:CO,fit:"good",o:"yes",role:"Python Backend AI Agent Developer",co:"OpenTrain AI",where:"Remote worldwide · 4-week contract",date:"Posted 1 Oct · 3+ yrs",pay:"$300 per approved task",bdt:"৳36.9k per task",sk:["Python","FastAPI","Claude","AI coding"],url:"https://www.opentrain.ai/jobs/python-backend-ai-agent-developer--cmupes372000206p152bcpycd/"},
+ {n:1,t:CO,fit:"good",o:"unclear",role:"Senior Software Engineer, AI Training",co:"G2i",where:"Remote · US-timezone preference · 10–20 h/wk",date:"Open",pay:"$100–200/hr",bdt:"≈ ৳529k–2.1M/mo at 10–20 h/wk (est.)",sk:["Claude Code","Code review","AI coding"],url:"https://jobs.ashbyhq.com/g2i/6ea6a53a-7689-45f2-b429-1146965d3cd7"},
+ {n:1,t:CO,fit:"good",o:"yes",role:"Developer Advocate",co:"SerpApi",where:"Remote-first, worldwide",date:"Oct HN thread",pay:"$100–125k/yr + profit share",bdt:"৳1.02–1.28M/mo",sk:["Writing","Talks","APIs","JavaScript","Python"],url:"https://serpapi.com/careers"},
+ {t:CO,fit:"good",o:"no",role:"Mentor, Claude Corps",co:"CodePath × Anthropic",where:"Remote · US only",date:"Open · cohort starts 19 Oct",pay:"$110–124.5k/yr",bdt:"৳1.13–1.28M/mo",sk:["Claude","Agents","Mentoring","Coaching"],url:"https://job-boards.greenhouse.io/codepath/jobs/5204039007"},
+ {t:CO,fit:"stretch",o:"no",role:"Applied AI Engineer (team enablement)",co:"Cognition (Devin)",where:"US offices",date:"Reposted ~Sep · 3+ yrs",pay:"$180–225k/yr",bdt:"৳1.84–2.31M/mo",sk:["Coaching","Workshops","AI coding","Playbooks"],url:"https://builtin.com/job/ai-enablement-engineer/7470703"},
+ {t:CO,fit:"stretch",o:"no",role:"Senior Developer Advocate, AI",co:"Autodesk",where:"Remote · Canada",date:"Open to 17 Nov · 3+ yrs",pay:"CA$123–180k/yr",bdt:"≈ ৳884k–1.30M/mo",sk:["MCP","SDKs","APIs","Talks"],url:"https://himalayas.app/companies/autodesk/jobs/senior-developer-advocate-ai"},
+ {t:CO,fit:"stretch",o:"no",role:"Developer Education Lead, Claude Platform",co:"Anthropic",where:"SF / NYC / Seattle",date:"Open 4 Oct · band raised",pay:"$290–365k/yr",bdt:"৳2.97–3.74M/mo",sk:["MCP","Agents","Workshops","Claude Code","Talks"],url:"https://job-boards.greenhouse.io/anthropic/jobs/5311465008"},
+ {t:CO,fit:"good",o:"yes",role:"Claude AI Engineer Technical Mentor",co:"Udacity",where:"Remote contract · APAC time zones",date:"Open 4 Oct · asks 5+ yrs",pay:"Not stated",bdt:null,sk:["Claude","Agents","Mentoring","Python"],url:"https://job-boards.greenhouse.io/udacity/jobs/8623954002"},
+ {n:1,t:CO,fit:"stretch",o:"unclear",role:"Developer Relations Engineer",co:"Canonical",where:"Remote · EMEA/Americas zones first",date:"Closes 20 Oct",pay:"Not stated",bdt:null,sk:["Linux","Open source","Talks","Writing"],url:"https://himalayas.app/companies/canonical/jobs/developer-relations-engineer"},
+ {n:1,t:CO,fit:"stretch",o:"yes",role:"Technical Content Creator (Pear/Bare/P2P)",co:"Tether",where:"Remote worldwide",date:"Apply by 9 Nov · 3–6+ yrs",pay:"Not stated",bdt:null,sk:["Node","C/C++","P2P","Video"],url:"https://himalayas.app/companies/tether-operations-limited/jobs/technical-content-creator-pear-bare-p2p-100-remote-worldwide"},
+ {n:1,t:CO,fit:"good",o:"yes",role:"Associate Training and Content Specialist",co:"Therap BD",where:"Banani, Dhaka · partly remote",date:"Open · associate level",pay:"Not stated",bdt:null,sk:["Writing","Tutorials","AI tools","Training"],url:"https://therap.hire.trakstar.com/jobs/fk0hwee/"},
+ {n:1,t:CO,fit:"good",o:"unclear",role:"Junior Developer Relations Advocate",co:"Tyk",where:"Remote · EMEA, travel in Europe",date:"~1 month old · junior",pay:"Not stated",bdt:null,sk:["APIs","AI","Writing","Content"],url:"https://tyk.io/jobs/developer-relations-advocate"},
+ {t:CO,fit:"stretch",o:"no",role:"Developer Advocate",co:"Kernel",where:"SF / NY / Seattle",date:"Still listed · pay no longer shown",pay:"Not stated",bdt:null,sk:["Agents","Writing","Video","Talks"],url:"https://jobs.ashbyhq.com/usekernel/5a4e70ee-666c-4cd0-affb-701b186e1aa8"},
+ {t:CO,fit:"stretch",o:"no",role:"AI Coach, Agentic Engineering",co:"Mindera",where:"Remote · Portugal only",date:"Apply by 23 Nov · 6+ yrs",pay:"Not stated",bdt:null,sk:["MCP","Agents","Coaching","Workshops"],url:"https://himalayas.app/companies/mindera/jobs/ai-coach-agentic-engineering"},
+ {t:CO,fit:"stretch",o:"visa",role:"Field Engineer (customer workshops)",co:"Cursor",where:"Remote / NY / SF",date:"Still listed 4 Oct",pay:"Not stated",bdt:null,sk:["Workshops","AI coding","TypeScript"],url:"https://jobs.ashbyhq.com/cursor/64a6cb18-493b-4d18-9f22-c661ae533bfa"}
+];
+const fitLabel={strong:"Strong fit",good:"Good fit",stretch:"Stretch"};
+const openLabel={yes:["yes","Yes"],visa:["visa","With visa"],unclear:["unclear","Unclear"],no:["no","Not open from Dhaka"]};
+
+// new-count tiles
+const NEW=J.filter(j=>j.n);
+document.getElementById("nNew").textContent=NEW.length;
+document.getElementById("nNewSplit").textContent=`${NEW.filter(j=>j.t===FS).length} full-stack · ${NEW.filter(j=>j.t===AI).length} AI-native · ${NEW.filter(j=>j.t===CO).length} coaching & content`;
+
+// matrix
+const roles=["Full-stack (Vue + Spring)","AI-native product eng.","AI coach / enablement","DevRel / educator","Technical writer"];
+const M=[
+ ["Vue / Nuxt","s",[3,2,0,1,1]],
+ ["React / Next.js","s",[2,3,0,2,2]],
+ ["Java / Spring Boot","s",[3,1,0,1,1]],
+ ["Node / NestJS","s",[2,3,0,2,1]],
+ ["SQL & MongoDB","s",[2,2,0,1,1]],
+ ["AWS · Docker · K8s","s",[2,2,1,2,1]],
+ ["Claude Code & agent workflows","s",[1,3,3,3,2]],
+ ["MCP","p",[0,2,2,3,1]],
+ ["Python · RAG · evals","g",[0,3,1,2,1]],
+ ["Workshops & training","s",[0,0,3,3,0]],
+ ["Writing in English","p",[1,1,2,3,3]],
+ ["Video & talks","g",[0,0,2,3,1]],
+ ["2+ years experience","p",[3,3,3,3,0]]
+];
+const lvW={s:1,p:.5,g:0},lvL={s:"Strong",p:"Partial",g:"Gap"};
+const fitPct=roles.map((_,c)=>{let n=0,d=0;M.forEach(r=>{n+=r[2][c]*lvW[r[1]];d+=r[2][c];});return Math.round(100*n/d);});
+document.getElementById("mx").innerHTML=
+ `<thead><tr><th class="rowh">Skill</th><th class="rowh">You</th>${roles.map(r=>`<th>${esc(r)}</th>`).join("")}</tr></thead><tbody>`+
+ M.map(r=>`<tr><td class="sk">${esc(r[0])}</td><td class="lv"><span class="lvl ${r[1]}"><i></i>${lvL[r[1]]}</span></td>${r[2].map(v=>`<td><div class="cell d${v}" title="${["Not needed","Nice to have","Often asked","Core requirement"][v]}">${["","nice","often","core"][v]}</div></td>`).join("")}</tr>`).join("")+
+ `</tbody><tfoot><tr><td class="sk" colspan="2">Your fit</td>${fitPct.map(p=>`<td class="num">${p}%</td>`).join("")}</tr></tfoot>`;
+
+// table
+let ft="all",fo=false,fsal=false,fnew=false;
+function render(){
+  const rows=J.filter(j=>(ft==="all"||j.t===ft)&&(!fo||j.o==="yes")&&(!fsal||j.bdt)&&(!fnew||j.n));
+  const fo2={strong:0,good:1,stretch:2};
+  rows.sort((a,b)=>(!!b.bdt-!!a.bdt)||(fo2[a.fit]-fo2[b.fit]));
+  document.getElementById("jobRows").innerHTML=rows.map(j=>`<tr>
+   <td class="sal num">${j.bdt?`<strong>${esc(j.pay)}</strong><span class="co">${esc(j.bdt)}</span>`:`<span class="muted">Not stated</span>`}</td>
+   <td class="role"><a href="${j.url}" target="_blank" rel="noopener"><strong>${esc(j.role)}</strong></a>${j.n?' <span class="chip new">New</span>':""}<div class="co">${esc(j.co)} · ${esc(j.t)}</div></td>
+   <td>${esc(j.where)}</td>
+   <td><span class="open ${openLabel[j.o][0]}">${openLabel[j.o][1]}</span></td>
+   <td class="${j.due?"due":""}">${esc(j.date)}</td>
+   <td class="skills"><div class="chips">${j.sk.map(s=>`<span class="chip ${cls(s)}">${esc(s)}</span>`).join("")}</div></td>
+   <td><span class="fit ${j.fit}">${fitLabel[j.fit]}</span></td></tr>`).join("");
+  document.getElementById("jobsTitle").textContent=`${rows.length} jobs matched to your skills`;
+}
+document.querySelectorAll("#jobs .filters button").forEach(b=>b.addEventListener("click",()=>{
+  if(b.dataset.t){ft=b.dataset.t;document.querySelectorAll("#jobs .filters button[data-t]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));}
+  else if(b.dataset.o){fo=!fo;b.setAttribute("aria-pressed",fo);}
+  else if(b.dataset.n){fnew=!fnew;b.setAttribute("aria-pressed",fnew);}
+  else{fsal=!fsal;b.setAttribute("aria-pressed",fsal);}
+  render();
+}));
+render();
+
+// mentorship
+const MT=[
+ {pay:"Not stated",n:"Claude AI Engineer Technical Mentor",org:"Udacity",t:"Contract job",bd:"yes",bdl:"Yes · APAC time zones",req:"5+ yrs; Claude API, Python, agentic AI; 1:1 calls and group Q&A. Open 4 Oct",url:"https://job-boards.greenhouse.io/udacity/jobs/8623954002"},
+ {pay:"Not stated",n:"Agentic AI Technical Mentor",org:"Udacity",t:"Contract job",bd:"yes",bdl:"Yes · APAC time zones",req:"5+ yrs; LLMs, RAG, multi-agent. Open 4 Oct",url:"https://job-boards.greenhouse.io/udacity/jobs/8540542002"},
+ {pay:"Not stated",n:"AI Technical Mentor",org:"Udacity",t:"Contract job",bd:"yes",bdl:"Yes · APAC time zones",req:"5+ yrs AI/ML, Python. Open 4 Oct",url:"https://job-boards.greenhouse.io/udacity/jobs/8535736002"},
+ {pay:"Varies by location",n:"Software Architect Track Mentor (new)",org:"Udacity",t:"Contract job",bd:"yes",bdl:"Yes · APAC time zones",req:"5+ yrs; TDD, design patterns, microservices, distributed systems; teaching",url:"https://job-boards.greenhouse.io/udacity/jobs/8441274002"},
+ {pay:"You set it · ~20% fee on top · avg ~$500/mo",n:"Become a mentor",org:"MentorCruise",t:"Marketplace",bd:"yes",bdl:"Yes · 90+ countries",req:"Application review",url:"https://mentorcruise.com/mentor/"},
+ {pay:"You set it · platform fee 13–22%",n:"Live mentoring and code review",org:"Codementor",t:"Marketplace",bd:"unclear",bdl:"Unclear · no country rules shown",req:"Application; fee depends on your weekly activity",url:"https://support.codementor.io/en/articles/4226113"},
+ {pay:"You set it · 10% on your own link, 20% via marketplace",n:"Paid 1:1 sessions",org:"Topmate",t:"Marketplace",bd:"yes",bdl:"Yes · country-based pricing",req:"None; best with your own audience",url:"https://topmate.io/pricing"},
+ {pay:"Preply keeps 100% of trials, then 33% → 18%",n:"Programming tutor",org:"Preply",t:"Marketplace",bd:"unclear",bdl:"Unclear · not stated for Bangladesh",req:"No credentials",url:"https://preply.com/en/teach"},
+ {pay:"Mostly free sessions",n:"Mentor profile",org:"ADPList",t:"Marketplace",bd:"yes",bdl:"Yes · 160+ countries",req:"Mentor application; good for visibility. Not re-checked this week",url:"https://adplist.org/"},
+ {pay:"Up to ₹40k/month",n:"Mentor",org:"Scaler",t:"Contract job",bd:"unclear",bdl:"Unclear · India-focused",req:"2+ yrs plus mentoring or team-lead experience",url:"https://www.scaler.com/mentor/"},
+ {pay:"Unpaid",n:"Language track mentor",org:"Exercism",t:"Volunteer",bd:"yes",bdl:"Yes",req:"None; builds a public mentoring record",url:"https://exercism.org/mentoring"},
+ {pay:"$110–124.5k/yr",n:"Mentor, Claude Corps",org:"CodePath × Anthropic",t:"Contract job",bd:"no",bdl:"No · US only",req:"2–5 yrs; AI tools; coaching. Cohort starts 19 Oct",url:"https://job-boards.greenhouse.io/codepath/jobs/5204039007"},
+ {pay:"$120–165k/yr listed",n:"Senior Team Lead, AI Engineering (part-time)",org:"Turing College",t:"Contract job",bd:"no",bdl:"No · EU and UK only",req:"2–3+ yrs building GenAI products",url:"https://www.ycombinator.com/companies/turing-college/jobs/RCDaK0u-senior-team-lead-in-ai-engineering"},
+ {pay:"Not stated",n:"AI Mentor",org:"Cambridge Spark",t:"Contract job",bd:"no",bdl:"No · UK only",req:"Copilot or Claude certifications. Listing probably stale",url:"https://remotive.com/remote/jobs/artificial-intelligence/ai-mentor-5538717"}
+];
+let mk="all",mt="all";
+function renderM(){
+  const r=MT.filter(m=>(mk==="all"||m.bd===mk)&&(mt==="all"||m.t===mt));
+  document.getElementById("mentorRows").innerHTML=r.map(m=>`<tr><td class="sal">${m.pay==="Not stated"?'<span class="muted">Not stated</span>':`<strong>${esc(m.pay)}</strong>`}</td><td class="role"><a href="${m.url}" target="_blank" rel="noopener"><strong>${esc(m.n)}</strong></a><div class="co">${esc(m.org)}</div></td><td>${esc(m.t)}</td><td><span class="open ${m.bd==="yes"?"yes":m.bd==="no"?"no":"unclear"}">${esc(m.bdl)}</span></td><td>${esc(m.req)}</td></tr>`).join("");
+}
+document.querySelectorAll("#coaching .filters button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#coaching .filters button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");
+  mk=b.dataset.mk||"all";mt=b.dataset.mt||"all";if(b.dataset.mk==="all"){mk="all";mt="all";}
+  renderM();
+}));
+renderM();
+
+if(typeof Chart==="undefined"){document.querySelectorAll(".chart-box").forEach(c=>c.innerHTML='<p class="note">Charts could not load. The tables carry the same data.</p>');return;}
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const charts=[];
+function tip(){return{backgroundColor:css("--ink"),titleColor:css("--bg"),bodyColor:css("--bg"),padding:10,cornerRadius:6,displayColors:false};}
+function build(){
+  charts.forEach(c=>c.destroy());charts.length=0;
+  Chart.defaults.font.family="IBM Plex Sans, system-ui, sans-serif";Chart.defaults.font.size=12;Chart.defaults.color=css("--ink-2");Chart.defaults.borderColor=css("--line");
+  const grid={color:css("--line")},axis=css("--axis");
+  const alpha=(hex,a)=>{const h=hex.replace("#","");const n=parseInt(h,16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;};
+
+  // radar
+  const ax=["Frontend (Vue/Nuxt/React)","Backend (Spring Boot/Node)","Cloud & DevOps","Databases","Agentic AI dev","Teaching & coaching","Public content & talks","Python & AI eng.","Experience & system design"];
+  const you=[4.5,4,3.5,3.5,4.5,4,2.5,1.5,2],fs=[4,4,3,3.5,3,1.5,1,1.5,3.5],co=[3,3,2,2,4.5,4.5,4.5,3.5,3.5];
+  charts.push(new Chart(document.getElementById("radar"),{type:"radar",
+   data:{labels:ax,datasets:[
+    {label:"You",data:you,borderColor:css("--s1"),backgroundColor:alpha(css("--s1"),.22),borderWidth:2,pointRadius:4,pointBackgroundColor:css("--s1"),pointBorderColor:css("--surface"),pointBorderWidth:2},
+    {label:"Full-stack roles ask",data:fs,borderColor:css("--s2"),backgroundColor:"rgba(0,0,0,0)",borderWidth:2,borderDash:[6,4],pointRadius:0},
+    {label:"Coach / DevRel roles ask",data:co,borderColor:css("--s3"),backgroundColor:"rgba(0,0,0,0)",borderWidth:2,borderDash:[2,3],pointRadius:0}]},
+   options:{maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1,display:false},grid:{color:css("--line")},angleLines:{color:css("--line")},pointLabels:{color:css("--ink-2"),font:{size:11}}}},
+    plugins:{legend:{display:false},tooltip:{...tip(),displayColors:true,callbacks:{label:c=>`${c.dataset.label}: ${c.raw} / 5`}}}}}));
+
+  // salary by path (৳ thousand / month)
+  const S=[
+   ["Dhaka full-stack, 2+ yrs (Field Nation)",80,120,"fs","৳80–120k stated"],
+   ["Dhaka senior full-stack (Field Nation)",160,210,"fs","৳160–210k stated, 4+ yrs"],
+   ["Dhaka staff engineer (Field Nation)",220,285,"fs","৳220–285k stated, 7+ yrs"],
+   ["Japan full-stack (TokyoDev roles)",389,779,"fs","¥6–12M/yr"],
+   ["Remote full-stack, mid (Nodeworthy)",492,738,"fs","$4–6k/month"],
+   ["Remote senior full-stack (Tarteel AI)",922,1127,"fs","$90–110k/yr"],
+   ["Remote AI-first full-stack (Powerprozesse)",123,369,"ai","$1–3k/month, 1+ yrs"],
+   ["Remote AI-coding developer (Steuart)",256,502,"ai","$25–49k/yr"],
+   ["Dhaka AI data engineer (Field Nation)",160,210,"ai","৳160–210k stated, 5+ yrs"],
+   ["Remote AI agent engineer (Sticker Mule)",1537,2561,"ai","$150–250k/yr"],
+   ["Bangladesh edtech instructor (Glassdoor)",19,23,"co","Programming Hero ৳19–23k"],
+   ["Paid articles, 1–2 a month",61,123,"co","$500/article, DigitalOcean"],
+   ["AI code evaluator, 20 h/week (est.)",317,1057,"co","$30–100/hr, OpenTrain"],
+   ["Remote DevRel, worldwide (SerpApi)",1025,1281,"co","$100–125k/yr"],
+   ["AI coaching mentor, US (CodePath)",1127,1276,"co","$110–124.5k/yr"],
+   ["Developer Education Lead (Anthropic)",2971,3740,"co","$290–365k/yr"]
+  ];
+  const col={fs:css("--s1"),ai:css("--s2"),co:css("--s3")};
+  const youLine={id:"you",afterDatasetsDraw(c){const x=c.scales.x.getPixelForValue(80),a=c.chartArea,g=c.ctx;g.save();g.strokeStyle=css("--accent");g.lineWidth=2;g.setLineDash([5,4]);g.beginPath();g.moveTo(x,a.top);g.lineTo(x,a.bottom);g.stroke();g.setLineDash([]);g.fillStyle=css("--accent");g.font="600 12px IBM Plex Sans, system-ui";g.fillText("You ৳80k",x+5,a.bottom-6);g.restore();}};
+  charts.push(new Chart(document.getElementById("salChart"),{type:"bar",
+   data:{labels:S.map(s=>s[0]),datasets:[{data:S.map(s=>[s[1],s[2]]),backgroundColor:S.map(s=>col[s[3]]),borderRadius:4,borderSkipped:false,barThickness:16}]},
+   options:{indexAxis:"y",maintainAspectRatio:false,layout:{padding:{top:14,right:8}},
+    scales:{x:{type:"logarithmic",min:10,max:5000,grid,border:{color:axis},title:{display:true,text:"৳ thousand per month (log scale)",color:css("--muted")},ticks:{maxRotation:0,callback:v=>[10,20,50,100,200,500,1000,2000,5000].includes(v)?"৳"+(v>=1000?v/1000+"M":v+"k"):""}},
+            y:{grid:{display:false},border:{color:axis},ticks:{autoSkip:false,color:css("--ink-2")}}},
+    plugins:{legend:{display:false},tooltip:{...tip(),callbacks:{label:c=>{const s=S[c.dataIndex];return[`৳${s[1]}k – ৳${s[2]}k per month`,s[4]];}}}}},plugins:[youLine]}));
+
+  // tracks x open
+  const T=[FS,AI,CO],O=[["yes","--good"],["visa","--s1"],["unclear","--warn"],["no","--crit"]];
+  charts.push(new Chart(document.getElementById("trkChart"),{type:"bar",
+   data:{labels:["Full-stack","AI-native","Coaching"],datasets:O.map(([o,c])=>({label:openLabel[o][1],data:T.map(t=>J.filter(j=>j.t===t&&j.o===o).length),backgroundColor:css(c),borderColor:css("--surface"),borderWidth:{top:2},borderRadius:4,borderSkipped:false}))},
+   options:{maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false},border:{color:axis}},y:{stacked:true,grid,border:{display:false},ticks:{precision:0}}},plugins:{legend:{display:false},tooltip:{...tip(),displayColors:true}}}}));
+
+  // salary stated share
+  charts.push(new Chart(document.getElementById("salStated"),{type:"bar",
+   data:{labels:["Full-stack","AI-native","Coaching"],datasets:[
+    {label:"Salary stated",data:T.map(t=>J.filter(j=>j.t===t&&j.bdt).length),backgroundColor:css("--s1"),borderColor:css("--surface"),borderWidth:{top:2},borderRadius:4,borderSkipped:false},
+    {label:"Not stated",data:T.map(t=>J.filter(j=>j.t===t&&!j.bdt).length),backgroundColor:css("--axis"),borderColor:css("--surface"),borderWidth:{top:2},borderRadius:4,borderSkipped:false}]},
+   options:{maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false},border:{color:axis}},y:{stacked:true,grid,border:{display:false},ticks:{precision:0}}},plugins:{legend:{display:false},tooltip:{...tip(),displayColors:true}}}}));
+}
+build();
+try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",build);}catch(e){}
+new MutationObserver(build).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

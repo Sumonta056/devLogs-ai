@@ -1,0 +1,921 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Agentic Daily 4 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F5F1; --surface:#FFFFFF; --sunk:#EBEDE6; --ink:#1A2220; --muted:#5A6560; --line:#D9DDD5;
+  --accent:#0E6B5A; --accent-soft:#DDEEE8; --amber:#9A6412; --amber-soft:#F6EBD6; --red:#A63D32;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"IBM Plex Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111615; --surface:#181F1D; --sunk:#1F2725; --ink:#E4EAE6; --muted:#9AA7A1; --line:#2C3633;
+    --accent:#52C7AA; --accent-soft:#17332D; --amber:#E0AE5C; --amber-soft:#33291A; --red:#E88A7F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111615; --surface:#181F1D; --sunk:#1F2725; --ink:#E4EAE6; --muted:#9AA7A1; --line:#2C3633;
+  --accent:#52C7AA; --accent-soft:#17332D; --amber:#E0AE5C; --amber-soft:#33291A; --red:#E88A7F;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+
+/* masthead */
+.mast{display:grid;gap:14px;padding-block:8px 22px;border-bottom:2px solid var(--ink)}
+.edition{display:flex;flex-wrap:wrap;gap:8px 18px;font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.edition b{color:var(--ink);font-weight:500}
+.demo-flag{color:var(--amber)}
+.mast h1{font-size:clamp(34px,6vw,56px);line-height:1.02;font-weight:700}
+.mast p{margin:0;max-width:64ch;color:var(--muted)}
+.agents{display:flex;flex-wrap:wrap;gap:8px}
+.agent{font:12px/1 var(--mono);padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.agent i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;font-style:normal}
+
+/* nav */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding-block:12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+nav.toc a{flex:none;font:500 13px/1 var(--body);text-decoration:none;color:var(--ink);padding:8px 12px;border-radius:6px;background:var(--sunk)}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+.progress{flex:none;margin-left:auto;font:12px/1 var(--mono);color:var(--muted);align-self:center;padding-left:10px}
+
+section{padding-top:40px;scroll-margin-top:60px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.sec-head h2{font-size:26px;font-weight:700}
+.sec-head .kicker{font:12px/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+
+/* key learnings */
+.learn{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.learn div{background:var(--accent-soft);border-radius:10px;padding:16px}
+.learn .n{font:500 12px/1 var(--mono);color:var(--accent);letter-spacing:.06em}
+.learn h3{font-size:17px;margin:8px 0 6px;line-height:1.25}
+.learn p{margin:0;font-size:14px;color:var(--ink)}
+
+/* items */
+.items{display:grid;gap:12px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;gap:10px}
+.item.done{opacity:.55}
+.item-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.item h3{font-size:18px;line-height:1.3;font-weight:500}
+.item h3 a{color:var(--ink);text-decoration:none}
+.item h3 a:hover{color:var(--accent);text-decoration:underline}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font:12px/1.4 var(--mono);color:var(--muted)}
+.tag{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:4px;background:var(--sunk);color:var(--muted)}
+.tag.new{background:var(--amber-soft);color:var(--amber)}
+.tag.off{background:var(--accent-soft);color:var(--accent)}
+.item ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.item li{max-width:78ch}
+.item li b{font-weight:600}
+.check{flex:none;display:flex;align-items:center;gap:6px;font:12px/1 var(--mono);color:var(--muted);cursor:pointer;user-select:none;padding-top:3px}
+.check input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+code{font:13px/1.4 var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+
+/* tips */
+.tips{counter-reset:t;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 28px;border-top:1px solid var(--line)}
+.tip{display:grid;grid-template-columns:34px 1fr;gap:4px 10px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tip::before{counter-increment:t;content:counter(t,decimal-leading-zero);font:500 13px/1.6 var(--mono);color:var(--accent)}
+.tip p{margin:0}
+.tip a{font:12px var(--mono);grid-column:2}
+
+/* suggestions */
+.stack{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stack-row{display:grid;grid-template-columns:200px 1fr;border-top:1px solid var(--line)}
+.stack-row:first-child{border-top:0}
+.stack-row h3{font-size:15px;padding:16px 18px;background:var(--sunk);font-weight:500;line-height:1.35}
+.stack-row p{margin:0;padding:16px 18px}
+@media (max-width:640px){.stack-row{grid-template-columns:1fr}.stack-row h3{padding-bottom:10px}}
+
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td.stars{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+td .bar{height:4px;background:var(--accent);border-radius:2px;margin-top:6px;opacity:.7}
+td a{font-weight:500}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0;max-width:80ch}
+
+/* video grid */
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.vid{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:8px;align-content:start}
+.vid .play{display:flex;align-items:center;gap:8px;font:12px var(--mono);color:var(--muted)}
+.vid .play svg{flex:none}
+.vid h3{font-size:16px;line-height:1.3;font-weight:500}
+.vid h3 a{color:var(--ink);text-decoration:none}
+.vid h3 a:hover{color:var(--accent)}
+.vid ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.res a.card{display:grid;gap:6px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.res a.card:hover{border-color:var(--accent)}
+.res .card b{font-family:var(--display);font-size:16px;font-weight:500}
+.res .card span{font-size:13px;color:var(--muted)}
+.res .card em{font:12px var(--mono);font-style:normal;color:var(--accent);overflow-wrap:anywhere}
+
+footer{margin-top:48px;padding-top:18px;border-top:2px solid var(--ink);display:grid;gap:8px;font-size:13px;color:var(--muted)}
+footer p{margin:0;max-width:80ch}
+@media (prefers-reduced-motion:no-preference){.item,.vid,.res a.card{transition:opacity .2s,border-color .2s}}
+
+/* picks of the day */
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.pick{align-content:start;border-top:3px solid var(--accent)}
+.pick .cat{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+.pick p{margin:0;font-size:14px}
+.pick ul{font-size:14px}
+.pick .src{font:12px/1.4 var(--mono);color:var(--muted)}
+.try{position:relative;background:var(--sunk);border:1px solid var(--line);border-radius:8px;min-width:0}
+.try .lbl{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 0 12px;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.try pre{margin:0;padding:8px 12px 12px;overflow-x:auto;font:12.5px/1.5 var(--mono);white-space:pre;color:var(--ink)}
+.copy{font:500 11px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.pick .stackline{font-size:13px;color:var(--muted);border-left:2px solid var(--amber);padding-left:10px}
+.pick .stackline b{color:var(--amber);font-weight:600}
+
+/* opus showcase */
+.vid.item{padding:16px;gap:8px}
+.vid .who{font:12px/1.4 var(--mono);color:var(--muted)}
+.vid p{margin:0;font-size:14px}
+.vid .steal{font-size:13px;border-left:2px solid var(--amber);padding-left:10px}
+.vid .steal b{color:var(--amber);font-weight:600}
+.kind{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:4px;background:var(--amber-soft);color:var(--amber)}
+
+/* substack & reddit */
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:12px 32px}
+.twocol h3{font-size:18px;margin:0 0 6px;font-weight:700}
+.twocol .tips{grid-template-columns:1fr}
+.tip .why{font-size:13px;color:var(--muted);grid-column:2}
+.tip .flag{color:var(--red);font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="edition">
+      <span><b>Edition</b> Sun 4 Oct 2026</span>
+      <span><b>Window</b> 27 Sep – 4 Oct</span>
+      <span><b>For</b> Mridul · Dhaka</span>
+    </div>
+    <h1>Agentic Dev Daily</h1>
+    <p>Claude and agentic development news, workflows, tips, repos, docs and videos, plus nine picks of the day, an Opus 5.5 showcase, Medium must-reads and Substack advice, gathered by eight research agents and turned into study notes. Tick items off as you read them; your progress is saved in this browser.</p>
+    <div class="agents" aria-label="Research agents in this run">
+      <span class="agent"><i></i>Trends &amp; news</span>
+      <span class="agent"><i></i>Community usage &amp; tips</span>
+      <span class="agent"><i></i>GitHub &amp; market resources</span>
+      <span class="agent"><i></i>Official docs &amp; YouTube</span>
+      <span class="agent"><i></i>Picks of the day</span>
+      <span class="agent"><i></i>Opus showcase</span>
+      <span class="agent"><i></i>Medium</span>
+      <span class="agent"><i></i>Substack &amp; Reddit</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#learnings">Key learnings</a>
+    <a href="#picks">Picks of the day</a>
+    <a href="#trending">Trending</a>
+    <a href="#showcase">Opus showcase</a>
+    <a href="#usage">How others use it</a>
+    <a href="#tips">Tips &amp; tricks</a>
+    <a href="#medium">Medium</a>
+    <a href="#substack">Substack &amp; Reddit</a>
+    <a href="#suggest">For your stack</a>
+    <a href="#github">GitHub</a>
+    <a href="#official">Official</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#market">Best resources</a>
+    <span class="progress" id="progress">0 read</span>
+  </nav>
+
+  <!-- KEY LEARNINGS -->
+  <section id="learnings">
+    <div class="sec-head"><h2>Key learnings today</h2><span class="kicker">Read these first</span></div>
+    <div class="learn">
+      <div><span class="n">01</span><h3>A model upgrade is more than changing the ID</h3><p>Sonnet 5.5 (28 Sep) is faster and cheaper, but forced <code>tool_choice</code> now returns a 400 error and "thinking disabled" changed. Run your real tasks on both models before you switch the default.</p></div>
+      <div><span class="n">02</span><h3>Permission rules are now your main safety control</h3><p>Claude Code 2.1.284 starts sessions in auto mode, Mods can change runtime behaviour, and 2.1.289 had to fix deny rules that leaked through symlinks. Write explicit deny rules and upgrade.</p></div>
+      <div><span class="n">03</span><h3>Treat MCP servers like npm dependencies</h3><p>Ox Security looked at 15k public MCP servers. Over 2% of their hostnames no longer resolve, so someone else could take them over. Pin trusted publishers and replace blanket "always allow" with per-tool permissions.</p></div>
+      <div><span class="n">04</span><h3>Log which model actually answered</h3><p>Sonnet 5.5's safety classifiers can quietly hand a conversation to Sonnet 5 or end it. Agent pipelines should record the serving model and the stop reason for every response.</p></div>
+    </div>
+  </section>
+
+  <!-- PICKS -->
+  <section id="picks">
+    <div class="sec-head"><h2>Picks of the day</h2><span class="kicker">9 picks · one per category</span></div>
+    <div class="picks">
+
+      <article class="item pick" data-id="p1">
+        <div class="item-top"><span class="cat">Agent Skill of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/antfu/skills" target="_blank" rel="noopener">nuxt (antfu/skills)</a></h3>
+        <div class="src">Community · Anthony Fu (Vue/Nuxt core team) · ~5.7k stars (repo page, 4 Oct)</div>
+        <p>A Nuxt skill generated from the official nuxt/nuxt docs (kept in sync through git submodules) and tuned by Anthony Fu. Its SKILL.md is a short index pointing to reference files on routing, data fetching, server routes and rendering, which the agent loads only when it needs them.</p>
+        <ul>
+          <li>Tracks Nuxt 5 (generated 25 Sep 2026). It warns about changes agents often get wrong: Nitro v3/h3 v2, server utilities imported from <code>nuxt/server</code>, typed routes, and the <code>app/</code> srcDir.</li>
+          <li>Loads on demand, so it uses far less context than pasting the Nuxt docs into CLAUDE.md.</li>
+          <li>The same repo has <code>vue</code>, <code>pinia</code>, <code>vite</code> and <code>vitest</code> skills.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it<button class="copy" type="button">Copy</button></div><pre># from the README (all skills; add -g for global)
+pnpx skills add antfu/skills --skill='*'
+
+# Nuxt only (adapted, not tested)
+pnpx skills add antfu/skills --skill='nuxt'
+
+# SKILL.md frontmatter (copied)
+---
+name: nuxt
+description: Nuxt full-stack Vue framework with SSR, auto-imports, and file-based routing. Use when working with Nuxt apps, server routes, useFetch, middleware, or hybrid rendering.
+---</pre></div>
+        <p class="stackline"><b>For your stack:</b> a direct fit for your Nuxt front end. The README calls it a proof of concept "not fully tested in practice", so check it on a real task first.</p>
+      </article>
+
+      <article class="item pick" data-id="p2">
+        <div class="item-top"><span class="cat">Agent Rule of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Don't hard-code to pass tests</a></h3>
+        <div class="src">Official · Claude prompting best practices, "Avoid focusing on passing tests and hardcoding"</div>
+        <p>A rule that stops the classic "make the test green" shortcut, where the agent special-cases test inputs or weakens assertions. It also tells the agent to report a wrong test instead of working around it.</p>
+        <ul>
+          <li>Prevents hard-coded return values and special cases written just to match test fixtures.</li>
+          <li>Makes clear that tests check the solution; they don't define it.</li>
+          <li>One paste into CLAUDE.md or AGENTS.md.</li>
+        </ul>
+        <div class="try"><div class="lbl">Paste into CLAUDE.md<button class="copy" type="button">Copy</button></div><pre>Please write a high-quality, general-purpose solution using the standard tools
+available. Do not create helper scripts or workarounds to accomplish the task more
+efficiently. Implement a solution that works correctly for all valid inputs, not
+just the test cases. Do not hard-code values or create solutions that only work
+for specific test inputs. Instead, implement the actual logic that solves the
+problem generally.
+
+Focus on understanding the problem requirements and implementing the correct
+algorithm. Tests are there to verify correctness, not to define the solution.
+Provide a principled implementation that follows best practices and software
+design principles.
+
+If the task is unreasonable or infeasible, or if any of the tests are incorrect,
+please inform me rather than working around them. The solution should be robust,
+maintainable, and extendable.</pre></div>
+        <p class="stackline"><b>For your stack:</b> most useful on JUnit/Spring Boot suites and Vitest specs, where agents like to tweak assertions until they pass.</p>
+      </article>
+
+      <article class="item pick" data-id="p3">
+        <div class="item-top"><span class="cat">Claude Repository of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" rel="noopener">hesreallyhim/awesome-claude-code</a></h3>
+        <div class="src">Community · ~53.1k stars, 4.6k forks (repo page, 4 Oct)</div>
+        <p>A hand-picked index of skills, hooks, status lines, orchestrators, tooling and workflows for Claude Code. It's curated rather than an exhaustive dump, with a "Recently Added" section for what's new.</p>
+        <ul>
+          <li>Clear sections: Start Here, From Anthropic, Skills, Agent Orchestration, Memory &amp; Context, Observability (incl. usage &amp; cost), Testing, Linting, Security.</li>
+          <li>"Recently Added" is a fast weekly scan.</li>
+          <li>Good place to look before writing your own hook or status line.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it · 10 min<button class="copy" type="button">Copy</button></div><pre>1. Open the README → "Start Here".
+2. Skim "Testing" and "Linting" for hooks you can reuse.
+3. Check "Observability → Usage &amp; Cost" for a status line
+   that shows context and spend.</pre></div>
+        <p class="stackline"><b>For your stack:</b> the Testing, Linting and Infrastructure &amp; DevOps sections matter most for a Nuxt + Spring Boot CI setup.</p>
+      </article>
+
+      <article class="item pick" data-id="p4">
+        <div class="item-top"><span class="cat">Claude Agent of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/02-language-specialists/vue-expert.md" target="_blank" rel="noopener">vue-expert</a></h3>
+        <div class="src">Community · VoltAgent/awesome-claude-code-subagents (~25.5k stars) · tools: Read, Write, Edit, Bash, Glob, Grep · model: sonnet</div>
+        <p>A senior Vue 3 / Nuxt specialist subagent covering the Composition API, ref vs reactive, composables, Pinia, Vitest and Nuxt SSR. It carries a checklist with items like "Component tests &gt; 85% achieved" and "SSR/SSG support implemented properly".</p>
+        <ul>
+          <li>Vue work runs in its own context, so the main session stays clean.</li>
+          <li>The checklist gives the main agent acceptance criteria (reactivity, bundle size, accessibility, SSR).</li>
+          <li>A single markdown file, easy to edit for team conventions.</li>
+        </ul>
+        <div class="try"><div class="lbl">Install · frontmatter copied<button class="copy" type="button">Copy</button></div><pre>claude plugin marketplace add VoltAgent/awesome-claude-code-subagents
+claude plugin install voltagent-lang    # language specialists
+
+# or copy the file to .claude/agents/vue-expert.md
+---
+name: vue-expert
+description: "Use this agent when building Vue 3 applications that require Composition API mastery, reactivity optimization, or Nuxt 3 development with enterprise-scale performance concerns."
+tools: Read, Write, Edit, Bash, Glob, Grep
+model: sonnet
+---</pre></div>
+        <p class="stackline"><b>For your stack:</b> the prompt targets Nuxt 3. Pair it with today's Nuxt 5 skill, or edit the prompt, so it doesn't suggest outdated patterns.</p>
+      </article>
+
+      <article class="item pick" data-id="p5">
+        <div class="item-top"><span class="cat">Claude Resource of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://platform.claude.com/docs/en/models/opus-5-5/migration-guide" target="_blank" rel="noopener">Migrating to Claude Opus 5.5</a></h3>
+        <div class="src">Official · Claude Platform docs · Sep 2026 · with <a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">What's new in Opus 5.5</a></div>
+        <p>The official checklist for moving API code to Opus 5.5. It lists the breaking changes, how agent loops must now handle thinking blocks, and the new betas.</p>
+        <ul>
+          <li>These now return 400: turning thinking off, forced <code>tool_choice</code>, <code>temperature</code>/<code>top_p</code>/<code>top_k</code>, and assistant prefill. Default effort dropped from high to medium.</li>
+          <li>Agent loops must pass thinking blocks back unchanged and pick response blocks by type, not position.</li>
+          <li>Picked instead of an engineering post: the agent's pick ("Harness design…") was featured on 27 Sep, and this is the doc you'll need when you upgrade Spring AI or SDK code.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it · 15 min<button class="copy" type="button">Copy</button></div><pre># find code that will break on Opus/Sonnet 5.5
+grep -rnE "tool_choice|temperature|top_p|top_k|\"disabled\"" \
+  src/ backend/ --include=*.java --include=*.ts --include=*.yml</pre></div>
+        <p class="stackline"><b>For your stack:</b> Spring AI and other Java clients often set <code>temperature</code> by default. Check <code>application.yml</code> before you switch model IDs.</p>
+      </article>
+
+      <article class="item pick" data-id="p6">
+        <div class="item-top"><span class="cat">MCP Server of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank" rel="noopener">Chrome DevTools MCP</a></h3>
+        <div class="src">Official (Google Chrome DevTools team) · ~52.9k stars (repo page, 4 Oct) · Apache-2.0</div>
+        <p>An MCP server that lets Claude Code control and inspect a live Chrome through DevTools. It covers performance traces, network requests, console messages with source-mapped stack traces, screenshots and Puppeteer automation.</p>
+        <ul>
+          <li>Claude reads real console errors and failed requests instead of guessing.</li>
+          <li>Performance traces come with insights on load and render behaviour.</li>
+          <li>A plugin version bundles skills as well.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it · copied from docs<button class="copy" type="button">Copy</button></div><pre>claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest
+
+# plugin (MCP + skills)
+/plugin marketplace add ChromeDevTools/chrome-devtools-mcp
+/plugin install chrome-devtools-mcp@chrome-devtools-plugins</pre></div>
+        <p class="stackline"><b>Security:</b> it "exposes content of the browser instance to MCP clients", so use a dev profile that isn't signed in to personal or production accounts. Usage statistics are on by default; turn them off with <code>--no-usage-statistics</code>. Add <code>--no-performance-crux</code> to stop trace URLs going to Google's CrUX API. <b>For your stack:</b> debug Nuxt hydration errors and watch <code>useFetch</code> calls to Spring Boot.</p>
+      </article>
+
+      <article class="item pick" data-id="p7">
+        <div class="item-top"><span class="cat">Hook of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Block edits to protected files</a></h3>
+        <div class="src">Official · Claude Code hooks guide · PreToolUse + matcher "Edit|Write"</div>
+        <p>A PreToolUse hook that runs a script before every file edit. If the path matches a protected pattern, the script exits with code 2 and its "Blocked:" message goes back to Claude, which then tries a different approach.</p>
+        <ul>
+          <li>Deterministic: <code>.env</code> and lockfiles can't be edited even if Claude ignores a CLAUDE.md rule.</li>
+          <li>Claude is told why the edit was blocked, so it doesn't just fail silently.</li>
+          <li>Easy to extend with more patterns.</li>
+        </ul>
+        <div class="try"><div class="lbl">.claude/hooks/protect-files.sh + settings.json<button class="copy" type="button">Copy</button></div><pre>#!/bin/bash
+# protect-files.sh  (chmod +x)
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+FILE_PATH="${FILE_PATH//\\//}"
+PROTECTED_PATTERNS=(".env" "package-lock.json" ".git/")
+for pattern in "${PROTECTED_PATTERNS[@]}"; do
+  if [[ "$FILE_PATH" == *"$pattern"* ]]; then
+    echo "Blocked: $FILE_PATH matches protected pattern '$pattern'" &gt;&amp;2
+    exit 2
+  fi
+done
+exit 0
+
+# .claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh" }
+        ]
+      }
+    ]
+  }
+}</pre></div>
+        <p class="stackline"><b>For your stack (adapted):</b> add <code>application-prod.yml</code>, <code>pnpm-lock.yaml</code> and <code>src/main/resources/db/migration/</code> to the patterns.</p>
+      </article>
+
+      <article class="item pick" data-id="p8">
+        <div class="item-top"><span class="cat">Command of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener"><code>/rewind</code> (or Esc Esc)</a></h3>
+        <div class="src">Official · Claude Code checkpointing docs</div>
+        <p>"Run <code>/rewind</code>, or press <code>Esc</code> twice when the prompt input is empty, to open the rewind menu." Pick any earlier prompt, then restore code, the conversation, both, or summarize from or up to that point.</p>
+        <ul>
+          <li>A fast undo when the agent goes off track, without juggling git.</li>
+          <li>"Summarize from here" frees the context used by a long debugging detour but keeps your original instructions.</li>
+          <li>Checkpoints are saved with the session, so it still works after <code>/resume</code>.</li>
+        </ul>
+        <div class="try"><div class="lbl">Usage example<button class="copy" type="button">Copy</button></div><pre>/rewind
+# → pick the prompt before the composable refactor
+# → "Restore code"
+
+/rewind
+# → pick the message where the Spring debugging detour began
+# → "Summarize from here"</pre></div>
+        <p class="stackline"><b>Limits:</b> it doesn't track files changed by Bash (<code>rm</code>, <code>mv</code>, generated migrations), it usually doesn't restore subagent edits, and it skips hard-linked files like pnpm's. The docs say it's "Not a replacement for version control."</p>
+      </article>
+
+      <article class="item pick" data-id="p9">
+        <div class="item-top"><span class="cat">Prompt pattern of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Say what to do, not what to avoid</a></h3>
+        <div class="src">Official · prompting best practices, "Control the format of responses"</div>
+        <p>Describe the output you want instead of listing what's forbidden. A clear target gives the model something to aim at, while a ban only rules one thing out.</p>
+        <ul>
+          <li>Reduces vague results and overcorrection.</li>
+          <li>Makes CLAUDE.md rules shorter and easier to check.</li>
+          <li>Works well alongside the "explain why a rule exists" pattern from 27 Sep.</li>
+        </ul>
+        <div class="try"><div class="lbl">Before → after<button class="copy" type="button">Copy</button></div><pre># official example
+Before: Do not use markdown in your response
+After:  Your response should be composed of smoothly flowing prose paragraphs.
+
+# adapted for Nuxt
+Before: Don't use the Options API.
+After:  Write components with &lt;script setup lang="ts"&gt; and the Composition API.</pre></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TRENDING -->
+  <section id="trending">
+    <div class="sec-head"><h2>What's trending</h2><span class="kicker">8 items · 27 Sep – 4 Oct</span></div>
+    <div class="items">
+      <article class="item" data-id="t1">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/claude-sonnet-5-5" target="_blank" rel="noopener">Claude Sonnet 5.5 launches as the new default mid-tier model</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Release</span><span class="tag off">Official</span><span>Anthropic</span><span>28 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> <code>claude-sonnet-5-5</code> costs $2/$10 per million input/output tokens and $0.20 per million cache reads, the same as Sonnet 5. Anthropic says it "runs 30%+ faster" and costs up to 30% less for most work. Terminal-Bench 4.0: 70.6% (Sonnet 5 scored 10.3%). On the API, Bedrock, Google Cloud and Foundry.</li>
+          <li><b>Why it matters:</b> Testers say it batches tool calls more often, so agent loops take fewer steps. It's the cheaper everyday partner to Opus 5.5, and Claude Code 2.1.284 made it the default with 1M context.</li>
+          <li><b>Do:</b> Run a few typical Nuxt and Spring tasks on Sonnet 5.5 and on Opus 5.5. Compare cost and tool-call count, then choose a default model for each workflow.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t2">
+        <div class="item-top"><h3><a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener">Sonnet 5.5 API breaking changes; Sonnet 4.5 retires 30 Nov</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">API</span><span class="tag off">Official</span><span>Claude Platform release notes</span><span>28 &amp; 30 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> On Sonnet 5.5, forced <code>tool_choice</code> (<code>any</code>/<code>tool</code>) returns 400. To turn thinking off at high effort or below, use <code>thinking: {"type": "between_tools"}</code>. The older <code>computer_20251124</code> tool is rejected. Thinking blocks only work in the account that produced them. <code>claude-sonnet-4-5-20250929</code> retires on 30 Nov 2026.</li>
+          <li><b>Why it matters:</b> Changing only the model ID will break code that forces a tool call to get structured output.</li>
+          <li><b>Do:</b> Search your SDK and Spring AI code for <code>tool_choice</code> and <code>"disabled"</code>, move to structured outputs, and plan the Sonnet 4.5 migration.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t3">
+        <div class="item-top"><h3><a href="https://thenewstack.io/claude-sonnet-cyber-safeguards/" target="_blank" rel="noopener">Sonnet 5.5's safety fallback to Sonnet 5 draws criticism</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Security</span><span>The New Stack · <a href="https://mixed-news.com/en/claude-sonnet-5-5-fallback-sonnet-5-classifiers/" target="_blank" rel="noopener">MIXED</a></span><span>28 Sep – 1 Oct 2026</span></div>
+        <ul>
+          <li><b>What:</b> Classifiers send higher-risk cyber work and some frontier-LLM requests to Sonnet 5, and the conversation stays there. They check everything the model reads, including search results and files. On the API, fallback is opt-in; without it, flagged requests simply end.</li>
+          <li><b>Why it matters:</b> An agent reading untrusted pages or repos can be silently switched to another model or stopped partway through a run. The New Stack cites tests where 12.01% of rerouted requests were compromised by prompt injection.</li>
+          <li><b>Do:</b> Log the model that served each response, decide whether to enable fallback, and handle refusals explicitly. A <a href="https://news.ycombinator.com/item?id=49881850" target="_blank" rel="noopener">HN thread</a> exists, but we couldn't load it to check its contents.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t4">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.284–2.1.286: auto mode by default, Sonnet 5.5, <code>claude --desktop</code></a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Release</span><span class="tag off">Official</span><span>Claude Code changelog</span><span>28–30 Sep 2026</span><span><a href="https://github.com/anthropics/claude-agent-sdk-typescript/releases" target="_blank" rel="noopener">Agent SDK TS 0.3.284</a></span></div>
+        <ul>
+          <li><b>What:</b> 2.1.284 makes Sonnet 5.5 the default and starts interactive sessions in auto mode. Ultracode becomes a toggle in <code>/effort</code>, and <code>/rate-limit-options</code> is new. 2.1.285 adds <code>claude --desktop</code>, <code>claude plugin configure</code> and the <code>allowedProviders</code> managed setting. 2.1.286 adds a "2 of 5" permission prompt counter. SDK 0.3.284 fixes <code>forkSession()</code> and elicitation <code>{decision:'block'}</code>.</li>
+          <li><b>Why it matters:</b> With auto mode as the starting state, your allow/ask/deny rules do more of the safety work.</li>
+          <li><b>Do:</b> Review <code>.claude/settings.json</code> deny and ask rules (Mongo drop commands, prod profiles) before relying on auto mode.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t5">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.287–2.1.289: Claude Mods, MCP sign-in prompts, permission fixes</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Release</span><span class="tag off">Official</span><span>Claude Code changelog</span><span>1–3 Oct 2026</span></div>
+        <ul>
+          <li><b>What:</b> 2.1.287 adds Claude Mods (plugins that change runtime and UI behaviour) and lets MCP servers send URL prompts for OAuth sign-in. 2.1.288 adds <code>/code-review --max-findings &lt;n&gt;|all</code> and asks you to re-authenticate when an MCP server needs more OAuth scope. 2.1.289 fixes security gaps: deny/ask rules now hold for nested compound commands, and Read deny rules apply through symlinks.</li>
+          <li><b>Why it matters:</b> Mods are a new way to extend Claude Code beyond skills, MCP and hooks, and the 2.1.289 fixes closed real gaps in permission rules.</li>
+          <li><b>Do:</b> Upgrade to 2.1.289 now and try <code>/code-review --max-findings all</code> on a PR. Don't make a mod the only thing enforcing an access rule.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t6">
+        <div class="item-top"><h3><a href="https://www.infosecurity-magazine.com/news/mcp-creating-major-governance-gaps/" target="_blank" rel="noopener">Ox Security: governance gaps across 15k MCP servers</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Security</span><span>Infosecurity Magazine</span><span>28 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> 15,465 MCP servers from public registries were analysed. About 16% of 5,095 hostnames resolve outside the US, and over 2% no longer resolve at all, so someone else could take them over. "Always-allow" permissions let later malicious actions run without asking.</li>
+          <li><b>Why it matters:</b> This is a supply-chain and data-residency risk for any community MCP server you add.</li>
+          <li><b>Do:</b> List the MCP servers you use, keep only trusted publishers, and replace blanket always-allow with per-tool permissions.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t7">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/news/claude-frontier-academy" target="_blank" rel="noopener">Anthropic launches Claude Frontier Academy ($100M)</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Ecosystem</span><span class="tag off">Official</span><span>Anthropic</span><span>2 Oct 2026</span></div>
+        <ul>
+          <li><b>What:</b> A nomination-only training program for enterprise AI engineers: in-person training, an assessment, then a 12-week residency on real projects at the participant's company. First cohorts come from Accenture, Deloitte, McKinsey, Capgemini and others.</li>
+          <li><b>Why it matters:</b> Anthropic sees trained engineers, more than model access, as what's holding back enterprise use. For consultancies, it could become a recognised credential.</li>
+          <li><b>Do:</b> If Cefalo works with an Anthropic account team or partner manager, ask whether it's eligible.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t8">
+        <div class="item-top"><h3><a href="https://www.theneurondaily.com/p/openai-launched-dots-20-more-tools" target="_blank" rel="noopener">Competitor: OpenAI DevDay 2026</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Ecosystem</span><span>The Neuron (secondary)</span><span>29 Sep 2026</span><span class="tag">Unverified</span></div>
+        <ul>
+          <li><b>What:</b> Reported: hosted browser and computer use in the Agents API, "GPT-6.1 Sol" for cheaper agent tasks, Codex Cloud Environments, and "Sign in with ChatGPT" billing.</li>
+          <li><b>Why it matters:</b> Both labs are competing on cheaper agent models, and Sonnet 5.5 shipped a day earlier.</li>
+          <li><b>Do:</b> Nothing urgent. Benchmark it only if you already use OpenAI.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- OPUS SHOWCASE -->
+  <section id="showcase">
+    <div class="sec-head"><h2>Cool things built with Opus 5.5</h2><span class="kicker">7 builds · still the newest Opus</span></div>
+    <div class="vids">
+      <article class="vid item" data-id="s1">
+        <div class="item-top"><span class="kind">Creative</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/dgreenheck/tidewater" target="_blank" rel="noopener">Tidewater: a tropical island and ocean in the browser</a></h3>
+        <div class="who">Dan Greenheck · ~24 Sep 2026 · <a href="https://dgreenheck.github.io/tidewater/" target="_blank" rel="noopener">live demo</a></div>
+        <p>A three.js + WebGPU scene with an FFT ocean, volumetric clouds, wildlife, boats and positional audio, built with simple "add X" / "make it better" prompts. He says it took about 8 hours and $1,874.40 in tokens; both figures are his own claim, and <a href="https://aifrontierpost.com/articles/opus-5-5-built-tidewater-island-game/" target="_blank" rel="noopener">AI Frontier Post</a> didn't verify them.</p>
+        <p class="steal"><b>What you can steal:</b> work in small steps. Ask for one feature at a time and keep each result instead of writing one huge spec. This works well for UI polish passes in Nuxt.</p>
+      </article>
+      <article class="vid item" data-id="s2">
+        <div class="item-top"><span class="kind">Research</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://www.vals.ai/blogs/faster-shortest-path-algorithm" target="_blank" rel="noopener">10 agents find and formally prove a faster shortest-path bound</a></h3>
+        <div class="who">Vals AI · work done 20 Sep 2026 · <a href="https://github.com/spicylemonade/c-hd-proof" target="_blank" rel="noopener">Lean proof</a></div>
+        <p>Ten Opus 5.5 agents coordinated through a shared message board and in 15 hours produced "C-HD", with a bound proven in Lean that beats Dijkstra in one narrow range of graph density. Vals itself says the constants are "enormous", so this is not a practical speedup, and it hasn't been peer reviewed.</p>
+        <p class="steal"><b>What you can steal:</b> have parallel agents coordinate through a shared notes file, and let a strict automatic checker decide what counts as done. In Spring, that checker is the build plus integration tests.</p>
+      </article>
+      <article class="vid item" data-id="s3">
+        <div class="item-top"><span class="kind">Agent</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://www.anthropic.com/claude-opus-5-5" target="_blank" rel="noopener">An 18-hour unsupervised run across six repos, and a 40-PR rebase</a></h3>
+        <div class="who">Clio, Stripe, Quantium · launch week, 22 Sep 2026 · customer quotes from Anthropic</div>
+        <p>At Clio, Opus 5.5 defined how internal services should talk to each other and made every service across six repos comply, staying on task overnight for over 18 hours. Stripe rebased 40 stacked PRs and "all 40 passed CI". These are customer quotes published by the vendor, not independently checked.</p>
+        <p class="steal"><b>What you can steal:</b> write the contract first, then enforce it. Have the agent write an OpenAPI or shared DTO spec, then migrate each Spring Boot service to match it, with CI as the overnight checkpoint.</p>
+      </article>
+      <article class="vid item" data-id="s4">
+        <div class="item-top"><span class="kind">Agent</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://origozero.ai/blog/make-a-game-with-opus-5-5" target="_blank" rel="noopener">OrigoZero: Opus 5.5 builds games in a live engine over MCP</a></h3>
+        <div class="who">OrigoZero · 24 Sep 2026</div>
+        <p>Claude Code drives the Zero browser engine through an MCP plugin. It writes Luau, takes screenshots to check its own work, reads typed error diagnostics, and publishes versioned worlds that others can fork. The "scored higher than any other model" claim comes from the vendor.</p>
+        <p class="steal"><b>What you can steal:</b> wrap your dev server in a small MCP server with <code>screenshot</code>, <code>get_errors</code> and <code>publish</code> tools, so Claude checks its own work against structured errors. This works for a Nuxt dev server or Spring Actuator.</p>
+      </article>
+      <article class="vid item" data-id="s5">
+        <div class="item-top"><span class="kind">App</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/xikhar/spiderbench" target="_blank" rel="noopener">Spiderbench: a 3D web-slinging fan game in the browser</a></h3>
+        <div class="who">Shikhar (@xikhar) · v3 posted 27 Sep 2026 · <a href="https://runtimewire.com/article/claude-opus-55-spiderbench-browser-game" target="_blank" rel="noopener">write-up</a></div>
+        <p>Over about 3 days on a 5x plan, Opus 5.5 wrote the code, shaders and procedural city, and generated 3D models by writing Blender Python scripts, all rendered in Three.js. It's a non-commercial fan benchmark, and the token cost is unknown.</p>
+        <p class="steal"><b>What you can steal:</b> start on medium effort and go to high only when it gets stuck. Have the model write scripts that generate assets or data, such as Mongo seed scripts, so they can be re-run and edited.</p>
+      </article>
+      <article class="vid item" data-id="s6">
+        <div class="item-top"><span class="kind">Creative</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://stillwet.art/" target="_blank" rel="noopener">stillwet.art: models paint in a simulated oil-paint engine</a></h3>
+        <div class="who">Alice (@aliceisplaying) · 2 Oct 2026 · <a href="https://news.ycombinator.com/item?id=49928566" target="_blank" rel="noopener">Show HN</a></div>
+        <p>Opus 5.5 and other models write programs that drive a Rust oil-paint simulator with bristle brushes and wet glazes, using vision to step back and look at the canvas between passes. The 75 paintings follow Caspar David Friedrich, whose work the models only read about and never saw.</p>
+        <p class="steal"><b>What you can steal:</b> give the model a small command language for a tool, then show it the rendered result so it can correct itself. This works for chart and PDF renderers too.</p>
+      </article>
+      <article class="vid item" data-id="s7">
+        <div class="item-top"><span class="kind">App</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://muz.li/blog/claude-opus-5-5-for-designers/" target="_blank" rel="noopener">Muzli: three award-style sites, with the prompts behind them</a></h3>
+        <div class="who">Petras Baukys (Muzli) · 28 Sep 2026</div>
+        <p>A brand site with a WebGL water effect (about 80 minutes, 4 self-correction rounds), a kinetic-type title sequence and a spring-physics music player, built with GSAP, Three.js, Lenis, Motion.dev and the Figma MCP. All times are the authors' own claims.</p>
+        <p class="steal"><b>What you can steal:</b> a structured brief (audience, mood, "one memorable thing", sections, motion, quality bar), a screenshot-and-critique loop, and a clear rule for when it's done.</p>
+      </article>
+    </div>
+    <p class="note">No newer Opus has shipped since 22 Sep. The only new model is Sonnet 5.5. We found no real computer-use build this week; the closest are the screenshot-checking loops above. The X posts linked from these projects weren't opened.</p>
+  </section>
+
+  <!-- USAGE -->
+  <section id="usage">
+    <div class="sec-head"><h2>How others are using it</h2><span class="kicker">5 real workflows</span></div>
+    <div class="items">
+      <article class="item" data-id="u1">
+        <div class="item-top"><h3><a href="https://byteiota.com/claude-code-mods-write-typescript-plugins-that-rewrite-the-agent/" target="_blank" rel="noopener">Claude Code Mods: TypeScript plugins that rewrite the agent</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Mods</span><span>byteiota</span><span>4 Oct 2026</span></div>
+        <ul>
+          <li>A mod has three files: <code>plugin.json</code>, <code>hooks/hooks.json</code> and <code>hooks/register.tsx</code>. <code>register(on)</code> subscribes to events like <code>on('tool.call', { tool: 'Bash' }, async (event, next) =&gt; next(event))</code>.</li>
+          <li>Four events: <code>tool.call</code>, <code>prompt.submit</code>, <code>prompt.compose</code> (changes the system prompt) and <code>ui.render</code>.</li>
+          <li>The example is a ~15-line guard blocking <code>rm -rf</code>, force push and <code>DROP TABLE</code>. Caveat: mods run "with the same access to your machine as Claude Code itself — no sandboxing".</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u2">
+        <div class="item-top"><h3><a href="https://github.com/springbokdev/claude-hexagonal-springboot-starter" target="_blank" rel="noopener">A hexagonal Spring Boot starter with spec-driven TDD skills</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Spring Boot</span><span>springbokdev (GitHub)</span><span>Date not shown</span></div>
+        <ul>
+          <li>Each skill is pinned to a model: <code>/discover</code> (opus, example mapping), <code>/accept</code> (sonnet, failing acceptance tests), <code>/tdd</code> (sonnet, red-green-refactor), <code>/review</code> (opus, uncommitted changes).</li>
+          <li>A PostToolUse hook runs <code>mvn test</code> after every file edit.</li>
+          <li>Path-scoped rules: <code>domain-rules.md</code> (pure Java, no Spring or JPA imports), plus persistence, test and web rules (thin controllers, DTOs, validation).</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u3">
+        <div class="item-top"><h3><a href="https://github.com/harlan-zw/harlan-claude-code" target="_blank" rel="noopener">harlan-agent-kit: a Nuxt/Vue maintainer's personal plugin</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Nuxt</span><span>Harlan Wilton</span><span>Date not shown</span></div>
+        <ul>
+          <li>36 skills (including <code>nuxt-frontend-design</code>, <code>nuxt-frontend-review</code>, <code>pr</code>, <code>dependency-updates</code>) and 8 bash hooks: lint on save, pre-commit checks, and a guard against committing to already-merged branches.</li>
+          <li>Install: <code>/plugin marketplace add harlan-zw/harlan-agent-kit</code>, then <code>/plugin install harlan-agent-kit</code>.</li>
+          <li>A <code>check</code> command runs lint, typecheck and tests in parallel. A local GitHub agent does read-only reviews of issues and PRs.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u4">
+        <div class="item-top"><h3><a href="https://codewithmukesh.com/blog/claude-code-tips-advanced/" target="_blank" rel="noopener">30 advanced Claude Code tips: verification loops and tiered permissions</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Permissions</span><span>Mukesh Murugan</span><span>7 Aug 2026</span></div>
+        <ul>
+          <li>Build and test after every change, and use <code>/goal</code> with a completion condition so a separate evaluator confirms the work is done.</li>
+          <li>Tiered <code>.claude/settings.json</code>: <code>allow</code> for build and test, <code>ask</code> for DB migrations. Bulk mechanical changes run headless with <code>claude --bare -p "…" --allowedTools "Edit,Bash(dotnet build:*)"</code>.</li>
+          <li><code>/rewind</code> restores only files Claude edited itself. Bash side effects, like generated migrations, stay, so check <code>git status</code>.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u5">
+        <div class="item-top"><h3><a href="https://www.mindstudio.ai/blog/claude-code-mods-agents-md" target="_blank" rel="noopener">Mods and agents.md: a four-week rollout plan</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Team rollout</span><span>MindStudio</span><span>19 Sep 2026</span><span><a href="https://www.volanea.com/blog/claude-code-mods-agent-workflows" target="_blank" rel="noopener">Volanea</a></span></div>
+        <ul>
+          <li>Four built-in mods are public: an agents.md loader, a diff panel, telemetry and an organisation security mod. Custom mods are early access, and the API may change.</li>
+          <li>Volanea's rollout: AGENTS.md first, then the live diff panel, then one change you can measure (with <code>/skill-doctor</code> or <code>plugin eval</code>), then parallel delegation.</li>
+          <li>At launch, agents.md loading isn't available on Bedrock, Vertex or Foundry.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section id="tips">
+    <div class="sec-head"><h2>Tips &amp; tricks</h2><span class="kicker">10 you can apply today</span></div>
+    <div class="tips">
+      <div class="tip"><p>Run <code>/clear</code> after two failed attempts at the same fix; by then the context is working against you.</p><a href="https://smartscope.blog/en/generative-ai/claude/claude-code-best-practices-advanced-2026/" target="_blank" rel="noopener">SmartScope · advanced practices</a></div>
+      <div class="tip"><p>Give <code>/compact</code> an argument saying what to keep, e.g. <code>/compact "keep the API contract and failing test names"</code>.</p><a href="https://smartscope.blog/en/generative-ai/claude/claude-code-best-practices-advanced-2026/" target="_blank" rel="noopener">SmartScope · advanced practices</a></div>
+      <div class="tip"><p>Add deny rules like <code>Read(./.env)</code> and <code>Bash(curl:*)</code> next to your allowlist.</p><a href="https://smartscope.blog/en/generative-ai/claude/claude-code-best-practices-advanced-2026/" target="_blank" rel="noopener">SmartScope · advanced practices</a></div>
+      <div class="tip"><p>Choose tools and model at the start of a session. Changing them mid-session invalidates the prompt cache (effort changes no longer do, per the Opus 5.5 blog).</p><a href="https://www.productcompass.pm/p/stop-hitting-claude-code-limits" target="_blank" rel="noopener">Product Compass · stop hitting limits</a></div>
+      <div class="tip"><p>Use <code>/effort medium</code> for most work. <code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=80</code> compacts earlier, and <code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code> caps the context window.</p><a href="https://www.productcompass.pm/p/stop-hitting-claude-code-limits" target="_blank" rel="noopener">Product Compass · stop hitting limits</a></div>
+      <div class="tip"><p>Press <code>Ctrl+G</code> in plan mode to edit the plan yourself before Claude carries it out.</p><a href="https://codewithmukesh.com/blog/claude-code-tips-advanced/" target="_blank" rel="noopener">codewithmukesh · 30 tips</a></div>
+      <div class="tip"><p>Make a <code>/handoff</code> command that writes up the session state. Watch <code>/context</code> and hand off at about 60% on complex builds.</p><a href="https://sankalp.bearblog.dev/my-experience-with-claude-code-20-and-how-to-get-better-at-using-coding-agents/" target="_blank" rel="noopener">Sankalp · Claude Code 2.0 guide</a></div>
+      <div class="tip"><p>Use worktrunk (<code>wt switch --create &lt;branch&gt;</code>, <code>wt merge</code>) to create, merge and clean up worktrees in one command.</p><a href="https://henryaj.substack.com/p/my-claude-code-workflow" target="_blank" rel="noopener">Henry Stanley · my Claude Code workflow</a></div>
+      <div class="tip"><p>Try <code>/code-review --max-findings all</code> (2.1.288) when you want every finding on a PR, not just the top few.</p><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code changelog</a></div>
+      <div class="tip"><p>Write <code>&lt;script setup lang="ts"&gt;</code>, <code>defineProps&lt;T&gt;()</code> and Pinia setup stores into a Nuxt rules file so agents stop producing Options API code.</p><a href="https://dev.to/mvtandas/how-to-make-claude-code-cursor-write-perfect-vuenuxt-code-cpg" target="_blank" rel="noopener">dev.to · perfect Vue/Nuxt code</a></div>
+    </div>
+  </section>
+
+  <!-- MEDIUM -->
+  <section id="medium">
+    <div class="sec-head"><h2>Medium must-reads</h2><span class="kicker">7 posts · 25 Sep – 3 Oct</span></div>
+    <div class="items">
+      <article class="item" data-id="m1">
+        <div class="item-top"><h3><a href="https://medium.com/notes-from-the-build/a-spec-driven-agentic-workflow-with-claude-code-skills-604438f7fbf1" target="_blank" rel="noopener">A spec-driven agentic workflow with Claude Code skills</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Clive Shirley</span><span>Notes from the build</span><span>3 Oct 2026</span><span>Claps not visible</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> A feature goes from raw request to verified code through 5 skills and 13 single-purpose agents. It starts with a spec and an interview step that pulls context from tickets, Slack and docs before asking you anything.</li>
+          <li><b>Key takeaway:</b> Give each agent a fresh context, keep state in files on disk rather than chat history, and check against acceptance criteria.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m2">
+        <div class="item-top"><h3><a href="https://medium.com/itnext/a-golden-path-for-terraform-with-ai-agents-efficient-responsible-and-productive-on-any-cloud-493b0eaf8cb7" target="_blank" rel="noopener">A golden path for Terraform with AI agents</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Filipe Motta</span><span>ITNEXT</span><span>28 Sep 2026</span><span>3 claps · 3 responses</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> Team conventions live in repo files, not in the model's memory. Safety comes in three layers: an 80-line always-on instruction file, skills and subagents loaded on demand, and hard limits through shell hooks and IAM. Top "Selected" pick on the claude-code tag.</li>
+          <li><b>Key takeaway:</b> "The conventions are the prompt." Put guardrails in hooks and IAM, not only in instructions.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m3">
+        <div class="item-top"><h3><a href="https://medium.com/data-science-collective/the-harness-is-the-product-how-agents-are-actually-built-in-2026-4b751480f60c" target="_blank" rel="noopener">The harness is the product: how agents are actually built in 2026</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Andrii Tkachuk</span><span>Data Science Collective</span><span>2 Oct 2026</span><span>3 claps · 8 responses</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> How well an agent works depends more on its harness (context, memory, policies, execution) than on the model. Reveal tools gradually through skills, and add credential gating and approval steps.</li>
+          <li><b>Key takeaway:</b> Build one persistent agent runtime and connect channels like Slack or Teams through adapters.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m4">
+        <div class="item-top"><h3><a href="https://medium.com/@tilakpuli/ai-writes-the-code-how-do-we-review-it-241c533fddae" target="_blank" rel="noopener">AI writes the code. How do we review it?</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Tilak Puli</span><span>Personal blog</span><span>3 Oct 2026</span><span>Claps not visible</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> Compares three approaches: send prepared context to a model, use a coding agent as reviewer, or buy a review platform. His team writes with Claude and reviews with Codex, for about $400–500 a month across ~1,000 reviews.</li>
+          <li><b>Key takeaway:</b> Use different models to write and to review, and keep a human approving until your data shows automation is safe.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m5">
+        <div class="item-top"><h3><a href="https://medium.com/@ai-engineering-trend/claude-code-mods-rewrite-behavior-build-custom-uis-anthropics-version-of-dsh-is-here-6f7adad6b4de" target="_blank" rel="noopener">Claude Code Mods: rewrite behavior, build custom UIs</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>AI Engineering</span><span>Personal blog</span><span>2 Oct 2026</span><span>Claps not visible</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> Mods are TypeScript modules that intercept tool calls and change rendering. Three examples: Token Weather (context usage), Blast Radius (asks before dangerous commands) and Replay Theater (plays back edits).</li>
+          <li><b>Key takeaway:</b> You can add your own guardrails and status displays to the client without waiting for official features.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m6">
+        <div class="item-top"><h3><a href="https://medium.com/@amrtawfik160/4-memory-plugins-that-stop-claude-code-forgetting-your-project-heres-what-each-stores-f0ea7f647d83" target="_blank" rel="noopener">4 memory plugins that stop Claude Code forgetting your project</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Amr Tawfik</span><span>Personal blog</span><span>3 Oct 2026</span><span>Claps not visible</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> Compares claude-mem, agentmemory, pmb and CodeMemory: claude-mem for solo work, agentmemory for multi-agent setups, pmb for local-only privacy, CodeMemory for warnings about repeated failures.</li>
+          <li><b>Key takeaway:</b> Pick one; stacking memory plugins injects the same context more than once.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="m7">
+        <div class="item-top"><h3><a href="https://medium.com/@mareks-082/beyond-grep-testing-codebase-memory-mcp-on-net-6245bd27aa23" target="_blank" rel="noopener">Beyond grep: testing Codebase Memory MCP on .NET</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span>Marek Sirkovský</span><span>Personal blog</span><span>29 Sep 2026</span><span>4 claps</span><span class="tag off">Free</span></div>
+        <ul>
+          <li><b>Summary:</b> A hands-on test of a graph-based code index MCP that saves tokens compared with grep inside one repo, but can't reliably follow calls across repos or into packages.</li>
+          <li><b>Key takeaway:</b> Be sceptical of token-saving claims if your code spans many repos or Maven modules (the Maven part is our extrapolation).</li>
+        </ul>
+      </article>
+    </div>
+    <p class="note">No post this week had big clap numbers (the highest visible was 6), so these are ranked by how practical they are and Medium's "Selected" placement. "Free" means we saw no paywall marker. A <a href="https://medium.com/@agentnativedev/20-ai-agent-skills-with-800k-github-stars-that-form-a-real-agent-stack-e0988bbaa365" target="_blank" rel="noopener">member-only list of 20 agent skills</a> (25 Sep, 6 claps) was the most popular in the ai-agents tag.</p>
+  </section>
+
+  <!-- SUBSTACK & REDDIT -->
+  <section id="substack">
+    <div class="sec-head"><h2>Substack &amp; Reddit suggestions</h2><span class="kicker">8 suggestions · Reddit unreachable this run</span></div>
+    <div class="twocol">
+      <div>
+        <h3>Claude suggestions</h3>
+        <div class="tips">
+          <div class="tip"><p>Don't default to "max" effort on Opus 5.5. Start lower and raise it mid-session only when needed.</p><span class="why">Willison found max effort "over-thinks to breaking point" and ran past the 128k output limit on a simple SVG prompt. One person's test, not a benchmark.</span><a href="https://simonwillison.net/2026/Sep/22/opus-and-sol-and-luna/" target="_blank" rel="noopener">Simon Willison · simonwillison.net · 22 Sep</a></div>
+          <div class="tip"><p>Give Opus 5.5 the whole task in one message with an explicit finish line ("the tests pass"), plus a CLAUDE.md rule on when to stop and ask.</p><span class="why">It handles long multi-step work well and thinks by default, so old "think carefully" prompts and constant check-ins now get in the way.</span><a href="https://claude.dev/blog/getting-the-most-out-of-opus-5-5/" target="_blank" rel="noopener">Addy Osmani · Anthropic blog (not Substack) · 22 Sep</a></div>
+          <div class="tip"><p>If you use several agents, keep one AGENTS.md. Claude Code reads it when a folder has no CLAUDE.md.</p><span class="why">One instruction file serves Claude Code, Codex and Cursor, so they stop drifting apart. Reported by two sources and disputed by none.</span><a href="https://aicodingdaily.substack.com/p/opus-55-gpt-6-solluna-grok-47-ive" target="_blank" rel="noopener">AI Coding Daily (Povilas Korop) · Substack · 24 Sep</a></div>
+          <div class="tip"><p>Hold Claude-written production code to a higher bar than human code: linting, tests, security review, fuzzing.</p><span class="why">Agents produce code faster than people can review it, so automated checks keep the codebase maintainable. Quoting Boris Cherny.</span><a href="https://simonwillison.net/2026/Sep/11/boris-cherny/" target="_blank" rel="noopener">Simon Willison · simonwillison.net · 11 Sep</a></div>
+        </div>
+      </div>
+      <div>
+        <h3>General AI suggestions</h3>
+        <div class="tips">
+          <div class="tip"><p>Before an agent deploys anything, put hard budget caps on every cloud service it touches: the service stops, not just an email alert.</p><span class="why">Agents make it easy to ship things that cost money, and a runaway service can quietly cost thousands overnight.</span><a href="https://simonwillison.net/2026/Oct/3/default-hard-budget-caps/" target="_blank" rel="noopener">Simon Willison · simonwillison.net · 3 Oct</a></div>
+          <div class="tip"><p>Split agent work into short, focused sessions and steer with engineering terms like "tracer bullets" (one end-to-end path first).</p><span class="why">Agents build layer by layer, which causes bugs where the layers meet; short contexts keep each session sharp. <span class="flag">Debated</span>: Mollick (below) argues detailed structure matters less now.</span><a href="https://newsletter.pragmaticengineer.com/p/ai-skills-with-matt-pocock" target="_blank" rel="noopener">Pragmatic Engineer with Matt Pocock · 17 Sep</a></div>
+          <div class="tip"><p>Sort AI-written PRs by risk: send API, auth and schema changes to humans, and spend human time on plans and tests rather than every line.</p><span class="why">Duckbill Group reports 94% higher PR throughput after this change. <span class="flag">Disputed</span>: Weaviate's CTO warns that skipping human review means "scope creep or ship critical issues".</span><a href="https://newsletter.pragmaticengineer.com/p/what-is-happening-with-code-reviews" target="_blank" rel="noopener">Gergely Orosz · Pragmatic Engineer · 8 Sep</a></div>
+          <div class="tip"><p>Give agents a goal and let them plan, but keep a human watching where they're heading. Put your own effort into expertise and taste.</p><span class="why">In Mollick's test, an agent spun up 13 sub-agents unprompted. Swarms can still go off course without oversight.</span><a href="https://www.oneusefulthing.org/p/the-dot-and-the-swarm" target="_blank" rel="noopener">Ethan Mollick · One Useful Thing · 1 Oct</a></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Reddit blocked our requests this run (both the JSON endpoints and fetches), so there are no upvote counts. All 8 suggestions come from newsletters and blogs.</p>
+  </section>
+
+  <!-- SUGGESTIONS -->
+  <section id="suggest">
+    <div class="sec-head"><h2>Suggestions for your stack</h2><span class="kicker">Nuxt · Spring Boot · MongoDB</span></div>
+    <div class="stack">
+      <div class="stack-row"><h3>Audit before the 5.5 model switch</h3><p>Run today's grep for <code>tool_choice</code>, <code>temperature</code> and <code>"disabled"</code> across your Spring AI config and Nuxt server routes. Replace forced tool calls with structured outputs, then compare Sonnet 5.5 and Opus 5.5 on cost per task.</p></div>
+      <div class="stack-row"><h3>Run tests after every Spring edit</h3><p>Copy the springbokdev pattern: a PostToolUse hook on <code>Write|Edit</code> that runs <code>./mvnw -q test</code>. On larger projects, narrowing it to the affected module with <code>-Dtest=…</code> is our suggestion, not the starter's.</p></div>
+      <div class="stack-row"><h3>Path-scoped rules on both ends</h3><p>Add <code>.claude/rules/domain-rules.md</code> (no Spring or Mongo annotations in domain classes) and <code>persistence-rules.md</code> (<code>@Document</code> and repositories stay in adapters). Add a Nuxt rules file written as positive instructions, following today's prompt pattern, and install the antfu <code>nuxt</code> skill.</p></div>
+      <div class="stack-row"><h3>Tighten permissions for auto mode</h3><p>Allow <code>Bash(./mvnw test:*)</code>, <code>Bash(pnpm test:*)</code> and <code>Bash(pnpm nuxi typecheck:*)</code>. Set <code>ask</code> on anything that writes data or deploys, deny <code>Read(./.env)</code> and <code>Read(**/application-prod.yml)</code>, add the protect-files hook, and upgrade to 2.1.289.</p></div>
+      <div class="stack-row"><h3>Let Claude see the browser</h3><p>Add Chrome DevTools MCP with <code>--no-usage-statistics</code> and a dev Chrome profile, and ask Claude to check Nuxt hydration warnings and failing <code>useFetch</code> calls to Spring before it says it's done. Pair it with the vue-expert subagent.</p></div>
+    </div>
+  </section>
+
+  <!-- GITHUB -->
+  <section id="github">
+    <div class="sec-head"><h2>Most-starred GitHub resources</h2><span class="kicker">Stars seen 4 Oct 2026</span></div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Repo</th><th>What it is · how to use it</th><th style="text-align:right">Stars</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/obra/superpowers" target="_blank" rel="noopener">obra/superpowers</a></td><td>Skills framework: brainstorm, plan, TDD, subagent reviews, worktrees. <code>/plugin install superpowers@claude-plugins-official</code>. +3.5k since 27 Sep.</td><td class="stars">293.3k<div class="bar" style="width:100%"></div></td></tr>
+          <tr><td><a href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">affaan-m/ECC</a></td><td>Agent harness: 68 agents, 293 skills, hooks, AgentShield. <code>npx ecc-universal@2.2.3 setup</code>. +5k since 27 Sep.</td><td class="stars">273k<div class="bar" style="width:93%"></div></td></tr>
+          <tr><td><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">anthropics/skills</a> <span class="tag off">Official</span></td><td>Official example skills, spec and template. <code>/plugin marketplace add anthropics/skills</code>.</td><td class="stars">177.5k<div class="bar" style="width:61%"></div></td></tr>
+          <tr><td><a href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">anthropics/claude-code</a> <span class="tag off">Official</span></td><td>Claude Code. <code>curl -fsSL https://claude.ai/install.sh | bash</code> or <code>brew install --cask claude-code</code>; the README says npm install is now deprecated.</td><td class="stars">149.3k<div class="bar" style="width:51%"></div></td></tr>
+          <tr><td><a href="https://github.com/garrytan/gstack" target="_blank" rel="noopener">garrytan/gstack</a></td><td>23 role commands (<code>/office-hours</code>, <code>/review</code>, <code>/qa</code>, <code>/ship</code>). Clone into <code>~/.claude/skills/gstack</code> and run <code>./setup</code> (needs Bun).</td><td class="stars">135k<div class="bar" style="width:46%"></div></td></tr>
+          <tr><td><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a> <span class="tag new">Rising</span></td><td>Design-system generator skill for 22 stacks, Vue included. <code>/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill</code>, then <code>/plugin install ui-ux-pro-max@ui-ux-pro-max-skill</code>.</td><td class="stars">132.6k<div class="bar" style="width:45%"></div></td></tr>
+          <tr><td><a href="https://github.com/Graphify-Labs/graphify" target="_blank" rel="noopener">Graphify-Labs/graphify</a></td><td>Turns a codebase into a queryable knowledge graph using tree-sitter. <code>uv tool install graphifyy &amp;&amp; graphify install</code>, then <code>/graphify .</code></td><td class="stars">124k<div class="bar" style="width:42%"></div></td></tr>
+          <tr><td><a href="https://github.com/addyosmani/agent-skills" target="_blank" rel="noopener">addyosmani/agent-skills</a> <span class="tag new">Rising</span></td><td>25 SDLC skills (<code>/spec</code>, <code>/plan</code>, <code>/build</code>, <code>/test</code>, <code>/review</code>, <code>/ship</code>). <code>npx skills add addyosmani/agent-skills</code>. On today's trending list at +680/day.</td><td class="stars">100.6k<div class="bar" style="width:34%"></div></td></tr>
+          <tr><td><a href="https://github.com/thedotmack/claude-mem" target="_blank" rel="noopener">thedotmack/claude-mem</a></td><td>Memory across sessions (SQLite FTS5 + Chroma). <code>npx claude-mem install</code>.</td><td class="stars">95.7k<div class="bar" style="width:33%"></div></td></tr>
+          <tr><td><a href="https://github.com/headroomlabs-ai/headroom" target="_blank" rel="noopener">headroomlabs-ai/headroom</a> <span class="tag new">Rising</span></td><td>Local compression for tool output, logs and JSON, as a proxy, library or MCP server. <code>pip install "headroom-ai[all]"</code>.</td><td class="stars">74.4k<div class="bar" style="width:25%"></div></td></tr>
+          <tr><td><a href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener">alibaba/open-code-review</a> <span class="tag new">Rising</span></td><td>Code-review tool with a Claude Code plugin and an MCP server. <code>npm install -g @alibaba-group/open-code-review</code>, then <code>ocr review</code>. +3.3k on today's trending list.</td><td class="stars">43.3k<div class="bar" style="width:15%"></div></td></tr>
+          <tr><td><a href="https://github.com/anthropics/knowledge-work-plugins" target="_blank" rel="noopener">anthropics/knowledge-work-plugins</a> <span class="tag off">Official</span></td><td>11 official role plugins for Cowork and Claude Code. <code>claude plugin marketplace add anthropics/knowledge-work-plugins</code>.</td><td class="stars">23.9k<div class="bar" style="width:8%"></div></td></tr>
+          <tr><td><a href="https://github.com/cloudflare/security-audit-skill" target="_blank" rel="noopener">cloudflare/security-audit-skill</a> <span class="tag new">New · fastest riser</span></td><td>Six-phase security-audit skill whose findings are independently verified and machine-readable. <code>npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit</code>. +3.6k today.</td><td class="stars">16.6k<div class="bar" style="width:6%"></div></td></tr>
+          <tr><td><a href="https://github.com/Tencent/BrowserSkill" target="_blank" rel="noopener">Tencent/BrowserSkill</a> <span class="tag new">New · trending</span></td><td>Lets agents use your real, signed-in browser through a CLI and extension. Treat it with care: it acts with your sessions. Install script in the README.</td><td class="stars">8k<div class="bar" style="width:3%"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The GitHub API was blocked this run, so counts are the rounded figures on each repo page (4 Oct). Trending and topic pages showed some lower, apparently cached counts, so repo-page figures are used. "New" is based on trending gains; creation dates weren't verified.</p>
+  </section>
+
+  <!-- OFFICIAL -->
+  <section id="official">
+    <div class="sec-head"><h2>Official Claude resources</h2><span class="kicker">Docs, Claude blog and Academy</span></div>
+    <div class="items">
+      <article class="item" data-id="o1">
+        <div class="item-top"><h3><a href="https://claude.com/blog/claude-opus-5-5-built-for-coding-sessions-that-use-more-context" target="_blank" rel="noopener">Coding sessions use more context. Opus 5.5 is built for that</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Claude blog</span><span>24 Sep 2026</span></div>
+        <ul>
+          <li>About 40% cheaper to run than Opus 5, with the biggest savings in long, context-heavy sessions.</li>
+          <li>Recent Claude Code changes cut cache misses by over 50%: changing effort and forking subagents no longer invalidate the cache.</li>
+          <li>Open-ended tasks take fewer turns; simple mechanical ones mostly just get the lower price.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o2">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/plugin-evals" target="_blank" rel="noopener">Test plugins with evals (<code>claude plugin eval</code>)</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Docs</span><span>v2.1.269+</span><span><a href="https://code.claude.com/docs/en/whats-new/2026-w37" target="_blank" rel="noopener">Week 37 digest</a></span></div>
+        <ul>
+          <li>Each case is <code>evals/&lt;case&gt;/prompt.md</code> plus graders (regex, tool-was-called, or a rubric scored by a model). <code>claude plugin eval init</code> drafts a suite for you.</li>
+          <li>Each case runs 3 times with the plugin and 3 times without; the report shows the score difference and an estimated cost.</li>
+          <li><code>--threshold</code> makes CI fail when the score drops below a set level, so you can test a skill before you share it with the team.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o3">
+        <div class="item-top"><h3><a href="https://platform.claude.com/docs/en/build-with-claude/compaction-on-demand" target="_blank" rel="noopener">Compaction on demand</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Docs</span><span>Beta <code>compact-2026-09-04</code></span></div>
+        <ul>
+          <li>Send <code>compaction={"type":"summarize"}</code> to get <code>stop_reason:"compaction"</code> and a signed block to put first in later requests.</li>
+          <li>Your code decides when to compact, instead of an automatic token threshold. Built for long agent loops.</li>
+          <li>Can't be combined with <code>context_management</code>, stop sequences, structured output or forced <code>tool_choice</code>.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o4">
+        <div class="item-top"><h3><a href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank" rel="noopener">Agentic coding is straining CI: scaling test impact analysis at Anthropic</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Claude blog</span><span>14 Sep 2026</span></div>
+        <ul>
+          <li>Plan for about 25x CI load growth within two quarters; small patches stop working quickly.</li>
+          <li>Moving from one stateful process to stateless, horizontally scaled workers is what made it scale.</li>
+          <li>They instrumented the service so Claude could watch it and suggest fixes.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o5">
+        <div class="item-top"><h3><a href="https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects" target="_blank" rel="noopener">How to prepare for AI-driven code modernization projects</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Claude blog</span><span>23 Sep 2026</span></div>
+        <ul>
+          <li>Before any code is written, pick the goal (uplift, transform or reimagine) and agree on "certificates of correctness" and how changes get promoted.</li>
+          <li>Reviewers, security and compliance set the pace, not how fast agents produce code.</li>
+          <li>Pilot on a small slice first to learn real token costs and review bottlenecks.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o6">
+        <div class="item-top"><h3><a href="https://anthropic.skilljar.com/introduction-to-subagents" target="_blank" rel="noopener">Introduction to subagents (Anthropic Academy)</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Free course</span><span><a href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank" rel="noopener">Intro to agent skills</a></span><span class="tag">Date unverified</span></div>
+        <ul>
+          <li>Four sections: what subagents are, creating one with <code>/agents</code>, design patterns (structured outputs), and when delegating helps and when it hurts.</li>
+          <li>Pairs with today's vue-expert pick.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- YOUTUBE -->
+  <section id="youtube">
+    <div class="sec-head"><h2>YouTube videos</h2><span class="kicker">Mostly Opus 5.5 hands-on</span></div>
+    <div class="vids">
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Venelin Valkov · after 22 Sep</span>
+        <h3><a href="https://www.youtube.com/watch?v=pgWu59YdI94" target="_blank" rel="noopener">Opus 5.5 live test: agentic coding, frontend, brownfield projects</a></h3>
+        <ul><li>A live test on existing codebases, not just new projects.</li><li>The most relevant one for day-to-day work.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>AI LABS · after 22 Sep</span>
+        <h3><a href="https://www.youtube.com/watch?v=DP7mgLUKN_U" target="_blank" rel="noopener">Using Claude Code to build beautiful sites with Opus 5.5</a></h3>
+        <ul><li>A frontend and UI workflow in Claude Code.</li><li>Useful for Nuxt UI work.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>@claude (official) · date unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=-INveHwbRz4" target="_blank" rel="noopener">Introducing agent view in Claude Code</a></h3>
+        <ul><li><code>claude agents</code>: one screen showing every session that's running, waiting for you, or done.</li><li>Useful when you run several worktrees at once.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Leon van Zyl · date unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=Aa_6bmzDc80" target="_blank" rel="noopener">Claude Code dynamic workflows explained for beginners</a></h3>
+        <ul><li>Workflows where Claude writes a script that coordinates many subagents.</li><li>Beginner-level walkthrough.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>ExamPro · date unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=SM-Fy8e3nFk" target="_blank" rel="noopener">Claude Agent SDK tutorial: build AI agents with Claude Code</a></h3>
+        <ul><li>Builds an agent with the Agent SDK from start to finish.</li><li>Pairs with the SDK docs below.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Berto Mill · date unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=BHiDYethBuE" target="_blank" rel="noopener">Agent evals with Eve &amp; Claude Code</a></h3>
+        <ul><li>Evaluating agents with Claude Code.</li><li>Pairs with the <code>claude plugin eval</code> docs above.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Roboverse · after 22 Sep</span>
+        <h3><a href="https://www.youtube.com/watch?v=6_rCyryA6hg" target="_blank" rel="noopener">Claude Code can now automate your videos (Remotion + Opus 5.5)</a></h3>
+        <ul><li>Claude Code generating video as React code with Remotion.</li><li>A use of Claude Code outside app development.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Bart Slodyczka · date unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=OU4gE2M45vY" target="_blank" rel="noopener">Claude Managed Agents full tutorial: set up your first agent</a></h3>
+        <ul><li>Hands-on setup of a server-hosted agent.</li><li>For agents that run on the server, not on your laptop.</li></ul>
+      </div>
+    </div>
+    <p class="note">YouTube blocked the watch pages, so only titles, channels and IDs were confirmed (via oEmbed). The bullets are inferred from each title.</p>
+  </section>
+
+  <!-- MARKET -->
+  <section id="market">
+    <div class="sec-head"><h2>Best resources in the market</h2><span class="kicker">Courses, docs, newsletters</span></div>
+    <div class="res">
+      <a class="card" href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener"><b>Claude Agent SDK docs</b><span>Use Claude Code as a Python or TypeScript library: tools, hooks, subagents, MCP, sessions.</span><em>code.claude.com</em></a>
+      <a class="card" href="https://huggingface.co/learn/mcp-course/unit0/introduction" target="_blank" rel="noopener"><b>Hugging Face MCP Course</b><span>Free beginner-to-advanced course on building with MCP, made with Anthropic.</span><em>huggingface.co/learn</em></a>
+      <a class="card" href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener"><b>Model Context Protocol docs</b><span>Official docs for building MCP servers, clients and MCP Apps.</span><em>modelcontextprotocol.io</em></a>
+      <a class="card" href="https://huggingface.co/learn/agents-course/unit0/introduction" target="_blank" rel="noopener"><b>Hugging Face AI Agents Course</b><span>Free course with a certificate on agent fundamentals: smolagents, LangGraph, LlamaIndex.</span><em>huggingface.co/learn</em></a>
+      <a class="card" href="https://www.latent.space/" target="_blank" rel="noopener"><b>Latent Space</b><span>Newsletter and podcast on AI engineering, agents and dev tools.</span><em>latent.space</em></a>
+      <a class="card" href="https://www.anthropic.com/engineering" target="_blank" rel="noopener"><b>Anthropic Engineering blog</b><span>Anthropic's posts on harness design, auto mode and Managed Agents; worth bookmarking.</span><em>anthropic.com/engineering</em></a>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>How this edition was made:</b> eight research agents searched the web in parallel: trends and news, community usage, GitHub and market resources, official docs and YouTube, the nine picks of the day, the Opus 5.5 showcase, Medium, and Substack &amp; Reddit. Every link comes from a search result or a page the agents saw. Picks, repos and resources were checked against the 24 and 27 Sep editions so none repeat. The Resource pick was swapped for the Opus 5.5 migration guide because the agent's choice had already been featured.</p>
+    <p><b>Caveats:</b> the GitHub API and Reddit were blocked, so star counts are rounded repo-page figures and there are no Reddit upvotes. YouTube dates and bullets are inferred from titles. Medium clap counts were mostly hidden. Build times and costs in the Opus showcase are the builders' own claims, and the customer stories are vendor-published. The OpenAI DevDay item is second-hand. Snippets marked "adapted" are tailored versions of the credited source.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY='agentic-daily-read-2026-10-04', state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
+  var items=document.querySelectorAll('.item[data-id]'), prog=document.getElementById('progress');
+  function update(){
+    var n=0; items.forEach(function(el){ if(state[el.dataset.id]) n++; });
+    prog.textContent=n+' / '+items.length+' read';
+  }
+  items.forEach(function(el){
+    var cb=el.querySelector('.check input'); if(!cb) return;
+    cb.id='read-'+el.dataset.id;
+    cb.checked=!!state[el.dataset.id]; el.classList.toggle('done',cb.checked);
+    cb.addEventListener('change',function(){
+      state[el.dataset.id]=cb.checked; el.classList.toggle('done',cb.checked);
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+      update();
+    });
+  });
+  update();
+
+  function selectText(pre){
+    try{var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}catch(e){}
+  }
+  document.querySelectorAll('.try .copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pre=btn.closest('.try').querySelector('pre'), text=pre.textContent;
+      function done(label){ btn.textContent=label; setTimeout(function(){btn.textContent='Copy';},1600); }
+      try{
+        navigator.clipboard.writeText(text).then(function(){ done('Copied'); }).catch(function(){ selectText(pre); done('Selected'); });
+      }catch(e){ selectText(pre); done('Selected'); }
+    });
+  });
+})();
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

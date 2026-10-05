@@ -1,0 +1,639 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Friday Java Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F3F5F2; --surface:#FFFFFF; --ink:#18221D; --muted:#56635C; --line:#D9E0DB;
+  --accent:#2F6B4A; --accent-soft:#E2EEE6; --amber:#9A6212; --amber-soft:#F6ECDC;
+  --code-bg:#15201A; --code-ink:#E4EDE7; --code-dim:#8FA398; --code-key:#9FD3B0; --code-str:#E8C58A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+    --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+    --code-bg:#0B110E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+  --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+  --code-bg:#0B110E;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.6 var(--body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;font-family:var(--body)}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mast{display:grid;gap:14px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.mast-top{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline}
+.demo-pill{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber);padding:6px 9px;border-radius:4px}
+.lede{font-size:17px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font:500 12.5px/1 var(--body);text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:7px 10px;border-radius:999px;background:var(--surface)}
+.toc a:hover{border-color:var(--accent);color:var(--accent)}
+section{display:grid;gap:16px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:6px}
+/* radar */
+.radar{display:grid;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.radar-row{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.radar-row:first-child{border-top:0}
+.radar-date{font:500 12.5px/1.5 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin-right:6px;vertical-align:2px}
+.tag.ga{background:var(--accent-soft);color:var(--accent)}
+.tag.pre{background:var(--amber-soft);color:var(--amber)}
+.tag.eol{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.radar-row p{font-size:14px;color:var(--muted);margin-top:3px}
+/* code */
+.code{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:8px;overflow:hidden}
+.code-bar{flex-wrap:wrap;gap:8px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #ffffff14;font:500 11.5px/1 var(--mono);color:var(--code-dim)}
+.copy{font:600 11px/1 var(--mono);background:transparent;color:var(--code-dim);border:1px solid #ffffff26;border-radius:4px;padding:5px 8px;cursor:pointer}
+.copy:hover{color:var(--code-ink);border-color:#ffffff55}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--mono);tab-size:2}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim);font-style:italic}
+/* feature: snippet of the week */
+.feature{display:grid;gap:16px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+.eli5{background:var(--amber-soft);border-radius:8px;padding:18px;display:grid;gap:10px}
+.eli5 .eyebrow{color:var(--amber)}
+.eli5 p{font-size:14.5px}
+@media (max-width:720px){.feature{grid-template-columns:1fr}.radar-row{grid-template-columns:1fr;gap:4px}}
+/* levels */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start}
+.meter{display:flex;gap:3px}
+.meter i{width:18px;height:4px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.level p{font-size:14px;color:var(--muted)}
+@media (max-width:720px){.levels{grid-template-columns:1fr}}
+/* tips */
+.tips{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.tips li{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.tips li:first-child{border-top:0}
+.tips .n{font:600 12px/1.6 var(--mono);color:var(--accent);min-width:3ch}
+.tips code,p code,td code,.qa code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.tips p{font-size:14px;color:var(--muted);margin-top:2px}
+/* qa */
+.qa{display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;gap:12px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+summary .lvl{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);flex:none;width:52px}
+summary::after{content:"+";margin-left:auto;color:var(--muted);font-family:var(--mono)}
+details[open] summary::after{content:"–"}
+.ans{padding:0 16px 16px 80px;display:grid;gap:8px;font-size:14.5px}
+@media (max-width:560px){.ans{padding-left:16px}}
+/* coding interview */
+.iq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:760px){.iq-grid{grid-template-columns:1fr}}
+.iq{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0}
+.iq-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.iq .task{font-size:14.5px}
+.iq .task li{margin-bottom:4px}
+.iq ul.task{margin:0;padding-left:18px}
+.iq details{border-color:var(--accent);background:transparent}
+.iq details summary{color:var(--accent);padding:10px 14px}
+.iq details summary::after{color:var(--accent)}
+.iq .sol{padding:0 14px 14px;display:grid;gap:10px;font-size:14px}
+.iq .sol p code,.iq .task code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.cx{display:flex;flex-wrap:wrap;gap:6px}
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font:600 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+/* two col lists */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.do{color:var(--accent)} .dont{color:var(--amber)}
+/* case study */
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:13.5px}
+.track{height:12px;background:var(--accent-soft);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.fill.warn{background:var(--amber)}
+@media (max-width:560px){.bar-row{grid-template-columns:1fr 60px}.bar-row .track{grid-column:1/-1;order:3}}
+.note{font-size:12.5px;color:var(--muted)}
+/* goals */
+.goals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.goals label{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px}
+.goals input{accent-color:var(--accent);margin-top:4px}
+.goals input:checked + span{color:var(--muted);text-decoration:line-through}
+/* sources */
+.sources{columns:2 280px;column-gap:24px;font-size:13.5px;padding-left:18px;margin:0}
+.sources li{break-inside:avoid;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a,.copy{transition:border-color .15s,color .15s}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Issue W40 · Friday 2 Oct 2026 · 10:00 Dhaka</span>
+  </div>
+  <h1>Friday Java Brief</h1>
+  <p class="lede">A milestone week. Spring Boot 4.2.0-M2 and Spring AI 2.1.0-M1 shipped, Spring moved to one patch day a month, and JDK 28 picked up a built-in JSON API. The coding theme is configuration: profiles and <code>@ConfigurationProperties</code> records.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#radar">This week</a><a href="#snippet">Snippet of the week</a><a href="#newfeature">New Java feature</a><a href="#agentic">Agentic Java &amp; AI</a><a href="#levels">Basic → Advanced</a><a href="#tips">Tips &amp; tricks</a><a href="#interview">Interview Q&amp;A</a><a href="#coding">Coding interview</a><a href="#practices">Best practices</a><a href="#industry">Industry adoption</a><a href="#case">Real problem</a><a href="#goals">Goals</a>
+  </nav>
+</header>
+
+<section id="radar">
+  <div class="sec-head"><span class="eyebrow">Known things this week</span><h2>Release radar</h2></div>
+  <div class="radar">
+    <div class="radar-row"><span class="radar-date">2 Oct 2026</span><div><h3><span class="tag pre">Preview</span>JDK 28 gets a built-in JSON API (JEP 540, incubator)</h3><p>A small, immutable JSON tree API in module <code>jdk.incubator.json</code>: <code>Json.parse(...)</code> returns a sealed <code>JsonValue</code> you can walk or pattern-match. JEPs 539 (strict field initialization, preview) and 541 (deprecate macOS/x64) were also targeted to JDK 28 this week.</p></div></div>
+    <div class="radar-row"><span class="radar-date">25 Sep 2026</span><div><h3><span class="tag pre">Milestone</span>Spring Boot 4.2.0-M2</h3><p>141 enhancements, docs updates, dependency upgrades and fixes. Headlines: SSL bundle support for LDAP (including LDAPS on the embedded server) and OpenTelemetry semantic-conventions support with shared OTLP endpoint, header and compression settings.</p></div></div>
+    <div class="radar-row"><span class="radar-date">25 Sep 2026</span><div><h3><span class="tag pre">Milestone</span>Spring AI 2.1.0-M1</h3><p>New ordered <code>MessagePart</code> model (text, reasoning, tool calls), OpenAI Responses API via <code>spring.ai.openai.chat.api=responses</code>, and <code>VectorStore.upsert()</code> for pre-computed embeddings. Built on Boot 4.2.0-M2.</p></div></div>
+    <div class="radar-row"><span class="radar-date">21 Sep 2026</span><div><h3><span class="tag pre">Security</span>Spring moves to "Patch Thursday"</h3><p>All Spring projects now release on one day: the Thursday after the third Monday each month. The next patch train is <strong>22 October 2026</strong>. The team reports nearly 80 community security reports a month since March and more than 160 CVEs fixed recently.</p></div></div>
+    <div class="radar-row"><span class="radar-date">Sep 2026</span><div><h3><span class="tag ga">GA</span>Gradle 9.8.0 and Maven 4.0.0-RC-7</h3><p>Gradle 9.8 supports Java 27 for the daemon and toolchains. Maven 4's seventh release candidate is expected to be the last before GA "in the coming weeks".</p></div></div>
+    <div class="radar-row"><span class="radar-date">31 Dec 2026</span><div><h3><span class="tag eol">EOL</span>Spring Boot 4.0 OSS support ends this year</h3><p>4.1 (OSS support until 31 July 2027) is the line to be on. 3.5 lost free support on 30 June 2026.</p></div></div>
+  </div>
+</section>
+
+<section id="snippet">
+  <div class="sec-head"><span class="eyebrow">Snippet of the week</span><h2>Atomic order numbers in MongoDB with <code style="font-size:.8em">findAndModify</code></h2>
+  <p>Need human-friendly IDs like <code>ORD-000042</code> that never repeat, even with three app instances running? One atomic MongoDB operation increments a counter and hands you the new value.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>OrderNumberService.java · Spring Data MongoDB</span><button class="copy" type="button" data-copy="c1">Copy</button></div>
+<pre id="c1"><span class="k">@Document</span>(<span class="s">"counters"</span>)
+<span class="k">record</span> Counter(<span class="k">@Id</span> String id, <span class="k">long</span> seq) {}
+
+<span class="k">@Service</span>
+<span class="k">class</span> OrderNumberService {
+
+  <span class="k">private final</span> MongoTemplate mongo;
+  OrderNumberService(MongoTemplate mongo) { <span class="k">this</span>.mongo = mongo; }
+
+  String next() {
+    Counter c = mongo.findAndModify(
+        Query.query(Criteria.where(<span class="s">"_id"</span>).is(<span class="s">"order"</span>)),
+        <span class="k">new</span> Update().inc(<span class="s">"seq"</span>, <span class="s">1</span>),
+        FindAndModifyOptions.options().returnNew(<span class="k">true</span>).upsert(<span class="k">true</span>),
+        Counter.<span class="k">class</span>);
+    <span class="k">return</span> <span class="s">"ORD-%06d"</span>.formatted(c.seq());
+  }
+}
+
+<span class="c">// First call creates {_id: "order", seq: 1} → "ORD-000001"</span>
+<span class="c">// Every later call: +1, atomically, on the server</span></pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>A bakery has one ticket machine by the door. Each customer pulls a ticket, and the machine prints the next number.</p>
+      <p>Two people can't get the same number, because the machine does "add one and print" as a single click. MongoDB is that machine: <code>$inc</code> and "give me the new value" happen in one step.</p>
+      <span class="eyebrow" style="margin-top:6px">Why it matters</span>
+      <p>The common mistake is read, add one in Java, then save. Two requests read 41 at the same moment and both save 42. <code>returnNew(true)</code> gives you the value after the update; <code>upsert(true)</code> creates the counter on first use. It looks up by <code>_id</code>, which is always indexed, so no extra index is needed.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="newfeature">
+  <div class="sec-head"><span class="eyebrow">New Java feature · JDK 25 · JEP 513 · Final</span><h2>Flexible Constructor Bodies: code before <code style="font-size:.8em">super(...)</code></h2>
+  <p>Since JDK 25 a constructor can run statements <em>before</em> it calls <code>super(...)</code> or <code>this(...)</code>. You can validate arguments and assign your own fields there. You still can't use <code>this</code>, call instance methods or read fields in that "prologue". Fully final, so no preview flags.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>Taka.java · javac --release 25 (or newer)</span><button class="copy" type="button" data-copy="c3">Copy</button></div>
+<pre id="c3"><span class="k">class</span> Money {
+  Money(<span class="k">long</span> minorUnits, String currency) { <span class="c">/* ... */</span> }
+}
+
+<span class="c">// Before (JDK 21): checks had to hide in a static helper</span>
+<span class="k">class</span> TakaOld <span class="k">extends</span> Money {
+  TakaOld(<span class="k">long</span> paisa) {
+    <span class="k">super</span>(requireNonNegative(paisa), <span class="s">"BDT"</span>);
+  }
+  <span class="k">private static long</span> requireNonNegative(<span class="k">long</span> v) {
+    <span class="k">if</span> (v &lt; <span class="s">0</span>) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"negative"</span>);
+    <span class="k">return</span> v;
+  }
+}
+
+<span class="c">// After (JDK 25+): validate first, then call super</span>
+<span class="k">class</span> Taka <span class="k">extends</span> Money {
+  <span class="k">private final</span> String label;
+  Taka(<span class="k">long</span> paisa, String label) {
+    <span class="k">if</span> (paisa &lt; <span class="s">0</span>) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"negative"</span>);
+    <span class="k">this</span>.label = label;  <span class="c">// allowed: assigning my own field</span>
+    <span class="k">super</span>(paisa, <span class="s">"BDT"</span>);
+  }
+}</pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>Before building a house, you check the bricks. The old rule said: pour the foundation first, then check the bricks. The new rule lets you check first and stop early if the bricks are broken.</p>
+      <span class="eyebrow" style="margin-top:6px">Use it for</span>
+      <p>Argument checks before an expensive parent constructor runs. It also fixes a classic bug: a parent constructor calls an overridden method that reads a child field which isn't set yet (it prints <code>null</code>). Assign the field before <code>super()</code> and the parent sees the real value.</p>
+      <span class="eyebrow" style="margin-top:6px">Status</span>
+      <p>Final in JDK 25 (LTS) and later. Spring Boot 4.1 runs on Java 17–26, so you can use it when your service runs on JDK 25+.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="agentic">
+  <div class="sec-head"><span class="eyebrow">Agentic Java development · Java AI features</span><h2>Agents on the JVM this month</h2>
+  <p>Embabel is now 1.0, Spring AI's next minor is in milestones, and the Helidon team showed agents built on virtual-thread MCP servers at JavaOne 2026.</p></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Framework / tool</th><th>Who's behind it</th><th>How people use it</th><th>Maturity</th></tr></thead>
+    <tbody>
+      <tr><td>Spring AI 2.1</td><td>Spring team (Broadcom)</td><td>ChatClient, tool calling, RAG and MCP in Boot apps. 2.1 adds OpenAI's Responses API and re-runnable vector ingestion with <code>upsert()</code>.</td><td><span class="tag ga">2.0 GA</span> <span class="tag pre">2.1 M1</span></td></tr>
+      <tr><td>Embabel 1.0</td><td>Rod Johnson (creator of Spring)</td><td>Goal-oriented action planning: agents are typed goals, actions and conditions, and the planner picks the sequence at runtime. Built on Spring AI.</td><td><span class="tag ga">GA (Aug 2026)</span></td></tr>
+      <tr><td>LangChain4j 1.20</td><td>LangChain4j community</td><td>AI services can now return <code>CompletableFuture</code> or <code>Flow.Publisher</code>, so tool calls and streaming don't block threads. Optional Jackson 3 module.</td><td><span class="tag ga">Stable</span></td></tr>
+      <tr><td>Koog for Java</td><td>JetBrains</td><td>Functional, graph or planning strategies, Spring Boot integration, persistence so agents recover after failures, OpenTelemetry.</td><td><span class="tag pre">Newer</span></td></tr>
+      <tr><td>MCP Java SDK 2.x</td><td>MCP project, with the Spring team</td><td>Building MCP servers and clients in plain Java. 2.0 validates tool inputs against JSON Schema and deprecates SSE in favour of Streamable HTTP.</td><td><span class="tag ga">GA</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="code">
+    <div class="code-bar"><span>Spring AI · turn free text into a typed record</span><button class="copy" type="button" data-copy="c4">Copy</button></div>
+<pre id="c4"><span class="k">record</span> TicketTriage(String department, <span class="k">boolean</span> urgent, String summary) {}
+
+<span class="k">@Service</span>
+<span class="k">class</span> TriageService {
+
+  <span class="k">private final</span> ChatClient chat;
+
+  TriageService(ChatClient.Builder builder) {
+    <span class="k">this</span>.chat = builder
+        .defaultSystem(<span class="s">"You route support tickets for an online shop."</span>)
+        .build();
+  }
+
+  TicketTriage triage(String ticketText) {
+    <span class="k">return</span> chat.prompt()
+        .user(u -&gt; u.text(<span class="s">"Classify this ticket: {ticket}"</span>)
+                    .param(<span class="s">"ticket"</span>, ticketText))
+        .call()
+        .entity(TicketTriage.<span class="k">class</span>); <span class="c">// JSON schema from the record</span>
+  }
+}
+<span class="c">// Save the TicketTriage straight into a MongoDB collection for reporting</span></pre>
+  </div>
+
+  <div class="pair">
+    <div class="box"><h3>What people are doing</h3><ul>
+      <li><strong>Using small, fast models for routing.</strong> The Spring blog paired Spring AI with TypeSafe's Jev API for yes/no, pick-one and score decisions (guardrails, tool selection, RAG reranking). Their post reports about 310 ms for a three-question call.</li>
+      <li><strong>Scaling agent backends with virtual threads.</strong> At JavaOne 2026, Ryan Eberhard showed "Agent Helidon": virtual-thread MCP servers plus compile-time LangChain4j integration.</li>
+      <li><strong>Picking planners over hand-written chains.</strong> Rod Johnson's framing for Embabel 1.0: "Spring AI exists at the level of the Servlet API, while Embabel is more like Spring MVC."</li>
+      <li><strong>Making ingestion jobs safe to re-run.</strong> Spring AI 2.1's <code>upsert()</code> replaces a row with the same id, so a nightly embedding job can run twice without duplicates.</li>
+    </ul></div>
+    <div class="box"><h3>Agentic tools in the Java workflow</h3><ul>
+      <li><strong>Junie</strong> (JetBrains) has been GA since June. Junie Local now runs on a Mac without cloud tokens, and a new <code>/demo</code> command produces videos, screenshots and HTML reports of a feature.</li>
+      <li><strong>Gradle 9.8</strong> supports Java 27 toolchains, so an agent can bump the toolchain and run the build in one step.</li>
+      <li><strong>Terminal agents</strong> such as Claude Code are good at repo-wide refactors when your <code>CLAUDE.md</code> lists the build and test commands.</li>
+      <li><strong>Try this week:</strong> ask your agent to find every <code>@Value("${...}")</code> in a service and propose one <code>@ConfigurationProperties</code> record to replace them. That's this week's Spring question.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="levels">
+  <div class="sec-head"><span class="eyebrow">Learning path · configuration, from basic to advanced</span><h2>Basic → Advanced</h2></div>
+  <div class="levels">
+    <article class="level"><div class="meter" aria-label="Basic"><i class="on"></i><i></i><i></i></div><h3>Profile-specific files</h3><p><code>application-dev.yaml</code> and <code>application-prod.yaml</code> override <code>application.yaml</code> when that profile is active. Activate with <code>--spring.profiles.active=prod</code> or the <code>SPRING_PROFILES_ACTIVE</code> env var.</p></article>
+    <article class="level"><div class="meter" aria-label="Intermediate"><i class="on"></i><i class="on"></i><i></i></div><h3>Typed config records</h3><p>Bind a prefix to a record and let Boot convert units: <code>"30s"</code> becomes a <code>Duration</code>, <code>"10MB"</code> a <code>DataSize</code>. Add <code>@Validated</code> so bad config fails at startup, not at 2 a.m.</p></article>
+    <article class="level"><div class="meter" aria-label="Advanced"><i class="on"></i><i class="on"></i><i class="on"></i></div><h3>JDK's own JSON API</h3><p>JEP 540 is targeted to JDK 28 as an <strong>incubator</strong> (<code>--add-modules jdk.incubator.json</code>). Good for small tools and scripts without Jackson. The API can still change, so not for production.</p></article>
+  </div>
+  <div class="code">
+    <div class="code-bar"><span>Intermediate · StorageProperties.java + application.yaml</span><button class="copy" type="button" data-copy="c2">Copy</button></div>
+<pre id="c2"><span class="k">@Validated</span>
+<span class="k">@ConfigurationProperties</span>(<span class="s">"app.storage"</span>)
+<span class="k">public record</span> StorageProperties(
+    <span class="k">@NotBlank</span> String bucket,
+    <span class="k">@DefaultValue</span>(<span class="s">"10MB"</span>) DataSize maxUpload,   <span class="c">// org.springframework.util.unit.DataSize</span>
+    <span class="k">@DefaultValue</span>(<span class="s">"30s"</span>) Duration uploadTimeout) {}
+
+<span class="c"># application.yaml</span>
+app:
+  storage:
+    bucket: <span class="s">"invoices"</span>
+    max-upload: <span class="s">"25MB"</span>      <span class="c"># kebab-case binds to maxUpload</span>
+    upload-timeout: <span class="s">"2m"</span>
+
+<span class="c">// Register once on the main class:</span>
+<span class="c">// @SpringBootApplication @ConfigurationPropertiesScan</span></pre>
+  </div>
+</section>
+
+<section id="tips">
+  <div class="sec-head"><span class="eyebrow">Must-have this week</span><h2>Tips &amp; tricks</h2></div>
+  <ol class="tips">
+    <li><span class="n">T1</span><div><h3>MongoDB properties moved in Boot 4</h3><p>Connection settings are now <code>spring.mongodb.*</code>: <code>spring.mongodb.uri</code>, <code>spring.mongodb.database</code>, <code>spring.mongodb.ssl.bundle</code>. Spring Data settings stay put: <code>spring.data.mongodb.auto-index-creation</code>, <code>spring.data.mongodb.field-naming-strategy</code>. An old <code>spring.data.mongodb.uri</code> line can leave you connecting to localhost.</p></div></li>
+    <li><span class="n">T2</span><div><h3>Never put <code>spring.profiles.active</code> in a profile file</h3><p>It is only allowed in non-profile-specific documents. Inside <code>application-prod.yaml</code> or an <code>on-profile</code> block, Boot rejects it at startup. The same rule applies to <code>spring.profiles.include</code> and <code>spring.profiles.group</code>.</p></div></li>
+    <li><span class="n">T3</span><div><h3>Group profiles instead of listing five</h3><p><code>spring.profiles.group.production[0]=proddb</code> and <code>[1]=prodmq</code>, then <code>--spring.profiles.active=production</code> turns on all three.</p></div></li>
+    <li><span class="n">T4</span><div><h3>Get autocomplete for your own properties</h3><p>Add <code>org.springframework.boot:spring-boot-configuration-processor</code> as an annotation processor. IntelliJ then completes and documents <code>app.*</code> keys from your <code>@ConfigurationProperties</code> records.</p></div></li>
+    <li><span class="n">T5</span><div><h3>Put Spring upgrades on the calendar</h3><p>With "Patch Thursday", every Spring patch now lands on one day a month. Book a dependency-bump PR for the Friday after: next one is 23 Oct, the day after the 22 Oct train.</p></div></li>
+  </ol>
+</section>
+
+<section id="interview">
+  <div class="sec-head"><span class="eyebrow">Industry &amp; interview questions</span><h2>Interview Q&amp;A</h2></div>
+  <div class="qa">
+    <details open><summary><span class="lvl">Basic</span>What is a Spring profile, and how do you activate one?</summary><div class="ans"><p>A named set of config and beans for one environment (<code>dev</code>, <code>test</code>, <code>prod</code>). Boot loads <code>application-{profile}.yaml</code> on top of <code>application.yaml</code>, and beans marked <code>@Profile("prod")</code> are only created when <code>prod</code> is active.</p><p>Activate with <code>--spring.profiles.active=prod</code>, <code>SPRING_PROFILES_ACTIVE=prod</code>, or in tests with <code>@ActiveProfiles("test")</code>. With no active profile, the profile called <code>default</code> is used.</p></div></details>
+    <details><summary><span class="lvl">Mid</span><code>@Value</code> or <code>@ConfigurationProperties</code>: which and why?</summary><div class="ans"><p><code>@Value("${app.x}")</code> is fine for one value. For a group of settings, <code>@ConfigurationProperties</code> wins: it is type-safe, supports relaxed binding (<code>max-upload</code>, <code>MAX_UPLOAD</code>), nested objects, lists, unit conversion and <code>@Validated</code>, and gives IDE metadata. A record makes the config immutable.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>If two profiles set the same property, which value wins?</summary><div class="ans"><p>Profile-specific files always override <code>application.yaml</code>. Between active profiles it's last-wins: with <code>spring.profiles.active=prod,live</code>, <code>application-live</code> overrides <code>application-prod</code>. Command-line args and environment variables still beat all of these files.</p></div></details>
+    <details><summary><span class="lvl">Senior</span>How do you handle secrets across dev, staging and prod?</summary><div class="ans"><p>Keep them out of Git entirely. <code>application.yaml</code> holds safe defaults; real secrets come from environment variables (relaxed binding maps <code>SPRING_MONGODB_URI</code> to <code>spring.mongodb.uri</code>), mounted config trees (<code>spring.config.import=configtree:/run/secrets/</code>) or a vault. Validate them with <code>@Validated</code> so a missing secret stops the app at startup, and never log the bound properties object.</p></div></details>
+  </div>
+</section>
+
+<section id="coding">
+  <div class="sec-head"><span class="eyebrow">Coding interview · one Java + one Spring Boot every week</span><h2>Week 2: write the code</h2>
+  <p>Try each one on paper or in your IDE for 15 minutes before opening the solution.</p></div>
+  <div class="iq-grid">
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Java · Week 2</span><span class="tag ga">Easy</span></div>
+      <h3>Are these two strings anagrams?</h3>
+      <ul class="task">
+        <li>Write <code>boolean isAnagram(String a, String b)</code>.</li>
+        <li>Ignore case and spaces. Inputs contain only English letters and spaces.</li>
+        <li>Don't sort. Aim for O(n) time and O(1) extra space.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Expected</span></div>
+<pre>isAnagram(<span class="s">"listen"</span>, <span class="s">"silent"</span>)          <span class="c">// true</span>
+isAnagram(<span class="s">"Dormitory"</span>, <span class="s">"Dirty room"</span>)  <span class="c">// true</span>
+isAnagram(<span class="s">"rat"</span>, <span class="s">"car"</span>)                <span class="c">// false</span>
+isAnagram(<span class="s">"aab"</span>, <span class="s">"abb"</span>)                <span class="c">// false</span></pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <div class="code">
+            <div class="code-bar"><span>Anagram.java</span><button class="copy" type="button" data-copy="iq1">Copy</button></div>
+<pre id="iq1"><span class="k">public static boolean</span> isAnagram(String a, String b) {
+  <span class="k">int</span>[] count = <span class="k">new int</span>[<span class="s">26</span>];
+  <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; a.length(); i++) {
+    <span class="k">char</span> c = a.charAt(i);
+    <span class="k">if</span> (c != <span class="s">' '</span>) count[Character.toLowerCase(c) - <span class="s">'a'</span>]++;
+  }
+  <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; b.length(); i++) {
+    <span class="k">char</span> c = b.charAt(i);
+    <span class="k">if</span> (c != <span class="s">' '</span>) count[Character.toLowerCase(c) - <span class="s">'a'</span>]--;
+  }
+  <span class="k">for</span> (<span class="k">int</span> n : count) {
+    <span class="k">if</span> (n != <span class="s">0</span>) <span class="k">return false</span>;
+  }
+  <span class="k">return true</span>;
+}</pre>
+          </div>
+          <p><strong>How it works.</strong> One counter per letter. Letters in <code>a</code> add one, letters in <code>b</code> subtract one. If every counter ends at zero, both strings used exactly the same letters the same number of times.</p>
+          <div class="cx"><span class="tag ga">Time O(n + m)</span><span class="tag ga">Space O(1)</span></div>
+          <p><strong>Follow-up they'll ask.</strong> What about Unicode, like Bangla text? The 26-slot array breaks. Count code points in a <code>HashMap&lt;Integer, Integer&gt;</code> using <code>a.codePoints()</code> and <code>map.merge(cp, 1, Integer::sum)</code>. Also mention the sort-and-compare version (<code>Arrays.sort</code> on both char arrays): simpler, but O(n log n).</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Spring Boot · Week 2</span><span class="tag pre">Medium</span></div>
+      <h3>Fix the config that won't start</h3>
+      <ul class="task">
+        <li>This Boot 4 app fails at startup. Name <strong>both</strong> problems.</li>
+        <li>Fix them so <code>prod</code> uses its own values when started with that profile.</li>
+        <li>Add checks: <code>page-size</code> must be 1–100 and <code>supplier-url</code> is required.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Buggy code</span></div>
+<pre><span class="k">@ConfigurationProperties</span>(<span class="s">"app.catalog"</span>)
+<span class="k">public record</span> CatalogProperties(
+    <span class="k">int</span> pageSize, Duration cacheTtl, String supplierUrl) {}
+
+<span class="k">@Service</span>
+<span class="k">class</span> CatalogService {
+  CatalogService(CatalogProperties props) { <span class="c">/* ... */</span> }
+}
+
+<span class="k">@SpringBootApplication</span>
+<span class="k">public class</span> ShopApplication { <span class="c">/* main(...) */</span> }
+
+<span class="c"># application-prod.yaml</span>
+spring:
+  profiles:
+    active: prod
+app:
+  catalog:
+    page-size: 50
+    cache-ttl: 30m
+    supplier-url: https://supplier.example.com</pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <p><strong>Problem 1.</strong> The record is never registered as a bean. <code>@ConfigurationProperties</code> alone doesn't create one, so startup fails because <code>CatalogService</code> needs a <code>CatalogProperties</code> bean that doesn't exist. <strong>Problem 2.</strong> <code>spring.profiles.active</code> inside a profile-specific file is invalid, and Boot rejects it at startup. A file can't switch on the profile that loads it.</p>
+          <div class="code">
+            <div class="code-bar"><span>Fixed: ShopApplication.java, CatalogProperties.java, YAML</span><button class="copy" type="button" data-copy="iq2">Copy</button></div>
+<pre id="iq2"><span class="k">@SpringBootApplication</span>
+<span class="k">@ConfigurationPropertiesScan</span>          <span class="c">// registers every @ConfigurationProperties type</span>
+<span class="k">public class</span> ShopApplication {
+  <span class="k">public static void</span> main(String[] args) {
+    SpringApplication.run(ShopApplication.<span class="k">class</span>, args);
+  }
+}
+
+<span class="k">@Validated</span>                            <span class="c">// needs spring-boot-starter-validation</span>
+<span class="k">@ConfigurationProperties</span>(<span class="s">"app.catalog"</span>)
+<span class="k">public record</span> CatalogProperties(
+    <span class="k">@Min</span>(<span class="s">1</span>) <span class="k">@Max</span>(<span class="s">100</span>) <span class="k">@DefaultValue</span>(<span class="s">"20"</span>) <span class="k">int</span> pageSize,
+    <span class="k">@DefaultValue</span>(<span class="s">"5m"</span>) Duration cacheTtl,
+    <span class="k">@NotBlank</span> String supplierUrl) {}
+
+<span class="c"># application.yaml (defaults, used in dev)</span>
+app:
+  catalog:
+    supplier-url: http://localhost:8081
+
+<span class="c"># application-prod.yaml (no spring.profiles.active here)</span>
+app:
+  catalog:
+    page-size: 50
+    cache-ttl: 30m
+    supplier-url: https://supplier.example.com
+
+<span class="c"># Start prod with:  java -jar shop.jar --spring.profiles.active=prod</span>
+<span class="c"># or set env var:   SPRING_PROFILES_ACTIVE=prod</span></pre>
+          </div>
+          <p><strong>How it works.</strong> <code>@ConfigurationPropertiesScan</code> finds the record and binds it through its constructor (no <code>@ConstructorBinding</code> needed for a record with one constructor). <code>@DefaultValue</code> fills missing keys, and <code>"30m"</code> converts to a <code>Duration</code>. If prod sets <code>page-size: 500</code>, <code>@Validated</code> stops startup with a clear binding error.</p>
+          <p><strong>Alternative.</strong> <code>@EnableConfigurationProperties(CatalogProperties.class)</code> on any <code>@Configuration</code> class registers just that one type.</p>
+          <p><strong>Follow-up they'll ask.</strong> Why not put <code>@Component</code> on the record? The docs say constructor binding doesn't work for beans created by component scanning, <code>@Bean</code> methods or <code>@Import</code>. Use the scan or <code>@EnableConfigurationProperties</code>.</p>
+        </div>
+      </details>
+    </article>
+
+  </div>
+
+  <details>
+    <summary><span class="lvl">Plan</span>The 20-week question plan</summary>
+    <div class="tbl" style="border:0;border-radius:0;border-top:1px solid var(--line)"><table>
+      <thead><tr><th>Week</th><th>Java (write a program)</th><th>Spring Boot (write or fix the code)</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1 · done</td><td>Palindrome string</td><td>Controller that never returns 404</td></tr>
+        <tr><td class="num">2 · now</td><td>Anagram check</td><td>Profiles + <code>@ConfigurationProperties</code> record</td></tr>
+        <tr><td class="num">3</td><td>First non-repeating character</td><td>Circular dependency, constructor injection</td></tr>
+        <tr><td class="num">4</td><td>Find duplicates in an array</td><td><code>@Valid</code> request validation → clean 400</td></tr>
+        <tr><td class="num">5</td><td>Second largest without sorting</td><td><code>@RestControllerAdvice</code> + ProblemDetail</td></tr>
+        <tr><td class="num">6</td><td>Fibonacci: loop, recursion, memo</td><td>JPA N+1 query fix</td></tr>
+        <tr><td class="num">7</td><td>Primes up to n (sieve)</td><td><code>@Transactional</code> self-invocation bug</td></tr>
+        <tr><td class="num">8</td><td>Word frequency with streams</td><td>Pagination with <code>Pageable</code> on MongoDB</td></tr>
+        <tr><td class="num">9</td><td>Remove duplicates, keep order</td><td>Custom MongoDB query + the index it needs</td></tr>
+        <tr><td class="num">10</td><td>Reverse a linked list</td><td>Secure an endpoint with <code>SecurityFilterChain</code></td></tr>
+        <tr><td class="num">11</td><td>Balanced brackets with a Deque</td><td><code>@WebMvcTest</code> + MockMvc test</td></tr>
+        <tr><td class="num">12</td><td>Merge two sorted arrays</td><td>Custom Actuator health indicator</td></tr>
+        <tr><td class="num">13</td><td>Binary search</td><td>Structured logging + Micrometer tracing</td></tr>
+        <tr><td class="num">14</td><td>LRU cache with LinkedHashMap</td><td><code>@Cacheable</code> with eviction</td></tr>
+        <tr><td class="num">15</td><td>equals/hashCode bug in a map key</td><td><code>@Async</code> + virtual threads</td></tr>
+        <tr><td class="num">16</td><td>Immutable class</td><td>Convert an endpoint to WebFlux</td></tr>
+        <tr><td class="num">17</td><td>Thread-safe lazy singleton</td><td>Spring Modulith module boundaries</td></tr>
+        <tr><td class="num">18</td><td>Producer-consumer, BlockingQueue</td><td>HTTP client with timeouts and retry</td></tr>
+        <tr><td class="num">19</td><td>Combine two calls, CompletableFuture</td><td>Idempotent POST with Idempotency-Key</td></tr>
+        <tr><td class="num">20</td><td>Fix ConcurrentModificationException</td><td>Fix a Boot 3 → 4 migration break</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+
+  <div class="box">
+    <h3>Go deeper: this week's two topics</h3>
+    <ul>
+      <li><a href="https://www.baeldung.com/java-strings-anagrams">Check if two strings are anagrams in Java · Baeldung</a> (sorting, counting and multiset versions)</li>
+      <li><a href="https://javarevisited.blogspot.com/2013/03/Anagram-how-to-check-if-two-string-are-anagrams-example-tutorial.html">How to check if two strings are anagrams · Javarevisited</a></li>
+      <li><a href="https://docs.spring.io/spring-boot/reference/features/external-config.html">Externalized configuration · Spring Boot reference</a> (records, <code>@DefaultValue</code>, relaxed binding)</li>
+      <li><a href="https://docs.spring.io/spring-boot/reference/features/profiles.html">Profiles · Spring Boot reference</a> (groups and the <code>spring.profiles.active</code> rule)</li>
+      <li><a href="https://www.baeldung.com/configuration-properties-in-spring-boot">Guide to @ConfigurationProperties · Baeldung</a></li>
+      <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a> (the order the Spring track follows)</li>
+    </ul>
+  </div>
+</section>
+
+<section id="practices">
+  <div class="sec-head"><span class="eyebrow">Best practices · Industry practices</span><h2>Do this, avoid that</h2></div>
+  <div class="pair">
+    <div class="box"><h3 class="do">Do</h3><ul>
+      <li>Group related settings into one <code>@Validated</code> <code>@ConfigurationProperties</code> record per feature.</li>
+      <li>Keep <code>application.yaml</code> runnable for local dev, and put only the differences in <code>application-prod.yaml</code>.</li>
+      <li>Use typed values: <code>Duration</code> for timeouts, <code>DataSize</code> for limits, not <code>int timeoutMs</code>.</li>
+      <li>Use atomic MongoDB updates (<code>$inc</code>, <code>findAndModify</code>) for counters and stock levels.</li>
+      <li>Track Spring's monthly patch day and upgrade within a week of it.</li>
+    </ul></div>
+    <div class="box"><h3 class="dont">Avoid</h3><ul>
+      <li>Committing passwords or connection strings to <code>application-prod.yaml</code>.</li>
+      <li>Branching on <code>if (env.equals("prod"))</code> in code. Use config values or <code>@Profile</code> beans.</li>
+      <li>Read-modify-write in Java for counters. Two requests will read the same value.</li>
+      <li>Keeping <code>spring.data.mongodb.uri</code> after moving to Boot 4. It's <code>spring.mongodb.uri</code> now.</li>
+      <li>Shipping incubator APIs (<code>jdk.incubator.json</code>) in production services.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="industry">
+  <div class="sec-head"><span class="eyebrow">How other industries adopt it</span><h2>Patterns by industry</h2><p>General adoption patterns tied to this week's topics, not claims about named companies.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Industry</th><th>What they use</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>E-commerce</td><td>Atomic MongoDB counters, typed config per region</td><td>Order and invoice numbers must never repeat across instances, and each market has its own limits and supplier URLs.</td></tr>
+      <tr><td>Banking &amp; fintech</td><td>Post-quantum crypto on newer JDKs</td><td>JDK 27 made ML-KEM 9–17% faster, and JDK 28 adds more intrinsics. Crypto agility costs less CPU each release.</td></tr>
+      <tr><td>SaaS / multi-tenant</td><td>Profile groups, validated config records</td><td>Many environments (dev, staging, regional prod) stay manageable when bad config fails at startup.</td></tr>
+      <tr><td>Customer support</td><td>Spring AI structured output, small routing models</td><td>Turning tickets into typed records (team, urgency) for dashboards, with cheap models doing the routing.</td></tr>
+      <tr><td>Platform teams</td><td>Monthly Spring patch train, Gradle/Maven upgrades</td><td>One predictable patch day makes security upgrades a routine job instead of a scramble.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="case">
+  <div class="sec-head"><span class="eyebrow">Real problem, solved with data</span><h2>"Copying a HashMap was the slow part"</h2></div>
+  <div class="case">
+    <p><strong>Problem.</strong> <code>new HashMap&lt;&gt;(other)</code> and <code>putAll(other)</code> are everywhere in Java services: copying request headers, building a response, taking a snapshot of a cache. Before JDK 27 they went through the generic <code>Map</code> path even when the source was itself a <code>HashMap</code>.</p>
+    <p><strong>Diagnosis.</strong> Oracle's JDK engineers benchmarked these calls and found the generic path doing work a <code>HashMap</code>-to-<code>HashMap</code> copy doesn't need. They found similar waste in file opening (redundant system calls) and AES/ECB encryption.</p>
+    <div class="bars" role="img" aria-label="JDK 27 benchmark results, before vs after: HashMap copy 10,593 ns down to 1,533 ns; file open 3,722 ns down to 3,192 ns; AES/ECB 11.52 µs down to 8.38 µs.">
+      <div class="bar-row"><span>HashMap copy · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">10,593 ns</span></div>
+      <div class="bar-row"><span>HashMap copy · after</span><div class="track"><div class="fill" style="width:14.5%"></div></div><span class="num">1,533 ns</span></div>
+      <div class="bar-row"><span>File open · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">3,722 ns</span></div>
+      <div class="bar-row"><span>File open · after</span><div class="track"><div class="fill" style="width:85.8%"></div></div><span class="num">3,192 ns</span></div>
+      <div class="bar-row"><span>AES/ECB · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">11.52 µs</span></div>
+      <div class="bar-row"><span>AES/ECB · after</span><div class="track"><div class="fill" style="width:72.7%"></div></div><span class="num">8.38 µs</span></div>
+    </div>
+    <p><strong>Fix.</strong> JDK 27 added a special path for <code>HashMap</code> sources. In that benchmark the copy takes 1,533 ÷ 10,593 ≈ 14.5% of the old time: 85.5% less, or about 6.9× faster. File open went from 3,722 to 3,192 ns (14.2% less). AES/ECB went from 11.52 to 8.38 µs, which is 11.52 ÷ 8.38 ≈ 1.37×, the reported 37% throughput gain. <strong>Your fix:</strong> upgrade the JDK. You don't change any code.</p>
+    <p class="note">Real numbers from Oracle's "Performance Improvements in JDK 27" (Inside.java, 28 Sep 2026). The post reports a 61–86% range for the HashMap change, and this is its headline benchmark. Micro-benchmarks don't predict end-to-end gains, so measure your own service before and after.</p>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="sec-head"><span class="eyebrow">Goals for next week</span><h2>Try it before next Friday</h2><p>Ticks are saved in this browser only.</p></div>
+  <ul class="goals">
+    <li><label><input type="checkbox" id="g1"><span>Replace three or more <code>@Value</code> fields in one service with a validated <code>@ConfigurationProperties</code> record.</span></label></li>
+    <li><label><input type="checkbox" id="g2"><span>Search your Boot 4 projects for <code>spring.data.mongodb.uri</code> and move it to <code>spring.mongodb.uri</code>.</span></label></li>
+    <li><label><input type="checkbox" id="g3"><span>Write the anagram solution from memory, then the Unicode version with <code>codePoints()</code>.</span></label></li>
+    <li><label><input type="checkbox" id="g4"><span>Solve Week 3 (first non-repeating character; circular dependency) before opening the solution.</span></label></li>
+  </ul>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><span class="eyebrow">Sources this week</span></div>
+  <ol class="sources">
+    <li><a href="https://inside.java/">Inside.java: JEP 540 targeted to JDK 28 (2 Oct 2026)</a></li>
+    <li><a href="https://www.infoq.com/news/2026/08/java-native-json-api/">JEP 540 Simple JSON API · InfoQ</a></li>
+    <li><a href="https://inside.java/2026/09/29/jep541-target-jdk28/">JEP 541 targeted to JDK 28 · Inside.java</a></li>
+    <li><a href="https://inside.java/2026/09/26/jep539-target-jdk28/">JEP 539 targeted to JDK 28 · Inside.java</a></li>
+    <li><a href="https://spring.io/blog/2026/09/25/spring-boot-4-2-0-M2-available-now/">Spring Boot 4.2.0-M2 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/09/25/spring-ai-2-1-0-M1-available-now/">Spring AI 2.1.0-M1 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/09/21/releasing-spring-for-modern-challenges/">Releasing Spring for Modern Challenges · spring.io</a></li>
+    <li><a href="https://spring.io/blog/category/releases/">Spring release posts · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/09/22/this-week-in-spring-september-22-2026/">This Week in Spring, 22 Sep 2026</a></li>
+    <li><a href="https://www.infoq.com/news/2026/09/java-news-roundup-sep21-2026/">Java News Roundup, 21 Sep 2026 · InfoQ</a></li>
+    <li><a href="https://www.infoq.com/news/2026/09/java-news-roundup-sep07-2026/">Java News Roundup, 7 Sep 2026 · InfoQ</a></li>
+    <li><a href="https://endoflife.date/spring-boot">Spring Boot support dates · endoflife.date</a></li>
+    <li><a href="https://openjdk.org/jeps/513">JEP 513: Flexible Constructor Bodies · OpenJDK</a></li>
+    <li><a href="https://inside.java/2026/09/28/performance-update-jdk27/">Performance Improvements in JDK 27 · Inside.java</a></li>
+    <li><a href="https://www.baeldung.com/java-weekly-666">Java Weekly, Issue 666 · Baeldung</a></li>
+    <li><a href="https://www.infoq.com/news/2026/08/embabel-1/">Embabel Agent Framework reaches 1.0 · InfoQ</a></li>
+    <li><a href="https://github.com/langchain4j/langchain4j/releases">LangChain4j releases · GitHub</a></li>
+    <li><a href="https://blog.jetbrains.com/ai/2026/03/koog-comes-to-java/">Koog comes to Java · JetBrains</a></li>
+    <li><a href="https://github.com/modelcontextprotocol/java-sdk/releases">MCP Java SDK releases · GitHub</a></li>
+    <li><a href="https://spring.io/blog/2026/09/21/spring-ai-typesafe-structured-judgment/">Spring AI and TypeSafe Jev · spring.io</a></li>
+    <li><a href="https://inside.java/2026/10/01/agent-helidon-scale/">Agent Helidon: License to Scale · Inside.java</a></li>
+    <li><a href="https://junie.jetbrains.com/blog/">Junie blog · JetBrains</a></li>
+    <li><a href="https://docs.spring.io/spring-boot/reference/features/external-config.html">Externalized configuration · Spring Boot docs</a></li>
+    <li><a href="https://docs.spring.io/spring-boot/reference/features/profiles.html">Profiles · Spring Boot docs</a></li>
+    <li><a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide">Spring Boot 4.0 Migration Guide · GitHub</a></li>
+    <li><a href="https://www.baeldung.com/java-strings-anagrams">Anagrams in Java · Baeldung</a></li>
+    <li><a href="https://www.baeldung.com/configuration-properties-in-spring-boot">@ConfigurationProperties · Baeldung</a></li>
+    <li><a href="https://www.digitalocean.com/community/tutorials/java-programming-interview-questions">Java programming interview questions · DigitalOcean</a></li>
+  </ol>
+</section>
+
+<footer>Friday Java Brief · generated every Friday at 10:00 Asia/Dhaka · Issue W40, Week 2 of the coding series</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.copy); var txt=el.innerText;
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected'}
+    try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+  });
+});
+document.querySelectorAll('.goals input').forEach(function(cb){
+  var key='fjb-2026-10-02-'+cb.id;
+  try{cb.checked=localStorage.getItem(key)==='1'}catch(e){}
+  cb.addEventListener('change',function(){try{localStorage.setItem(key,cb.checked?'1':'0')}catch(e){}});
+});
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

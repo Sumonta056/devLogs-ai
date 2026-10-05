@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangladesh Stock Market - Complete Beginner's Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0C1117;
+  --surface: #151C25;
+  --surface2: #1A2332;
+  --card: #1E2A3A;
+  --border: #2A3A4E;
+  --accent: #00D4AA;
+  --accent2: #00B894;
+  --accent-glow: rgba(0, 212, 170, 0.15);
+  --warn: #FF6B6B;
+  --warn-bg: rgba(255, 107, 107, 0.1);
+  --gold: #FFD93D;
+  --gold-bg: rgba(255, 217, 61, 0.1);
+  --blue: #74B9FF;
+  --blue-bg: rgba(116, 185, 255, 0.08);
+  --text: #E8EDF2;
+  --text2: #9BAAB8;
+  --text3: #6B7D8E;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { 
+  background: var(--bg); 
+  color: var(--text); 
+  font-family: 'DM Sans', 'Noto Sans Bengali', sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+/* Hero */
+.hero {
+  padding: 60px 0 40px;
+  text-align: center;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--accent-glow);
+  border: 1px solid rgba(0,212,170,0.3);
+  color: var(--accent);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.2;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { color: var(--text2); font-size: 17px; max-width: 600px; margin: 0 auto; }
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--surface);
+  color: var(--text2);
+  border: 1px solid transparent;
+}
+.nav-tab:hover { background: var(--surface2); color: var(--text); }
+.nav-tab.active { 
+  background: var(--accent-glow); 
+  color: var(--accent); 
+  border-color: rgba(0,212,170,0.3);
+}
+
+/* Sections */
+.section { display: none; padding: 30px 0 60px; animation: fadeIn 0.3s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.section-subtitle {
+  color: var(--text2);
+  font-size: 15px;
+  margin-bottom: 30px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(0,212,170,0.3); }
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card p, .card li { color: var(--text2); font-size: 14.5px; line-height: 1.8; }
+
+/* Icon badges */
+.icon-badge {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.icon-green { background: var(--accent-glow); }
+.icon-gold { background: var(--gold-bg); }
+.icon-red { background: var(--warn-bg); }
+.icon-blue { background: var(--blue-bg); }
+
+/* Step indicators */
+.step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.step-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.step-content p { color: var(--text2); font-size: 14px; }
+
+/* Info boxes */
+.info-box {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.info-box.tip { background: var(--accent-glow); border-left: 3px solid var(--accent); }
+.info-box.warn { background: var(--warn-bg); border-left: 3px solid var(--warn); }
+.info-box.note { background: var(--blue-bg); border-left: 3px solid var(--blue); }
+.info-box.gold { background: var(--gold-bg); border-left: 3px solid var(--gold); }
+.info-box span { font-size: 18px; }
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13.5px;
+}
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--surface2);
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+.data-table tr:hover td { background: var(--surface); }
+
+/* Tags */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-green { background: rgba(0,212,170,0.15); color: var(--accent); }
+.tag-gold { background: rgba(255,217,61,0.15); color: var(--gold); }
+.tag-red { background: rgba(255,107,107,0.15); color: var(--warn); }
+.tag-blue { background: rgba(116,185,255,0.15); color: var(--blue); }
+
+/* Two column grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* Glossary */
+.glossary-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.glossary-item:last-child { border-bottom: none; }
+.glossary-term {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.glossary-bangla {
+  color: var(--gold);
+  font-size: 13px;
+  font-family: 'Noto Sans Bengali', sans-serif;
+}
+.glossary-def { color: var(--text2); font-size: 14px; }
+
+/* Calculator */
+.calc-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  margin: 8px 0;
+}
+.calc-input:focus { outline: none; border-color: var(--accent); }
+.calc-result {
+  background: var(--accent-glow);
+  border: 1px solid rgba(0,212,170,0.3);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 16px;
+}
+.calc-result h4 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
+.calc-result .big-num { font-size: 28px; font-weight: 700; color: var(--text); }
+
+/* Accordion */
+.accordion-item { margin-bottom: 8px; }
+.accordion-header {
+  background: var(--surface2);
+  padding: 14px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.accordion-header:hover { background: var(--card); }
+.accordion-body {
+  padding: 14px 18px;
+  color: var(--text2);
+  font-size: 14px;
+  display: none;
+  line-height: 1.8;
+}
+.accordion-item.open .accordion-body { display: block; }
+.accordion-item.open .accordion-header { background: var(--card); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.accordion-item.open .accordion-body { background: var(--card); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top: 1px solid var(--border); }
+
+ul { padding-left: 20px; }
+li { margin-bottom: 6px; }
+
+.highlight { color: var(--accent); font-weight: 600; }
+.highlight-gold { color: var(--gold); font-weight: 600; }
+.highlight-red { color: var(--warn); font-weight: 600; }
+
+/* Website section */
+.website-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.website-header {
+  background: linear-gradient(135deg, var(--card), var(--surface2));
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.website-header h3 { font-size: 17px; margin-bottom: 4px; }
+.website-header a { color: var(--accent); font-size: 13px; text-decoration: none; }
+.website-body { padding: 20px; }
+.website-feature {
+  display: flex; gap: 10px; margin-bottom: 12px;
+  align-items: flex-start;
+}
+.website-feature .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); margin-top: 8px; flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-badge">🇧🇩 বাংলাদেশ শেয়ার বাজার</div>
+    <h1>Bangladesh Stock Market<br>Complete Beginner's Guide</h1>
+    <p>Everything you need to know to start investing in DSE with ৳3,000–4,000 — from opening a BO account to picking your first stock.</p>
+  </div>
+
+  <div class="nav-tabs" id="navTabs">
+    <div class="nav-tab active" data-tab="basics">📚 Basics</div>
+    <div class="nav-tab" data-tab="glossary">📖 Glossary</div>
+    <div class="nav-tab" data-tab="bo-account">🏦 BO Account</div>
+    <div class="nav-tab" data-tab="how-to-buy">🛒 How to Buy</div>
+    <div class="nav-tab" data-tab="websites">🌐 Websites</div>
+    <div class="nav-tab" data-tab="categories">🏷️ Categories</div>
+    <div class="nav-tab" data-tab="picks">🎯 Stock Picks</div>
+    <div class="nav-tab" data-tab="calculator">🧮 Calculator</div>
+    <div class="nav-tab" data-tab="risks">⚠️ Risks</div>
+    <div class="nav-tab" data-tab="roadmap">🗺️ Roadmap</div>
+  </div>
+
+  <!-- SECTION: BASICS -->
+  <div class="section active" id="basics">
+    <h2 class="section-title">Stock Market Basics</h2>
+    <p class="section-subtitle">বাংলাদেশে শেয়ার বাজার কী এবং কীভাবে কাজ করে — একদম শূন্য থেকে শিখুন</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">💡</span> What is a Stock / Share?</h3>
+      <p>When you buy a "share" of a company, you become a tiny owner of that company. If the company does well, the value of your share goes up. If it does poorly, the value drops. Think of it like buying a small piece of a shop — if the shop makes profit, you earn too.</p>
+      <div class="info-box tip">
+        <span>🇧🇩</span>
+        <div><strong>বাংলায়:</strong> শেয়ার মানে একটা কোম্পানির ছোট্ট একটা অংশ। তুমি যখন শেয়ার কেনো, তখন তুমি ওই কোম্পানির একজন ক্ষুদ্র মালিক হয়ে যাও।</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">🏛️</span> Bangladesh Stock Exchanges</h3>
+      <p>Bangladesh has <span class="highlight">two stock exchanges</span>:</p>
+      <div class="grid-2" style="margin-top:12px;">
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--accent);">DSE</strong> — Dhaka Stock Exchange<br>
+          <span style="font-size:13px;color:var(--text3);">Main exchange. ~600+ listed companies. Located in Nikunja, Dhaka. This is where most trading happens.</span>
+        </div>
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--blue);">CSE</strong> — Chittagong Stock Exchange<br>
+          <span style="font-size:13px;color:var(--text3);">Smaller exchange. Same companies can be listed on both. Less trading volume.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">⏰</span> Market Hours</h3>
+      <table class="data-table">
+        <tr><th>Detail</th><th>Info</th></tr>
+        <tr><td>Trading Days</td><td><strong>Sunday – Thursday</strong></td></tr>
+        <tr><td>Market Hours</td><td><strong>10:00 AM – 2:30 PM</strong> (BST)</td></tr>
+        <tr><td>Closed</td><td>Friday, Saturday & public holidays</td></tr>
+        <tr><td>Settlement</td><td>T+2 (you get shares 2 days after buying)</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📊</span> Key Market Indices</h3>
+      <p>An "index" tracks how the overall market is performing. Think of it as a health meter for the entire stock market.</p>
+      <table class="data-table">
+        <tr><th>Index</th><th>What it Tracks</th></tr>
+        <tr><td><strong style="color:var(--accent)">DSEX</strong></td><td>Broad market index — tracks ALL listed companies on DSE. <em>This is the main one.</em></td></tr>
+        <tr><td><strong style="color:var(--blue)">DS30</strong></td><td>Top 30 companies by market cap and liquidity</td></tr>
+        <tr><td><strong style="color:var(--gold)">DSES</strong></td><td>Shariah-compliant companies index</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">💰</span> How You Earn Money</h3>
+      <p>There are <strong>two ways</strong> to earn from stocks:</p>
+      <div style="margin-top:12px;">
+        <div class="info-box tip">
+          <span>📈</span>
+          <div><strong>Capital Gain:</strong> Buy at ৳100, sell at ৳130 → You earned ৳30 profit. This is the most common way. But prices can also fall — that's the risk.</div>
+        </div>
+        <div class="info-box gold">
+          <span>🎁</span>
+          <div><strong>Dividend:</strong> Many companies share their profits with shareholders. This can be <em>cash dividend</em> (you get money in your bank) or <em>stock dividend / bonus share</em> (you get extra shares for free).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-red">🏦</span> Who Regulates?</h3>
+      <p><strong style="color:var(--accent)">BSEC</strong> — Bangladesh Securities and Exchange Commission is the main regulator. They set the rules, protect investors, and oversee DSE & CSE. Think of them as the "traffic police" of the stock market.</p>
+      <p style="margin-top:8px;"><strong style="color:var(--blue)">CDBL</strong> — Central Depository Bangladesh Limited holds your shares electronically in your BO account.</p>
+    </div>
+  </div>
+
+  <!-- SECTION: GLOSSARY -->
+  <div class="section" id="glossary">
+    <h2 class="section-title">Stock Market Glossary</h2>
+    <p class="section-subtitle">গুরুত্বপূর্ণ শব্দগুলো জানুন — বাংলা সহ</p>
+    <div class="card">
+      <div class="glossary-item">
+        <div class="glossary-term">LTP (Last Traded Price)</div>
+        <div class="glossary-bangla">সর্বশেষ লেনদেনের দাম</div>
+        <div class="glossary-def">The most recent price at which a share was bought/sold. On AmarStock, this is the main price you see.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">YCP (Yesterday's Closing Price)</div>
+        <div class="glossary-bangla">গতকালের সমাপনী মূল্য</div>
+        <div class="glossary-def">The final price of a stock when the market closed yesterday. Used to calculate today's change.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Change %</div>
+        <div class="glossary-bangla">পরিবর্তনের হার</div>
+        <div class="glossary-def">How much a stock price has moved today compared to yesterday. Green/positive = up, Red/negative = down.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Volume</div>
+        <div class="glossary-bangla">লেনদেনের পরিমাণ</div>
+        <div class="glossary-def">Total number of shares traded today. High volume = many people are buying/selling that stock.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">High / Low</div>
+        <div class="glossary-bangla">সর্বোচ্চ / সর্বনিম্ন</div>
+        <div class="glossary-def">The highest and lowest price the stock reached during today's trading session.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Market Cap</div>
+        <div class="glossary-bangla">বাজার মূলধন</div>
+        <div class="glossary-def">Total value of a company = Share Price × Total Shares. Large cap = big, stable company.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">EPS (Earnings Per Share)</div>
+        <div class="glossary-bangla">শেয়ার প্রতি আয়</div>
+        <div class="glossary-def">Company's profit divided by total shares. Higher EPS = company is earning more per share.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">P/E Ratio (Price-to-Earnings)</div>
+        <div class="glossary-bangla">মূল্য-আয় অনুপাত</div>
+        <div class="glossary-def">Share Price ÷ EPS. Shows how "expensive" a stock is. Lower P/E (under 15) = relatively cheaper.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Dividend Yield</div>
+        <div class="glossary-bangla">ডিভিডেন্ড ইয়েল্ড</div>
+        <div class="glossary-def">Annual dividend ÷ Share price × 100. Shows the return you get just from dividends. 4%+ is good in BD.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">NAV (Net Asset Value)</div>
+        <div class="glossary-bangla">নিট সম্পদ মূল্য</div>
+        <div class="glossary-def">The actual book value of a company per share. If share price is below NAV, it might be undervalued.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Face Value</div>
+        <div class="glossary-bangla">অভিহিত মূল্য</div>
+        <div class="glossary-def">The original value assigned to a share (usually ৳10 in BD). Not the market price — just an accounting number.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Circuit Breaker</div>
+        <div class="glossary-bangla">সার্কিট ব্রেকার</div>
+        <div class="glossary-def">A safety limit. DSE halts trading on a stock if its price moves too much in one day (usually ±10%).</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">BO Account</div>
+        <div class="glossary-bangla">বেনিফিশিয়ারি ওনার্স অ্যাকাউন্ট</div>
+        <div class="glossary-def">Your digital account that holds your shares. Like a bank account, but for stocks. Mandatory for trading.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: BO ACCOUNT -->
+  <div class="section" id="bo-account">
+    <h2 class="section-title">Opening a BO Account</h2>
+    <p class="section-subtitle">শেয়ার বাজারে বিনিয়োগের প্রথম ধাপ — BO অ্যাকাউন্ট খোলা</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📋</span> Requirements (যা যা লাগবে)</h3>
+      <table class="data-table">
+        <tr><th>#</th><th>Document</th><th>Details</th></tr>
+        <tr><td>1</td><td><strong>NID / Smart Card</strong></td><td>Valid National ID card (10 or 17 digit accepted). If you have old 13-digit NID, add birth year at front to make it 17 digits.</td></tr>
+        <tr><td>2</td><td><strong>Passport Size Photo</strong></td><td>Recent photo of yours — 2 copies</td></tr>
+        <tr><td>3</td><td><strong>Nominee's NID + Photo</strong></td><td>Nominee is who gets your shares if something happens to you. Their NID and photo needed.</td></tr>
+        <tr><td>4</td><td><strong>Bank Cheque / Statement</strong></td><td>From your personal bank account — to link your bank with BO account</td></tr>
+        <tr><td>5</td><td><strong>Mobile Number & Email</strong></td><td>Valid and active — OTP will be sent for verification</td></tr>
+      </table>
+      <div class="info-box tip">
+        <span>✅</span>
+        <div><strong>Good news:</strong> TIN (Tax ID) is NOT mandatory for opening a BO account. But you may need it later for tax purposes if your investment grows.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">🏢</span> Where to Open?</h3>
+      <p>You need to choose a <strong>brokerage house</strong> (TREC holder). They are the middlemen between you and DSE. Some popular options:</p>
+      <table class="data-table" style="margin-top:12px;">
+        <tr><th>Brokerage</th><th>Online?</th><th>Notes</th></tr>
+        <tr><td><strong>AmarStock (UFTCL)</strong></td><td><span class="tag tag-green">Yes</span></td><td>Fully online. Beginner-friendly app. ৳450 opening charge.</td></tr>
+        <tr><td><strong>Mika Securities</strong></td><td><span class="tag tag-green">Yes</span></td><td>Online + branches. Good platform and support.</td></tr>
+        <tr><td><strong>BRAC EPL Stock Brokerage</strong></td><td><span class="tag tag-green">Yes</span></td><td>iDesk app — fully online via NID. Trusted brand.</td></tr>
+        <tr><td><strong>LankaBangla Securities</strong></td><td><span class="tag tag-green">Yes</span></td><td>39 branches nationwide. Good research team.</td></tr>
+        <tr><td><strong>EBL Securities</strong></td><td><span class="tag tag-green">Yes</span></td><td>Bloomberg terminal access. Strong research.</td></tr>
+      </table>
+      <div class="info-box note">
+        <span>💡</span>
+        <div>Since you use <strong>AmarStock</strong> already, opening your BO account through them (UFTCL) at <a href="https://www.amarstock.com/open-bo" style="color:var(--accent)">amarstock.com/open-bo</a> would be the most convenient option. Everything stays in one ecosystem — your data, trading, and portfolio.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">📝</span> Step-by-Step Process</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Choose a Brokerage & Go to Their Website</h4>
+          <p>Visit their online BO account opening page. For AmarStock: amarstock.com/open-bo. For CDBL direct: cdbl.com.bd/bo/</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Enter Mobile Number & Email</h4>
+          <p>You'll receive an OTP for verification. Make sure these are active and accessible.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Provide NID Details & Personal Information</h4>
+          <p>Your NID number, name, father's/mother's name, address, date of birth — all from NID.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Fill in Nominee & Bank Details</h4>
+          <p>Nominee's NID, your bank account number, branch, and routing number.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Upload Documents</h4>
+          <p>Upload photo, NID scan (both sides), nominee's photo and NID, bank cheque leaf/statement.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Pay ৳450 (BO Opening Fee)</h4>
+          <p>This is a one-time CDBL charge. Some brokerages may charge additional fees. You can pay via bKash/Nagad/bank transfer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4>Account Activated (1-3 Business Days)</h4>
+          <p>You'll get your BO account number (16 digits). Now fund your account and start trading!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-red">💸</span> Costs Breakdown</h3>
+      <table class="data-table">
+        <tr><th>Fee</th><th>Amount</th><th>When</th></tr>
+        <tr><td>BO Account Opening</td><td><strong>৳450</strong></td><td>One-time</td></tr>
+        <tr><td>CDBL Annual Maintenance</td><td><strong>৳450</strong></td><td>Every year</td></tr>
+        <tr><td>Brokerage Commission</td><td><strong>0.25%–0.50%</strong></td><td>Per transaction (buy & sell)</td></tr>
+        <tr><td>BSEC Fee</td><td><strong>0.015%</strong></td><td>Per transaction</td></tr>
+        <tr><td>AIT (Advance Income Tax)</td><td><strong>0.05%</strong></td><td>On sell amount</td></tr>
+      </table>
+      <div class="info-box warn">
+        <span>⚠️</span>
+        <div><strong>Example:</strong> If you buy ৳3,000 worth of shares, your commission cost at 0.30% = ৳9. When you sell later, another ৳9 + AIT. Total cost ~৳20 per round trip. Not bad!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: HOW TO BUY -->
+  <div class="section" id="how-to-buy">
+    <h2 class="section-title">How to Buy & Sell Stocks</h2>
+    <p class="section-subtitle">শেয়ার কেনা-বেচার সম্পূর্ণ প্রক্রিয়া</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📱</span> 3 Ways to Trade</h3>
+      <div style="margin-top:12px;">
+        <div class="info-box tip">
+          <span>📱</span>
+          <div><strong>Mobile/Web App (Best for you):</strong> Most brokerage houses have their own app. AmarStock has one too. You log in, search for a stock, place a buy order with price & quantity.</div>
+        </div>
+        <div class="info-box note">
+          <span>📞</span>
+          <div><strong>Call Your Broker:</strong> Call the brokerage house, tell them "I want to buy 50 shares of SQURPHARMA at ৳215" — they execute the order for you.</div>
+        </div>
+        <div class="info-box gold">
+          <span>🏢</span>
+          <div><strong>Visit Brokerage Office:</strong> Go physically, fill a slip, hand it over. Old-school but some people prefer it.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">🛒</span> Buying Your First Stock (Step by Step)</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Fund Your BO Account</h4>
+          <p>Transfer money from your bank to your brokerage account. Most accept bank transfer, bKash, or cheque deposit.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Research the Stock</h4>
+          <p>Go to amarstock.com/latest-share-price or dsebd.org. Check LTP, P/E ratio, EPS, dividend history.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Place a Buy Order</h4>
+          <p>On your trading app: enter the stock code (e.g., SQURPHARMA), quantity (e.g., 15 shares), and price. You can place a <strong>"Market Order"</strong> (buy at current price) or <strong>"Limit Order"</strong> (buy only if price drops to your target).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Order Gets Matched</h4>
+          <p>If someone is selling at your price, the trade happens. You'll see a confirmation in your app.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Settlement (T+2)</h4>
+          <p>Shares appear in your BO account within 2 working days. Money is debited from your brokerage balance.</p>
+        </div>
+      </div>
+      <div class="info-box warn">
+        <span>🔑</span>
+        <div><strong>Important:</strong> The market is open Sun–Thu, 10 AM – 2:30 PM only. You can't buy/sell outside these hours. But you CAN place orders that will execute when the market opens.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">💡</span> Types of Orders</h3>
+      <table class="data-table">
+        <tr><th>Order Type</th><th>How it Works</th><th>Best For</th></tr>
+        <tr><td><strong>Market Order</strong></td><td>Buy/sell at whatever the current price is</td><td>When you want to trade immediately</td></tr>
+        <tr><td><strong>Limit Order</strong></td><td>Buy only at your specified price or lower</td><td>When you want a better price — more control</td></tr>
+      </table>
+      <div class="info-box tip">
+        <span>💡</span>
+        <div>As a beginner with ৳3,000-4,000, use <strong>Limit Orders</strong>. They give you more control. Set your maximum buy price and wait.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: WEBSITES -->
+  <div class="section" id="websites">
+    <h2 class="section-title">Understanding the Websites</h2>
+    <p class="section-subtitle">AmarStock ও DSE ওয়েবসাইট থেকে কী কী শিখতে পারো</p>
+
+    <div class="website-card">
+      <div class="website-header">
+        <h3>🟢 AmarStock — amarstock.com/latest-share-price</h3>
+        <a href="https://www.amarstock.com/latest-share-price" target="_blank">Visit Website ↗</a>
+      </div>
+      <div class="website-body">
+        <p style="margin-bottom:16px;">This page shows the <strong>live price table of all DSE-listed shares</strong>. Here's what each column means:</p>
+        <table class="data-table">
+          <tr><th>Column</th><th>Meaning</th><th>What to Look For</th></tr>
+          <tr><td><strong>Trading Code</strong></td><td>Short name of the company (e.g., SQURPHARMA)</td><td>Search for the company you want</td></tr>
+          <tr><td><strong>LTP</strong></td><td>Last Traded Price — current price</td><td>This is what you'd roughly pay right now</td></tr>
+          <tr><td><strong>Change %</strong></td><td>How much price moved today vs yesterday</td><td>Green = up, Red = down</td></tr>
+          <tr><td><strong>High / Low</strong></td><td>Today's highest and lowest price</td><td>Shows the day's trading range</td></tr>
+          <tr><td><strong>YCP</strong></td><td>Yesterday's Closing Price</td><td>Base price for today's comparison</td></tr>
+          <tr><td><strong>Trade</strong></td><td>Number of trades executed today</td><td>More trades = more active stock</td></tr>
+          <tr><td><strong>Value</strong></td><td>Total taka value traded (in lakhs)</td><td>High value = significant trading interest</td></tr>
+          <tr><td><strong>Volume</strong></td><td>Number of shares exchanged</td><td>High volume = many buyers & sellers</td></tr>
+        </table>
+        <div class="info-box tip" style="margin-top:16px;">
+          <span>🎯</span>
+          <div><strong>Pro Tip:</strong> Click on any stock name on AmarStock to see its detailed page — with financial statements, dividend history, charts, and key ratios like P/E, EPS, and NAV. This is gold for research!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="website-card">
+      <div class="website-header">
+        <h3>🔵 DSE Official — dsebd.org</h3>
+        <a href="https://www.dsebd.org/" target="_blank">Visit Website ↗</a>
+      </div>
+      <div class="website-body">
+        <p style="margin-bottom:16px;">The official Dhaka Stock Exchange website. Key pages to explore:</p>
+        <table class="data-table">
+          <tr><th>Page</th><th>URL</th><th>Use For</th></tr>
+          <tr><td><strong>Latest Share Prices</strong></td><td>dsebd.org/latest_share_price_scroll_l.php</td><td>Official real-time prices</td></tr>
+          <tr><td><strong>Company Details</strong></td><td>dsebd.org/displayCompany.php?name=CODE</td><td>Deep dive into any company — financials, dividends, P/E</td></tr>
+          <tr><td><strong>Top 20 Shares</strong></td><td>dsebd.org/top_20_share.php</td><td>Most actively traded stocks today</td></tr>
+          <tr><td><strong>Market Summary</strong></td><td>dsebd.org/dse_market_statistics.php</td><td>Overall market performance</td></tr>
+          <tr><td><strong>Company by Industry</strong></td><td>dsebd.org/companylistbyindustry.php</td><td>Browse stocks by sector (pharma, bank, etc.)</td></tr>
+        </table>
+        <div class="info-box note" style="margin-top:16px;">
+          <span>📌</span>
+          <div><strong>Example:</strong> To check Square Pharma's details on DSE, go to: <a href="https://dsebd.org/displayCompany.php?name=SQURPHARMA" style="color:var(--accent)">dsebd.org/displayCompany.php?name=SQURPHARMA</a> — you'll see EPS, P/E, NAV, dividend history, and financial statements.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: CATEGORIES -->
+  <div class="section" id="categories">
+    <h2 class="section-title">Stock Categories on DSE</h2>
+    <p class="section-subtitle">DSE-তে শেয়ারগুলো বিভিন্ন ক্যাটাগরিতে ভাগ করা হয় — এটা বোঝা খুব জরুরি</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">🏷️</span> DSE Company Categories</h3>
+      <p>DSE categorizes all listed companies. <strong class="highlight">As a beginner, you should ONLY invest in A-Category stocks.</strong></p>
+      <table class="data-table" style="margin-top:12px;">
+        <tr><th>Category</th><th>Meaning</th><th>Risk</th><th>Your Action</th></tr>
+        <tr>
+          <td><span class="tag tag-green">A</span></td>
+          <td>Regular AGM + declared ≥10% dividend last year</td>
+          <td>Lower risk ✅</td>
+          <td><strong class="highlight">INVEST HERE</strong></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">B</span></td>
+          <td>Regular AGM but dividend &lt;10% last year</td>
+          <td>Medium risk</td>
+          <td>Avoid for now</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gold">N</span></td>
+          <td>Newly listed companies</td>
+          <td>Uncertain</td>
+          <td>Avoid as beginner</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">Z</span></td>
+          <td>Failed to hold AGM or pay dividends — troubled company</td>
+          <td>HIGH risk ⛔</td>
+          <td><strong class="highlight-red">NEVER buy Z-category</strong></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">G</span></td>
+          <td>Greenfield (pre-commercial operation)</td>
+          <td>Very uncertain</td>
+          <td>Avoid completely</td>
+        </tr>
+      </table>
+      <div class="info-box warn">
+        <span>⛔</span>
+        <div><strong>Critical Rule:</strong> Z-category stocks might look temptingly cheap (৳2-5 per share) but they are cheap for a reason — these companies are in trouble. Many beginners lose money here. Stay away.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">🏭</span> Key Sectors on DSE</h3>
+      <p>Stocks are grouped by industry. The safest sectors for beginners are:</p>
+      <div class="grid-2" style="margin-top:12px;">
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--accent);">💊 Pharmaceuticals</strong><br>
+          <span style="font-size:13px;color:var(--text2);">Strong local demand, export potential. Square Pharma, Beximco Pharma, Renata are leaders.</span>
+        </div>
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--blue);">🏦 Banking</strong><br>
+          <span style="font-size:13px;color:var(--text2);">Stable dividends. BRAC Bank, Dutch-Bangla Bank, City Bank are well-known.</span>
+        </div>
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--gold);">📱 Telecom</strong><br>
+          <span style="font-size:13px;color:var(--text2);">Grameenphone is the biggest. Stable revenue, good dividends. But share price is high (~৳350+).</span>
+        </div>
+        <div style="background:var(--surface);padding:16px;border-radius:8px;">
+          <strong style="color:var(--accent);">🍞 Food & FMCG</strong><br>
+          <span style="font-size:13px;color:var(--text2);">BATBC (British American Tobacco), AMCL (PRAN) — essential goods, steady business.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STOCK PICKS -->
+  <div class="section" id="picks">
+    <h2 class="section-title">Stock Suggestions for Beginners</h2>
+    <p class="section-subtitle">৳3,000–4,000 বাজেটে কোন শেয়ার কিনবে — বিশ্লেষণসহ</p>
+
+    <div class="info-box warn">
+      <span>⚠️</span>
+      <div><strong>Disclaimer:</strong> I'm not a licensed financial advisor. These are educational suggestions based on publicly available fundamental data. The stock market carries risk — always do your own research. Never invest money you can't afford to lose.</div>
+    </div>
+
+    <div class="card" style="border-color:rgba(0,212,170,0.4);">
+      <h3><span class="icon-badge icon-green">💊</span> Top Pick: SQURPHARMA (Square Pharmaceuticals)</h3>
+      <table class="data-table">
+        <tr><th>Metric</th><th>Value</th><th>What it Means</th></tr>
+        <tr><td>Current Price (LTP)</td><td><strong>~৳213</strong></td><td>You can buy ~14 shares with ৳3,000</td></tr>
+        <tr><td>P/E Ratio</td><td><strong>~9.7x</strong></td><td>Undervalued compared to historical avg of ~27x</td></tr>
+        <tr><td>EPS</td><td><strong>৳29.27</strong></td><td>Strong earnings per share</td></tr>
+        <tr><td>Dividend Yield</td><td><strong>~5.5%</strong></td><td>Better than most bank FD rates!</td></tr>
+        <tr><td>Dividend per Share</td><td><strong>৳12/year</strong></td><td>14 shares × ৳12 = ৳168/year in dividends</td></tr>
+        <tr><td>Category</td><td><span class="tag tag-green">A</span></td><td>Regular AGM + good dividend history</td></tr>
+        <tr><td>Revenue Growth</td><td><strong>+8.8% YoY</strong></td><td>Growing steadily</td></tr>
+        <tr><td>Analyst Rating</td><td><strong>Strong Buy</strong></td><td>3 out of 3 analysts say Buy</td></tr>
+      </table>
+      <div class="info-box tip" style="margin-top:16px;">
+        <span>🎯</span>
+        <div><strong>Why this is good for you:</strong> Square Pharma is Bangladesh's largest pharmaceutical company. Medicine is an essential need — people buy medicine in good times and bad. The P/E ratio of ~10 is historically very low for this stock, meaning it could be undervalued. The ~5.5% dividend yield gives you regular income even if the price doesn't move much. With ৳3,000, you can buy ~14 shares and receive ~৳168/year in cash dividends.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">🏦</span> Alternative Pick: Banking Stocks (Lower Price Entry)</h3>
+      <p style="margin-bottom:12px;">If you want to buy MORE shares with your ৳3,000–4,000 budget, consider these A-category bank stocks:</p>
+      <table class="data-table">
+        <tr><th>Stock</th><th>~Price</th><th>Shares for ৳4,000</th><th>Dividend Yield</th></tr>
+        <tr><td><strong>BRACBANK</strong></td><td>~৳35-40</td><td>~100 shares</td><td>~3-4%</td></tr>
+        <tr><td><strong>CITYBANK</strong></td><td>~৳25-30</td><td>~130 shares</td><td>~3-5%</td></tr>
+        <tr><td><strong>DUTCHBANGLA</strong></td><td>~৳60-70</td><td>~55 shares</td><td>~4-5%</td></tr>
+      </table>
+      <div class="info-box note">
+        <span>💡</span>
+        <div>Banking stocks are more volatile than pharma but often have good dividends. They also tend to benefit when the economy grows. Check the latest prices on AmarStock before buying.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">📦</span> Safest Option: Mutual Funds</h3>
+      <p>If you want the <strong>lowest risk possible</strong>, consider closed-end mutual funds traded on DSE. They are professionally managed baskets of stocks.</p>
+      <div class="info-box gold" style="margin-top:12px;">
+        <span>🛡️</span>
+        <div><strong>Why mutual funds are safer:</strong> Your money is spread across many companies, so if one stock drops, others may hold up. Many closed-end mutual funds on DSE trade at ৳3-10 per unit, so you can buy hundreds of units with ৳3,000–4,000. Look for funds managed by reputable houses like ICB, LankaBangla, IDLC, or Shanta Asset Management.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📊</span> Real-Life Investment Example</h3>
+      <p style="margin-bottom:12px;">Let's say you invest <strong>৳3,200</strong> in SQURPHARMA today:</p>
+      <table class="data-table">
+        <tr><th>Detail</th><th>Calculation</th></tr>
+        <tr><td>Buy Price</td><td>৳213 per share</td></tr>
+        <tr><td>Shares Bought</td><td>15 shares (15 × ৳213 = ৳3,195)</td></tr>
+        <tr><td>Brokerage (0.30%)</td><td>৳9.59</td></tr>
+        <tr><td>Total Investment</td><td><strong>৳3,204.59</strong></td></tr>
+      </table>
+      <p style="margin-top:16px;font-weight:600;color:var(--accent);">Scenario after 1 year:</p>
+      <table class="data-table">
+        <tr><th>Scenario</th><th>Price</th><th>Capital Gain</th><th>Dividend</th><th>Total Return</th></tr>
+        <tr style="background:rgba(0,212,170,0.05);">
+          <td><span class="tag tag-green">Good (+15%)</span></td>
+          <td>৳245</td>
+          <td>+৳480</td>
+          <td>+৳180</td>
+          <td><strong class="highlight">+৳660 (~20%)</strong></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Moderate (+5%)</span></td>
+          <td>৳224</td>
+          <td>+৳165</td>
+          <td>+৳180</td>
+          <td><strong>+৳345 (~11%)</strong></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gold">Flat (0%)</span></td>
+          <td>৳213</td>
+          <td>৳0</td>
+          <td>+৳180</td>
+          <td><strong>+৳180 (~5.6%)</strong></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">Bad (-10%)</span></td>
+          <td>৳192</td>
+          <td>-৳315</td>
+          <td>+৳180</td>
+          <td><strong class="highlight-red">-৳135 (~-4%)</strong></td>
+        </tr>
+      </table>
+      <div class="info-box tip" style="margin-top:12px;">
+        <span>💡</span>
+        <div>Notice: even in the "flat" scenario where the price doesn't move at all, you still earn ~5.6% from dividends alone. That's the power of dividend investing — you get paid for holding. And even in the bad scenario, the dividend cushions your loss significantly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: CALCULATOR -->
+  <div class="section" id="calculator">
+    <h2 class="section-title">Investment Calculator</h2>
+    <p class="section-subtitle">তোমার বিনিয়োগের হিসাব করো</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">🧮</span> Quick Calculator</h3>
+      <div style="margin-top:12px;">
+        <label style="font-size:14px;color:var(--text2);display:block;margin-bottom:4px;">Investment Amount (৳)</label>
+        <input type="number" class="calc-input" id="calcAmount" value="3000" min="100">
+        
+        <label style="font-size:14px;color:var(--text2);display:block;margin-top:12px;margin-bottom:4px;">Share Price (৳)</label>
+        <input type="number" class="calc-input" id="calcPrice" value="213" min="1">
+        
+        <label style="font-size:14px;color:var(--text2);display:block;margin-top:12px;margin-bottom:4px;">Brokerage Commission (%)</label>
+        <input type="number" class="calc-input" id="calcComm" value="0.30" step="0.05" min="0.1" max="1">
+        
+        <label style="font-size:14px;color:var(--text2);display:block;margin-top:12px;margin-bottom:4px;">Expected Dividend per Share (৳/year)</label>
+        <input type="number" class="calc-input" id="calcDiv" value="12" min="0">
+      </div>
+
+      <div class="calc-result" id="calcResult">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <h4>Shares You Can Buy</h4>
+            <div class="big-num" id="resultShares">14</div>
+          </div>
+          <div>
+            <h4>Total Cost (with commission)</h4>
+            <div class="big-num" id="resultCost">৳3,001</div>
+          </div>
+          <div>
+            <h4>Annual Dividend Income</h4>
+            <div class="big-num" style="color:var(--accent)" id="resultDiv">৳168</div>
+          </div>
+          <div>
+            <h4>Dividend Yield</h4>
+            <div class="big-num" style="color:var(--gold)" id="resultYield">5.6%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: RISKS -->
+  <div class="section" id="risks">
+    <h2 class="section-title">Risks & Golden Rules</h2>
+    <p class="section-subtitle">শেয়ার বাজারের ঝুঁকি ও সোনালী নিয়ম — এগুলো না জানলে লোকসান হবে</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-red">⚠️</span> Real Risks You Must Know</h3>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📉 Market Risk — Prices can drop</span>
+          <span>▼</span>
+        </div>
+        <div class="accordion-body">Even great companies see their stock prices fall during market crashes. Bangladesh experienced a major crash in 2010-2011 where many lost 50-70% of their investment. The market recovered eventually, but it took years.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>🎭 Rumor Risk — "Hot tips" from friends</span>
+          <span>▼</span>
+        </div>
+        <div class="accordion-body">In Bangladesh's market, rumors spread fast. People will tell you "this stock will double next month." These are almost always wrong or manipulative. NEVER buy based on WhatsApp/Facebook tips. Do your own research.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>😱 Emotional Risk — Panic selling</span>
+          <span>▼</span>
+        </div>
+        <div class="accordion-body">When the market drops 5% in a day, beginners panic and sell at a loss. But if you picked good companies (A-category, strong fundamentals), the price usually recovers. Time in the market beats timing the market.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>💸 Liquidity Risk — Can't sell when you want</span>
+          <span>▼</span>
+        </div>
+        <div class="accordion-body">Some low-volume stocks have very few buyers. You might want to sell but no one is buying. Stick to high-volume stocks (check the Volume column on AmarStock) to avoid this.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">🏆</span> 10 Golden Rules for Beginners</h3>
+      <div style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">1</div>
+          <div class="step-content">
+            <h4>Only Invest What You Can Afford to Lose</h4>
+            <p>Your ৳3,000-4,000 should be money you won't need for at least 1 year. Never use rent money, loan money, or emergency fund.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">2</div>
+          <div class="step-content">
+            <h4>Stick to A-Category Stocks Only</h4>
+            <p>As a beginner, don't touch Z, B, G, or N categories. A-category means the company pays dividends and holds regular AGMs.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">3</div>
+          <div class="step-content">
+            <h4>Look at P/E Ratio Before Buying</h4>
+            <p>If P/E is above 25-30, the stock might be overpriced. For beginners, look for P/E under 15 in the banking/pharma sector.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">4</div>
+          <div class="step-content">
+            <h4>Prioritize Dividend-Paying Stocks</h4>
+            <p>Dividends give you income even when the price doesn't move. Look for stocks with 4%+ dividend yield and consistent history.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">5</div>
+          <div class="step-content">
+            <h4>Never Buy Based on "Tips" or Rumors</h4>
+            <p>If someone on Facebook says "buy XYZ stock, it'll double!" — run the other way. Do your own research on AmarStock/DSE.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">6</div>
+          <div class="step-content">
+            <h4>Don't Check Prices Every Hour</h4>
+            <p>If you're investing for 1 year, checking every hour causes anxiety. Check once a week. The market has daily ups and downs — that's normal.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">7</div>
+          <div class="step-content">
+            <h4>Start with ONE Stock, Learn, Then Diversify</h4>
+            <p>With ৳3,000-4,000, buy one good stock first. Learn the process. After a few months, you can add more with new savings.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">8</div>
+          <div class="step-content">
+            <h4>Think Long-Term (1 Year Minimum)</h4>
+            <p>Don't try to buy and sell within days. Day trading with small capital will just eat your money in commissions. Hold for at least 1 year.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">9</div>
+          <div class="step-content">
+            <h4>Keep Learning Every Week</h4>
+            <p>Read DSE news, follow market summaries, understand quarterly results. The more you learn, the better your decisions become.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:var(--gold);font-size:13px;">10</div>
+          <div class="step-content">
+            <h4>Have an Exit Plan</h4>
+            <p>Before buying, decide: "I'll sell if price reaches ৳X (profit target)" and "I'll sell if price drops below ৳Y (stop loss)." Stick to it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: ROADMAP -->
+  <div class="section" id="roadmap">
+    <h2 class="section-title">Your Complete Roadmap</h2>
+    <p class="section-subtitle">তোমার শেয়ার বাজার যাত্রার সম্পূর্ণ রোডম্যাপ — আজ থেকে শুরু</p>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📅</span> Week 1-2: Preparation</h3>
+      <ul>
+        <li>Gather documents: NID, passport photo, nominee's NID & photo, bank cheque</li>
+        <li>Open BO account online (AmarStock / BRAC EPL / Mika Securities)</li>
+        <li>Pay ৳450 opening fee</li>
+        <li>While waiting for activation, study AmarStock's price page daily — just observe</li>
+        <li>Learn to read: LTP, Change %, Volume, P/E ratio</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">📅</span> Week 3-4: Research & Fund</h3>
+      <ul>
+        <li>BO account should be active by now</li>
+        <li>Transfer ৳3,000-4,000 to your brokerage account</li>
+        <li>Research 3-5 A-category stocks on AmarStock and DSE</li>
+        <li>Check their P/E, EPS, dividend history, and recent news</li>
+        <li>Shortlist 1-2 stocks you understand and feel confident about</li>
+        <li>Use the Calculator tab above to check how many shares you can buy</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-gold">📅</span> Week 5: First Purchase!</h3>
+      <ul>
+        <li>Place a <strong>Limit Order</strong> for your chosen stock</li>
+        <li>Start with your strongest pick (e.g., SQURPHARMA)</li>
+        <li>Don't use all your money — keep ৳500-1,000 as buffer</li>
+        <li>Once order is executed, celebrate your first investment! 🎉</li>
+        <li>Screenshot your portfolio for the memory</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-green">📅</span> Month 2-6: Hold & Learn</h3>
+      <ul>
+        <li>Check your portfolio once a week, not every day</li>
+        <li>Follow quarterly earnings reports of your company</li>
+        <li>Read DSE market summaries</li>
+        <li>Start saving for your next investment (even ৳500/month adds up)</li>
+        <li>Learn about new sectors — IT, textiles, energy</li>
+        <li>Don't panic if price drops 5-10% — that's normal</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon-badge icon-blue">📅</span> Month 6-12: Grow</h3>
+      <ul>
+        <li>Collect your first dividend! (If the company declares one)</li>
+        <li>Re-evaluate your stock: Has anything fundamentally changed?</li>
+        <li>Consider adding a second stock with new savings for diversification</li>
+        <li>Start understanding technical analysis basics (support/resistance levels)</li>
+        <li>At the 1-year mark, decide: hold, sell for profit, or add more</li>
+      </ul>
+    </div>
+
+    <div class="card" style="border-color:rgba(0,212,170,0.4);">
+      <h3><span class="icon-badge icon-green">🎯</span> Quick Reference Checklist</h3>
+      <table class="data-table">
+        <tr><th>✅ Before Buying Any Stock, Check:</th><th>Target</th></tr>
+        <tr><td>Is it A-Category?</td><td>Must be YES</td></tr>
+        <tr><td>P/E Ratio</td><td>Under 15 (ideally under 12)</td></tr>
+        <tr><td>EPS (Earnings Per Share)</td><td>Positive and growing</td></tr>
+        <tr><td>Dividend History</td><td>Consistent for 3+ years</td></tr>
+        <tr><td>Dividend Yield</td><td>Above 4%</td></tr>
+        <tr><td>Daily Volume</td><td>At least 50,000+</td></tr>
+        <tr><td>Company Sector</td><td>Pharma, Banking, Telecom, FMCG (beginner-safe)</td></tr>
+        <tr><td>Do I understand the business?</td><td>YES — you should know what they do</td></tr>
+      </table>
+    </div>
+
+    <div class="info-box tip" style="margin-top:20px;">
+      <span>🚀</span>
+      <div><strong>Final Thought:</strong> You're starting with ৳3,000-4,000 — that's perfectly fine. Every big investor started small. The goal right now isn't to make huge money — it's to <em>learn the system</em>, <em>build the habit</em>, and <em>not lose your initial capital</em>. With time and consistent small investments, this will grow into something meaningful. শুভ কামনা! 🇧🇩</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>📊 Data sourced from DSE (dsebd.org), AmarStock, Simply Wall St, Investing.com & TradingView</p>
+    <p style="margin-top:8px;">Prices are approximate and may have changed. Always verify current prices before investing.</p>
+    <p style="margin-top:8px;">This is an educational guide, not financial advice. বিনিয়োগ ঝুঁকিপূর্ণ — জেনে বুঝে বিনিয়োগ করুন।</p>
+  </div>
+</div>
+
+<script>
+// Tab navigation
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+  });
+});
+
+// Accordion
+function toggleAccordion(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+
+// Calculator
+function updateCalc() {
+  const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+  const price = parseFloat(document.getElementById('calcPrice').value) || 1;
+  const comm = parseFloat(document.getElementById('calcComm').value) || 0.3;
+  const div = parseFloat(document.getElementById('calcDiv').value) || 0;
+  
+  const shares = Math.floor(amount / price);
+  const totalCost = shares * price * (1 + comm / 100);
+  const annualDiv = shares * div;
+  const yieldPct = (div / price * 100).toFixed(1);
+  
+  document.getElementById('resultShares').textContent = shares;
+  document.getElementById('resultCost').textContent = '৳' + Math.round(totalCost).toLocaleString();
+  document.getElementById('resultDiv').textContent = '৳' + Math.round(annualDiv).toLocaleString();
+  document.getElementById('resultYield').textContent = yieldPct + '%';
+}
+
+document.querySelectorAll('.calc-input').forEach(input => {
+  input.addEventListener('input', updateCalc);
+});
+updateCalc();
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

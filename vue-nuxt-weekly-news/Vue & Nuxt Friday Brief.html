@@ -1,0 +1,661 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Vue &amp; Nuxt Friday Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f8f6; --surface:#ffffff; --ink:#15231d; --muted:#56675f; --line:#dbe4df;
+  --accent:#2f9e6e; --accent-ink:#0f5c3d; --accent-soft:#e3f3eb;
+  --navy:#243746; --code-bg:#17232c; --code-ink:#dfe9e4; --code-dim:#8fa4a0; --code-key:#7fd6ad; --code-str:#f2c38a;
+  --warn:#b7791f; --warn-soft:#fbf1df;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f171b; --surface:#152127; --ink:#e4ede9; --muted:#9aaca5; --line:#26363d;
+    --accent:#4cc28c; --accent-ink:#8be0b8; --accent-soft:#17332a;
+    --navy:#c9d8e3; --code-bg:#0a1114; --warn:#e2b25c; --warn-soft:#2e2615;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f171b; --surface:#152127; --ink:#e4ede9; --muted:#9aaca5; --line:#26363d;
+  --accent:#4cc28c; --accent-ink:#8be0b8; --accent-soft:#17332a;
+  --navy:#c9d8e3; --code-bg:#0a1114; --warn:#e2b25c; --warn-soft:#2e2615;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent-ink);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:0}.toc{display:none}}
+
+header.mast{max-width:1120px;margin:0 auto;padding-block:40px 28px;border-bottom:1px solid var(--line);margin-bottom:32px}
+.issue{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pill{padding:5px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink)}
+.pill.demo{background:var(--warn-soft);color:var(--warn)}
+h1{font:700 clamp(34px,6vw,58px)/1.02 var(--display);letter-spacing:-.02em;margin:18px 0 12px;text-wrap:balance}
+h1 span{color:var(--accent)}
+.lede{max-width:62ch;color:var(--muted);font-size:17px;margin:0}
+
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;font-size:14px}
+.toc p{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;border-left:1px solid var(--line)}
+.toc a{display:block;padding:5px 12px;color:var(--muted);text-decoration:none;margin-left:-1px;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+
+main{display:grid;grid-template-columns:minmax(0,1fr);gap:56px;min-width:0}
+main>section{min-width:0}
+section h2{font:700 26px/1.15 var(--display);letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
+.kicker{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 20px;max-width:65ch}
+
+.musthave{background:var(--navy);color:var(--bg);border-radius:14px;padding:24px 26px;display:grid;gap:10px}
+.musthave h2{color:var(--bg)}
+.musthave .kicker{color:var(--accent)}
+.musthave ol{margin:0;padding-left:20px;display:grid;gap:8px}
+.musthave code{background:rgba(127,127,127,.22);color:inherit}
+
+.releases{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start}
+.rel .v{font:500 13px var(--mono);color:var(--accent-ink)}
+.rel h3{font:600 16px/1.3 var(--body);margin:0}
+.rel p{margin:0;color:var(--muted);font-size:14.5px}
+.tag{justify-self:start;font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:var(--accent-soft);color:var(--accent-ink)}
+.tag.pre{background:var(--warn-soft);color:var(--warn)}
+
+.spot{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;align-content:start;min-width:0}
+.feat .fw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.feat .brand{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:5px;background:var(--navy);color:var(--bg)}
+.feat h3{font:700 22px/1.15 var(--display);margin:0;text-wrap:balance}
+.feat p{margin:0}
+.feat h4{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:13.5px}
+.flow div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--bg)}
+.flow b{display:block;font:500 11px var(--mono);color:var(--accent-ink);margin-bottom:4px}
+@media (max-width:520px){.flow{grid-template-columns:minmax(0,1fr)}}
+.feat ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14.5px}
+.yours{border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:14.5px}
+.snip{display:grid;gap:10px;margin-bottom:30px}
+.snip:last-child{margin-bottom:0}
+.snip h3{font:600 18px/1.3 var(--body);margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.lvl{font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:2px 7px;border-radius:4px}
+.snip p{margin:0;max-width:68ch}
+.code{position:relative;background:var(--code-bg);border-radius:10px;overflow:hidden}
+.code .fn{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font:12px var(--mono);color:var(--code-dim);border-bottom:1px solid rgba(255,255,255,.07)}
+.code button{font:500 11px var(--mono);background:transparent;color:var(--code-dim);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:3px 9px;cursor:pointer}
+.code button:hover{color:var(--code-ink)}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13.5px/1.6 var(--mono);color:var(--code-ink)}
+pre .c{color:var(--code-dim)} pre .k{color:var(--code-key)} pre .s{color:var(--code-str)}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);color:var(--accent-ink);padding:1px 5px;border-radius:4px}
+pre code{background:none;color:inherit;padding:0;font-size:inherit}
+.why{font-size:14.5px;color:var(--muted)}
+.why b{color:var(--ink);font-weight:600}
+
+.tips{display:grid;gap:0;border-top:1px solid var(--line)}
+.tip{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tip b{font-weight:600}
+.tip span{color:var(--muted);font-size:15px}
+
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.list{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.list li{padding-left:18px;position:relative}
+.list li::before{content:"";position:absolute;left:0;top:.65em;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.list.dont li::before{background:var(--warn)}
+h3.col{font:600 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--muted)}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.stat{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font:700 30px/1 var(--display);color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:13.5px;color:var(--muted)}
+
+.case{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:14px}
+.case dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px 16px}
+.case dt{font:500 11px/1.9 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.case dd{margin:0}
+@media (max-width:520px){.case dl{grid-template-columns:minmax(0,1fr)}.case dt{line-height:1}}
+
+.path{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;counter-reset:s}
+.step{border-top:3px solid var(--accent);background:var(--surface);border-radius:0 0 10px 10px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.step:nth-child(2){border-top-color:#3a8f9e}.step:nth-child(3){border-top-color:var(--navy)}
+.step h3{margin:0;font:600 15px var(--body)}
+.step ul{margin:0;padding-left:18px;font-size:14.5px;color:var(--muted);display:grid;gap:4px}
+
+.iv{display:grid;gap:18px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;min-width:0}
+.q .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.q .brand{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:5px;background:var(--navy);color:var(--bg)}
+.q blockquote{margin:0;font:600 clamp(18px,2.4vw,21px)/1.35 var(--display);text-wrap:balance}
+.q .asked{font-size:13.5px;color:var(--muted);margin:0}
+.q h4{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.q p{margin:0}
+.q ul,.q ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px}
+details.ans{border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+details.ans>summary{cursor:pointer;padding:12px 16px;font:600 14px var(--body);color:var(--accent-ink);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.ans>summary::-webkit-details-marker{display:none}
+details.ans>summary::after{content:"+";font:500 18px var(--mono)}
+details.ans[open]>summary::after{content:"−"}
+details.ans>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+details.ans .body{padding:0 16px 16px;display:grid;gap:12px}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.levels div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--surface)}
+.levels b{display:block;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.levels .jr b{color:var(--warn)} .levels .sr b{color:var(--accent-ink)}
+.miss{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14.5px}
+.sources ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px}
+.sources li span{color:var(--muted)}
+footer{max-width:1120px;margin:48px auto 0;padding-top:20px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a{transition:color .15s,border-color .15s}}
+</style>
+
+<header class="mast">
+  <div class="issue">
+    <span class="pill">Week 40 · Fri 2 Oct 2026</span>
+    <span>Every Friday · 10:00 Dhaka</span>
+  </div>
+  <h1>Vue &amp; Nuxt <span>Friday Brief</span></h1>
+  <p class="lede">A 10-minute read: what shipped, three snippets worth stealing, tips, one real team's story and two interview questions. Tuned for a Nuxt front end talking to a Spring Boot API.</p>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <p>This issue</p>
+    <ol>
+      <li><a href="#musthave">Must-have this week</a></li>
+      <li><a href="#shipped">What shipped</a></li>
+      <li><a href="#spotlight">Feature spotlight</a></li>
+      <li><a href="#snippets">Snippets</a></li>
+      <li><a href="#tips">Tips &amp; tricks</a></li>
+      <li><a href="#practices">Best practices</a></li>
+      <li><a href="#industry">Industry adoption</a></li>
+      <li><a href="#realproblem">Real problem solved</a></li>
+      <li><a href="#interview">Interview corner</a></li>
+      <li><a href="#path">Learning path</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="musthave" class="musthave">
+      <p class="kicker">Must-have this week</p>
+      <h2>If you only take three things</h2>
+      <ol>
+        <li>Before you bump <code>@vueuse/core</code> to 15, read the breaking changes. <code>useThrottleFn</code> now defaults to <code>trailing: true</code>, <code>templateRef</code> is gone (use Vue's <code>useTemplateRef</code>), and Node 20 support was dropped.</li>
+        <li>When SSR calls Spring Boot, forward <em>only</em> the <code>cookie</code> header with <code>useRequestHeaders(['cookie'])</code>. Don't forward everything (Snippet 2).</li>
+        <li>Check your <code>routeRules</code>. Any route with <code>swr</code>, <code>isr</code> or <code>prerender</code> serves the same HTML to every visitor, so it must never render per-user data. The Nuxt interview question below explains why.</li>
+      </ol>
+    </section>
+
+    <section id="shipped">
+      <p class="kicker">Releases &amp; news</p>
+      <h2>What shipped</h2>
+      <p class="sub">The big news is that h3 v2, the server layer under Nitro, is now stable. Vue 3.6 is still in release candidates. Also out: patch releases of Nuxt UI 4.11.3, @nuxt/test-utils 4.3.3, Pinia Colada 1.4.7, Vuetify 4.2.3 and PrimeVue 5.0.2. Nuxt core is still on 4.5.2.</p>
+      <div class="releases">
+        <article class="rel"><span class="tag">Stable</span><span class="v">h3 2.0.1 · 3 Oct</span><h3>h3 v2 is stable</h3><p>The release notes say "H3 v2 is now stable!" It's a rewrite on web-standard <code>Request</code>/<code>Response</code>, with onion-style <code>(event, next)</code> middleware and a new route-rules engine. Deprecated v1 names are still exported to make upgrading easier. Needs Node 20.19+.</p></article>
+        <article class="rel"><span class="tag pre">Pre-release</span><span class="v">vue 3.6.0-rc.10 · 30 Sep</span><h3>Vue 3.6, RC number ten</h3><p>Mostly Vapor compiler and runtime fixes. Two fixes apply outside Vapor too: reactivity now notifies the rest of a batch when one subscriber throws, and <code>useModel</code> keeps its local value when the prop didn't change. Stable is still 3.5.43.</p></article>
+        <article class="rel"><span class="tag">Stable</span><span class="v">@vueuse/core 15.0.0 · 16 Sep</span><h3>VueUse 15 (major)</h3><p>New composables: <code>useLiveAnnouncer</code>, <code>useWebMCP</code> and <code>useTemporalNow</code>. Breaking: <code>templateRef</code> is removed, the old timer options are replaced by <code>scheduler</code>, and <code>useThrottleFn</code> now defaults to trailing.</p></article>
+        <article class="rel"><span class="tag">Stable</span><span class="v">vite 8.3.2 · 1 Oct</span><h3>Vite 8.3.x patches</h3><p>8.3.0 (10 Sep) added a top-level <code>tsconfig</code> option and dev-server DevTools integration. 8.3.1 and 8.3.2 fix the optimizer, sourcemaps and CSS preloading.</p></article>
+        <article class="rel"><span class="tag pre">Beta</span><span class="v">@nuxt/devtools 4.0.0-beta.3 · 2 Oct</span><h3>DevTools 4, beta 3</h3><p>Improves timeline function wrapping and fixes editor path resolution. It's the third beta in three weeks, so expect a release candidate soon.</p></article>
+        <article class="rel"><span class="tag">Security</span><span class="v">@nuxt/content 3.16.1 · 21 Sep</span><h3>Nuxt Content ReDoS fix</h3><p>Fixes a ReDoS vulnerability in <code>assertSafeQuery</code> and adds a <code>content.llms</code> option. Upgrade if you run Nuxt Content.</p></article>
+      </div>
+    </section>
+
+    <section id="spotlight">
+      <p class="kicker">Feature spotlight · from the official docs</p>
+      <h2>One Nuxt feature, one Vue feature</h2>
+      <p class="sub">Last week covered the <code>enabled</code> fetch option and lazy hydration. This week covers one feature for layout and one for accessibility. Both are taken from nuxt.com and vuejs.org.</p>
+      <div class="spot">
+
+        <article class="feat">
+          <div class="fw"><span class="brand">Nuxt 4.5</span><span class="tag">Stable</span></div>
+          <h3>Named views: one route, several <code>&lt;NuxtPage&gt;</code> outlets</h3>
+          <p>From the docs: "A single route can render into multiple <code>&lt;NuxtPage&gt;</code> outlets in a parent component by giving each outlet a <code>name</code> and providing a sibling page file for each name." It's Vue Router's named views, set up through file names instead of a hand-written routes array.</p>
+          <div class="flow" aria-label="How named views work">
+            <div><b>1 · Name the file</b>Next to <code>child.vue</code>, add <code>child@sidebar.vue</code></div>
+            <div><b>2 · Add an outlet</b>The parent renders <code>&lt;NuxtPage /&gt;</code> and <code>&lt;NuxtPage name="sidebar" /&gt;</code></div>
+            <div><b>3 · Navigate</b>On <code>/parent/child</code>, each file renders into its matching outlet. Outlets with no matching file stay empty</div>
+          </div>
+          <h4>Turn it on</h4>
+          <div class="code"><div class="fn">app/pages/orders.vue · orders/[id].vue · orders/[id]@sidebar.vue<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c"># file layout (Nuxt 4.5+, no config flag needed)</span>
+app/pages/
+  orders.vue
+  orders/
+    [id].vue            <span class="c"># → default outlet</span>
+    [id]@sidebar.vue    <span class="c"># → outlet named "sidebar"</span>
+
+<span class="c">&lt;!-- app/pages/orders.vue --&gt;</span>
+&lt;<span class="k">template</span>&gt;
+  &lt;div class=<span class="s">"grid"</span>&gt;
+    &lt;<span class="k">NuxtPage</span> /&gt;
+    &lt;<span class="k">aside</span>&gt;&lt;<span class="k">NuxtPage</span> name=<span class="s">"sidebar"</span> /&gt;&lt;/<span class="k">aside</span>&gt;
+  &lt;/div&gt;
+&lt;/<span class="k">template</span>&gt;
+
+<span class="c">&lt;!-- orders/[id]@sidebar.vue: params work as usual --&gt;</span>
+&lt;<span class="k">script setup</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">const</span> route = useRoute()
+<span class="k">const</span> { data: history } = <span class="k">await</span> useFetch(() =&gt; <span class="s">`/orders/${route.params.id}/history`</span>, {
+  baseURL: useRuntimeConfig().public.apiBase,
+})
+&lt;/<span class="k">script</span>&gt;</code></pre></div>
+          <h4>Watch out for</h4>
+          <ul>
+            <li><code>definePageMeta</code> is only read from the default route file. Meta written in a <code>name@view.vue</code> file "has no effect on the route", so middleware and layout belong in <code>[id].vue</code>.</li>
+            <li>The 4.5 release notes say "per-view rendering modes aren't supported". The whole route shares one rendering mode, so you can't, for example, make only the sidebar client-only through route rules.</li>
+            <li>Outlets with no matching named file render nothing, so plan an empty state for the <code>&lt;aside&gt;</code>.</li>
+            <li>Requires Nuxt 4.5 or later.</li>
+          </ul>
+          <p class="yours"><b>In your project:</b> it suits master-detail screens backed by Spring Boot. The default view shows the order (<code>GET /orders/{id}</code>) and the sidebar view shows its audit trail (<code>GET /orders/{id}/history</code>, perhaps a Mongo sub-collection). Each view fetches its own data and owns its loading state, and the parent page doesn't need <code>v-if</code> logic to decide what goes in the aside.</p>
+          <a href="https://nuxt.com/docs/4.x/directory-structure/app/pages#named-views-v45">Official docs: Pages → Named Views (v4.5)</a>
+        </article>
+
+        <article class="feat">
+          <div class="fw"><span class="brand">Vue 3.5+</span><span class="tag">Stable</span></div>
+          <h3><code>useId()</code>: SSR-safe IDs for labels and ARIA</h3>
+          <p>The docs say it is "used to generate unique-per-application IDs for accessibility attributes or form elements". The IDs are "guaranteed to be stable across the server and client renders", so you can stop using <code>Math.random()</code> ids and counters, which cause hydration mismatches.</p>
+          <div class="flow" aria-label="How useId works">
+            <div><b>1 · Call</b>Call <code>useId()</code> in <code>setup</code>. Each call, and each component instance, gets a new id</div>
+            <div><b>2 · Bind</b>Use it for <code>:for</code>/<code>:id</code>, <code>aria-describedby</code> and <code>aria-controls</code></div>
+            <div><b>3 · Hydrate</b>The server and client generate the same string, so there's no mismatch warning</div>
+          </div>
+          <h4>Turn it on</h4>
+          <div class="code"><div class="fn">components/FormField.vue<button type="button" data-copy>Copy</button></div>
+<pre><code>&lt;<span class="k">script setup</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">import</span> { useId } <span class="k">from</span> <span class="s">'vue'</span>   <span class="c">// auto-imported in Nuxt</span>
+
+<span class="k">defineProps</span>&lt;{ label: string; error?: string }&gt;()
+<span class="k">const</span> model = defineModel&lt;string&gt;()
+<span class="k">const</span> id = useId()               <span class="c">// call in setup, NOT inside computed()</span>
+<span class="k">const</span> errorId = <span class="s">`${id}-error`</span>
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">template</span>&gt;
+  &lt;label :for=<span class="s">"id"</span>&gt;{{ label }}&lt;/label&gt;
+  &lt;input :id=<span class="s">"id"</span> v-model=<span class="s">"model"</span>
+         :aria-invalid=<span class="s">"!!error"</span>
+         :aria-describedby=<span class="s">"error ? errorId : undefined"</span> /&gt;
+  &lt;p v-if=<span class="s">"error"</span> :id=<span class="s">"errorId"</span>&gt;{{ error }}&lt;/p&gt;
+&lt;/<span class="k">template</span>&gt;
+
+<span class="c">// two Vue apps on one page? give each a prefix</span>
+app.config.idPrefix = <span class="s">'admin'</span>    <span class="c">// ids become 'admin:0', 'admin:1', …</span></code></pre></div>
+          <h4>Watch out for</h4>
+          <ul>
+            <li>The docs warn that <code>useId()</code> "should not be called inside a <code>computed()</code>", because it may cause instance conflicts. Create the id once outside and reference it inside.</li>
+            <li>IDs are unique <em>per application</em>. If more than one Vue app mounts on the same page, set <code>app.config.idPrefix</code> for each so the ids don't collide.</li>
+            <li>Don't use them as data keys or persist them. They identify DOM nodes for one render tree and mean nothing to your API.</li>
+          </ul>
+          <p class="yours"><b>In your project:</b> pair it with last week's <code>ProblemDetail</code> handling. When Spring returns a 400 with field errors, render each message in a <code>&lt;p :id="errorId"&gt;</code> linked through <code>aria-describedby</code>, so screen readers announce the server's message for that exact field. Nuxt 4 auto-imports Vue's <code>useId</code>; there's no separate Nuxt version in the 4.x docs.</p>
+          <a href="https://vuejs.org/api/composition-api-helpers#useid">Official docs: Composition API helpers → useId()</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="snippets">
+      <p class="kicker">Snippets</p>
+      <h2>Code worth copying</h2>
+      <p class="sub">Snippets 2 and 3 are written for a Nuxt front end calling a Spring Boot + MongoDB API. Every API name has been checked against vuejs.org, nuxt.com and pinia-colada.esm.dev.</p>
+
+      <div class="snip">
+        <h3>Props with defaults, no <code>withDefaults</code> <span class="lvl">Basic · Vue 3.5+</span></h3>
+        <p>Reactive props destructure lets you write defaults with plain JavaScript syntax. The catch: pass a <em>getter</em> to <code>watch</code> or to a composable, not the destructured value.</p>
+        <div class="code"><div class="fn">components/OrderBadge.vue<button type="button" data-copy>Copy</button></div>
+<pre><code>&lt;<span class="k">script setup</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">type</span> OrderStatus = <span class="s">'PENDING'</span> | <span class="s">'PAID'</span> | <span class="s">'SHIPPED'</span> | <span class="s">'CANCELLED'</span>  <span class="c">// mirrors the Java enum</span>
+
+<span class="k">const</span> { status = <span class="s">'PENDING'</span>, compact = <span class="k">false</span> } =
+  defineProps&lt;{ status?: OrderStatus; compact?: boolean }&gt;()
+
+<span class="k">const</span> label = computed(() =&gt; status.charAt(<span class="s">0</span>) + status.slice(<span class="s">1</span>).toLowerCase())
+
+<span class="c">// ❌ watch(status, …) passes a plain value, and Vue's compiler warns</span>
+watch(() =&gt; status, (now, before) =&gt; {     <span class="c">// ✅ getter keeps it reactive</span>
+  <span class="k">if</span> (now === <span class="s">'CANCELLED'</span>) console.info(<span class="s">`order went ${before} → ${now}`</span>)
+})
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">template</span>&gt;
+  &lt;span :class=<span class="s">"['badge', status.toLowerCase(), { compact }]"</span>&gt;{{ label }}&lt;/span&gt;
+&lt;/<span class="k">template</span>&gt;</code></pre></div>
+        <p class="why"><b>Gotcha:</b> to hand a destructured prop to your own composable, write <code>useThing(() =&gt; status)</code>. Inside it, read the value with <code>toValue()</code>.</p>
+      </div>
+
+      <div class="snip">
+        <h3>Forward the session cookie to Spring Boot during SSR <span class="lvl">Intermediate · Nuxt 3.x/4.x + Spring Security</span></h3>
+        <p>During SSR the request to Spring comes from the Nuxt server, not the browser, so the user's <code>JSESSIONID</code> doesn't go with it unless you pass it on. Forward that one header only.</p>
+        <div class="code"><div class="fn">app/composables/useMe.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="k">export interface</span> Me { id: string; email: string; roles: string[] }
+
+<span class="k">export function</span> useMe() {
+  <span class="k">const</span> config = useRuntimeConfig()
+  <span class="c">// SSR: { cookie: 'JSESSIONID=…' } · browser: {} (empty object, per the docs)</span>
+  <span class="k">const</span> headers = useRequestHeaders([<span class="s">'cookie'</span>])
+
+  <span class="k">return</span> useFetch&lt;Me&gt;(<span class="s">'/api/users/me'</span>, {
+    key: <span class="s">'me'</span>,
+    baseURL: config.public.apiBase,      <span class="c">// e.g. https://api.example.com</span>
+    headers,                             <span class="c">// only the cookie, never host/content-length/x-forwarded-*</span>
+    credentials: <span class="s">'include'</span>,             <span class="c">// browser-side calls send the cookie cross-origin</span>
+  })
+}
+
+<span class="c">// in a page or middleware</span>
+<span class="k">const</span> { data: me, error } = <span class="k">await</span> useMe()</code></pre></div>
+        <p class="why"><b>Why it matters:</b> the docs warn: "Be very careful before proxying headers to an external API and just include headers that you need". <code>host</code>, <code>content-length</code> and the <code>x-forwarded-*</code> headers should never be forwarded. If Spring sets a cookie in its SSR response, the same docs page has a <code>fetchWithCookie</code> recipe that copies <code>set-cookie</code> back to the browser with <code>appendResponseHeader</code>.</p>
+      </div>
+
+      <div class="snip">
+        <h3>Cache Spring Data pages and refresh them after a mutation <span class="lvl">Advanced · @pinia/colada 1.x (+ @pinia/colada-nuxt)</span></h3>
+        <p>Pinia Colada caches each query under a key. One mutation can then invalidate every page of a list, because keys match hierarchically: <code>['orders']</code> also matches <code>['orders', 'c42', 0]</code>.</p>
+        <div class="code"><div class="fn">app/composables/orders.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="k">import</span> { useQuery, useMutation, useQueryCache } <span class="k">from</span> <span class="s">'@pinia/colada'</span>
+<span class="k">import</span> type { Page } <span class="k">from</span> <span class="s">'~/types/page'</span>   <span class="c">// { content, page: {...} } from last week</span>
+<span class="k">import</span> type { Order } <span class="k">from</span> <span class="s">'~/types/order'</span>
+
+<span class="k">export function</span> useOrders(customerId: MaybeRefOrGetter&lt;string&gt;, pageNo: MaybeRefOrGetter&lt;number&gt;) {
+  <span class="k">const</span> { $api } = useNuxtApp()             <span class="c">// your $fetch.create() instance</span>
+  <span class="k">return</span> useQuery({
+    key: () =&gt; [<span class="s">'orders'</span>, toValue(customerId), toValue(pageNo)],   <span class="c">// reactive key</span>
+    query: () =&gt; $api&lt;Page&lt;Order&gt;&gt;(<span class="s">'/orders'</span>, {
+      query: { customerId: toValue(customerId), page: toValue(pageNo), size: <span class="s">20</span> },
+    }),
+  })
+}
+
+<span class="k">export function</span> useCancelOrder() {
+  <span class="k">const</span> { $api } = useNuxtApp()
+  <span class="k">const</span> queryCache = useQueryCache()
+  <span class="k">return</span> useMutation({
+    mutation: (id: string) =&gt; $api(<span class="s">`/orders/${id}/cancel`</span>, { method: <span class="s">'POST'</span> }),
+    <span class="c">// success or failure: re-sync every cached orders page</span>
+    onSettled: () =&gt; queryCache.invalidateQueries({ key: [<span class="s">'orders'</span>] }),
+  })
+}
+
+<span class="c">// page: const { data, status, refresh } = useOrders(customerId, page)</span>
+<span class="c">//       const { mutate: cancel, asyncStatus } = useCancelOrder()</span></code></pre></div>
+        <p class="why"><b>Why it matters:</b> without this, a cancel on page 2 leaves page 1's cached copy stale. Add <code>exact: true</code> when you mean one key only. For optimistic UI, the invalidation guide shows <code>onMutate</code> + <code>setQueryData</code> with a rollback in <code>onError</code>.</p>
+      </div>
+
+    </section>
+
+    <section id="tips">
+      <p class="kicker">Tips &amp; tricks</p>
+      <h2>Small things that save time</h2>
+      <div class="tips">
+        <div class="tip"><b>Check <code>useThrottleFn</code> calls before VueUse 15</b><span>The default <code>trailing</code> changed from <code>false</code> to <code>true</code>, so a throttled "save" handler can now fire one extra time at the end of a burst. Pass <code>trailing</code> explicitly if your code depends on the old behaviour.</span></div>
+        <div class="tip"><b>Make sure CI runs Node 20.19 or newer</b><span>h3 v2 requires Node 20.19+, and VueUse 15 dropped Node 20 support altogether. Update <code>engines</code> and the CI image before Nitro moves to h3 v2.</span></div>
+        <div class="tip"><b>Try <code>defineRouteRules</code> inside a page</b><span>With <code>experimental.inlineRouteRules: true</code>, a page can declare <code>defineRouteRules({ prerender: true })</code> itself. Regex params like <code>/:id(\d+)</code> can't be converted to a rule pattern and are silently skipped.</span></div>
+        <div class="tip"><b>Use <code>useLayout()</code> to read the active layout</b><span>New in Nuxt 4.5, it returns a read-only computed ref of the resolved layout. That's handy for analytics or for hiding a header on <code>layout === 'auth'</code>.</span></div>
+        <div class="tip"><b>Smoke-test 3.6.0-rc.10 in a branch</b><span>rc.10 changes <code>useModel</code> to keep its local value when the prop didn't change. If you wrote <code>defineModel</code> workarounds, run your form tests against the RC now.</span></div>
+      </div>
+    </section>
+
+    <section id="practices">
+      <p class="kicker">Best practices &amp; industry practices</p>
+      <h2>What teams are standardising on</h2>
+      <p class="sub">Taken from Nuxt's data-fetching and rendering docs, the Vue props guide, and how Spring Security handles credentialed CORS.</p>
+      <div class="twocol">
+        <div>
+          <h3 class="col">Do</h3>
+          <ul class="list">
+            <li>Allowlist the headers you forward from SSR to your API. Usually that's just <code>cookie</code> or <code>authorization</code>.</li>
+            <li>Choose a rendering mode per route. <code>prerender</code> for marketing pages, <code>swr</code>/<code>isr</code> for public catalogues, plain SSR for anything personalised, <code>ssr: false</code> for admin areas.</li>
+            <li>Use <code>useId()</code> for every label/input and <code>aria-*</code> pairing in SSR apps.</li>
+            <li>Key client caches hierarchically (<code>['orders', customerId, page]</code>) so you can invalidate a whole family at once.</li>
+            <li>Allow an explicit list of origins with credentials on the Spring side.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="col">Retire</h3>
+          <ul class="list dont">
+            <li><code>Math.random()</code> or module-level counters for DOM ids. They change between server and client.</li>
+            <li><code>withDefaults()</code> in new code on Vue 3.5+. Destructure with defaults instead.</li>
+            <li>Forwarding <code>useRequestHeaders()</code> with no filter. It leaks <code>host</code> and <code>x-forwarded-*</code> to an external API.</li>
+            <li>VueUse's <code>templateRef</code>. It was removed in v15; use Vue's <code>useTemplateRef</code>.</li>
+            <li><code>allowedOrigins("*")</code> together with credentials. Spring refuses that combination; list origins or use <code>allowedOriginPatterns</code>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="code" style="margin-top:22px"><div class="fn">Spring Boot · CORS for a Nuxt front end that sends cookies<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// WebConfig.java: only matters for calls made by the BROWSER.</span>
+<span class="c">// SSR calls from the Nuxt server are server-to-server and ignore CORS.</span>
+<span class="k">@Configuration</span>
+<span class="k">class</span> WebConfig <span class="k">implements</span> WebMvcConfigurer {
+  <span class="k">@Override</span>
+  <span class="k">public void</span> addCorsMappings(CorsRegistry registry) {
+    registry.addMapping(<span class="s">"/api/**"</span>)
+        .allowedOrigins(<span class="s">"https://app.example.com"</span>, <span class="s">"http://localhost:3000"</span>)
+        .allowedMethods(<span class="s">"GET"</span>, <span class="s">"POST"</span>, <span class="s">"PUT"</span>, <span class="s">"PATCH"</span>, <span class="s">"DELETE"</span>)
+        .allowCredentials(<span class="k">true</span>);   <span class="c">// pairs with credentials: 'include' in Nuxt</span>
+  }
+}
+<span class="c">// With Spring Security, also call http.cors(Customizer.withDefaults())</span></code></pre></div>
+    </section>
+
+    <section id="industry">
+      <p class="kicker">Industry adoption</p>
+      <h2>Who uses Vue and Nuxt, and for what</h2>
+      <p class="sub">These rows come from Monterail's "Companies using Vue.js" list (updated 2 Oct 2026) and the Easyship case study below. Stats are quoted only where that source gives them.</p>
+      <div class="stats">
+        <div class="stat"><b>93.4%</b><span>of State of Vue 2025 respondents plan to use Vue for their next project (Monterail)</span></div>
+        <div class="stat"><b>6.4M</b><span>weekly npm downloads of Vue, as cited by Monterail</span></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Industry</th><th>Company</th><th>How they use it</th></tr></thead>
+          <tbody>
+            <tr><td>Developer tools</td><td>GitLab</td><td>Core platform UI, moved from jQuery to Vue</td></tr>
+            <tr><td>Gaming</td><td>Nintendo</td><td>Regional websites (DE, FR, ES, UK) sharing reusable UI components</td></tr>
+            <tr><td>Financial media</td><td>The Motley Fool</td><td>Dynamic data and real-time chart updates for investors</td></tr>
+            <tr><td>Creative software</td><td>Adobe (Behance)</td><td>Portfolio front end with dynamic, component-based interfaces</td></tr>
+            <tr><td>Video / SaaS</td><td>Livestorm</td><td>Core front end for registration, email cadences and analytics</td></tr>
+            <tr><td>Consumer electronics</td><td>Xiaomi</td><td>Official website and high-traffic web apps</td></tr>
+            <tr><td>Logistics / e-commerce</td><td>Easyship</td><td>Marketing site rebuilt from AngularJS to Vue + Nuxt SSR. Details in the next section.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="realproblem">
+      <p class="kicker">Real problem solved</p>
+      <h2>AngularJS → Nuxt SSR: +36% conversions for a shipping platform</h2>
+      <div class="case">
+        <dl>
+          <dt>Who</dt><dd>Easyship, an all-in-one shipping tool used by 15,000+ e-commerce vendors, working with the Vue agency Monterail.</dd>
+          <dt>Problem</dt><dd>An AngularJS marketing site that was slow (high bounce rates), weak for SEO ("AngularJS framework is not SEO-friendly out of the box"), and visually dated, with conversion opportunities going unused.</dd>
+          <dt>Approach</dt><dd>Rebuilt it in Vue with Nuxt as the core framework, for built-in SSR. They added a full meta-tag strategy (canonical URLs, Open Graph, Twitter cards, JSON-LD), served translations from an Express backend with MongoDB, and designed responsive-first.</dd>
+          <dt>Result</dt><dd>37% better performance and load times, 36% more conversions, 19% more time on site and 14% more organic traffic. The project took under three months.</dd>
+          <dt>Takeaway</dt><dd>For public pages, choosing SSR is a business decision as much as a technical one. Your stack has the same split: SEO-facing routes get SSR/<code>swr</code> and good <code>useSeoMeta</code>, logged-in screens don't need it. The case study is from 2025, but the reasoning holds.</dd>
+        </dl>
+        <a href="https://www.monterail.com/blog/from-angularjs-to-vuejs">Read the full case study (Monterail, updated Mar 2025)</a>
+      </div>
+    </section>
+
+    <section id="interview">
+      <p class="kicker">Interview corner</p>
+      <h2>One Vue question, one Nuxt question</h2>
+      <p class="sub">This week's topics are reactivity and rendering/caching. Answer out loud first, then open the model answer. Answers are checked against vuejs.org and nuxt.com.</p>
+      <div class="iv">
+
+        <article class="q">
+          <div class="meta"><span class="brand">Vue</span><span class="tag">Mid → Senior</span><span class="lvl">Reactivity · watchers</span></div>
+          <blockquote>A search box calls a Spring Boot endpoint, and the page also shows a filtered total. Which do you use for each: <code>computed</code>, <code>watch</code> or <code>watchEffect</code>? And how do you stop a slow, older response from overwriting a newer one?</blockquote>
+          <p class="asked">Asked in: Hyring's Vue set (Q5 "When do you use computed versus watch?", rated for freshers, and Q24 "What is the difference between watch and watchEffect?", rated intermediate), GreatFrontEnd's Vue interview guide ("If you can calculate it during render, use computed"), and SharpSkill's 25 essential Vue questions (watchEffect vs watch). The race-condition follow-up is what moves it up to senior level.</p>
+          <h4>What they're really testing</h4>
+          <ul>
+            <li>Can you tell derived state (no side effects, cached) apart from side effects that react to a change?</li>
+            <li>Do you know watcher cleanup and dependency tracking well enough to prevent stale-response bugs?</li>
+          </ul>
+          <details class="ans">
+            <summary>Show model answer</summary>
+            <div class="body">
+              <p><b>30-second version:</b> the total is derived from state, so it's a <code>computed</code>: cached, declarative, and recalculated only when its dependencies change. The API call is a side effect, so it's a <code>watch</code> on the query. That gives an explicit source, it's lazy by default, and you get the new and old values. <code>watchEffect</code> runs immediately and tracks whatever it reads, but only during its synchronous part, so anything read after the first <code>await</code> isn't tracked. For races, register a cleanup with <code>onWatcherCleanup()</code> (Vue 3.5+) that aborts the previous request before the next run starts. In Nuxt, <code>useFetch</code> with a reactive <code>query</code> does this for you.</p>
+              <div class="code"><div class="fn">SearchOrders.vue<button type="button" data-copy>Copy</button></div>
+<pre><code>&lt;<span class="k">script setup</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">import</span> { ref, computed, watch, onWatcherCleanup } <span class="k">from</span> <span class="s">'vue'</span>
+
+<span class="k">const</span> q = ref(<span class="s">''</span>)
+<span class="k">const</span> results = ref&lt;Order[]&gt;([])
+
+<span class="c">// ✅ derived state → computed (cached, no side effects)</span>
+<span class="k">const</span> total = computed(() =&gt; results.value.reduce((s, o) =&gt; s + o.amount, <span class="s">0</span>))
+
+<span class="c">// ✅ side effect → watch with an explicit source</span>
+watch(q, <span class="k">async</span> (term) =&gt; {
+  <span class="k">const</span> controller = <span class="k">new</span> AbortController()
+  onWatcherCleanup(() =&gt; controller.abort())   <span class="c">// runs before the next call · must be registered before any await</span>
+  <span class="k">try</span> {
+    results.value = <span class="k">await</span> $fetch&lt;Order[]&gt;(<span class="s">'/api/orders/search'</span>, {
+      query: { q: term }, signal: controller.signal,
+    })
+  } <span class="k">catch</span> (e) {
+    <span class="k">if</span> (!controller.signal.aborted) <span class="k">throw</span> e      <span class="c">// ignore our own aborts</span>
+  }
+})
+&lt;/<span class="k">script</span>&gt;
+
+<span class="c">// Nuxt shortcut: reactive query + default dedupe:'cancel' handles the race</span>
+<span class="c">// const { data } = await useFetch('/api/orders/search', { query: { q } })</span></code></pre></div>
+              <div class="levels">
+                <div class="jr"><b>Junior answer</b>"Computed is cached, watch is for when something changes." That's correct, but it stops there and puts the fetch in a <code>watchEffect</code> with no cleanup.</div>
+                <div class="sr"><b>Senior answer</b>Uses computed for derived state and <code>watch</code> for effects. Explains that <code>watchEffect</code> only tracks the synchronous part before the first <code>await</code>. Fixes the race with <code>onWatcherCleanup</code> (or the <code>onCleanup</code> third argument on older versions). Points out that Nuxt's <code>useFetch</code> already cancels superseded requests, and mentions debouncing so the Spring API isn't hit on every keystroke.</div>
+              </div>
+              <h4>Likely follow-ups</h4>
+              <ol>
+                <li>How do you run the watcher once at start? (<code>{ immediate: true }</code>. And <code>{ once: true }</code>, Vue 3.4+, fires only on the first change.)</li>
+                <li>You need the updated DOM inside the callback. What do you do? (<code>flush: 'post'</code>, or <code>watchPostEffect()</code>.)</li>
+                <li>When does a watcher <em>not</em> stop on unmount? (When it was created asynchronously, for example after an <code>await</code> or inside a <code>setTimeout</code>. Call the returned stop function yourself.)</li>
+              </ol>
+            </div>
+          </details>
+          <p class="miss"><b>Common mistake:</b> using <code>watch</code> to copy derived values into another ref (<code>watch(items, v =&gt; total.value = sum(v))</code>). You end up with two sources of truth, an extra render, and a value that can be out of date for one tick. If you can calculate it during render, use <code>computed</code>.</p>
+          <a href="https://vuejs.org/guide/essentials/watchers">Official docs: Watchers (cleanup, flush timing, once)</a> · <a href="https://vuejs.org/guide/essentials/computed">Computed properties</a>
+        </article>
+
+        <article class="q">
+          <div class="meta"><span class="brand">Nuxt</span><span class="tag">Senior</span><span class="lvl">Hybrid rendering · routeRules · caching</span></div>
+          <blockquote>Your Nuxt app has a public product catalogue, a marketing home page, a logged-in "My orders" page and an internal admin. All of it is backed by Spring Boot. Configure rendering per route, and tell me where each cache lives and what could go wrong.</blockquote>
+          <p class="asked">Asked in: GoodSpace's 2026 Nuxt set (Q14 "What are the rendering modes in Nuxt 3 and when do you use each?", Q16 "What is hybrid rendering and how does ISR work in Nuxt 3?", Q34 on on-demand ISR revalidation), Vue School's "Nuxt Rendering Modes and Hybrid Rendering" article, and Nuxt SEO's "Rendering for SEO in 2026" guide.</p>
+          <h4>What they're really testing</h4>
+          <ul>
+            <li>Do you know what each route rule does, and which ones only take effect on certain hosting platforms?</li>
+            <li>Do you understand that a cached page is shared across users, and the cross-user data leak that follows if you cache the wrong page?</li>
+          </ul>
+          <details class="ans">
+            <summary>Show model answer</summary>
+            <div class="body">
+              <p><b>30-second version:</b> use <code>routeRules</code>, Nuxt's hybrid rendering. The home page is <code>prerender: true</code>, rendered once at build time and served as a static file. The catalogue is <code>swr</code>: cache headers are added and the response is cached "on the server or reverse proxy for a configurable TTL". On Netlify or Vercel, <code>isr</code> pushes it into the CDN cache instead. "My orders" stays plain SSR with no cache, because the HTML contains one user's data. Admin gets <code>ssr: false</code> and renders only in the browser. The main risk: if you put <code>swr</code>, <code>isr</code> or <code>prerender</code> on a personalised page, the first user's orders get served to everyone.</p>
+              <div class="code"><div class="fn">nuxt.config.ts · server/api/categories.get.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="k">export default</span> defineNuxtConfig({
+  routeRules: {
+    <span class="s">'/'</span>:            { prerender: <span class="k">true</span> },   <span class="c">// built once at build time; data must exist at build time</span>
+    <span class="s">'/products/**'</span>: { swr: <span class="s">600</span> },        <span class="c">// cached 10 min on Nitro/proxy, revalidated in background</span>
+    <span class="c">// on Vercel/Netlify: '/products/**': { isr: 600 } → CDN cache</span>
+    <span class="s">'/orders/**'</span>:   { headers: { <span class="s">'cache-control'</span>: <span class="s">'private, no-store'</span> } }, <span class="c">// SSR, never shared</span>
+    <span class="s">'/admin/**'</span>:    { ssr: <span class="k">false</span> },       <span class="c">// SPA island, no server HTML</span>
+    <span class="s">'/old-shop'</span>:    { redirect: <span class="s">'/products'</span> },
+  },
+})
+
+<span class="c">// server/api/categories.get.ts: cache an expensive Spring call in Nitro</span>
+<span class="k">export default</span> defineCachedEventHandler(<span class="k">async</span> (event) =&gt; {
+  <span class="k">return</span> $fetch(<span class="s">`${useRuntimeConfig(event).apiBase}/categories`</span>)  <span class="c">// private runtime config</span>
+}, { maxAge: <span class="s">60</span> * <span class="s">10</span> })</code></pre></div>
+              <p><b>Where each cache lives:</b> <code>prerender</code> produces static files in the build output. <code>swr</code> caches on the Nitro server or a reverse proxy. <code>isr</code> uses the platform CDN, currently Netlify or Vercel per the docs. None of them replace HTTP caching on the Spring side, so public GETs there can still send their own <code>Cache-Control</code>.</p>
+              <div class="levels">
+                <div class="jr"><b>Junior answer</b>Lists "SSR, SSG, SPA" and puts <code>swr: true</code> on everything "for speed".</div>
+                <div class="sr"><b>Senior answer</b>Picks a mode per route and explains why. Knows <code>isr</code> needs platform support. Treats shared caches as public-only and marks personalised responses <code>private</code>. Thinks about invalidation (TTL vs on-demand). Adds <code>defineCachedEventHandler</code> for hot server routes and mentions page-level <code>defineRouteRules</code> (experimental).</div>
+              </div>
+              <h4>Likely follow-ups</h4>
+              <ol>
+                <li>Can a page declare its own rule? (Yes. <code>defineRouteRules()</code> inside the page, behind <code>experimental.inlineRouteRules</code>. Paths with regex params, partial segments or repeatable params are not converted, so their rules aren't applied.)</li>
+                <li><code>swr</code> vs <code>isr</code>? (Both cache the response for a TTL. <code>isr</code> can also add it to the CDN cache on platforms that support it, currently Netlify and Vercel.)</li>
+                <li>How would you keep a few pages script-free? (<code>noScripts: true</code> disables Nuxt scripts and JS resource hints, which works for purely static legal or landing pages.)</li>
+              </ol>
+            </div>
+          </details>
+          <p class="miss"><b>Common mistake:</b> thinking a cached SSR page is per-user because "it's server-rendered". A <code>swr</code>/<code>isr</code> response is one HTML document shared by every visitor until it's revalidated. Personalised content must be uncached SSR or fetched on the client after hydration.</p>
+          <a href="https://nuxt.com/docs/4.x/guide/concepts/rendering#hybrid-rendering">Official docs: Rendering modes → Hybrid rendering</a> · <a href="https://nuxt.com/docs/4.x/api/utils/define-route-rules">defineRouteRules</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="path">
+      <p class="kicker">Learning path</p>
+      <h2>Basic to advanced, one step a week</h2>
+      <div class="path">
+        <div class="step"><h3>Basic</h3><ul><li><code>computed</code> vs <code>watch</code>: derived state vs side effects</li><li>Reactive props destructure with defaults</li><li><code>useId()</code> for labels and <code>aria-describedby</code></li></ul></div>
+        <div class="step"><h3>Intermediate</h3><ul><li>Watcher cleanup with <code>onWatcherCleanup</code>, plus <code>flush</code> timing</li><li>Forwarding cookies during SSR with <code>useRequestHeaders</code></li><li>Named views with <code>name@view.vue</code></li></ul></div>
+        <div class="step"><h3>Advanced</h3><ul><li><code>routeRules</code>: prerender / swr / isr / ssr:false per route</li><li><code>defineCachedEventHandler</code> in front of Spring Boot</li><li>Pinia Colada keys, invalidation and optimistic updates</li></ul></div>
+      </div>
+      <p class="why" style="margin-top:14px"><b>This week's pick:</b> the Intermediate topic. Build a search page that calls a Spring Boot endpoint with a plain <code>watch</code>. Throttle the network to "Slow 3G" in DevTools, type fast, and watch an old response overwrite the newest one. Then add <code>onWatcherCleanup</code> + <code>AbortController</code> and confirm in the Network tab that superseded requests show as "cancelled". Finally, rewrite it with <code>useFetch</code> and a reactive <code>query</code> and compare.</p>
+    </section>
+
+    <section id="sources" class="sources">
+      <p class="kicker">Sources</p>
+      <h2>Read further</h2>
+      <ol>
+        <li><a href="https://github.com/h3js/h3/releases/tag/v2.0.1">h3 v2.0.1: "H3 v2 is now stable!"</a> <span>· GitHub</span></li>
+        <li><a href="https://github.com/vuejs/core/blob/minor/CHANGELOG.md">Vue 3.6.0-rc.10 changelog (minor branch)</a> · <a href="https://github.com/vuejs/core/releases">vuejs/core releases</a> <span>· GitHub</span></li>
+        <li><a href="https://releasebot.io/updates/vue/vue-core">Vue core release log (3.5.43)</a> <span>· Releasebot</span></li>
+        <li><a href="https://www.npmjs.com/package/vue?activeTab=versions">vue versions (rc.10 published 30 Sep)</a> <span>· npm</span></li>
+        <li><a href="https://github.com/vueuse/vueuse/releases/tag/v15.0.0">VueUse v15.0.0</a> <span>· GitHub</span></li>
+        <li><a href="https://github.com/vitejs/vite/blob/main/packages/vite/CHANGELOG.md">Vite changelog (8.3.0–8.3.2)</a> <span>· GitHub</span></li>
+        <li><a href="https://nuxt.com/changelog">Nuxt ecosystem changelog (DevTools beta.3, Content 3.16.1, UI 4.11.3, test-utils 4.3.3)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://github.com/nuxt/nuxt/releases">nuxt/nuxt releases (4.5.2 current)</a> <span>· GitHub</span></li>
+        <li><a href="https://nuxt.com/blog/v4-5">Nuxt 4.5 release (named views, useLayout)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/directory-structure/app/pages#named-views-v45">Nuxt docs: Pages → Named Views</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/getting-started/data-fetching">Nuxt docs: Data fetching (passing headers &amp; cookies)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/api/composables/use-request-headers">Nuxt docs: useRequestHeaders</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/guide/concepts/rendering">Nuxt docs: Rendering modes &amp; hybrid rendering</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/api/utils/define-route-rules">Nuxt docs: defineRouteRules</a> <span>· nuxt.com</span></li>
+        <li><a href="https://vuejs.org/api/composition-api-helpers#useid">Vue docs: useId()</a> · <a href="https://vuejs.org/api/application#app-config-idprefix">app.config.idPrefix</a> <span>· vuejs.org</span></li>
+        <li><a href="https://vuejs.org/guide/components/props#reactive-props-destructure">Vue docs: Reactive props destructure</a> <span>· vuejs.org</span></li>
+        <li><a href="https://vuejs.org/guide/essentials/watchers">Vue docs: Watchers</a> · <a href="https://vuejs.org/guide/essentials/computed">Computed</a> <span>· vuejs.org</span></li>
+        <li><a href="https://pinia-colada.esm.dev/guide/queries.html">Pinia Colada: Queries</a> · <a href="https://pinia-colada.esm.dev/guide/query-invalidation.html">Query invalidation</a> <span>· pinia-colada.esm.dev</span></li>
+        <li><a href="https://docs.spring.io/spring-framework/reference/web/webmvc-cors.html">Spring: CORS in Web MVC</a> <span>· docs.spring.io</span></li>
+        <li><a href="https://www.monterail.com/blog/top-companies-using-vue-js">Top companies using Vue.js in 2026 (updated 2 Oct 2026)</a> <span>· Monterail</span></li>
+        <li><a href="https://www.monterail.com/blog/from-angularjs-to-vuejs">Easyship case study: AngularJS → Vue/Nuxt</a> <span>· Monterail</span></li>
+        <li><a href="https://hyring.com/jobseeker-toolkit/interview-questions/technical/vue">Vue interview questions (Q5, Q24)</a> <span>· Hyring</span></li>
+        <li><a href="https://www.greatfrontend.com/blog/vue-interview-questions">Vue.js interview questions</a> <span>· GreatFrontEnd</span></li>
+        <li><a href="https://sharpskill.dev/en/blog/vue-nuxt/essential-vuejs-interview-questions">25 essential Vue.js interview questions</a> <span>· SharpSkill</span></li>
+        <li><a href="https://goodspace.ai/interview-questions/nuxtjs">Top 30 Nuxt.js interview questions 2026 (Q14, Q16, Q34)</a> <span>· GoodSpace</span></li>
+        <li><a href="https://vueschool.io/articles/vuejs-tutorials/hybrid-rendering-in-nuxt-js-3/">Nuxt rendering modes and hybrid rendering</a> <span>· Vue School</span></li>
+        <li><a href="https://nuxtseo.com/learn-seo/nuxt/routes-and-rendering/rendering">Rendering for SEO in 2026</a> <span>· Nuxt SEO</span></li>
+      </ol>
+    </section>
+  </main>
+</div>
+
+<footer>Generated by Claude on Sunday 4 October 2026 for the Week 40 issue. A new issue replaces this one every Friday at 10:00 (Asia/Dhaka).</footer>
+
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var code=btn.closest('.code').querySelector('pre').innerText;
+    var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+    try{navigator.clipboard.writeText(code).then(done,function(){sel(btn)})}catch(e){sel(btn)}
+  });
+});
+function sel(btn){var r=document.createRange();r.selectNodeContents(btn.closest('.code').querySelector('pre'));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';}
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>
