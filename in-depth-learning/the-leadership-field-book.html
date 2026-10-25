@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Leadership Field Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --back:#D9E2D4; --paper:#F7F9F3; --ink:#16291D; --muted:#5A6B5E; --rule:#D0DACC; --soft:#E7EEE3;
+  --moss:#2F5B3E; --on-moss:#F7F9F3; --accent:#E3EDB0; --on-accent:#16291D; --warn:#B4532A; --ok:#2F7A4A;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --back:#0B120E; --paper:#16211A; --ink:#E6EEE3; --muted:#97A99A; --rule:#2B3A30; --soft:#1D2B22;
+    --moss:#8FC29F; --on-moss:#0F1A13; --accent:#33452A; --on-accent:#E6EEE3; --warn:#E08A62; --ok:#7FCB97; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --back:#0B120E; --paper:#16211A; --ink:#E6EEE3; --muted:#97A99A; --rule:#2B3A30; --soft:#1D2B22;
+  --moss:#8FC29F; --on-moss:#0F1A13; --accent:#33452A; --on-accent:#E6EEE3; --warn:#E08A62; --ok:#7FCB97; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--back);color:var(--ink);font-family:var(--body);overflow:hidden;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--back)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--moss);outline-offset:3px;border-radius:6px}
+
+/* ---------- chrome ---------- */
+.top{flex:none;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.top .where{flex:1;min-width:0;font-family:var(--display);font-size:15px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);font-family:var(--display);font-weight:600;font-size:14px}
+.pill svg{width:18px;height:18px}
+.pill.icon{width:38px;padding:0;justify-content:center}
+.viewport{flex:1;min-height:0;display:grid;place-items:center;padding:4px 16px}
+.frame{position:relative}
+.slide{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--paper);border-radius:22px;box-shadow:0 2px 6px rgb(0 0 0/.05),0 24px 60px rgb(20 40 25/.14);overflow:hidden}
+.bottom{flex:none;display:flex;align-items:center;gap:14px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.track{flex:1;height:4px;border-radius:2px;background:var(--rule);overflow:hidden}
+.track i{display:block;height:100%;background:var(--ink);opacity:.55;transition:width .4s ease}
+.count{font-family:var(--display);font-size:14px;color:var(--muted);min-width:64px;text-align:center}
+.nav{height:44px;padding:0 20px}
+.nav.next{background:var(--moss);color:var(--on-moss);border-color:var(--moss)}
+.nav[disabled]{opacity:.35;cursor:default}
+@media (max-width:600px){.nav .lbl{display:none}.nav{width:44px;padding:0;justify-content:center}.top .where{display:none}}
+
+/* contents overlay */
+.contents{position:fixed;inset:0;z-index:60;background:var(--back);overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) clamp(16px,4vw,48px) calc(40px + env(safe-area-inset-bottom,0px));display:none}
+.contents.open{display:block;animation:fadein .25s both}
+@keyframes fadein{from{opacity:0}}
+.contents .head{display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto 18px}
+.contents h2{font-family:var(--display);font-size:30px;margin:0}
+.parts{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.part{background:var(--paper);border-radius:18px;padding:18px}
+.part h3{font-family:var(--display);font-size:15px;color:var(--muted);font-weight:600;margin:0 0 4px}
+.part h4{font-family:var(--display);font-size:20px;margin:0 0 10px;line-height:1.2}
+.part button{display:flex;gap:12px;width:100%;text-align:left;border:0;background:none;padding:8px 6px;border-radius:8px;font-size:16px;line-height:1.3}
+.part button span{font-family:var(--display);color:var(--muted);min-width:22px}
+.part button:hover,.part button.on{background:var(--soft)}
+
+/* ---------- slide internals (canvas px) ---------- */
+.s{position:absolute;inset:0;display:flex;flex-direction:column;padding:48px 64px 40px;font-size:20px;line-height:1.5}
+.portrait .s{padding:30px 24px 24px;font-size:17px}
+.portrait .title{font-size:30px}.portrait .lead{font-size:19px}.portrait .cover h1{font-size:40px!important}.portrait .cover .subt{font-size:19px}
+.portrait .key{font-size:18px}.portrait .letters span{width:48px;height:48px;font-size:30px}.portrait .cover .ghost{font-size:220px}
+.portrait .tile .L{font-size:40px}.portrait .tile{padding:14px}.portrait .tile b{font-size:17px}.portrait .tile span:last-child{font-size:15px}
+.portrait .item b{font-size:18px}.portrait .item p{font-size:16px}.portrait .sr>span{padding:10px 12px;font-size:16px}.portrait .sr{grid-template-columns:1fr 26px 1fr}
+.portrait .flip{height:auto;min-height:150px}.portrait .flip .bad,.portrait .flip .good{font-size:19px}.portrait .flips{grid-template-columns:1fr}
+.portrait .bubble{font-size:17px}.portrait .stack b{font-size:36px}.portrait .inside button{font-size:16px}.portrait .quote p{font-size:26px}
+.portrait .tier{font-size:15px;min-height:56px}.portrait .det{min-height:0}.portrait .det h3{font-size:24px}
+.portrait .cell{min-height:90px;padding:12px}.portrait .cell b{font-size:17px}.portrait .eq{padding:18px}.portrait .gtab{font-size:12px}.portrait .gtab td:first-child{width:80px}
+.portrait .gscroll{overflow-x:auto}.portrait .gtab{min-width:720px;font-size:13px}
+.portrait .grow{grid-template-columns:1fr}.portrait .grow b{padding-bottom:0}.portrait .grow div{padding:4px 16px 10px}
+.anim{animation:turnF .45s cubic-bezier(.2,.7,.2,1) both}
+.anim.back{animation-name:turnB}
+@keyframes turnF{from{opacity:0;transform:translateX(30px)}}
+@keyframes turnB{from{opacity:0;transform:translateX(-30px)}}
+.rv{animation:rise .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 50ms + 100ms)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.hd{flex:none;margin-bottom:22px}
+.crumb{font-family:var(--display);font-size:15px;color:var(--muted);margin:0 0 4px;display:flex;justify-content:space-between;gap:20px}
+.dots{display:flex;gap:5px;align-items:center}
+.dots i{width:18px;height:4px;border-radius:2px;background:var(--rule)}
+.dots i.on{background:var(--moss)}
+h1,h2,h3,h4,h5{font-family:var(--display);letter-spacing:-.02em;line-height:1.08;margin:0}
+.title{font-size:44px;font-weight:800}
+.fitwrap{flex:1;min-height:0;overflow:hidden;position:relative}
+.fitbox{transform-origin:0 0}
+.fitwrap.mid{display:flex;flex-direction:column;justify-content:center;padding-bottom:3%}
+.fitwrap.mid > .fitbox{flex:none}
+.lead{font-size:24px;line-height:1.4;max-width:60ch;margin:0 0 20px}
+.note{color:var(--muted);margin:0 0 14px;font-size:19px;max-width:70ch}
+.sub{font-size:26px;font-weight:600;margin:0 0 14px;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px}
+.ht{font-family:var(--body);font-style:italic;font-weight:400;font-size:16px;color:var(--muted);letter-spacing:0}
+.use{display:flex;gap:12px;align-items:baseline;margin:18px 0 0;font-size:19px}
+.use b{font-family:var(--display);font-size:14px;background:var(--moss);color:var(--on-moss);padding:3px 10px;border-radius:5px;white-space:nowrap}
+.tip{display:flex;gap:14px;padding:14px 18px;margin:18px 0 0;background:var(--soft);border-radius:12px;font-size:19px}
+.tip b{font-family:var(--display);white-space:nowrap}
+
+/* covers */
+.cover{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;height:100%}
+.portrait .cover{grid-template-columns:1fr;align-content:center;gap:36px}
+.cover .ghost{position:absolute;right:-20px;top:-70px;font-family:var(--display);font-weight:800;font-size:360px;line-height:.8;color:transparent;-webkit-text-stroke:2px var(--rule);pointer-events:none;user-select:none;animation:ghost 1.1s cubic-bezier(.2,.7,.2,1) both}
+@keyframes ghost{from{opacity:0;transform:translateX(50px)}}
+.cover > div{position:relative}
+.kick{font-family:var(--display);font-size:18px;color:var(--muted);margin-bottom:14px}
+.cover h1{font-size:68px;font-weight:800}
+.cover .subt{font-size:24px;color:var(--muted);margin:16px 0 0;max-width:34ch;line-height:1.35}
+.key{margin:26px 0 0;font-size:23px;font-style:italic;line-height:1.4;padding-left:18px;border-left:4px solid var(--moss);max-width:36ch}
+.letters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.letters span{font-family:var(--display);font-weight:800;font-size:40px;width:64px;height:64px;display:grid;place-items:center;border-radius:14px;background:var(--moss);color:var(--on-moss);animation:drop .6s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--i) * 80ms + 120ms)}
+@keyframes drop{from{opacity:0;transform:translateY(-36px) rotate(-8deg)}}
+.inside{background:var(--soft);border-radius:18px;padding:22px 24px}
+.inside b{font-family:var(--display);font-size:16px;color:var(--muted);font-weight:600}
+.inside ol{margin:10px 0 0;padding:0;list-style:none;counter-reset:x}
+.inside li{counter-increment:x}
+.inside button{display:flex;gap:12px;width:100%;text-align:left;border:0;background:none;padding:9px 0;border-top:1px solid var(--rule);font-size:19px;line-height:1.3}
+.inside li:first-child button{border-top:0}
+.inside button::before{content:counter(x);font-family:var(--display);color:var(--muted);min-width:20px}
+.inside button:hover{color:var(--moss)}
+.src{margin-top:16px;font-size:16px;color:var(--muted)}
+.cta{display:inline-flex;margin-top:30px;background:var(--moss);color:var(--on-moss);border:0;border-radius:999px;padding:14px 28px;font-family:var(--display);font-weight:600;font-size:19px}
+.cta.alt{background:transparent;color:var(--ink);border:1px solid var(--rule);margin-left:10px}
+.stack{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stack div{background:var(--soft);border-radius:16px;padding:18px 20px;font-family:var(--display)}
+.stack b{display:block;font-size:48px;font-weight:800;line-height:1}
+.stack span{color:var(--muted);font-size:17px}
+kbd{font-family:var(--display);border:1px solid var(--rule);border-bottom-width:2px;border-radius:5px;padding:0 6px;font-size:15px;background:var(--paper)}
+
+/* blocks */
+.acro{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:14px}
+.portrait .acro{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tile{background:var(--soft);border-radius:18px;padding:22px 20px}
+.tile .L{display:block;font-family:var(--display);font-weight:800;font-size:60px;line-height:1;margin-bottom:14px;color:var(--moss)}
+.tile b{display:block;font-family:var(--display);font-size:21px;line-height:1.2;margin-bottom:8px}
+.tile span:last-child{color:var(--muted);font-size:18px;line-height:1.4;display:block}
+.acro.sm .tile{padding:18px 16px}.acro.sm .L{font-size:46px}.acro.sm b{font-size:19px}.acro.sm span:last-child{font-size:16.5px}
+
+.list{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:0 36px}
+.portrait .list{grid-template-columns:1fr}
+.item{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--rule)}
+.item .n{font-family:var(--display);font-weight:800;font-size:24px;color:var(--moss);min-width:30px;line-height:1.25}
+.item .n.dot::before{content:"";display:block;width:12px;height:12px;margin-top:9px;border-radius:50%;background:var(--moss)}
+.item .n.warn{color:var(--warn)}
+.item b{display:block;font-family:var(--display);font-size:21px;line-height:1.25;font-weight:600}
+.item p{margin:4px 0 0;color:var(--muted);font-size:18px;line-height:1.45}
+.item .say{color:var(--ink);font-style:italic;margin-top:6px}
+
+.swap{border-radius:16px;overflow:hidden;background:var(--soft)}
+.sr{display:grid;grid-template-columns:1fr 50px 1.15fr;align-items:center;border-top:1px solid var(--rule)}
+.sr:first-child{border-top:0}
+.sr>span{padding:15px 20px}
+.sr.h{font-family:var(--display);font-weight:600;font-size:17px}
+.sr.h .x{color:var(--muted)}
+.sr.h .y{background:var(--moss);color:var(--on-moss);align-self:stretch;display:flex;align-items:center}
+.sr .x{color:var(--muted)}
+.sr .y{font-weight:600;background:var(--paper);align-self:stretch;display:flex;align-items:center}
+.sr .arr{text-align:center;padding:0;color:var(--moss);font-family:var(--display);font-weight:800;font-size:22px}
+.sr:not(.h) .arr{animation:nudge 2.6s ease-in-out infinite;animation-delay:calc(var(--d,0)*140ms)}
+@keyframes nudge{0%,70%,100%{transform:none}80%{transform:translateX(6px)}}
+.swap.dd .sr:not(.h) .x::before{content:"✗\00a0";color:var(--warn);font-weight:700}
+.swap.dd .sr:not(.h) .y::before{content:"✓\00a0";color:var(--ok)}
+
+.script{display:grid;gap:12px}
+.script.two{grid-template-columns:1fr 1fr}
+.portrait .script.two{grid-template-columns:1fr}
+.line{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+.line.plain{grid-template-columns:1fr}
+.line .who{font-family:var(--display);font-weight:600;display:flex;gap:10px;align-items:center;font-size:19px}
+.line .who i{font-style:normal;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--moss);color:var(--on-moss);font-size:15px;font-weight:800}
+.bubble{background:var(--soft);border-radius:20px 20px 20px 4px;padding:14px 20px;font-style:italic;font-size:20px}
+.portrait .line{grid-template-columns:1fr;gap:6px}
+
+.checks{display:grid;gap:4px}
+.checks.two{grid-template-columns:1fr 1fr;gap:4px 16px}
+.portrait .checks.two{grid-template-columns:1fr}
+.ckm{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin-bottom:6px;font-family:var(--display);font-size:16px;color:var(--muted)}
+.ckm .t{flex:1;max-width:320px;height:8px;border-radius:4px;background:var(--soft);overflow:hidden}
+.ckm .t i{display:block;height:100%;width:0;background:var(--moss);transition:width .35s ease}
+.ck{display:flex;gap:14px;align-items:center;width:100%;text-align:left;border:0;background:var(--soft);padding:13px 16px;border-radius:12px;font-size:20px;line-height:1.3;transition:background .2s}
+.ck .box{flex:none;width:26px;height:26px;border-radius:7px;border:2px solid var(--moss);display:grid;place-items:center;transition:background .2s}
+.ck .box svg{width:17px;height:17px;stroke:var(--on-moss);stroke-width:3;fill:none;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .3s ease}
+.ck[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.ck[aria-pressed="true"] .box{background:var(--moss)}
+.ck[aria-pressed="true"] .box svg{stroke-dashoffset:0}
+
+.mrow{display:grid;grid-template-columns:600px 1fr;gap:40px;align-items:center}
+.portrait .mrow{grid-template-columns:1fr}
+.matrix{display:grid;grid-template-columns:30px 1fr;grid-template-rows:1fr auto;gap:8px}
+.matrix .my{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-family:var(--display);font-size:15px;color:var(--muted)}
+.matrix .mx{grid-column:2;text-align:center;font-family:var(--display);font-size:15px;color:var(--muted)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);padding:0 0 10px 10px}
+.cell{background:var(--soft);border-radius:14px;padding:18px;min-height:120px}
+.cell b{display:block;font-family:var(--display);font-size:21px}
+.cell span{color:var(--muted);font-size:17px;line-height:1.35;display:block;margin-top:6px}
+.cell.hi{background:var(--moss);color:var(--on-moss)}
+.cell.hi span{color:var(--on-moss);opacity:.85}
+.mside .tip:first-child,.mside .use:first-child,.mside .note:first-child{margin-top:0}
+
+.eq{display:flex;align-items:center;gap:22px;background:var(--soft);border-radius:20px;padding:26px 30px}
+.portrait .eq{flex-direction:column}
+.eq .t{font-family:var(--display);font-weight:800;font-size:34px;background:var(--moss);color:var(--on-moss);padding:12px 26px;border-radius:999px}
+.eq .eqs{font-family:var(--display);font-size:38px;color:var(--muted)}
+.frac{flex:1}
+.frac .top{display:flex;flex-wrap:wrap;align-items:center;gap:14px;justify-content:center;text-align:center}
+.frac .top em{font-style:normal;font-family:var(--display);font-size:30px;color:var(--moss)}
+.term b{display:block;font-family:var(--display);font-size:21px}
+.term i{font-size:16px;color:var(--muted)}
+.frac .rule{height:3px;background:var(--ink);margin:14px 0;border-radius:2px;transform-origin:left;animation:grow .8s .3s cubic-bezier(.6,0,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.frac .bot{text-align:center}
+
+.audit{background:var(--soft);border-radius:16px;padding:8px 22px}
+.arow{display:grid;grid-template-columns:190px 1fr 260px;gap:18px;align-items:center;padding:13px 0;border-bottom:1px solid var(--rule)}
+.portrait .arow{grid-template-columns:1fr 1fr}
+.arow b{font-family:var(--display);font-size:20px;justify-self:start;padding:0 6px;border-radius:5px}
+.arow .q{color:var(--muted)}
+.arow label{display:flex;align-items:center;gap:12px}
+.arow input{flex:1;accent-color:var(--moss);height:28px}
+.arow .v{font-family:var(--display);font-weight:800;font-size:22px;width:20px}
+.arow.low b{background:var(--moss);color:var(--on-moss)}
+.ares{padding:16px 0 10px;font-size:19px}
+
+.tl{list-style:none;padding:0;margin:20px 0 0;position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:13px;height:3px;background:var(--rule)}
+.tl li{position:relative;padding-top:44px}
+.tl li::before{content:"";position:absolute;top:2px;left:0;width:26px;height:26px;border-radius:50%;background:var(--paper);border:4px solid var(--moss)}
+.tl .when{font-family:var(--display);font-weight:800;font-size:24px}
+.tl p{margin:6px 0 0;font-size:20px}
+.portrait .tl{grid-template-columns:1fr}
+.portrait .tl::before{left:11px;right:auto;top:0;bottom:0;width:3px;height:auto}
+.portrait .tl li{padding:0 0 0 44px}
+
+.flips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.portrait .flips{grid-template-columns:1fr 1fr}
+.flip{perspective:1000px;border:0;background:none;padding:0;text-align:left;height:220px}
+.flip .in{display:grid;height:100%;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip .f,.flip .b{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--soft)}
+.flip .b{background:var(--moss);color:var(--on-moss);transform:rotateY(180deg)}
+.flip[aria-pressed="true"] .in{transform:rotateY(180deg)}
+.flip .no{font-family:var(--display);font-size:15px;color:var(--muted)}
+.flip .b .no,.flip .b .hint{color:var(--on-moss);opacity:.75}
+.flip .bad{font-family:var(--display);font-weight:600;font-size:25px;line-height:1.15}
+.flip .why{color:var(--muted);font-size:18px}
+.flip .good{font-family:var(--display);font-weight:600;font-size:25px;line-height:1.2}
+.flip .hint{margin-top:auto;font-size:15px;color:var(--muted)}
+
+.pyrx{display:grid;grid-template-columns:1fr 1.1fr;gap:44px;align-items:center}
+.portrait .pyrx{grid-template-columns:1fr}
+.pyr{display:grid;gap:8px}
+.tier{justify-self:center;width:calc(34% + var(--i) * 16.5%);border:0;background:var(--soft);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);padding:16px 10px;text-align:center;font-family:var(--display);font-weight:600;font-size:18px;line-height:1.15;min-height:74px;transition:background .25s,color .25s}
+.tier.tip0{clip-path:polygon(50% 0,50% 0,100% 100%,0 100%);padding-top:34px}
+.tier[aria-pressed="true"]{background:var(--moss);color:var(--on-moss)}
+.det{background:var(--soft);border-radius:18px;padding:26px 28px;min-height:330px}
+.det .k{font-family:var(--display);color:var(--muted);font-size:16px}
+.det h3{font-size:32px;margin:4px 0 10px}
+.det p{margin:0 0 14px;font-size:19px}
+.det ul{margin:0;padding-left:22px;font-size:19px}
+.det li{margin:4px 0}
+.det.swapin{animation:rise .35s both}
+
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tabs button{border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:9px 18px;font-family:var(--display);font-weight:600;font-size:17px}
+.tabs small{font-weight:400;color:var(--muted);margin-left:6px}
+.tabs button[aria-selected="true"]{background:var(--moss);color:var(--on-moss);border-color:var(--moss)}
+.tabs button[aria-selected="true"] small{color:var(--on-moss);opacity:.8}
+.gen{border-radius:16px;background:var(--soft);overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.portrait .gen{grid-template-columns:1fr}
+.grow{display:grid;grid-template-columns:190px 1fr;border-top:1px solid var(--rule);animation:rise .35s both;animation-delay:calc(var(--i) * 40ms)}
+.grow b{font-family:var(--display);padding:12px 16px;font-size:16px;color:var(--muted);font-weight:600}
+.grow div{padding:12px 16px 12px 0;font-size:18px}
+.grow ul{margin:0;padding-left:20px}
+.gtab{width:100%;border-collapse:collapse;font-size:16px}
+.gtab th,.gtab td{border-bottom:1px solid var(--rule);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.35}
+.gtab th{font-family:var(--display);font-size:17px}
+.gtab th small{display:block;font-weight:400;color:var(--muted)}
+.gtab td:first-child{font-family:var(--display);font-weight:600;color:var(--muted);width:150px}
+
+.shelves{display:grid;gap:18px}
+.shelf h4{font-family:var(--display);font-size:20px;margin:0 0 8px}
+.shelf .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.portrait .shelf .row{grid-template-columns:1fr}
+.bk{display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--soft);border-radius:14px;padding:12px 14px}
+.spine{height:64px;border-radius:3px 6px 6px 3px;background:var(--c);box-shadow:inset 5px 0 0 rgb(0 0 0/.2);display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:20px}
+.bk b{font-family:var(--display);font-size:18px;line-height:1.15;display:block}
+.bk i{font-size:15px;color:var(--muted);display:block;margin:2px 0 4px;font-style:normal}
+.bk p{margin:0;font-size:16px;line-height:1.35}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.duo>div{border-radius:16px;padding:20px 22px;background:var(--soft)}
+.duo>div:last-child{background:var(--moss);color:var(--on-moss)}
+.duo h5{font-size:21px;margin:0 0 8px}
+.duo p{margin:8px 0;font-style:italic;font-size:21px}
+
+.flow{display:flex;align-items:stretch}
+.portrait .flow{flex-direction:column;gap:8px}
+.flow>div{flex:1;background:var(--soft);padding:20px 34px 20px 24px;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 50%,calc(100% - 20px) 100%,0 100%);margin-right:-8px}
+.portrait .flow>div{clip-path:none;border-radius:12px;margin:0}
+.flow>div:nth-child(1){background:var(--moss);color:var(--on-moss)}
+.flow>div:nth-child(3){background:var(--accent);color:var(--on-accent)}
+.flow b{font-family:var(--display);font-size:24px;display:block}
+.flow span{font-size:18px;opacity:.9}
+
+.stairs{display:grid;gap:12px}
+.stairs>div{margin-left:calc(var(--i) * 12%);background:var(--soft);border-left:6px solid var(--moss);border-radius:12px;padding:18px 22px}
+.stairs b{font-family:var(--display);font-size:24px}
+.stairs p{margin:4px 0 0;color:var(--muted);font-size:20px}
+
+.sandwich{display:grid;grid-template-columns:240px 1fr;gap:44px;align-items:center}
+.portrait .sandwich{grid-template-columns:1fr}
+.sw{position:relative;display:grid;gap:6px;justify-items:center;margin:20px}
+.sw span{font-family:var(--display);font-weight:600;padding:10px 22px;border-radius:999px;background:var(--soft);font-size:18px}
+.sw span:nth-child(2){background:var(--muted);color:var(--paper);font-size:15px}
+.sw::after{content:"";position:absolute;inset:-22px;border:6px solid var(--warn);border-radius:50%;background:linear-gradient(135deg,transparent 47.5%,var(--warn) 47.5%,var(--warn) 52.5%,transparent 52.5%);opacity:.8;animation:pop .5s .4s both}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+
+.techs{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:16px}
+.portrait .techs{grid-template-columns:1fr}
+.tech{background:var(--soft);border-radius:18px;padding:24px}
+.tech h3{font-size:25px}
+.tech .by{font-size:16px;color:var(--muted);font-style:italic}
+.tech p{margin:12px 0 0;font-size:19px}
+.tech .viz{margin-top:18px}
+.c135{display:flex;align-items:center;gap:14px}
+.c135 div{border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:600;line-height:1.1;border:2px solid var(--moss)}
+.c135 div:nth-child(1){width:120px;height:120px;background:var(--moss);color:var(--on-moss);font-size:18px}
+.c135 div:nth-child(2){width:90px;height:90px;font-size:16px}
+.c135 div:nth-child(3){width:66px;height:66px;font-size:13px}
+.cal{display:grid;gap:5px;max-width:300px}
+.cal div{border-radius:8px;padding:10px 14px;font-family:var(--display);font-size:16px;background:var(--moss);color:var(--on-moss)}
+.cal div.buf{background:var(--paper);color:var(--ink);text-align:center;padding:5px;border:2px dashed var(--moss);animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{50%{padding:12px 5px}}
+.pareto{display:grid;gap:10px;font-family:var(--display);font-size:16px}
+.pareto .r{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:12px}
+.pareto .t{display:flex;height:32px;border-radius:8px;overflow:hidden}
+.pareto .t span{display:grid;place-items:center}
+.pareto .t span:first-child{background:var(--moss);color:var(--on-moss)}
+.pareto .t span:last-child{background:var(--paper)}
+.timer{display:flex;align-items:center;gap:22px}
+.dial{width:130px;height:130px;position:relative}
+.dial svg{width:100%;height:100%;transform:rotate(-90deg)}
+.dial circle{fill:none;stroke-width:10}
+.dial .bg{stroke:var(--paper)}
+.dial .fg{stroke:var(--warn);stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.dial .lab{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:800;font-size:26px;line-height:1}
+.dial .lab small{display:block;font-size:13px;font-weight:400;color:var(--muted);margin-top:4px}
+.timer .btns{display:flex;gap:8px}
+.timer .btns button{border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:9px 18px;font-family:var(--display);font-weight:600;font-size:16px}
+.pomo{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.pomo span{font-family:var(--display);font-size:15px;padding:5px 12px;border-radius:999px;background:var(--paper)}
+
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.portrait .stages{grid-template-columns:1fr 1fr}
+.stg{border:0;background:var(--soft);border-radius:14px;padding:16px;text-align:left;font-size:17px;line-height:1.35;transition:background .2s,transform .2s}
+.stg b{display:block;font-family:var(--display);font-size:19px;margin:4px 0}
+.stg .nn{font-family:var(--display);color:var(--muted);font-size:15px}
+.stg i{color:var(--muted)}
+.stg[aria-pressed="true"]{background:var(--moss);color:var(--on-moss);transform:translateY(-4px)}
+.stg[aria-pressed="true"] i,.stg[aria-pressed="true"] .nn{color:var(--on-moss)}
+.stgout{margin-top:16px;padding:16px 20px;border-radius:12px;border:2px solid var(--moss);font-size:21px}
+
+.quote{margin:0 0 26px;padding-left:24px;border-left:6px solid var(--moss)}
+.quote p{font-family:var(--display);font-size:34px;line-height:1.2;margin:0;font-weight:600;letter-spacing:-.01em;max-width:30ch}
+.quote cite{display:block;margin-top:10px;color:var(--muted);font-style:normal;font-size:19px}
+
+.sheet{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.portrait .sheet{grid-template-columns:1fr 1fr}
+.sheet button{display:block;text-align:left;background:var(--soft);border:0;border-radius:12px;padding:12px 14px}
+.sheet button:hover{background:var(--accent)}
+.sheet b{font-family:var(--display);font-size:18px;display:block;line-height:1.2}
+.sheet span{color:var(--muted);font-size:15px;line-height:1.3;display:block;margin-top:3px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="pill" id="tocBtn" aria-expanded="false" aria-controls="contents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Contents</button>
+  <span class="where" id="where"></span>
+  <button class="pill icon" id="themeBtn" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
+  <button class="pill icon" id="fsBtn" aria-label="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</header>
+<div class="viewport" id="vp"><div class="frame" id="frame"><div class="slide" id="slide" aria-live="polite"></div></div></div>
+<nav class="bottom" aria-label="Slide navigation">
+  <button class="pill nav" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg><span class="lbl">Back</span></button>
+  <div class="track"><i id="trk"></i></div>
+  <span class="count" id="count"></span>
+  <button class="pill nav next" id="next" aria-label="Next slide"><span class="lbl">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+</nav>
+<div class="contents" id="contents" role="dialog" aria-label="Contents"><div class="head"><h2>Contents</h2><button class="pill" id="closeToc">Close</button></div><div class="parts" id="parts"></div></div>
+<script>
+const PARTS = [
+  {n:"I",   t:"Feedback & hard conversations", d:"Say the hard thing so it lands — and hear it back without flinching."},
+  {n:"II",  t:"Building trust", d:"Trust isn’t a feeling. It’s something you can diagnose, influence and see."},
+  {n:"III", t:"Kindness, empathy & recognition", d:"Kind doesn’t mean soft. It means caring enough to be honest — and to notice people."},
+  {n:"IV",  t:"Coaching & understanding people", d:"Meet people where they are, not where you want them to be."},
+  {n:"V",   t:"Rhythms, time & growth", d:"The meetings, habits and reading that keep a team — and you — on track."}
+];
+
+const CH = [
+/* ---------------- PART I ---------------- */
+{p:0, src:1, t:"How to give feedback that builds trust", s:"The CLEAR framework", L:"CLEAR",
+ key:"Start with the relationship, not the issue.",
+ pages:[
+  {t:"The CLEAR framework", b:[
+    {k:"lead", t:"Five steps that turn feedback from a verdict into a conversation."},
+    {k:"acro", items:[["C","Connect first","Start with the relationship, not the issue."],["L","Listen fully","Understand before you respond."],["E","Explain what you noticed","Share observations, not judgments."],["A","Ask for their perspective","Invite them into the conversation."],["R","Request a path forward","Collaborate on next steps."]]}
+  ]},
+  {t:"What to say at each step", b:[
+    {k:"script", items:[["Connect","“I value our working relationship and want to share something with you.”"],["Listen","“Before I share my thoughts, how do you feel things have been going?”"],["Explain","“I noticed in Tuesday’s meeting, you spoke over two colleagues.”"],["Ask","“What was happening for you in that moment?”"],["Request","“What might help you create more space for others next time?”"]]}
+  ]},
+  {t:"The mindset shift", b:[
+    {k:"lead", t:"The best feedback comes from a different place."},
+    {k:"swap", a:"Old mindset", b:"New mindset", rows:[["I’m correcting a problem","I’m investing in their growth"],["I need to be right","I need to be curious"],["This is uncomfortable","This is caring"],["I’ll tell them what to do","We’ll figure it out together"]]}
+  ]},
+  {t:"What makes feedback feel safe", b:[
+    {k:"list", mark:"dot", cols:2, items:[{t:"The timing is right",d:"It’s easier to hear when emotions have settled."},{t:"The space is private",d:"Some conversations aren’t meant for an audience."},{t:"You’re calm",d:"Your energy shapes how open they can be."},{t:"They can speak too",d:"People receive better when they feel heard."}]}
+  ]},
+  {t:"Signs your feedback landed", b:[
+    {k:"note", t:"You’ll know it worked when… tick the ones you’ve seen after your last feedback conversation."},
+    {k:"checks", items:["They ask follow-up questions","They share their own perspective openly","They suggest their own solutions","The relationship feels stronger, not strained","You see change over time — without reminders"]}
+  ]},
+  {t:"Feedback traps to avoid", b:[
+    {k:"list", mark:"warn", cols:2, items:[{t:"Waiting too long",d:"The moment passes, and so does the meaning."},{t:"Skipping their perspective",d:"There might be more to the story."},{t:"Staying vague",d:"It’s hard to grow without knowing what to change."},{t:"Over-softening",d:"You can be kind and clear at the same time."},{t:"No follow-up",d:"Without a check-in, it often fades."}]}
+  ]}
+ ]},
+
+{p:0, src:5, t:"How to give difficult feedback", s:"Without making it personal — the AID method", L:"AID", credit:"h/t Max Landsberg",
+ key:"Most critical feedback fails because it feels like an attack on who someone is.",
+ pages:[
+  {t:"The AID method", b:[
+    {k:"lead", t:"A simple structure for feedback that feels critical but lands constructively."},
+    {k:"acro", items:[["A","Action","What you observed — facts only."],["I","Impact","What it affected — team, project, trust."],["D","Desired outcome","What you’d like to see next."]]},
+    {k:"use", t:"Performance issues, missed expectations, behavior that needs to shift."}
+  ]},
+  {t:"Before you start", b:[
+    {k:"lead", t:"A few questions to ask yourself first."},
+    {k:"list", mark:"q", cols:2, items:["Is this about a pattern or a one-off?","Am I calm enough to stay curious?","What outcome would actually help them?","Have I earned enough trust for this to land?"]}
+  ]},
+  {t:"Why this works", b:[
+    {k:"lead", t:"Most critical feedback fails because it feels like an attack on who someone is. Swap character for behavior."},
+    {k:"swap", a:"Instead of…", b:"Try…", rows:[["“You’re not a team player”","“When you skipped the debrief, the team missed your input”"],["“Your work has been sloppy”","“The last two reports had data errors that delayed sign-off”"],["“You need to communicate better”","“When updates come late, it’s hard for me to advocate for you”"]]}
+  ]},
+  {t:"Common mistakes", b:[
+    {k:"swap", a:"Mistake", b:"Do this instead", rows:[["Waiting too long, hoping it resolves itself","Address it while it’s still specific and fresh"],["Softening the message so much that it gets lost","Be kind AND clear — they’re not opposites"],["Making it about character (“you’re disorganized”)","Make it about action (“the deadlines were missed”)"],["Unloading everything at once","One issue per conversation"]]}
+  ]},
+  {t:"After you’ve said it", b:[
+    {k:"lead", t:"The conversation doesn’t end when you stop talking."},
+    {k:"stairs", items:[["Pause","Let them respond before filling the silence."],["Listen","Their reaction might reveal something you missed."],["Agree on one next step","Small and specific beats big and vague."]]}
+  ]}
+ ]},
+
+{p:0, src:18, t:"The 5-minute feedback formula", s:"See it. Say it. Support it.",
+ key:"Quick feedback works best when it’s specific, human and forward-focused — not personal or vague.",
+ pages:[
+  {t:"See it. Say it. Support it.", b:[
+    {k:"lead", t:"Quick feedback works best when it’s specific, human, and forward-focused (not personal or vague)."},
+    {k:"flow", items:[["See it","Step 1: spot the moment"],["Say it","Steps 2–3: name the behavior, share the impact"],["Support it","Steps 4–6: ask, co-create, end with confidence"]]}
+  ]},
+  {t:"The six steps", b:[
+    {k:"list", mark:"num", cols:3, items:[{t:"Spot the moment",d:"Give feedback as close to the action as possible so it stays relevant and fresh."},{t:"Name the behavior",d:"Describe exactly what you saw or heard. Focus on actions, not personality."},{t:"Share the impact",d:"Explain how it affected results, relationships, or the team’s goals."},{t:"Ask for perspective",d:"Invite their view.",q:"“How did that feel for you?” or “What was your intention there?”"},{t:"Co-create the next step",d:"Agree on what to try next time, keeping it specific and actionable."},{t:"End with confidence",d:"Reinforce belief in their ability to grow.",q:"“I know you’ve got this.”"}]}
+  ]}
+ ]},
+
+{p:0, src:16, t:"Performance reviews", s:"How to lead conversations that motivate and inspire",
+ key:"People accept feedback better when they feel it’s about helping them grow, not proving they failed.",
+ pages:[
+  {t:"1. Use the SBI model for clarity", b:[
+    {k:"note", t:"h/t Center for Creative Leadership"},
+    {k:"lead", t:"Clear feedback starts with removing judgment and sticking to what happened."},
+    {k:"flow", items:[["Situation","Say when and where it happened"],["Behavior","Describe what you observed"],["Impact","Share how it affected you, the team, or results"]]},
+    {k:"tip", l:"Example", t:"“During yesterday’s meeting (situation), you interrupted the client twice (behavior). This blocked us from hearing their needs (impact).”"},
+    {k:"use", t:"Delivering specific, actionable feedback that reduces defensiveness."}
+  ]},
+  {t:"2. Be radically candid", b:[
+    {k:"mrow", m:{y:"Care", x:"Challenge", cells:[["Ruinous Empathy","High care, low challenge"],["Radical Candor","High care, high challenge",1],["Manipulative Insincerity","Low care, low challenge"],["Obnoxious Aggression","Low care, high challenge"]]}, side:[
+      {k:"note", t:"h/t Kim Scott"},
+      {k:"lead", t:"The best feedback challenges people directly while showing you care about them personally."},
+      {k:"use", t:"Building trust while delivering tough messages."},
+      {k:"tip", t:"Make criticism immediate and specific. Praise can be public, criticism should be private."}
+    ]}
+  ]},
+  {t:"3. Focus on growth", b:[
+    {k:"note", t:"h/t Carol Dweck"},
+    {k:"lead", t:"The language you use shapes how people receive feedback."},
+    {k:"duo", a:{h:"Fixed mindset",l:["“You’re not good at this”","“This is just who you are”"]}, b:{h:"Growth mindset",l:["“You haven’t mastered this yet”","“You can develop this skill”"]}},
+    {k:"tip", t:"The word “yet” is powerful. Try using it. It turns a closed door into an open one."},
+    {k:"use", t:"Creating a culture where people embrace challenges and learn from setbacks."}
+  ]},
+  {t:"4. Skip the feedback sandwich", b:[
+    {k:"sandwich", t:"People remember the beginning and end of conversations better than the middle. When you sandwich criticism between praise, it gets lost.", items:["Give praise when you mean it, criticism when it’s needed","Separate the two by time and context","Be direct but kind"]}
+  ]},
+  {t:"5. Talk about the future", b:[
+    {k:"lead", t:"People accept feedback better when they feel it’s about helping them grow, not proving they failed."},
+    {k:"flow", items:[["Past performance","Where they’ve been"],["Future possibilities","Where they can go — ask:"]]},
+    {k:"list", mark:"q", cols:2, items:["What would success look like for you?","What support do you need to get there?","What skills do you want to develop?","How can we set you up to win?"]}
+  ]},
+  {t:"6. Make it a conversation, not a monologue", b:[
+    {k:"lead", t:"The best reviews involve two-way dialogue where employees share their perspective too. Try this:"},
+    {k:"list", mark:"num", cols:2, items:["Ask employees to complete a self-assessment first","Compare your notes with theirs during the meeting","Listen actively to their perspective on challenges","Invite their ideas on solutions and next steps"]}
+  ]}
+ ]},
+
+{p:0, src:13, t:"How to handle criticism", s:"Like a great leader — the RAIN method", L:"RAIN", credit:"h/t Tara Brach & Michele McDonald",
+ key:"The pause between hearing and responding is where leadership lives.",
+ pages:[
+  {t:"The RAIN method", b:[
+    {k:"lead", t:"A mindfulness approach that can shift how criticism lands."},
+    {k:"acro", items:[["R","Recognize","Notice what you’re feeling. Name it. “I’m defensive right now.”"],["A","Allow","Let the feeling exist without pushing it away or acting on it."],["I","Investigate","Get curious. Where is this landing in my body? What’s underneath?"],["N","Nurture","Offer yourself what you’d offer a friend. “This is hard. And I can handle hard.”"]]},
+    {k:"use", t:"Processing feedback without spiraling or shutting down."}
+  ]},
+  {t:"Before you respond", b:[
+    {k:"lead", t:"The pause between hearing and responding is where leadership lives."},
+    {k:"tl", items:[["1","Take a breath (literally)"],["2","Say “thank you for sharing that”"],["3","Ask a clarifying question"],["4","Request time if you need it"]]}
+  ]},
+  {t:"Two types of criticism", b:[
+    {k:"lead", t:"Learn to tell them apart — only one deserves your energy."},
+    {k:"swap", v:"dd", a:"Destructive", b:"Constructive", rows:[["Vague and general","Specific to a situation"],["Attacks character","Offers a path forward"],["Comes from resentment","Comes from investment"],["Uses “You always…”","Uses “I noticed…”"]]}
+  ]},
+  {t:"The 24-hour rule", b:[
+    {k:"lead", t:"For criticism that hits especially hard, give yourself 24 hours before deciding what to do with it."},
+    {k:"tl", items:[["0–2 hours","Feel it. Don’t act on it."],["2–12 hours","Write down what was said. Just the facts."],["12–24 hours","Ask: What’s useful? What can I release?"],["24+ hours","Decide your next step."]]}
+  ]},
+  {t:"Questions that help", b:[
+    {k:"lead", t:"These shift the conversation from judgment to growth."},
+    {k:"script", plain:1, items:[["","“Can you give me an example?”"],["","“What would better look like?”"],["","“Is there something specific I can work on?”"]]}
+  ]}
+ ]},
+
+{p:0, src:12, t:"12 phrases that calm tense situations", s:"What not to say, why it triggers, and what to say instead",
+ key:"Swap the phrase that shuts people down for one that lets them be heard.",
+ pages:[
+  {t:"Phrases 1 to 6", b:[
+    {k:"note", t:"Each card shows the phrase to drop and why it triggers people. Tap a card to see what to say instead."},
+    {k:"flips", start:0, items:[
+      ["“Calm down.”","It says their feelings are wrong.","“I can see this matters to you.”"],
+      ["“That doesn’t make sense.”","It shuts down their ideas.","“Help me understand your perspective.”"],
+      ["“It’s not a big deal.”","It shrinks what feels big.","“I can see why this is frustrating.”"],
+      ["“Stop being emotional.”","It shames them for feeling.","“Take your time. I want to hear you.”"],
+      ["“I don’t have time.”","It says they’re not worth it.","“This deserves my full attention.”"],
+      ["“Let’s just move on.”","It rushes past their feelings.","“I don’t want to rush past this.”"]]}
+  ]},
+  {t:"Phrases 7 to 12", b:[
+    {k:"note", t:"Tap a card to flip it."},
+    {k:"flips", start:6, items:[
+      ["“You’re making this harder.”","It blames them for the tension.","“What would make this easier?”"],
+      ["“I already explained this.”","It makes them feel dumb.","“Let me try saying it differently.”"],
+      ["“There’s nothing I can do.”","It takes away all hope.","“Let’s explore our options together.”"],
+      ["“Why are you so upset?”","It puts them on the defensive.","“Something’s bothering you. I’m here.”"],
+      ["“Everyone else is fine with it.”","It isolates them from the group.","“Your experience matters too.”"],
+      ["“That’s not what I said.”","It starts a battle over words.","“Let me clarify what I meant.”"]]}
+  ]}
+ ]},
+
+/* ---------------- PART II ---------------- */
+{p:1, src:2, t:"How to build a high-trust team", s:"The Trust Equation, a self-audit and the safety matrix",
+ key:"Most leaders over-index on credibility and reliability. But intimacy and low self-orientation often matter more.",
+ pages:[
+  {t:"The Trust Equation", b:[
+    {k:"note", t:"h/t David Maister, Charles Green & Robert Galford"},
+    {k:"lead", t:"Trust isn’t a feeling. It’s a formula you can actually influence."},
+    {k:"eq"},
+    {k:"use", t:"Diagnosing why trust might be breaking down."}
+  ]},
+  {t:"The insight", b:[
+    {k:"quote", t:"Most leaders over-index on credibility and reliability. But intimacy and low self-orientation often matter more.", by:"Amy Gibson"},
+    {k:"note", t:"Self-orientation sits underneath the line: the more it’s about you, the more it divides everything above it."}
+  ]},
+  {t:"Quick trust audit", b:[
+    {k:"lead", t:"Rate yourself 1–5. Your lowest score is your starting point."},
+    {k:"audit", items:[["Credibility","Do they believe what I say?"],["Reliability","Do I follow through?"],["Intimacy","Do they feel safe with me?"],["Self-orientation","Am I focused on them or me?"]]}
+  ]},
+  {t:"The psychological safety matrix", b:[
+    {k:"mrow", m:{y:"Psychological safety", x:"Accountability", cells:[["Comfort zone","Safe but unchallenged"],["Learning zone","Safe AND stretched",1],["Apathy zone","Disengaged and directionless"],["Anxiety zone","High pressure, low support"]]}, side:[
+      {k:"note", t:"h/t Amy Edmondson"},
+      {k:"lead", t:"High-performing teams need both safety and accountability. This matrix can help you spot where your team sits."},
+      {k:"tip", l:"The goal", t:"Move your team to the Learning Zone, where people feel safe enough to take risks and accountable for results."}
+    ]}
+  ]},
+  {t:"5 trust-building behaviors", b:[
+    {k:"note", t:"Source: Ron Friedman, Harvard Business Review. Research on high-trust teams reveals patterns — these 5 behaviors show up again and again."},
+    {k:"list", mark:"num", cols:2, items:[{t:"Don’t leave collaboration to chance",d:"Create structured time for real connection."},{t:"Keep colleagues in the loop",d:"Share information before you’re asked."},{t:"Share credit generously",d:"Recognize contributions sideways, not just upward."},{t:"Believe disagreement makes you better",d:"Welcome healthy friction instead of avoiding it."},{t:"Address tension early",d:"Name small issues before they grow."}]}
+  ]},
+  {t:"Trust starts at the top", b:[
+    {k:"lead", t:"But not in the way most leaders think."},
+    {k:"swap", a:"Instead of…", b:"Try", rows:[["Having all the answers","Saying “I don’t know yet”"],["Hiding your mistakes","Sharing what you learned from them"],["Solving every problem","Asking “What do you think?”"],["Waiting for feedback","Requesting it regularly"]]}
+  ]}
+ ]},
+
+{p:1, src:3, t:"9 signs your team trusts you", s:"What trust looks like from the outside",
+ key:"Trust shows up in behavior long before anyone says it out loud.",
+ pages:[
+  {t:"Check your team against the 9 signs", b:[
+    {k:"note", t:"Use this as a mirror: tick each sign you can honestly see on your team today. Any you can’t tick point you back to the trust audit."},
+    {k:"checks", items:["They stay when things get hard","They give honest feedback","They come to you first with concerns","They defend you when you’re not in the room","They give you the benefit of the doubt","They ask for help when they need it","They take risks without fear","They show up as themselves","They protect your time"]}
+  ]}
+ ]},
+
+/* ---------------- PART III ---------------- */
+{p:2, src:4, t:"How to make your team feel seen", s:"The SEEN framework for recognition", L:"SEEN",
+ key:"The people who leave often aren’t the ones who failed. They’re the ones who stopped feeling seen.",
+ pages:[
+  {t:"The SEEN framework", b:[
+    {k:"acro", items:[["S","Specific","Name what you noticed."],["E","Effort-aware","Acknowledge the work, not just the win."],["E","Equitable","Recognition should reach everyone who earns it."],["N","Natural","Weave it into your rhythm, not just big moments."]]}
+  ]},
+  {t:"Why recognition matters", b:[
+    {k:"lead", t:"The people who leave often aren’t the ones who failed. They’re the ones who stopped feeling seen."},
+    {k:"stats", items:[["2×","Unappreciated employees are twice as likely to quit within a year","Gallup"],["65%","of employees say they got no recognition last year","Gallup"],["#2","Lack of recognition is the 2nd largest risk factor for workplace distress","Brun & Dugas"]]}
+  ]},
+  {t:"The four ways people feel seen", b:[
+    {k:"note", t:"h/t Jean-Pierre Brun & Ninon Dugas. Most leaders default to celebrating wins. But wins are just one piece."},
+    {k:"list", mark:"dot", cols:2, items:[{t:"The person",d:"Who they are, not just what they do.",q:"“How are you really doing?”"},{t:"The effort",d:"Energy invested, even before results.",q:"“I saw how much prep went into that. Thank you.”"},{t:"The process",d:"How they work, their craft and care.",q:"“The way you handled that conversation was thoughtful.”"},{t:"The results",d:"What they achieved and delivered.",q:"“That landed. The client said yes.”"}]}
+  ]},
+  {t:"What works (and what doesn’t)", b:[
+    {k:"swap", v:"dd", a:"Don’t", b:"Do", rows:[["Wait until the project ships","Notice effort before outcomes arrive"],["Default to “great job”","Be specific about what you saw"],["Assume everyone wants public praise","Ask how they like to be recognized"],["Save it for annual reviews","Make it part of your rhythm"],["Only celebrate the loudest wins","Recognize the quiet contributors"]]}
+  ]}
+ ]},
+
+{p:2, src:7, t:"How to lead with empathy", s:"A framework for building trust and connection", L:"EMPATHY",
+ key:"Empathy doesn’t mean avoiding hard truths.",
+ pages:[
+  {t:"The EMPATHY framework", b:[
+    {k:"acro", sm:1, items:[["E","Engage fully","Give them your full attention."],["M","Mirror emotions","Reflect back what you’re hearing."],["P","Pause before responding","Take a moment before you speak."],["A","Ask, don’t assume","Get curious before drawing conclusions."],["T","Trust their perspective","Their experience is real to them."],["H","Hold space","Be present without trying to fix."],["Y","Yield the spotlight","Let them finish before you jump in."]]},
+    {k:"note", t:"Next: four tools to put it into practice."}
+  ]},
+  {t:"Tool 1: reading the room with SCARF", b:[
+    {k:"note", t:"h/t David Rock"},
+    {k:"lead", t:"People don’t always tell you what’s bothering them. This helps you see it."},
+    {k:"acro", sm:1, items:[["S","Status","Feeling valued."],["C","Certainty","Knowing what’s next."],["A","Autonomy","Having choices."],["R","Relatedness","Feeling safe with others."],["F","Fairness","Sensing equal treatment."]]},
+    {k:"use", t:"Understanding what makes someone feel safe or threatened."}
+  ]},
+  {t:"Tool 2: saying what you need", b:[
+    {k:"note", t:"Nonviolent Communication — h/t Marshall Rosenberg"},
+    {k:"lead", t:"Say how you feel without putting anyone on the defensive. Four steps, in order:"},
+    {k:"script", two:1, items:[["Observation","“When I see/hear…”"],["Feeling","“I feel…”"],["Need","“Because I need…”"],["Request","“Would you be willing to…?”"]]},
+    {k:"use", t:"Expressing your perspective without blame."}
+  ]},
+  {t:"Tool 3: balancing honesty and care", b:[
+    {k:"mrow", m:{y:"Care personally", x:"Challenge directly", cells:[["Ruinous Empathy","Cares, but won’t challenge"],["Radical Candor","Cares and challenges",1],["Manipulative Insincerity","Neither cares nor challenges"],["Obnoxious Aggression","Challenges without caring"]]}, side:[
+      {k:"note", t:"Radical Candor — h/t Kim Scott"},
+      {k:"lead", t:"Empathy doesn’t mean avoiding hard truths."},
+      {k:"use", t:"Having honest conversations without losing the relationship."},
+      {k:"note", t:"Laid out as in Kim Scott’s model and the Performance Reviews sheet; the original empathy sheet places the labels differently."}
+    ]}
+  ]},
+  {t:"Tool 4: delivering it clearly", b:[
+    {k:"note", t:"SBI feedback model — h/t Center for Creative Leadership"},
+    {k:"lead", t:"Say what you saw, not what you assume."},
+    {k:"script", items:[["Situation","“In yesterday’s meeting…”"],["Behavior","“When you interrupted Sara…”"],["Impact","“The team lost momentum.”"]]},
+    {k:"use", t:"Giving honest feedback that lands."}
+  ]}
+ ]},
+
+{p:2, src:6, t:"8 ways to lead with kindness", s:"Small habits people remember",
+ key:"What you say when they’re absent tends to define you more than what you say when they’re present.",
+ pages:[
+  {t:"Ways 1 to 4", b:[
+    {k:"list", mark:"num", cols:2, items:[
+      {t:"Speak well of them when they’re not there",d:"What you say when they’re absent tends to define you more than what you say when they’re present."},
+      {t:"Name exactly what they did well",d:"“Your follow-up saved that client” stays with people longer than “great job.”"},
+      {t:"Invite the quieter voices in",d:"Some of the best thinking comes from people who won’t interrupt to share it."},
+      {t:"Keep tough feedback one on one",d:"Corrections tend to land differently when there’s no audience watching."}]}
+  ]},
+  {t:"Ways 5 to 8", b:[
+    {k:"list", mark:"num", start:5, cols:2, items:[
+      {t:"Give them the context, not just the task",d:"Sharing the “why” behind a request says “I respect your thinking,” not just your output."},
+      {t:"Check in before it’s urgent",d:"A quick “how’s everything going?” can catch what reviews might miss."},
+      {t:"Remember what matters to them",d:"Asking about their kid’s recital or their mom’s surgery shows you see them as more than a role."},
+      {t:"Put their growth on the calendar",d:"Blocking time for their development often says more than words ever could."}]}
+  ]}
+ ]},
+
+{p:2, src:8, t:"11 laws of kind leadership", s:"Taking care of those in your charge",
+ key:"Leadership is about taking care of those in your charge.",
+ pages:[
+  {t:"The idea behind the laws", b:[
+    {k:"quote", t:"“Leadership is not about being in charge. It’s about taking care of those in your charge.”", by:"Simon Sinek"}
+  ]},
+  {t:"The 11 laws", b:[
+    {k:"list", mark:"num", cols:2, items:["See the human first, employee second","Give feedback that helps people grow","Make space for quiet voices to be heard","Respect your team members’ boundaries","Ask “how are you?” and truly listen","Show up with care when times get tough","Celebrate growth, not just results","Show appreciation in small ways daily","Make it safe to be human at work","Lend a hand when teammates need help","Stand up for your people, every time"]}
+  ]}
+ ]},
+
+{p:2, src:11, t:"9 things kind leaders do differently", s:"Why kindness is a strength, not a weakness",
+ key:"Kind doesn’t mean soft. It means caring enough to be honest.",
+ pages:[
+  {t:"Things 1 to 3", b:[
+    {k:"list", mark:"num", cols:3, items:[
+      {t:"They tell the truth (even when it’s hard)",d:"Kind doesn’t mean soft. It means caring enough to be honest. They say what needs to be said, with respect."},
+      {t:"They give people the benefit of the doubt",d:"Before jumping to conclusions, they ask questions. They assume good intent first."},
+      {t:"They let people be human",d:"Bad days happen. Mistakes happen. Kind leaders don’t expect perfection. They expect effort."}]}
+  ]},
+  {t:"Things 4 to 6", b:[
+    {k:"list", mark:"num", start:4, cols:3, items:[
+      {t:"They don’t dodge conflict… they handle it with care",d:"Avoiding hard conversations isn’t kind. It’s fear. Kind leaders lean in. They address issues early, directly, and with compassion."},
+      {t:"They set high standards AND provide real support",d:"They don’t just raise the bar and walk away. They help people reach it. Excellence and empathy go hand in hand."},
+      {t:"They see the whole person (not just the job title)",d:"People have lives, struggles, and dreams outside of work. Kind leaders honor that."}]}
+  ]},
+  {t:"Things 7 to 9", b:[
+    {k:"list", mark:"num", start:7, cols:3, items:[
+      {t:"They shut down toxic behavior. Every time.",d:"Kindness is not tolerance of cruelty. Protecting the team IS the kind thing to do. They don’t look the other way."},
+      {t:"They go first",d:"They model what they want to see. They own their mistakes. They say sorry. They show up with humility. Every single day."},
+      {t:"They prove that kindness is a strength, not a weakness",d:"Kind leaders build teams that trust each other, challenge each other, and stay. That’s not soft. That’s powerful."}]}
+  ]}
+ ]},
+
+{p:2, src:15, t:"14 acts of kindness that transform teams", s:"Everyday moves, big effect",
+ key:"Praise publicly, guide privately, and always preserve dignity.",
+ pages:[
+  {t:"Acts 1 to 5", b:[
+    {k:"list", mark:"num", cols:2, items:[
+      {t:"Say “thank you” specifically",d:"“Your attention to detail saved us” beats generic appreciation."},
+      {t:"Remember their coffee order",d:"Notice what brings someone comfort and quietly make it happen."},
+      {t:"Defend absent colleagues",d:"What you say when they’re not there builds trust everywhere."},
+      {t:"Make space for quiet voices",d:"Sometimes leadership means stepping back so others can step up."},
+      {t:"Give feedback privately",d:"Praise publicly, guide privately, and always preserve dignity."}]}
+  ]},
+  {t:"Acts 6 to 10", b:[
+    {k:"list", mark:"num", start:6, cols:2, items:[
+      {t:"Share credit publicly",d:"When success arrives, your name doesn’t need to be first."},
+      {t:"Offer help before they ask",d:"“What can I take off your plate?” beats waiting for overwhelm."},
+      {t:"Block time for their growth",d:"“Let’s work on your development plan” shows you invest in their future."},
+      {t:"Ask “How are you really?”",d:"Then wait for the real answer beneath the automatic response."},
+      {t:"Step in during their crisis",d:"Step in silently when a colleague needs to handle personal matters."}]}
+  ]},
+  {t:"Acts 11 to 14", b:[
+    {k:"list", mark:"num", start:11, cols:2, items:[
+      {t:"Stay late with them",d:"When deadlines loom, presence speaks louder than advice ever could."},
+      {t:"Share your resources",d:"Your network, knowledge, or tools might unlock someone’s potential."},
+      {t:"Send the encouraging text",d:"“Thinking of you before your presentation” can change someone’s day."},
+      {t:"Volunteer for the worst task",d:"Taking what nobody wants shows servant leadership in action."}]}
+  ]}
+ ]},
+
+/* ---------------- PART IV ---------------- */
+{p:3, src:9, t:"How to coach someone who doesn’t see the problem", s:"A cheat sheet for leaders", L:"OARS",
+ key:"If they’re in precontemplation, your job isn’t to convince. It’s to plant seeds.",
+ pages:[
+  {t:"The OARS approach", b:[
+    {k:"note", t:"h/t William Miller & Stephen Rollnick"},
+    {k:"lead", t:"Guide the conversation without pushing."},
+    {k:"acro", items:[["O","Open questions","That invite exploration."],["A","Affirmations","That recognize effort."],["R","Reflections","That mirror what you hear."],["S","Summaries","That connect the dots."]]},
+    {k:"use", t:"Creating space for self-discovery."}
+  ]},
+  {t:"Stages of change", b:[
+    {k:"note", t:"h/t Prochaska & DiClemente. Meet them where they are, not where you want them to be. Tap a stage."},
+    {k:"stages", items:[["Precontemplation","“I don’t see a problem”","Your job isn’t to convince. It’s to plant seeds."],["Contemplation","“Maybe something’s off”","They’re weighing it — open questions and reflections help them think it through. (added hint)"],["Preparation","“I’m ready to try”","Help them shape a first small, specific step. (added hint)"],["Action","“I’m working on it”","Affirm the effort and notice what’s changing. (added hint)"],["Maintenance","“I’m staying the course”","Keep checking in so the new habit holds. (added hint)"]]}
+  ]},
+  {t:"Open questions that work", b:[
+    {k:"lead", t:"The right question invites reflection. The wrong one triggers defense."},
+    {k:"swap", a:"Instead of this", b:"Try this", rows:[["“Why did you do that?”","“What were you hoping would happen?”"],["“Don’t you see the issue?”","“How do you think that landed?”"],["“You need to fix this”","“What would you do differently?”"]]}
+  ]},
+  {t:"Affirmations that build trust", b:[
+    {k:"lead", t:"Acknowledge what’s working, even when addressing what’s not."},
+    {k:"script", plain:1, two:1, items:[["","“You’ve handled tougher situations before”"],["","“I can see you care about getting this right”"],["","“I notice you’re really thinking this through”"],["","“It takes courage to talk about this”"]]}
+  ]},
+  {t:"Signs they’re starting to see", b:[
+    {k:"lead", t:"Awareness often shows up before words do."},
+    {k:"list", mark:"dot", cols:2, items:["They pause longer before responding","They ask clarifying questions","They revisit past conversations differently","They stop defending and start wondering"]}
+  ]},
+  {t:"Remember", b:[
+    {k:"checks", items:["Coaching someone into awareness takes time","Hold space without forcing the moment","The breakthrough often happens after the conversation","Sometimes the person who shifts the most is you"]}
+  ]}
+ ]},
+
+{p:3, src:17, t:"How to lead when every generation wants different things", s:"Boomers, Gen X, Millennials and Gen Z",
+ key:"These are research-based generalizations. Focus on understanding your specific team members.",
+ pages:[
+  {t:"Explore one generation at a time", b:[
+    {k:"note", t:"Research-based generalizations — individual preferences vary within each generation. Focus on understanding your specific team members."},
+    {k:"gens"}
+  ]},
+  {t:"All four side by side", b:[{k:"gtable"}]}
+ ]},
+
+/* ---------------- PART V ---------------- */
+{p:4, src:14, t:"5 types of meetings every leader should run", s:"From weekly syncs to annual culture touchpoints",
+ key:"Each rhythm does one job — status, people, connection, strategy or belonging.",
+ pages:[
+  {t:"The meeting pyramid", b:[
+    {k:"pyr", items:[
+      ["Weekly team syncs","Each team member reports using traffic-light status: Green = on track, Yellow = needs attention, Red = requires immediate help.",["Keep it under 30 minutes","No problem-solving during updates","Follow up on reds within 24 hours"]],
+      ["Monthly one-on-ones","Personal check-ins that go beyond tasks to explore wellbeing, career growth and developmental feedback.",["Start with “How are you really?”","Discuss development, not just deliverables","Let them set the agenda"]],
+      ["Monthly all-hands","Keep everyone connected to company vision while celebrating team wins and sharing progress updates.",["Spotlight different teams each month","Share failures alongside successes","Always end with what’s coming next"]],
+      ["Quarterly strategy sessions","Big-picture reflection where teams analyze what worked, what didn’t, and self-reported next commitments.",["Teams present their own results","Focus on learning, not blame","Set commitments, not just assignments"]],
+      ["Annual culture touchpoints","Always during work hours to build genuine belonging without causing burnout. (For Amy’s team, it’s the Holiday Party.)",["Never schedule after 5pm","Include all departments","Create memories, not new obligations"]]
+    ]}
+  ]}
+ ]},
+
+{p:4, src:19, t:"Master time management", s:"Unlock 3 extra hours each day",
+ key:"Do your hardest task first. Everything else feels easy after that.",
+ pages:[
+  {t:"Start the day right", b:[
+    {k:"techs", items:[
+      {t:"1. The phone-free power hour",d:"Keep your phone on airplane mode until 9 AM. No distractions. Just focused work while your brain is fresh."},
+      {t:"2. The 2-minute rule",by:"h/t David Allen",d:"If it takes less than 2 minutes, do it now. Small tasks won’t pile up into big problems."},
+      {t:"3. The “eat the frog” method",by:"h/t Brian Tracy",d:"Do your hardest task first. Everything else feels easy after that."}]}
+  ]},
+  {t:"Work in focused sprints", b:[
+    {k:"techs", items:[
+      {t:"4. The Pomodoro technique",by:"h/t Francesco Cirillo",d:"Work 25 minutes. Take a 5-minute break. Repeat. Your brain stays sharp, and tasks get done.",viz:"timer"},
+      {t:"5. The 1-3-5 rule",d:"Plan each day: 1 big task, 3 medium tasks, 5 small tasks. Realistic goals you’ll actually complete.",viz:"135"}]}
+  ]},
+  {t:"Protect your energy", b:[
+    {k:"techs", items:[
+      {t:"6. The buffer zone method",d:"Add 15 minutes between meetings. Gives your mind space to reset. And if one runs long, no problem.",viz:"buffer"},
+      {t:"7. The 80/20 rule",by:"h/t Vilfredo Pareto",d:"20% of your work gives 80% of results. Focus on that 20%. Let the rest wait or disappear.",viz:"pareto"}]}
+  ]}
+ ]},
+
+{p:4, src:10, t:"9 books that will make you a better leader", s:"A reading list in three shelves",
+ key:"Long-term outcomes are shaped more by behavior than knowledge.",
+ pages:[
+  {t:"The reading list", b:[{k:"books"}]}
+ ]}
+];
+
+const GENS = {
+  rows:["Biggest misconception","What they value","How they work","What motivates them","Trust breakers","Career development","Lead them by","Actionable tips"],
+  g:[
+    {n:"Baby Boomers",y:"1946–1964",v:["They’re tech-resistant dinosaurs","Recognition for experience and knowledge","Structured environments with hierarchies","Career achievement and success markers","Being dismissed as outdated","Executive coaching and mentorship opportunities","Honoring expertise through mentorship",["Ask their advice on strategic decisions","Create “expert advisor” roles","Recognize tenure milestones publicly"]]},
+    {n:"Generation X",y:"1965–1980",v:["They’re just cynical slackers","Independence and work flexibility","Self-sufficient with minimal supervision","Work-life balance and skill growth","Micromanagement and broken promises","Lateral moves and portfolio careers","Granting autonomy and focusing on results",["Keep meetings results-focused","Focus conversations on outcomes","Offer flexible work arrangements"]]},
+    {n:"Millennials",y:"1981–1996",v:["They’re entitled and lazy","Purpose-driven work and regular feedback","Collaborative teams with digital tools","Growth opportunities and work with purpose","Lack of transparency and limited growth","Clear progression paths and stretch assignments","Providing clear paths and recognition",["Give feedback every 2 weeks","Share company impact metrics","Create clear promotion timelines"]]},
+    {n:"Generation Z",y:"1997–2012",v:["They have no attention span","Diversity, authenticity and flexibility","Tech-first with flexible arrangements","Learning opportunities and social impact","Performative values without action","Project ownership and skill-building opportunities","Creating inclusive environments with clear purpose",["Provide learning opportunities","Explain the “why” behind decisions","Offer mental health days as standard"]]}
+  ]
+};
+
+const BOOKS = [
+  {cat:"Team leadership", items:[["The Hard Thing About Hard Things","Ben Horowitz","Leadership means owning responsibility when choices are difficult.","#1e1e1e"],["The Five Dysfunctions of a Team","Patrick Lencioni","Trust allows teams to work through challenges together.","#b3302e"],["Multipliers","Liz Wiseman","The best leaders help others grow in confidence and capability.","#c9a00f"]]},
+  {cat:"Judgment & decision-making", items:[["Turn the Ship Around!","L. David Marquet","Empowering others to decide builds stronger teams and better outcomes.","#7a8590"],["$100M Offers","Alex Hormozi","Clarity around value leads to better business decisions.","#7b2fd0"],["Thinking in Bets","Annie Duke","Great leaders make better decisions by separating outcomes from process.","#c4572d"]]},
+  {cat:"Leadership depth & long-term thinking", items:[["Dare to Lead","Brené Brown","Leadership requires the courage to have honest, meaningful conversations.","#2c6f7a"],["High Output Management","Andy Grove","Strong leadership systems create consistent performance at scale.","#2742a8"],["The Psychology of Money","Morgan Housel","Long-term outcomes are shaped more by behavior than knowledge.","#7b9a82"]]}
+];
+
+/* ===================== BUILD SLIDE LIST ===================== */
+const PAGES = [{type:"book"}];
+let chNo = 0;
+PARTS.forEach((P, pi) => {
+  P.start = PAGES.length; PAGES.push({type:"part", pi});
+  P.chs = CH.filter(c => c.p === pi);
+  P.chs.forEach(c => {
+    c.no = ++chNo; c.start = PAGES.length; PAGES.push({type:"ch", c});
+    c.pages.forEach((pg, j) => PAGES.push({type:"pg", c, pg, j}));
+  });
+});
+PAGES.push({type:"end"});
+
+/* ===================== RENDERERS ===================== */
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const tick = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+
+function matrix(m) {
+  return `<div class="matrix rv"><div class="my">${m.y} ↑</div><div class="mg">${m.cells.map(([t,d,hi]) => `<div class="cell${hi ? " hi" : ""}"><b>${t}</b><span>${d}</span></div>`).join("")}</div><div class="mx">${m.x} →</div></div>`;
+}
+
+function block(b) {
+  switch (b.k) {
+    case "lead": return `<p class="lead rv">${b.t}</p>`;
+    case "note": return `<p class="note rv">${b.t}</p>`;
+    case "use": return `<p class="use rv"><b>Use for</b><span>${b.t}</span></p>`;
+    case "tip": return `<div class="tip rv"><b>${b.l || "Tip"}</b><span>${b.t}</span></div>`;
+    case "quote": return `<blockquote class="quote rv"><p>${b.t}</p><cite>— ${b.by}</cite></blockquote>`;
+    case "acro": return `<div class="acro${b.sm ? " sm" : ""}" style="--n:${b.items.length}">${b.items.map(([l,t,d]) => `<div class="tile rv"><span class="L">${l}</span><b>${t}</b><span>${d}</span></div>`).join("")}</div>`;
+    case "list": {
+      const s = b.start || 1;
+      return `<div class="list" style="--cols:${b.cols || 1}">${b.items.map((it, i) => {
+        const o = typeof it === "string" ? {t:it} : it;
+        const m = b.mark === "num" ? `<span class="n">${s + i}</span>` : b.mark === "warn" ? `<span class="n warn">!</span>` : b.mark === "q" ? `<span class="n">?</span>` : `<span class="n dot"></span>`;
+        return `<div class="item rv">${m}<div><b>${o.t}</b>${o.d ? `<p>${o.d}</p>` : ""}${o.q ? `<p class="say">${o.q}</p>` : ""}</div></div>`;
+      }).join("")}</div>`;
+    }
+    case "swap": return `<div class="swap ${b.v || ""} rv"><div class="sr h"><span class="x">${b.a}</span><span class="arr"></span><span class="y">${b.b}</span></div>${b.rows.map(([x,y], i) => `<div class="sr" style="--d:${i}"><span class="x">${x}</span><span class="arr">${b.v === "dd" ? "" : "→"}</span><span class="y">${y}</span></div>`).join("")}</div>`;
+    case "script": return `<div class="script${b.two ? " two" : ""}">${b.items.map(([w,s], i) => b.plain ? `<div class="line plain rv"><div class="bubble">${s}</div></div>` : `<div class="line rv"><span class="who"><i>${i + 1}</i>${w}</span><div class="bubble">${s}</div></div>`).join("")}</div>`;
+    case "checks": return `<div class="checks${b.items.length > 6 ? " two" : ""} rv" data-checks><div class="ckm"><span class="ct">0 of ${b.items.length}</span><span class="t"><i></i></span></div>${b.items.map(t => `<button class="ck" aria-pressed="false" data-act="ck"><span class="box">${tick}</span><span>${t}</span></button>`).join("")}</div>`;
+    case "mrow": return `<div class="mrow">${matrix(b.m)}<div class="mside">${b.side.map(block).join("")}</div></div>`;
+    case "eq": return `<div class="eq rv"><span class="t">Trust</span><span class="eqs">=</span><div class="frac"><div class="top"><span class="term"><b>Credibility</b><i>Do they believe what you say?</i></span><em>+</em><span class="term"><b>Reliability</b><i>Do you follow through?</i></span><em>+</em><span class="term"><b>Intimacy</b><i>Do they feel safe with you?</i></span></div><div class="rule"></div><div class="bot term"><b>Self-orientation</b><i>Are you in it for them or you?</i></div></div></div>`;
+    case "audit": return `<div class="audit rv" data-audit>${b.items.map(([a,q], i) => `<div class="arow"><b>${a}</b><span class="q">${q}</span><label><input type="range" min="1" max="5" value="3" aria-label="${a} score"><span class="v">3</span></label></div>`).join("")}<div class="ares"></div></div>`;
+    case "stats": return `<div class="list" style="--cols:3">${b.items.map(([v,t,s]) => `<div class="item rv" style="grid-template-columns:1fr;border-top:4px solid var(--moss)"><div><b style="font-size:64px;font-weight:800;color:var(--moss);line-height:1.1">${v}</b><p style="color:var(--ink);font-size:20px">${t}</p><p style="font-size:15px">${s}</p></div></div>`).join("")}</div>`;
+    case "tl": return `<ol class="tl">${b.items.map(([w,t]) => `<li class="rv"><div class="when">${w}</div><p>${t}</p></li>`).join("")}</ol>`;
+    case "stairs": return `<div class="stairs">${b.items.map(([t,d], i) => `<div class="rv" style="--i:${i}"><b>${t}</b><p>${d}</p></div>`).join("")}</div>`;
+    case "flow": return `<div class="flow rv">${b.items.map(([t,d]) => `<div><b>${t}</b><span>${d}</span></div>`).join("")}</div>${b.items.length ? '<div style="height:18px"></div>' : ""}`;
+    case "duo": return `<div class="duo rv"><div><h5>${b.a.h}</h5>${b.a.l.map(x => `<p>${x}</p>`).join("")}</div><div><h5>${b.b.h}</h5>${b.b.l.map(x => `<p>${x}</p>`).join("")}</div></div>`;
+    case "sandwich": return `<div class="sandwich rv"><div class="sw" aria-hidden="true"><span>Praise</span><span>Criticism</span><span>Praise</span></div><div><p class="lead">${b.t}</p><h4 style="font-size:20px;margin-bottom:4px">Try this instead</h4><div class="list" style="--cols:1">${b.items.map(x => `<div class="item"><span class="n dot"></span><div><b>${x}</b></div></div>`).join("")}</div></div></div>`;
+    case "flips": return `<div class="flips">${b.items.map(([bad,why,good], i) => { const n = String(b.start + i + 1).padStart(2,"0"); return `<button class="flip rv" aria-pressed="false" data-act="flip"><span class="in"><span class="f"><span class="no">${n} Don’t say</span><span class="bad">${bad}</span><span class="why">${why}</span><span class="hint">Tap to flip</span></span><span class="b"><span class="no">${n} Say this instead</span><span class="good">${good}</span><span class="hint">Tap to flip back</span></span></span></button>`; }).join("")}</div>`;
+    case "pyr": PYR = b.items; return `<div class="pyrx"><div class="pyr rv">${b.items.map(([t], i) => `<button class="tier${i === 0 ? " tip0" : ""}" style="--i:${i}" aria-pressed="${i === 0}" data-act="tier" data-i="${i}">${i + 1}. ${t}</button>`).join("")}<p class="note" style="text-align:center;margin-top:10px">Tap a level. Most frequent at the top, everyone at the base.</p></div><div class="det rv" id="det">${tierDet(0)}</div></div>`;
+    case "stages": return `<div class="rv"><div class="stages">${b.items.map(([t,q,h], i) => `<button class="stg" aria-pressed="${i === 0}" data-act="stg" data-h="${h.replace(/"/g,"&quot;")}"><span class="nn">Stage ${i + 1}</span><b>${t}</b><i>${q}</i></button>`).join("")}</div><div class="stgout" aria-live="polite">${b.items[0][2]}</div></div>`;
+    case "gens": return `<div class="rv"><div class="tabs" role="tablist">${GENS.g.map((g, i) => `<button role="tab" aria-selected="${i === 0}" data-act="gen" data-i="${i}">${g.n}<small>${g.y}</small></button>`).join("")}</div><div class="gen" id="genPanel">${genRows(0)}</div></div>`;
+    case "gtable": return `<div class="gscroll rv"><table class="gtab"><thead><tr><th></th>${GENS.g.map(g => `<th>${g.n}<small>${g.y}</small></th>`).join("")}</tr></thead><tbody>${GENS.rows.map((r, ri) => `<tr><td>${r}</td>${GENS.g.map(g => `<td>${Array.isArray(g.v[ri]) ? g.v[ri].join("<br>") : g.v[ri]}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    case "books": return `<div class="shelves">${BOOKS.map(s => `<div class="shelf rv"><h4>${s.cat}</h4><div class="row">${s.items.map(([t,a,d,c]) => `<div class="bk"><div class="spine" style="--c:${c}">${t.replace(/^The |^\$/,"").charAt(0)}</div><div><b>${t}</b><i>${a}</i><p>${d}</p></div></div>`).join("")}</div></div>`).join("")}</div>`;
+    case "techs": return `<div class="techs" style="--n:${b.items.length}">${b.items.map(it => `<div class="tech rv"><h3>${it.t}</h3>${it.by ? `<span class="by">${it.by}</span>` : ""}<p>${it.d}</p>${it.viz ? `<div class="viz">${viz(it.viz)}</div>` : ""}</div>`).join("")}</div>`;
+  }
+  return "";
+}
+let PYR = [];
+function tierDet(i) {
+  const [t,d,l] = PYR[i];
+  return `<span class="k">Level ${i + 1} of 5</span><h3>${t}</h3><p>${d}</p><ul>${l.map(x => `<li>${x}</li>`).join("")}</ul>`;
+}
+function genRows(i) {
+  const g = GENS.g[i];
+  return GENS.rows.map((r, ri) => `<div class="grow" style="--i:${ri}"><b>${r}</b><div>${Array.isArray(g.v[ri]) ? `<ul>${g.v[ri].map(x => `<li>${x}</li>`).join("")}</ul>` : g.v[ri]}</div></div>`).join("");
+}
+function viz(v) {
+  if (v === "135") return `<div class="c135"><div>1<br>big task</div><div>3<br>medium</div><div>5<br>small</div></div>`;
+  if (v === "buffer") return `<div class="cal"><div>Meeting</div><div class="buf">15 min break</div><div>Meeting</div></div>`;
+  if (v === "pareto") return `<div class="pareto"><div class="r"><span>Effort</span><div class="t"><span style="width:20%">20%</span><span style="width:80%">80%</span></div></div><div class="r"><span>Result</span><div class="t"><span style="width:80%">80%</span><span style="width:20%">20%</span></div></div></div>`;
+  if (v === "timer") return `<div class="timer" data-timer><div class="dial"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg><div class="lab"><div><span class="tm">25:00</span><small class="md">Focus</small></div></div></div><div class="btns"><button data-act="tgo">Start</button><button data-act="treset">Reset</button></div></div><div class="pomo"><span>1 Choose a task</span><span>2 Set timer</span><span>3 Work intensely</span><span>4 Take a short break</span><span>5 Repeat</span></div>`;
+  return "";
+}
+
+/* ---------- slide types ---------- */
+function bookCover(saved) {
+  return `<div class="fitwrap"><div class="fitbox cv"><div class="cover"><span class="ghost" aria-hidden="true">L</span>
+  <div><div class="kick rv">A learning edition of Amy Gibson’s “A Leadership Book in One Page”</div>
+  <h1 class="rv" style="font-size:80px">The Leadership Field Book</h1>
+  <p class="subt rv">Nineteen one-page sheets, rebuilt as slides you can learn from one idea at a time.</p>
+  <div class="rv">${saved > 0 ? `<button class="cta" data-go="${saved}">Continue reading</button><button class="cta alt" data-go="1">Start over</button>` : `<button class="cta" data-go="1">Start reading</button>`}</div></div>
+  <div><div class="stack rv"><div><b>5</b><span>parts</span></div><div><b>19</b><span>chapters</span></div><div><b>${PAGES.length}</b><span>slides</span></div><div><b>22</b><span>frameworks</span></div></div>
+  <p class="src rv">Move with <kbd>←</kbd> <kbd>→</kbd> or swipe. Press <kbd>F</kbd> for full screen.<br>All content by Amy Gibson — linkedin.com/in/amy-l-g</p></div></div></div></div>`;
+}
+function partCover(pi) {
+  const P = PARTS[pi];
+  return `<div class="fitwrap"><div class="fitbox cv"><div class="cover"><span class="ghost" aria-hidden="true">${P.n}</span>
+  <div><div class="kick rv">Part ${P.n}</div><h1 class="rv">${cap(P.t)}</h1><p class="subt rv">${P.d}</p>
+  <div class="rv"><button class="cta" data-go="${P.start + 1}">Begin part ${P.n}</button></div></div>
+  <div class="inside rv"><b>Chapters in this part</b><ol>${P.chs.map(c => `<li><button data-go="${c.start}">${cap(c.t)}</button></li>`).join("")}</ol></div></div></div></div>`;
+}
+function chCover(c) {
+  const P = PARTS[c.p];
+  return `<div class="fitwrap"><div class="fitbox cv"><div class="cover"><span class="ghost" aria-hidden="true">${c.no}</span>
+  <div>${c.L ? `<div class="letters" aria-label="${c.L}">${[...c.L].map((l, i) => `<span style="--i:${i}">${l}</span>`).join("")}</div>` : ""}
+  <div class="kick rv">Part ${P.n}, chapter ${c.no}</div>
+  <h1 class="rv" style="font-size:${c.t.length > 40 ? 54 : 64}px">${cap(c.t)}</h1>
+  <p class="subt rv">${c.s}${c.credit ? ` <i style="font-size:.8em">(${c.credit})</i>` : ""}</p>
+  <p class="key rv">${c.key}</p></div>
+  <div class="inside rv"><b>Inside this chapter</b><ol>${c.pages.map((pg, j) => `<li><button data-go="${c.start + 1 + j}">${pg.t}</button></li>`).join("")}</ol><p class="src">From sheet ${c.src} of 19 in the original</p></div></div></div></div>`;
+}
+function contentSlide(c, pg, j) {
+  return `<div class="hd"><p class="crumb rv"><span>Chapter ${c.no}: ${cap(c.t)}</span><span class="dots">${c.pages.map((_, k) => `<i class="${k === j ? "on" : ""}"></i>`).join("")}</span></p><h2 class="title rv">${pg.t}</h2></div>
+  <div class="fitwrap"><div class="fitbox">${pg.b.map(block).join("")}</div></div>`;
+}
+function endSlide() {
+  const fw = [["CLEAR","Connect, Listen, Explain, Ask, Request",1],["AID","Action, Impact, Desired outcome",2],["See it. Say it. Support it.","The 5-minute feedback formula",3],["SBI","Situation, Behavior, Impact",4],["Radical Candor","Care personally + challenge directly",4],["Growth mindset","The power of “yet”",4],["RAIN","Recognize, Allow, Investigate, Nurture",5],["24-hour rule","Feel, write, sort, decide",5],["12 calming phrases","What to say instead",6],["Trust Equation","(C + R + I) ÷ Self-orientation",7],["Safety matrix","Aim for the Learning Zone",7],["9 signs of trust","Your team’s mirror",8],["SEEN","Specific, Effort-aware, Equitable, Natural",9],["EMPATHY","Seven listening habits",10],["SCARF","Status, Certainty, Autonomy, Relatedness, Fairness",10],["NVC","Observation, Feeling, Need, Request",10],["OARS","Open questions, Affirmations, Reflections, Summaries",15],["Stages of change","Plant seeds in precontemplation",15],["Generations","Lead the person, not the label",16],["5 meetings","Weekly to annual rhythm",17],["Pomodoro & 1-3-5","Focus in sprints, plan realistically",18],["80/20 & eat the frog","Do what matters, hardest first",18]];
+  const st = n => CH.find(c => c.no === n).start;
+  return `<div class="hd"><p class="crumb rv"><span>The end</span></p><h2 class="title rv">Framework cheat sheet</h2></div>
+  <div class="fitwrap"><div class="fitbox"><p class="note rv">Every model in the book. Tap one to jump back to its chapter.</p><div class="sheet">${fw.map(([t,d,n]) => `<button class="rv" data-go="${st(n)}"><b>${t}</b><span>${d}</span></button>`).join("")}</div>
+  <p class="src rv">Original content: Amy Gibson, “A Leadership Book in One Page” — linkedin.com/in/amy-l-g</p></div></div>`;
+}
+
+/* ===================== VIEWER ===================== */
+const $ = s => document.querySelector(s);
+const slide = $("#slide"), frame = $("#frame"), vp = $("#vp");
+let cur = 0, W = 1280, H = 720, timer = null;
+const store = {get(){try{return parseInt(localStorage.getItem("lfb-slide") || "0", 10) || 0}catch(e){return 0}}, set(v){try{localStorage.setItem("lfb-slide", v)}catch(e){}}};
+
+function layout() {
+  const aw = vp.clientWidth - 32, ah = vp.clientHeight - 8;
+  const portrait = aw / ah < 0.95;
+  if (portrait) { W = 480; H = Math.round(W * ah / aw); } else { W = 1280; H = 720; }
+  document.body.classList.toggle("portrait", portrait);
+  slide.style.width = W + "px"; slide.style.height = H + "px";
+  const s = Math.min(aw / W, ah / H);
+  slide.style.transform = `scale(${s})`;
+  frame.style.width = W * s + "px"; frame.style.height = H * s + "px";
+  fitBody();
+}
+function fitBody() {
+  const b = slide.querySelector(".fitbox"); if (!b) return;
+  const cv = b.classList.contains("cv");
+  b.style.transform = ""; b.style.width = ""; b.style.minHeight = "";
+  const avail = b.parentElement.clientHeight;
+  let k = 1;
+  for (let p = 0; p < 4; p++) {
+    if (cv) b.style.minHeight = (avail / k) + "px";
+    const h = b.scrollHeight;
+    const nk = Math.max(0.5, Math.min(1, avail / h));
+    if (Math.abs(nk - k) < 0.005) break;
+    k = nk;
+    b.style.width = k < 1 ? `${100 / k}%` : "";
+  }
+  if (cv) b.style.minHeight = (avail / k) + "px";
+  const h = b.scrollHeight;
+  if (h * k > avail + 1) k = avail / h;
+  b.style.transform = k < 1 ? `scale(${k})` : "";
+  b.parentElement.classList.toggle("mid", h * k < avail - 2);
+}
+
+function show(i, dir) {
+  i = Math.max(0, Math.min(PAGES.length - 1, i));
+  if (timer) { clearInterval(timer.id); timer = null; }
+  dir = dir || (i >= cur ? 1 : -1); cur = i;
+  const P = PAGES[i];
+  let html, where = "";
+  if (P.type === "book") html = bookCover(store.get());
+  else if (P.type === "part") { html = partCover(P.pi); where = `Part ${PARTS[P.pi].n}: ${cap(PARTS[P.pi].t)}`; }
+  else if (P.type === "ch") { html = chCover(P.c); where = `Chapter ${P.c.no}: ${cap(P.c.t)}`; }
+  else if (P.type === "pg") { html = contentSlide(P.c, P.pg, P.j); where = `Chapter ${P.c.no}: ${cap(P.c.t)}`; }
+  else { html = endSlide(); where = "Framework cheat sheet"; }
+  slide.innerHTML = `<div class="s anim${dir < 0 ? " back" : ""}">${html}</div>`;
+  slide.querySelectorAll(".rv").forEach((el, k) => { if (!el.style.getPropertyValue("--d")) el.style.setProperty("--d", Math.min(k, 14)); });
+  $("#where").textContent = where;
+  $("#count").textContent = `${i + 1} / ${PAGES.length}`;
+  $("#trk").style.width = `${(i / (PAGES.length - 1)) * 100}%`;
+  $("#prev").disabled = i === 0; $("#next").disabled = i === PAGES.length - 1;
+  if (i > 0) store.set(i);
+  if (location.hash !== `#s${i}`) history.replaceState(null, "", `#s${i}`);
+  fitBody(); initAudit();
+}
+
+function buildContents() {
+  $("#parts").innerHTML = `<div class="part"><h3>Start</h3><h4>The Leadership Field Book</h4><button data-go="0"><span>☰</span>Cover</button><button data-go="${PAGES.length - 1}"><span>✓</span>Framework cheat sheet</button></div>` +
+    PARTS.map(P => `<div class="part"><h3>Part ${P.n}</h3><h4>${cap(P.t)}</h4>${P.chs.map(c => `<button data-go="${c.start}" data-ch="${c.no}"><span>${c.no}</span>${cap(c.t)}</button>`).join("")}</div>`).join("");
+}
+function openContents(o) {
+  $("#contents").classList.toggle("open", o);
+  $("#tocBtn").setAttribute("aria-expanded", o);
+  if (o) { const P = PAGES[cur]; document.querySelectorAll("#parts [data-ch]").forEach(b => b.classList.toggle("on", P.c && +b.dataset.ch === P.c.no)); }
+}
+
+/* ---------- interactions ---------- */
+function initAudit() {
+  const a = slide.querySelector("[data-audit]"); if (!a) return;
+  const upd = () => {
+    const rows = [...a.querySelectorAll(".arow")], vals = rows.map(r => +r.querySelector("input").value);
+    rows.forEach((r, k) => r.querySelector(".v").textContent = vals[k]);
+    const min = Math.min(...vals);
+    rows.forEach((r, k) => r.classList.toggle("low", vals[k] === min));
+    const lows = rows.filter((r, k) => vals[k] === min).map(r => r.querySelector("b").textContent);
+    a.querySelector(".ares").innerHTML = `Start with <b>${lows.join(" and ")}</b>. <span style="color:var(--muted)">Trust Equation: (${vals[0]} + ${vals[1]} + ${vals[2]}) ÷ ${vals[3]} = <b style="color:var(--ink)">${((vals[0] + vals[1] + vals[2]) / vals[3]).toFixed(1)}</b> — here a higher self-orientation score means more focus on yourself, which pulls trust down.</span>`;
+  };
+  a.addEventListener("input", upd); upd();
+}
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) { openContents(false); show(+go.dataset.go); return; }
+  const t = e.target.closest("[data-act]"); if (!t) return;
+  const act = t.dataset.act;
+  if (act === "ck" || act === "flip") {
+    t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") !== "true");
+    const box = t.closest("[data-checks]");
+    if (box) { const all = box.querySelectorAll(".ck").length, n = box.querySelectorAll('.ck[aria-pressed="true"]').length; box.querySelector(".ct").textContent = `${n} of ${all}`; box.querySelector(".t i").style.width = `${n / all * 100}%`; }
+  }
+  if (act === "stg") { t.parentElement.querySelectorAll(".stg").forEach(s => s.setAttribute("aria-pressed", s === t)); t.closest(".rv").querySelector(".stgout").textContent = t.dataset.h; }
+  if (act === "gen") { t.parentElement.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b === t)); $("#genPanel").innerHTML = genRows(+t.dataset.i); fitBody(); }
+  if (act === "tier") { t.parentElement.querySelectorAll(".tier").forEach(b => b.setAttribute("aria-pressed", b === t)); const d = $("#det"); d.innerHTML = tierDet(+t.dataset.i); d.classList.remove("swapin"); void d.offsetWidth; d.classList.add("swapin"); }
+  if (act === "tgo" || act === "treset") pomo(t.closest("[data-timer]"), act);
+});
+function pomo(el, act) {
+  const fg = el.querySelector(".fg"), tm = el.querySelector(".tm"), md = el.querySelector(".md"), btn = el.querySelector('[data-act="tgo"]'), C = 326.7;
+  if (!timer) timer = {left:1500, total:1500, mode:"Focus", id:null};
+  const s = timer;
+  const paint = () => { tm.textContent = `${String(Math.floor(s.left / 60)).padStart(2,"0")}:${String(s.left % 60).padStart(2,"0")}`; md.textContent = s.mode; fg.style.strokeDashoffset = C * (1 - s.left / s.total); fg.style.stroke = s.mode === "Focus" ? "var(--warn)" : "var(--ok)"; };
+  if (act === "treset") { clearInterval(s.id); s.id = null; s.left = s.total = 1500; s.mode = "Focus"; btn.textContent = "Start"; paint(); return; }
+  if (s.id) { clearInterval(s.id); s.id = null; btn.textContent = "Resume"; return; }
+  btn.textContent = "Pause";
+  s.id = setInterval(() => { s.left--; if (s.left < 0) { const f = s.mode === "Focus"; s.mode = f ? "Break" : "Focus"; s.total = s.left = f ? 300 : 1500; } paint(); }, 1000);
+}
+
+$("#prev").onclick = () => show(cur - 1, -1);
+$("#next").onclick = () => show(cur + 1, 1);
+$("#tocBtn").onclick = () => openContents(!$("#contents").classList.contains("open"));
+$("#closeToc").onclick = () => openContents(false);
+$("#fsBtn").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (e) {} };
+$("#themeBtn").onclick = () => { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; r.dataset.theme = dark ? "light" : "dark"; };
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;
+  if (e.key === "Escape") return openContents(false);
+  if ($("#contents").classList.contains("open")) return;
+  if (["ArrowRight","PageDown"," "].includes(e.key)) { e.preventDefault(); show(cur + 1, 1); }
+  if (["ArrowLeft","PageUp"].includes(e.key)) { e.preventDefault(); show(cur - 1, -1); }
+  if (e.key === "Home") show(0); if (e.key === "End") show(PAGES.length - 1);
+  if (e.key === "f" || e.key === "F") $("#fsBtn").click();
+});
+let tx = null, ty = null;
+vp.addEventListener("touchstart", e => { if (e.target.closest("input,.gscroll")) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+vp.addEventListener("touchend", e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); tx = null; });
+addEventListener("resize", layout);
+addEventListener("hashchange", () => { const m = location.hash.match(/^#s(\d+)$/); if (m && +m[1] !== cur) show(+m[1]); });
+if (document.fonts) document.fonts.ready.then(fitBody);
+
+buildContents();
+const m0 = location.hash.match(/^#s(\d+)$/);
+show(m0 ? +m0[1] : 0, 1);
+layout();
+
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

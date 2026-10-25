@@ -1,0 +1,690 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Vue &amp; Nuxt Friday Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f8f6; --surface:#ffffff; --ink:#15231d; --muted:#56675f; --line:#dbe4df;
+  --accent:#2f9e6e; --accent-ink:#0f5c3d; --accent-soft:#e3f3eb;
+  --navy:#243746; --code-bg:#17232c; --code-ink:#dfe9e4; --code-dim:#8fa4a0; --code-key:#7fd6ad; --code-str:#f2c38a;
+  --warn:#b7791f; --warn-soft:#fbf1df;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f171b; --surface:#152127; --ink:#e4ede9; --muted:#9aaca5; --line:#26363d;
+    --accent:#4cc28c; --accent-ink:#8be0b8; --accent-soft:#17332a;
+    --navy:#c9d8e3; --code-bg:#0a1114; --warn:#e2b25c; --warn-soft:#2e2615;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f171b; --surface:#152127; --ink:#e4ede9; --muted:#9aaca5; --line:#26363d;
+  --accent:#4cc28c; --accent-ink:#8be0b8; --accent-soft:#17332a;
+  --navy:#c9d8e3; --code-bg:#0a1114; --warn:#e2b25c; --warn-soft:#2e2615;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent-ink);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:0}.toc{display:none}}
+
+header.mast{max-width:1120px;margin:0 auto;padding-block:40px 28px;border-bottom:1px solid var(--line);margin-bottom:32px}
+.issue{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pill{padding:5px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink)}
+.pill.demo{background:var(--warn-soft);color:var(--warn)}
+h1{font:700 clamp(34px,6vw,58px)/1.02 var(--display);letter-spacing:-.02em;margin:18px 0 12px;text-wrap:balance}
+h1 span{color:var(--accent)}
+.lede{max-width:62ch;color:var(--muted);font-size:17px;margin:0}
+
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;font-size:14px}
+.toc p{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;border-left:1px solid var(--line)}
+.toc a{display:block;padding:5px 12px;color:var(--muted);text-decoration:none;margin-left:-1px;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+
+main{display:grid;grid-template-columns:minmax(0,1fr);gap:56px;min-width:0}
+main>section{min-width:0}
+section h2{font:700 26px/1.15 var(--display);letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
+.kicker{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 20px;max-width:65ch}
+
+.musthave{background:var(--navy);color:var(--bg);border-radius:14px;padding:24px 26px;display:grid;gap:10px}
+.musthave h2{color:var(--bg)}
+.musthave .kicker{color:var(--accent)}
+.musthave ol{margin:0;padding-left:20px;display:grid;gap:8px}
+.musthave code{background:rgba(127,127,127,.22);color:inherit}
+
+.releases{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start}
+.rel .v{font:500 13px var(--mono);color:var(--accent-ink)}
+.rel h3{font:600 16px/1.3 var(--body);margin:0}
+.rel p{margin:0;color:var(--muted);font-size:14.5px}
+.tag{justify-self:start;font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:var(--accent-soft);color:var(--accent-ink)}
+.tag.pre{background:var(--warn-soft);color:var(--warn)}
+
+.spot{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;align-content:start;min-width:0}
+.feat .fw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.feat .brand{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:5px;background:var(--navy);color:var(--bg)}
+.feat h3{font:700 22px/1.15 var(--display);margin:0;text-wrap:balance}
+.feat p{margin:0}
+.feat h4{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:13.5px}
+.flow div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--bg)}
+.flow b{display:block;font:500 11px var(--mono);color:var(--accent-ink);margin-bottom:4px}
+@media (max-width:520px){.flow{grid-template-columns:minmax(0,1fr)}}
+.feat ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14.5px}
+.yours{border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:14.5px}
+.snip{display:grid;gap:10px;margin-bottom:30px}
+.snip:last-child{margin-bottom:0}
+.snip h3{font:600 18px/1.3 var(--body);margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.lvl{font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:2px 7px;border-radius:4px}
+.snip p{margin:0;max-width:68ch}
+.code{position:relative;background:var(--code-bg);border-radius:10px;overflow:hidden}
+.code .fn{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font:12px var(--mono);color:var(--code-dim);border-bottom:1px solid rgba(255,255,255,.07)}
+.code button{font:500 11px var(--mono);background:transparent;color:var(--code-dim);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:3px 9px;cursor:pointer}
+.code button:hover{color:var(--code-ink)}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13.5px/1.6 var(--mono);color:var(--code-ink)}
+pre .c{color:var(--code-dim)} pre .k{color:var(--code-key)} pre .s{color:var(--code-str)}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);color:var(--accent-ink);padding:1px 5px;border-radius:4px}
+pre code{background:none;color:inherit;padding:0;font-size:inherit}
+.why{font-size:14.5px;color:var(--muted)}
+.why b{color:var(--ink);font-weight:600}
+
+.tips{display:grid;gap:0;border-top:1px solid var(--line)}
+.tip{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tip b{font-weight:600}
+.tip span{color:var(--muted);font-size:15px}
+
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.list{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.list li{padding-left:18px;position:relative}
+.list li::before{content:"";position:absolute;left:0;top:.65em;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.list.dont li::before{background:var(--warn)}
+h3.col{font:600 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--muted)}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.stat{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font:700 30px/1 var(--display);color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:13.5px;color:var(--muted)}
+
+.case{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;gap:14px}
+.case dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px 16px}
+.case dt{font:500 11px/1.9 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.case dd{margin:0}
+@media (max-width:520px){.case dl{grid-template-columns:minmax(0,1fr)}.case dt{line-height:1}}
+
+.path{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;counter-reset:s}
+.step{border-top:3px solid var(--accent);background:var(--surface);border-radius:0 0 10px 10px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.step:nth-child(2){border-top-color:#3a8f9e}.step:nth-child(3){border-top-color:var(--navy)}
+.step h3{margin:0;font:600 15px var(--body)}
+.step ul{margin:0;padding-left:18px;font-size:14.5px;color:var(--muted);display:grid;gap:4px}
+
+.iv{display:grid;gap:18px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;min-width:0}
+.q .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.q .brand{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:5px;background:var(--navy);color:var(--bg)}
+.q blockquote{margin:0;font:600 clamp(18px,2.4vw,21px)/1.35 var(--display);text-wrap:balance}
+.q .asked{font-size:13.5px;color:var(--muted);margin:0}
+.q h4{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.q p{margin:0}
+.q ul,.q ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px}
+details.ans{border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+details.ans>summary{cursor:pointer;padding:12px 16px;font:600 14px var(--body);color:var(--accent-ink);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.ans>summary::-webkit-details-marker{display:none}
+details.ans>summary::after{content:"+";font:500 18px var(--mono)}
+details.ans[open]>summary::after{content:"−"}
+details.ans>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+details.ans .body{padding:0 16px 16px;display:grid;gap:12px}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.levels div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--surface)}
+.levels b{display:block;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.levels .jr b{color:var(--warn)} .levels .sr b{color:var(--accent-ink)}
+.miss{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14.5px}
+.sources ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px}
+.sources li span{color:var(--muted)}
+footer{max-width:1120px;margin:48px auto 0;padding-top:20px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a{transition:color .15s,border-color .15s}}
+</style>
+
+<header class="mast">
+  <div class="issue">
+    <span class="pill">Week 42 · Fri 16 Oct 2026</span>
+    <span>Every Friday · 10:00 Dhaka</span>
+  </div>
+  <h1>Vue &amp; Nuxt <span>Friday Brief</span></h1>
+  <p class="lede">A 10-minute read: what shipped, three snippets worth stealing, tips, one real team's story and two interview questions. Tuned for a Nuxt front end talking to a Spring Boot API.</p>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <p>This issue</p>
+    <ol>
+      <li><a href="#musthave">Must-have this week</a></li>
+      <li><a href="#shipped">What shipped</a></li>
+      <li><a href="#spotlight">Feature spotlight</a></li>
+      <li><a href="#snippets">Snippets</a></li>
+      <li><a href="#tips">Tips &amp; tricks</a></li>
+      <li><a href="#practices">Best practices</a></li>
+      <li><a href="#industry">Industry adoption</a></li>
+      <li><a href="#realproblem">Real problem solved</a></li>
+      <li><a href="#interview">Interview corner</a></li>
+      <li><a href="#path">Learning path</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="musthave" class="musthave">
+      <p class="kicker">Must-have this week</p>
+      <h2>If you only take three things</h2>
+      <ol>
+        <li>Before you upgrade to Nuxt 4.6 with <code>npx nuxt upgrade --dedupe</code>, check your Node version. The 4.6 upgrade notes list <code>^22.22.3 || ^24.15.0 || &gt;=26.0.0</code>, so CI images still on Node 20 (or an older Node 22) will fail.</li>
+        <li>Make sure the Vite in your lockfile is at least 8.3.3, 7.3.7 or 6.4.4. On 6 October, Vite patched three dev-server advisories across five release lines. Run <code>npm ls vite</code>, and be extra careful if you use <code>nuxt dev --host</code> on a shared network.</li>
+        <li>Search your composables for <code>ref()</code> or <code>reactive()</code> at module scope. On the server, that state is shared by every request, so one user's data can show up for another. Move it into <code>useState</code> or a Pinia store. The Vue interview question below explains why.</li>
+      </ol>
+    </section>
+
+    <section id="shipped">
+      <p class="kicker">Releases &amp; news</p>
+      <h2>What shipped</h2>
+      <p class="sub">The big news is Nuxt 4.6. It adds a server-agnostic <code>nuxt/server</code>, sealed-cookie sessions, a rebuilt typed <code>$fetch</code>, <code>useFetch</code> addons and Vapor interop. Also out: Pinia 4.1.0 (adds <code>getStores()</code>), @nuxt/fonts 1.0, @nuxt/content 3.16.2 (query security hardening), DevTools 4.0.0-beta.5, h3 2.0.2, Vuetify 4.2.6 (plus 4.3.0-beta.0) and Vitest 5.0.5.</p>
+      <div class="releases">
+        <article class="rel"><span class="tag">Stable</span><span class="v">nuxt 4.6.0 · 5 Oct → 4.6.1 · 9 Oct</span><h3>Nuxt 4.6 and CLI v4</h3><p>Adds <code>nuxt/server</code>, <code>appSecret</code> with <code>useSession</code>, opt-in <code>experimental.routeTypedFetch</code>, <code>createUseFetch</code> addons, <code>serialize: false</code> for <code>useFetch</code>, Vapor interop, the "my-bad" error overlay and a terminal panel for <code>nuxt dev</code>. Nuxt 3 reached end of life on 31 July. 4.6.1 is a patch release with fixes across Vite, Nitro and kit.</p></article>
+        <article class="rel"><span class="tag">Stable</span><span class="v">vue 3.5.44 · 13 Oct</span><h3>Vue 3.5.44, about 25 fixes</h3><p>A <code>once</code> watcher now stops when its callback throws, and watcher callbacks no longer track dependencies from an enclosing effect. Also fixes edge cases in KeepAlive, Suspense and Teleport, and async setup errors now propagate during SSR. <code>3.6.0-rc.11</code> was published on 10 Oct.</p></article>
+        <article class="rel"><span class="tag">Security</span><span class="v">vite 8.3.3 / 8.2.4 / 8.1.6 / 7.3.7 / 6.4.4 · 6 Oct</span><h3>Three dev-server advisories fixed</h3><p>GHSA-rq7h-c2jc-7f22 (moderate, every release line), GHSA-vfpm-58rq-9qcg (moderate, 8.3 and 8.2) and GHSA-9jrq-w75r-8gcw (low, SSR setups). These affect the dev server, not production builds. 8.3.4 followed on 8 Oct.</p></article>
+        <article class="rel"><span class="tag">Stable</span><span class="v">vue-router 5.4.0 · 7 Oct</span><h3>Vue Router 5.4</h3><p><code>createRouter</code> now accepts a prebuilt matcher, and scroll restoration gains a route-rendered hook. One breaking change applies to the <em>experimental</em> router only: query values are normalized to arrays. Fixes cover hash and query params and stale scroll positions.</p></article>
+        <article class="rel"><span class="tag">Stable</span><span class="v">@nuxt/ui 4.12.0 · 15 Oct</span><h3>Nuxt UI 4.12: a Chart component</h3><p>Adds a new Chart component, matches locales automatically with @nuxtjs/i18n, adds new props on existing components, loads less JavaScript and mounts faster.</p></article>
+        <article class="rel"><span class="tag pre">Event</span><span class="v">Vue Fes Japan · Sat 24 Oct · Tokyo</span><h3>Vue Fes Japan 2026</h3><p>One of the largest Vue conferences in Japan. The next major European event is Vuejs Amsterdam on 11–12 Mar 2027.</p></article>
+      </div>
+    </section>
+
+    <section id="spotlight">
+      <p class="kicker">Feature spotlight · from the official docs</p>
+      <h2>One Nuxt feature, one Vue feature</h2>
+      <p class="sub">Last week covered named views and <code>useId()</code>. This week covers two things from the Nuxt 4.6 / Vue 3.6 wave: a single place to put your Spring API rules, and Vue's new compilation mode that doesn't use a virtual DOM.</p>
+      <div class="spot">
+
+        <article class="feat">
+          <div class="fw"><span class="brand">Nuxt 4.6</span><span class="tag">Stable</span></div>
+          <h3><code>useFetch</code> addons with <code>defineUseFetchAddon</code></h3>
+          <p>From the docs: an addon is "a reusable extension for <code>useFetch</code> composables created with <code>createUseFetch</code>". It "can declare custom call-site options, wrap the handler with middleware, attach custom logic or extend the returned object". Before this, the same logic got copied into every <code>useFetch</code> call or hidden in a wrapper that lost its typing.</p>
+          <div class="flow" aria-label="How useFetch addons work">
+            <div><b>1 · Define</b><code>defineUseFetchAddon({ setup })</code>. <code>setup</code> runs on <em>every call</em> and gets the merged options</div>
+            <div><b>2 · Attach</b>Pass it to <code>createUseFetch({ addons: [...] })</code>, exported from <code>composables/</code></div>
+            <div><b>3 · Call</b><code>useSpring('/api/orders', { csrf: false })</code>. Custom options and extra return values are typed</div>
+          </div>
+          <h4>Turn it on</h4>
+          <div class="code"><div class="fn">app/composables/useSpring.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// Nuxt 4.6+. One place for every Spring Boot rule.</span>
+<span class="k">export const</span> spring = defineUseFetchAddon({
+  setup: (options: UseFetchAddonOptions&lt;{ csrf?: boolean }&gt;) =&gt; {
+    <span class="c">// setup runs at the call site, so composables work here</span>
+    <span class="k">const</span> config = useRuntimeConfig()
+    <span class="k">const</span> xsrf = useCookie(<span class="s">'XSRF-TOKEN'</span>)                <span class="c">// CookieCsrfTokenRepository</span>
+    <span class="k">const</span> { cookie } = useRequestHeaders([<span class="s">'cookie'</span>])   <span class="c">// SSR only, {} in the browser</span>
+
+    options.baseURL ??= config.public.apiBase
+    options.credentials ??= <span class="s">'include'</span>
+    options.csrf ??= <span class="k">true</span>
+
+    options.onRequest.push(({ options: req }) =&gt; {   <span class="c">// always an array</span>
+      <span class="k">if</span> (<span class="k">import</span>.meta.server &amp;&amp; cookie) req.headers.set(<span class="s">'cookie'</span>, cookie)
+      <span class="k">const</span> method = (req.method ?? <span class="s">'GET'</span>).toUpperCase()
+      <span class="k">if</span> (options.csrf &amp;&amp; xsrf.value &amp;&amp; ![<span class="s">'GET'</span>, <span class="s">'HEAD'</span>, <span class="s">'OPTIONS'</span>].includes(method)) {
+        req.headers.set(<span class="s">'X-XSRF-TOKEN'</span>, xsrf.value)
+      }
+    })
+  },
+})
+
+<span class="k">export const</span> useSpring = createUseFetch({ addons: [spring] })
+
+<span class="c">// in a page</span>
+<span class="k">const</span> { data: me } = <span class="k">await</span> useSpring&lt;Me&gt;(<span class="s">'/api/users/me'</span>)
+<span class="k">await</span> useSpring(<span class="s">'/api/public/ping'</span>, { csrf: <span class="k">false</span> })   <span class="c">// typed custom option</span></code></pre></div>
+          <h4>Watch out for</h4>
+          <ul>
+            <li><code>createUseFetch</code> "is a compiler macro". It must be an <em>exported</em> declaration in <code>composables/</code> or another scanned directory.</li>
+            <li>Custom options are "<strong>not</strong> part of the auto-generated key by default". If an option changes the response (a tenant, a scope), add a <code>key</code> resolver, and declare <code>setup</code> <em>before</em> <code>key</code> so TypeScript infers the options.</li>
+            <li>Addons run in array order, and the first addon's middleware is the outermost wrapper. Listing the same addon twice runs it once.</li>
+            <li>Custom options are passed to <code>$fetch</code> too, which ignores keys it doesn't recognise. Don't give one the same name as a real fetch option.</li>
+          </ul>
+          <p class="yours"><b>In your project:</b> Spring Security's cookie-based CSRF (<code>CookieCsrfTokenRepository</code>) expects the <code>XSRF-TOKEN</code> cookie to come back as an <code>X-XSRF-TOKEN</code> header on every unsafe method. The SSR cookie forwarding from Snippet 2 two weeks ago lives in the same addon now, so pages just call <code>useSpring()</code>. If you use Spring's JWT resource server instead, swap the CSRF branch for the docs' <code>Authorization: Bearer</code> example.</p>
+          <a href="https://nuxt.com/docs/4.x/api/utils/define-use-fetch-addon">Official docs: defineUseFetchAddon</a> · <a href="https://nuxt.com/docs/4.x/api/composables/create-use-fetch">createUseFetch</a>
+        </article>
+
+        <article class="feat">
+          <div class="fw"><span class="brand">Vue 3.6 RC</span><span class="tag pre">Pre-release</span></div>
+          <h3>Vapor Mode, now usable from Nuxt</h3>
+          <p>Vapor is "an alternative compilation strategy introduced in Vue 3.6 that renders components without the Virtual DOM, lowering memory use and improving runtime performance". Vue's 3.6.0-rc.1 notes call it feature-complete and recommend it for parts of existing apps or for small new apps. <em>vuejs.org doesn't have a guide page for it yet</em>, so this section is based on the official GitHub release notes and nuxt.com's Vapor section.</p>
+          <div class="flow" aria-label="How Vapor interop works">
+            <div><b>1 · Install</b>Install <code>vue@^3.6.0-rc.2</code> or later (rc.11 is current), then set <code>vue.vapor: true</code> in Nuxt or use <code>vaporInteropPlugin</code> in plain Vue</div>
+            <div><b>2 · Opt in</b>Add <code>vapor</code> to <code>&lt;script setup&gt;</code>. It works per component or per page</div>
+            <div><b>3 · Mix</b>The app root stays on the VDOM. Vapor and VDOM components pass props, events and slots to each other</div>
+          </div>
+          <h4>Turn it on</h4>
+          <div class="code"><div class="fn">nuxt.config.ts · app/components/OrderRow.vue<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// nuxt.config.ts (Nuxt 4.6+). Installs Vue's vaporInteropPlugin</span>
+<span class="k">export default</span> defineNuxtConfig({
+  vue: { vapor: <span class="k">true</span> },
+})
+
+<span class="c">// plain Vue app instead:</span>
+<span class="c">// createApp(App).use(vaporInteropPlugin).mount('#app')</span>
+
+<span class="c">&lt;!-- app/components/OrderRow.vue: a hot, simple list row --&gt;</span>
+&lt;<span class="k">script setup vapor</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">const</span> { order } = defineProps&lt;{ order: { id: string; status: string; total: number } }&gt;()
+<span class="k">const</span> emit = defineEmits&lt;{ select: [id: string] }&gt;()
+<span class="k">const</span> total = computed(() =&gt; order.total.toFixed(<span class="s">2</span>))
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">template</span>&gt;
+  &lt;tr @click=<span class="s">"emit('select', order.id)"</span>&gt;
+    &lt;td&gt;{{ order.id }}&lt;/td&gt;&lt;td&gt;{{ order.status }}&lt;/td&gt;&lt;td&gt;{{ total }}&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/<span class="k">template</span>&gt;</code></pre></div>
+          <h4>Watch out for</h4>
+          <ul>
+            <li>It's still a release candidate (3.6.0-rc.11), and Nuxt marks Vapor support "experimental … The API may change". Nuxt recommends "trying Vapor Mode in a fresh project rather than adding it to an existing one".</li>
+            <li>Not supported in Vapor components: the Options API, <code>app.config.globalProperties</code>, <code>v-memo</code> and <code>@vue:xxx</code> events. <code>getCurrentInstance()</code> returns <code>null</code>, and template refs don't expose <code>$el</code>.</li>
+            <li>The Nuxt-specific limits: full Vapor apps aren't supported; <code>&lt;ClientOnly&gt;</code>, <code>&lt;NuxtIsland&gt;</code> and <code>&lt;Title&gt;</code>-style head components can't read Vapor slot content; and Nuxt composables called after an <code>await</code> "may lose the Nuxt context".</li>
+            <li>The release notes say mixed nesting has "rough edges", especially with VDOM component libraries, and recommend keeping separate regions for each mode. Since rc.2, event delegation is opt-in through the <code>.delegate</code> modifier.</li>
+          </ul>
+          <p class="yours"><b>In your project:</b> good candidates are large read-only lists of Spring data, such as an orders table with hundreds of rows from a <code>Page&lt;Order&gt;</code>. Each row is a small Composition API component. Keep forms and anything built on Vuetify or PrimeVue on the VDOM for now. Try it on a branch, profile before and after, and don't ship an RC to production.</p>
+          <a href="https://nuxt.com/docs/4.x/guide/concepts/vuejs-development#vapor-mode">Official docs: Nuxt → Vue.js Development → Vapor Mode</a> · <a href="https://github.com/vuejs/core/releases/tag/v3.6.0-rc.1">Vue 3.6.0-rc.1 release notes (About Vapor Mode)</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="snippets">
+      <p class="kicker">Snippets</p>
+      <h2>Code worth copying</h2>
+      <p class="sub">Snippets 2 and 3 target a Nuxt front end calling a Spring Boot + MongoDB API. Every API name has been checked against the Nuxt 4.6 docs.</p>
+
+      <div class="snip">
+        <h3>Announce Spring save results to screen readers <span class="lvl">Basic · Nuxt 4.4.2+</span></h3>
+        <p>A toast is invisible to screen-reader users. <code>useAnnouncer</code> writes to a hidden live region. Add <code>&lt;NuxtAnnouncer /&gt;</code> once and call it from anywhere.</p>
+        <div class="code"><div class="fn">app/app.vue · app/components/SaveAddress.vue<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">&lt;!-- app.vue: mount the live region once --&gt;</span>
+&lt;<span class="k">template</span>&gt;
+  &lt;<span class="k">NuxtRouteAnnouncer</span> /&gt;
+  &lt;<span class="k">NuxtAnnouncer</span> /&gt;
+  &lt;<span class="k">NuxtPage</span> /&gt;
+&lt;/<span class="k">template</span>&gt;
+
+<span class="c">&lt;!-- SaveAddress.vue --&gt;</span>
+&lt;<span class="k">script setup</span> lang=<span class="s">"ts"</span>&gt;
+<span class="k">const</span> { polite, assertive } = useAnnouncer()
+<span class="k">const</span> form = reactive({ street: <span class="s">''</span>, city: <span class="s">''</span> })
+
+<span class="k">async function</span> save() {
+  <span class="k">try</span> {
+    <span class="k">await</span> $fetch(<span class="s">'/api/addresses'</span>, { method: <span class="s">'POST'</span>, body: form })
+    polite(<span class="s">'Address saved'</span>)                         <span class="c">// waits for the reader to finish</span>
+  } <span class="k">catch</span> (e: any) {
+    <span class="c">// Spring ProblemDetail → { title, detail, status }</span>
+    assertive(<span class="s">`Could not save: ${e?.data?.detail ?? 'please try again'}`</span>)   <span class="c">// interrupts</span>
+  }
+}
+&lt;/<span class="k">script</span>&gt;</code></pre></div>
+        <p class="why"><b>Rule of thumb from the docs:</b> use <code>polite</code> for updates that can wait (saved, loaded, "found 12 results") and <code>assertive</code> only for urgent ones like errors. <code>&lt;NuxtRouteAnnouncer&gt;</code> handles page changes, and <code>&lt;NuxtAnnouncer&gt;</code> handles in-page updates.</p>
+      </div>
+
+      <div class="snip">
+        <h3>Type your Spring Boot endpoints without a codegen step <span class="lvl">Intermediate · Nuxt 4.6+</span></h3>
+        <p>Pass <code>routes</code> to <code>createUseFetch</code>, and the response, <code>query</code> and <code>body</code> are typed for each path and method. It reuses the <code>spring</code> addon from the spotlight for the base URL and CSRF.</p>
+        <div class="code"><div class="fn">app/composables/useOrdersApi.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="k">import</span> type { DynamicParam, Endpoint } <span class="k">from</span> <span class="s">'nuxt/app'</span>
+<span class="k">import</span> { spring } <span class="k">from</span> <span class="s">'./useSpring'</span>
+
+<span class="k">type</span> Status = <span class="s">'PENDING'</span> | <span class="s">'PAID'</span> | <span class="s">'SHIPPED'</span> | <span class="s">'CANCELLED'</span>   <span class="c">// mirrors the Java enum</span>
+<span class="k">interface</span> Order { id: string; status: Status; total: number; createdAt: string }
+<span class="k">interface</span> Page&lt;T&gt; {                        <span class="c">// Spring Data PagedModel JSON</span>
+  content: T[]
+  page: { size: number; number: number; totalElements: number; totalPages: number }
+}
+
+<span class="k">interface</span> OrderRoutes {
+  <span class="s">'/api/orders'</span>: {
+    [Endpoint]: {
+      GET:  { response: Page&lt;Order&gt;, query: { page?: number; size?: number; sort?: string } }
+      POST: { response: Order, body: { customerId: string; items: { sku: string; qty: number }[] } }
+    }
+    [DynamicParam]: {                          <span class="c">// /api/orders/{id}</span>
+      [Endpoint]: { GET: { response: Order } }
+    }
+  }
+}
+
+<span class="k">export const</span> useOrdersApi = createUseFetch({
+  routes: {} <span class="k">as</span> OrderRoutes,                  <span class="c">// type only, dropped at runtime</span>
+  addons: [spring],
+})
+
+<span class="c">// page:  const { data } = await useOrdersApi('/api/orders', { query: { page: 0, size: 20 } })</span>
+<span class="c">//        data.value?.content[0].status  → Status</span>
+<span class="c">//        await useOrdersApi('/api/orders', { method: 'post', body: { customerId, items } })</span></code></pre></div>
+        <p class="why"><b>Gotchas from the docs:</b> paths are matched "as written", so don't add the <code>baseURL</code> to them. A path built at runtime resolves to <code>unknown</code>. Unknown paths are allowed unless you enable <code>experimental.routeTypedFetch</code> + <code>strictRouteTypes</code>. If you already publish an OpenAPI spec with springdoc, <code>fetchdts</code>'s <code>compileRoutes</code> can generate this interface for you. Java <code>Instant</code>/<code>LocalDate</code> arrive as JSON strings, so type them as <code>string</code>.</p>
+      </div>
+
+      <div class="snip">
+        <h3>A portable BFF route that validates before Spring sees it <span class="lvl">Advanced · Nuxt 4.6+ · nuxt/server</span></h3>
+        <p>Import from <code>nuxt/server</code> so the handler keeps working on Nitro 2, on Nitro 3 in Nuxt 5, and on the Vite server builder. Bad input gets a 400 response before it reaches your Java service.</p>
+        <div class="code"><div class="fn">server/api/orders.post.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="k">import</span> { defineEventHandler, readValidatedBody, getRequestHeader,
+         useRuntimeConfig, createError } <span class="k">from</span> <span class="s">'nuxt/server'</span>   <span class="c">// explicit, NOT auto-imported</span>
+<span class="k">import</span> { z } <span class="k">from</span> <span class="s">'zod'</span>
+
+<span class="k">const</span> NewOrder = z.object({
+  customerId: z.string().min(<span class="s">1</span>),
+  items: z.array(z.object({ sku: z.string(), qty: z.number().int().positive() })).min(<span class="s">1</span>),
+})
+
+<span class="k">export default</span> defineEventHandler(<span class="k">async</span> (event) =&gt; {
+  <span class="c">// any Standard Schema works; invalid → 400 with data.issues</span>
+  <span class="k">const</span> order = <span class="k">await</span> readValidatedBody(event, NewOrder)
+  <span class="k">const</span> { springApiBase } = useRuntimeConfig()   <span class="c">// private key; no per-request form</span>
+
+  <span class="c">// global $fetch isn't part of nuxt/server: use fetch and check ok yourself</span>
+  <span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">`${springApiBase}/api/orders`</span>, {
+    method: <span class="s">'POST'</span>,
+    headers: {
+      <span class="s">'content-type'</span>: <span class="s">'application/json'</span>,
+      cookie: getRequestHeader(event, <span class="s">'cookie'</span>) ?? <span class="s">''</span>,   <span class="c">// forward the session only</span>
+    },
+    body: JSON.stringify(order),
+  })
+  <span class="k">if</span> (!res.ok) {
+    <span class="k">throw</span> createError({ status: res.status, statusText: <span class="s">'Order service rejected the request'</span> })
+  }
+  <span class="k">return</span> (<span class="k">await</span> res.json()) <span class="k">as</span> { id: string; status: string }   <span class="c">// annotate the value → typed $fetch</span>
+})</code></pre></div>
+        <p class="why"><b>Why it matters:</b> on Nuxt 4, the <em>auto-imported</em> <code>defineEventHandler</code>, <code>readBody</code> and similar are still h3's helpers, and mixing them with <code>nuxt/server</code> raises <code>NUXT_E8012</code>. Other differences from h3 v1: <code>createError</code> takes <code>status</code>/<code>statusText</code>, and plain <code>fetch</code> doesn't throw on a non-2xx status. Keep <code>springApiBase</code> under top-level <code>runtimeConfig</code> (env <code>NUXT_SPRING_API_BASE</code>) so it never reaches the browser.</p>
+      </div>
+
+    </section>
+
+    <section id="tips">
+      <p class="kicker">Tips &amp; tricks</p>
+      <h2>Small things that save time</h2>
+      <div class="tips">
+        <div class="tip"><b>Learn the new <code>nuxt dev</code> shortcuts</b><span>CLI v4 shows a terminal panel: <code>r</code> restarts, <code>o</code> opens the app, <code>l</code> shows logs, <code>n</code> shows requests, and <code>p</code> lists pages and server routes. Use <code>--no-tui</code> for the classic output, for example in Docker logs.</span></div>
+        <div class="tip"><b>Search the docs for <em>your</em> Nuxt version</b><span><code>nuxt docs "useFetch serialize"</code> searches the docs that match your installed version, so you don't land on 3.x pages by accident.</span></div>
+        <div class="tip"><b>Keep big Spring DTOs out of the payload</b><span>In development, 4.6 warns when a page's payload is over 100 kB. Use <code>pick</code> to keep only the fields you render, or <code>serialize: false</code> (v4.6) to leave server-fetched data out of <code>__NUXT_DATA__</code>. With <code>serialize: false</code>, the client refetches after hydration.</span></div>
+        <div class="tip"><b>Sliding cookie expiry is one line now</b><span><code>useCookie('token', { expires: () =&gt; new Date(Date.now() + 3600_000) })</code>. The getter is re-evaluated on every write, so assigning a new value also extends the cookie. Keep the getter pure.</span></div>
+        <div class="tip"><b>Order global middleware with number prefixes</b><span>Global middleware runs in alphabetical order by filename, compared as strings, so <code>10.x.global.ts</code> sorts before <code>2.y.global.ts</code>. The docs suggest <code>01.</code>, <code>02.</code> prefixes.</span></div>
+      </div>
+    </section>
+
+    <section id="practices">
+      <p class="kicker">Best practices &amp; industry practices</p>
+      <h2>What teams are standardising on</h2>
+      <p class="sub">Based on the Nuxt 4.6 release and upgrade guide, the server-imports and state-management docs, and Vue's composables guide.</p>
+      <div class="twocol">
+        <div>
+          <h3 class="col">Do</h3>
+          <ul class="list">
+            <li>In new server routes, import server helpers from <code>nuxt/server</code> explicitly. You won't need to migrate them for Nuxt 5.</li>
+            <li>Set <code>NUXT_APP_SECRET</code> (32+ chars, e.g. <code>openssl rand -base64 32</code>) in every deployed environment. "Builds never generate one."</li>
+            <li>Keep per-user state in <code>useState</code> or Pinia, never in a module-scope <code>ref</code>.</li>
+            <li>Treat route middleware as UX. Spring Security still checks every API call.</li>
+            <li>Put base URL, credentials and CSRF handling in one <code>createUseFetch</code> addon instead of repeating them on every call.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="col">Retire</h3>
+          <ul class="list dont">
+            <li><code>nuxt init</code>. It's removed in CLI v4; use <code>npm create nuxt@latest</code>.</li>
+            <li>Mixins. The Vue docs say "we no longer recommend using mixins in Vue 3"; use composables.</li>
+            <li><code>createError({ statusCode, statusMessage })</code> in <code>nuxt/server</code> code. Use <code>{ status, statusText }</code>.</li>
+            <li>Node 20 CI images, and Node 22 below 22.22.3, for Nuxt 4.6 projects.</li>
+            <li>Running Nuxt 3. It reached end of life on 31 July 2026, and there's no 3.x release alongside 4.6.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="code" style="margin-top:22px"><div class="fn">nuxt.config.ts · package.json: a Nuxt 4.6 baseline for a Spring-backed app<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// nuxt.config.ts</span>
+<span class="k">export default</span> defineNuxtConfig({
+  runtimeConfig: {
+    springApiBase: <span class="s">'http://localhost:8080'</span>,          <span class="c">// server only · NUXT_SPRING_API_BASE</span>
+    public: { apiBase: <span class="s">'http://localhost:8080'</span> },   <span class="c">// browser · NUXT_PUBLIC_API_BASE</span>
+    <span class="c">// appSecret: set NUXT_APP_SECRET. Keys starting with "app" are reserved for Nuxt</span>
+  },
+  experimental: {
+    routeTypedFetch: <span class="k">true</span>,     <span class="c">// opt-in on 4.x, default in Nuxt 5 (Date → string at call sites)</span>
+  },
+})
+
+<span class="c">// package.json: fail fast on old Node (range from the 4.6 upgrade notes)</span>
+{
+  <span class="s">"engines"</span>: { <span class="s">"node"</span>: <span class="s">"^22.22.3 || ^24.15.0 || &gt;=26.0.0"</span> }
+}</code></pre></div>
+    </section>
+
+    <section id="industry">
+      <p class="kicker">Industry adoption</p>
+      <h2>Who uses Vue and Nuxt, and for what</h2>
+      <p class="sub">These rows come from the official Nuxt showcase (nuxt.com/showcase), Monterail's companies list and Cowrywise's engineering blog. "Showcase" means the public site is listed there as built with Nuxt. The one stat below comes from the case study.</p>
+      <div class="stats">
+        <div class="stat"><b>296,554</b><span>lines of code in the Nuxt 2 app Cowrywise moved to Nuxt 3 (Cowrywise Engineering)</span></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Industry</th><th>Company</th><th>How they use it</th></tr></thead>
+          <tbody>
+            <tr><td>Fintech / investing</td><td>Cowrywise</td><td>Its largest web app, rebuilt from Nuxt 2 onto Nuxt 3 + TypeScript. Details in the next section.</td></tr>
+            <tr><td>Fintech / brokerage</td><td>Trade Republic</td><td>Public website (Nuxt showcase)</td></tr>
+            <tr><td>Luxury retail</td><td>Louis Vuitton, Prada, Harrods</td><td>E-commerce and brand sites (Nuxt showcase)</td></tr>
+            <tr><td>Science / space</td><td>NASA JPL</td><td>jpl.nasa.gov (Nuxt showcase)</td></tr>
+            <tr><td>Developer tools</td><td>Stack Overflow, n8n, Directus</td><td>Company and product sites (Nuxt showcase)</td></tr>
+            <tr><td>Food service</td><td>McDonald's France</td><td>mcdonalds.fr (Nuxt showcase)</td></tr>
+            <tr><td>Online content</td><td>9GAG</td><td>A large site redesign handling fast-changing, high-traffic content (Monterail)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="realproblem">
+      <p class="kicker">Real problem solved</p>
+      <h2>Fintech rewrite: ~300k lines from Nuxt 2 to Nuxt 3, without freezing features</h2>
+      <div class="case">
+        <dl>
+          <dt>Who</dt><dd>Cowrywise, a Nigerian fund manager licensed by the SEC, with savings, investment and mutual-fund products. The work was on its largest web app.</dd>
+          <dt>Problem</dt><dd>They wanted Vue 3's logic reuse, better performance and TypeScript. The official automatic upgrade path failed on a 296,554-line codebase, because of library incompatibilities, Node version conflicts and dependencies that only supported Vue 2.</dd>
+          <dt>Approach</dt><dd>They started a fresh Nuxt 3 project (TypeScript, ESLint, Prettier). They mapped global pieces (plugins, stores, middleware, layouts) and local pieces (pages, components), then migrated from the least-coupled piece to the most, saving stores and global mixins for last so engineers could work in parallel. Mixins became composables, filters became utility functions and requests moved to <code>$fetch</code>. Because the automated tests weren't reliable, migrated flows got multi-engineer manual and exploratory testing. In "catch-up mode", new features shipped in the old app and were rebuilt in the new one until they could launch.</dd>
+          <dt>Result</dt><dd>It launched in production. The team describes the result as "faster, more maintainable, future-proof", then did a post-launch cleanup of packages, types and rushed code. The post gives no performance numbers, so neither do we.</dd>
+          <dt>Takeaway</dt><dd>For a large app, a planned rewrite in dependency order can be more predictable than forcing the automatic migration. Building every feature twice is the expensive part, so plan a feature freeze or release windows. This is relevant now: Nuxt 3 reached end of life on 31 July, and the same dependency-mapping approach works for a 3 → 4.6 move. (The post is from January 2026.)</dd>
+        </dl>
+        <a href="https://engineering.cowrywise.com/article/how-we-migrated-our-largest-app-from-nuxt-2-to-nuxt-3">Read the full write-up (Cowrywise Engineering, 2 Jan 2026)</a>
+      </div>
+    </section>
+
+    <section id="interview">
+      <p class="kicker">Interview corner</p>
+      <h2>One Vue question, one Nuxt question</h2>
+      <p class="sub">This week's topics are composables and state, and middleware and auth. Answer out loud first, then open the model answer. The answers were checked against vuejs.org and nuxt.com.</p>
+      <div class="iv">
+
+        <article class="q">
+          <div class="meta"><span class="brand">Vue</span><span class="tag">Mid → Senior</span><span class="lvl">Composables · shared state · SSR</span></div>
+          <blockquote>You extract a <code>useCart()</code> composable. A teammate moves <code>const items = ref([])</code> above the function "so every component shares the cart". It works locally, but in production SSR some users see someone else's cart. Why? And how would you choose between a plain composable, <code>useState</code> and Pinia?</blockquote>
+          <p class="asked">Asked in: GreatFrontEnd's 2026 Vue guide ("What is a composable?" for freshers; "How do you choose between props, provide/inject, and Pinia?" for seniors), the softwaredeveloperhub01 Vue Q&amp;A list on GitHub (Q36 "What are composables?", Q47 on mixins, Q92 "How do you reuse logic without mixins?") and SecondTalent's Nuxt hiring guide (Q9, useState vs Pinia). The SSR leak follow-up comes from Vue Mastery's "Pinia vs useState" article on cross-request state pollution.</p>
+          <h4>What they're really testing</h4>
+          <ul>
+            <li>Do you know that state created <em>inside</em> a composable is per call, while state at module scope is a singleton?</li>
+            <li>Do you understand how SSR module lifetimes cause cross-request state pollution, and which tool gives you per-request state?</li>
+          </ul>
+          <details class="ans">
+            <summary>Show model answer</summary>
+            <div class="body">
+              <p><b>30-second version:</b> refs created inside a composable are new on every call, so each component gets its own copy. Moving the ref to module scope makes it a singleton. In the browser that's fine, because modules are "initialized fresh for each browser page visit". On the server, though, modules are initialized once at boot and "reused across multiple server requests", so one user's cart leaks into another user's render. The Vue docs call this <b>cross-request state pollution</b>. The fix is per-request state. In Nuxt, use <code>useState('cart', …)</code>, which is keyed, created per request and serialized to the payload. When the logic grows (actions, devtools, HMR, team conventions), use a Pinia store; <code>@pinia/nuxt</code> creates it per request. Keep plain composables for logic that is per component instance.</p>
+              <div class="code"><div class="fn">app/composables/useCart.ts<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// ❌ module scope: one array for the whole server process</span>
+<span class="k">const</span> items = ref&lt;CartItem[]&gt;([])
+<span class="k">export function</span> useCartBad() { <span class="k">return</span> { items } }
+
+<span class="c">// ✅ per-instance logic: fresh state on every call</span>
+<span class="k">export function</span> useQuantity(initial = <span class="s">1</span>) {
+  <span class="k">const</span> qty = ref(initial)
+  <span class="k">return</span> { qty, inc: () =&gt; qty.value++ }       <span class="c">// plain object of refs</span>
+}
+
+<span class="c">// ✅ shared + SSR-safe in Nuxt: keyed, per request, serialized</span>
+<span class="k">export const</span> useCart = () =&gt; {
+  <span class="k">const</span> items = useState&lt;CartItem[]&gt;(<span class="s">'cart'</span>, () =&gt; [])
+  <span class="k">const</span> total = computed(() =&gt; items.value.reduce((s, i) =&gt; s + i.price * i.qty, <span class="s">0</span>))
+  <span class="k">return</span> { items, total, add: (i: CartItem) =&gt; items.value.push(i) }
+}
+
+<span class="c">// ✅ bigger domain logic: Pinia setup store (one per request with @pinia/nuxt)</span>
+<span class="k">export const</span> useCartStore = defineStore(<span class="s">'cart'</span>, () =&gt; {
+  <span class="k">const</span> items = ref&lt;CartItem[]&gt;([])            <span class="c">// fine here: scoped to the pinia instance</span>
+  <span class="k">async function</span> load() { items.value = <span class="k">await</span> $fetch&lt;CartItem[]&gt;(<span class="s">'/api/cart'</span>) }
+  <span class="k">return</span> { items, load }
+})</code></pre></div>
+              <div class="levels">
+                <div class="jr"><b>Junior answer</b>"Composables share logic, Pinia shares state." They try a <code>reactive()</code> at module scope, see it work in the browser, and can't explain why SSR leaks.</div>
+                <div class="sr"><b>Senior answer</b>Explains per-call vs module-scope lifetimes and how server modules are reused, and names cross-request state pollution. Picks <code>useState</code> for small, serializable shared state and Pinia for domain stores, and points out that <code>useState</code> values must be JSON-serializable (no classes, functions or symbols). Mentions the Nuxt docs' warning: "Never define <code>const state = ref()</code> outside of <code>&lt;script setup&gt;</code> or <code>setup()</code>".</div>
+              </div>
+              <h4>Likely follow-ups</h4>
+              <ol>
+                <li>Why return an object of refs instead of a <code>reactive()</code>? (So callers can destructure without losing reactivity. Destructuring a reactive object breaks the connection.)</li>
+                <li>Can you call a composable inside <code>setTimeout</code> or after an <code>await</code>? (Call composables synchronously in <code>setup</code>. <code>&lt;script setup&gt;</code> is the only place you can call them after <code>await</code>, because the compiler restores the instance.)</li>
+                <li>Why composables over mixins? (The docs list three reasons: you can't tell where a property comes from, keys collide between mixins, and mixins are implicitly coupled through shared keys. Composables fix all three.)</li>
+              </ol>
+            </div>
+          </details>
+          <p class="miss"><b>Common mistake:</b> "it works in dev, so it's fine." The leak only appears when concurrent SSR requests hit the same server process, which is exactly what you get in production and rarely while testing alone on localhost.</p>
+          <a href="https://vuejs.org/guide/scaling-up/ssr#cross-request-state-pollution">Official docs: SSR → Cross-request state pollution</a> · <a href="https://vuejs.org/guide/reusability/composables">Composables</a> · <a href="https://nuxt.com/docs/4.x/getting-started/state-management">Nuxt state management</a>
+        </article>
+
+        <article class="q">
+          <div class="meta"><span class="brand">Nuxt</span><span class="tag">Mid</span><span class="lvl">Middleware · plugins · auth</span></div>
+          <blockquote>The <code>/account/**</code> pages need a logged-in user, and authentication lives in Spring Security (a <code>JSESSIONID</code> session). Where do you put the check: route middleware, server middleware or a plugin? And what does each one actually protect?</blockquote>
+          <p class="asked">Asked in: ClimbTheLadder's Nuxt set (#3 "Describe how middleware works in Nuxt…", #6 "How do you implement authentication in a Nuxt application?"), SecondTalent's Nuxt hiring guide (Q13 on middleware, Q16 on JWT/sessions and protecting routes with middleware, Q10 on plugins) and Hyring's Nuxt.js set (Q6 "How would you explain middleware in a Nuxt.js interview?").</p>
+          <h4>What they're really testing</h4>
+          <ul>
+            <li>Can you tell the Vue-side route middleware apart from Nitro server middleware and plugins, and do you know when each one runs?</li>
+            <li>Do you know that client-reachable checks are UX, and the real security boundary is on the server, which here means Spring?</li>
+          </ul>
+          <details class="ans">
+            <summary>Show model answer</summary>
+            <div class="body">
+              <p><b>30-second version:</b> a <b>plugin</b> runs when the app initializes. Use it to load the current user once (<code>GET /api/users/me</code> with the forwarded cookie) into <code>useState</code>. <b>Route middleware</b> (<code>defineNuxtRouteMiddleware</code>) "run within the Vue part" of the app before navigation, on the server for the first render and again in the browser. It reads that state and returns <code>navigateTo('/login')</code>, which becomes a 302 on the server. <b>Server middleware</b> (<code>server/middleware</code>) runs on every request to Nitro before server routes. It should only inspect or extend <code>event.context</code> or throw, and it only guards Nuxt's own <code>server/api</code> routes. None of these protect Spring's data, so Spring Security has to check every endpoint. As the Nuxt docs put it, "Client-side middleware is helpful for the user, but without server-side protection your data can still be accessed."</p>
+              <div class="code"><div class="fn">app/plugins/01.session.ts · app/middleware/auth.ts · pages/account/index.vue<button type="button" data-copy>Copy</button></div>
+<pre><code><span class="c">// app/plugins/01.session.ts: load the user once (server render, then hydrated)</span>
+<span class="k">export default</span> defineNuxtPlugin(<span class="k">async</span> () =&gt; {
+  <span class="k">const</span> user = useState&lt;Me | <span class="k">null</span>&gt;(<span class="s">'me'</span>, () =&gt; <span class="k">null</span>)
+  <span class="k">if</span> (user.value) <span class="k">return</span>                         <span class="c">// already in the SSR payload</span>
+  user.value = <span class="k">await</span> $fetch&lt;Me&gt;(<span class="s">'/api/users/me'</span>, {
+    baseURL: useRuntimeConfig().public.apiBase,
+    headers: useRequestHeaders([<span class="s">'cookie'</span>]),
+    credentials: <span class="s">'include'</span>,
+  }).catch(() =&gt; <span class="k">null</span>)                           <span class="c">// 401 → anonymous</span>
+})
+
+<span class="c">// app/middleware/auth.ts: named middleware, a UX redirect only</span>
+<span class="k">export default</span> defineNuxtRouteMiddleware((to) =&gt; {   <span class="c">// use `to`, never useRoute()</span>
+  <span class="k">const</span> user = useState&lt;Me | <span class="k">null</span>&gt;(<span class="s">'me'</span>)
+  <span class="k">if</span> (!user.value &amp;&amp; to.path !== <span class="s">'/login'</span>) {
+    <span class="k">return</span> navigateTo({ path: <span class="s">'/login'</span>, query: { redirect: to.fullPath } })
+  }
+})
+
+<span class="c">// app/pages/account/index.vue</span>
+definePageMeta({ middleware: <span class="s">'auth'</span> })</code></pre></div>
+              <div class="levels">
+                <div class="jr"><b>Junior answer</b>"Put a middleware on the page that checks a token." They don't separate route middleware from server middleware, and they don't mention that the API still has to check every request.</div>
+                <div class="sr"><b>Senior answer</b>Gives a role to each of the three. Knows route middleware runs on the server and again on the client, and that redirects are made by <em>returning</em> <code>navigateTo</code>/<code>abortNavigation</code>, not by calling <code>next()</code>. Guards against redirect loops. Uses <code>to</code> instead of <code>useRoute()</code>. Says Spring Security enforces access on every endpoint and that server middleware only matters if Nuxt has its own BFF routes.</div>
+              </div>
+              <h4>Likely follow-ups</h4>
+              <ol>
+                <li>The middleware runs twice on first load. How do you skip the client run? (Check <code>import.meta.client &amp;&amp; nuxtApp.isHydrating &amp;&amp; nuxtApp.payload.serverRendered</code> and return early.)</li>
+                <li>Why not call <code>useRoute()</code> inside middleware? ("There is no concept of a 'current route' in middleware", because it can redirect or abort. Use the <code>to</code>/<code>from</code> arguments.)</li>
+                <li>How do you run auth on every route except a few? (Name the file <code>auth.global.ts</code> and allowlist public paths, or use the <code>appMiddleware</code> route rule to turn middleware on or off by path.)</li>
+              </ol>
+            </div>
+          </details>
+          <p class="miss"><b>Common mistake:</b> treating route middleware as the security boundary. It runs in code the browser downloads and can be bypassed by calling the API directly. A second, smaller mistake: redirecting to <code>/login</code> without checking <code>to.path</code>, which the docs warn "might get an infinite redirect loop".</p>
+          <a href="https://nuxt.com/docs/4.x/directory-structure/app/middleware">Official docs: app/middleware</a> · <a href="https://nuxt.com/docs/4.x/directory-structure/server#server-middleware">Server middleware</a> · <a href="https://nuxt.com/docs/4.x/guide/recipes/sessions-and-authentication">Sessions &amp; authentication recipe</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="path">
+      <p class="kicker">Learning path</p>
+      <h2>Basic to advanced, one step a week</h2>
+      <div class="path">
+        <div class="step"><h3>Basic</h3><ul><li>Composable conventions: the <code>use</code> prefix, returning refs, <code>toValue()</code> inputs</li><li>Route middleware: <code>navigateTo</code>, <code>abortNavigation</code>, <code>.global</code></li><li><code>useAnnouncer</code> + <code>&lt;NuxtAnnouncer&gt;</code> for in-page updates</li></ul></div>
+        <div class="step"><h3>Intermediate</h3><ul><li>Module scope vs <code>useState</code> vs Pinia, and cross-request state pollution</li><li>Plugins + middleware for a Spring session login flow</li><li><code>createUseFetch</code> default vs override mode, and typed <code>routes</code></li></ul></div>
+        <div class="step"><h3>Advanced</h3><ul><li>Writing <code>defineUseFetchAddon</code> addons: options, <code>key</code>, middleware</li><li>Portable handlers with <code>nuxt/server</code>, <code>useSession</code> and <code>appSecret</code></li><li>Vapor interop: what breaks, and where it pays off</li></ul></div>
+      </div>
+      <p class="why" style="margin-top:14px"><b>This week's pick:</b> the Intermediate topic. Reproduce the leak yourself. Write <code>useCartBad()</code> with a module-scope ref, render the cart's item count on a page, and add an item on the server based on a query param (<code>?add=sku1</code>). Run <code>nuxt build &amp;&amp; node .output/server/index.mjs</code>, then load <code>/?add=a</code> in one browser and plain <code>/</code> in a private window. The second visitor sees the first visitor's item. Switch to <code>useState('cart')</code>, rebuild, and confirm the leak is gone.</p>
+    </section>
+
+    <section id="sources" class="sources">
+      <p class="kicker">Sources</p>
+      <h2>Read further</h2>
+      <ol>
+        <li><a href="https://nuxt.com/blog/v4-6">Nuxt 4.6 release post</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/changelog">Nuxt ecosystem changelog (4.6.0, 4.6.1, fonts 1.0, content 3.16.2, devtools 4.0.0-beta.5)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/api/utils/define-use-fetch-addon">Nuxt docs: defineUseFetchAddon</a> · <a href="https://nuxt.com/docs/4.x/api/composables/create-use-fetch">createUseFetch (addons, routes, override mode)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/guide/concepts/vuejs-development#vapor-mode">Nuxt docs: Vapor Mode</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/guide/going-further/server-imports">Nuxt docs: Server imports (nuxt/server, sessions, deriveSecret)</a> · <a href="https://nuxt.com/docs/4.x/getting-started/upgrade">Upgrade guide (moving to nuxt/server)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/api/composables/use-announcer">Nuxt docs: useAnnouncer</a> · <a href="https://nuxt.com/docs/4.x/api/components/nuxt-announcer">&lt;NuxtAnnouncer&gt;</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/api/composables/use-fetch">Nuxt docs: useFetch (serialize, middleware)</a> · <a href="https://nuxt.com/docs/4.x/api/composables/use-cookie">useCookie (expires getter)</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/directory-structure/app/middleware">Nuxt docs: route middleware</a> · <a href="https://nuxt.com/docs/4.x/directory-structure/server#server-middleware">server middleware</a> · <a href="https://nuxt.com/docs/4.x/guide/recipes/sessions-and-authentication">sessions &amp; auth recipe</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/docs/4.x/getting-started/state-management">Nuxt docs: State management (useState, Pinia)</a> · <a href="https://nuxt.com/docs/4.x/api/composables/use-state">useState</a> <span>· nuxt.com</span></li>
+        <li><a href="https://nuxt.com/showcase">Nuxt showcase</a> <span>· nuxt.com</span></li>
+        <li><a href="https://github.com/vuejs/core/releases/tag/v3.6.0-rc.1">Vue 3.6.0-rc.1 release notes (About Vapor Mode)</a> · <a href="https://github.com/vuejs/core/blob/minor/CHANGELOG.md">3.6 changelog (rc.2 event delegation)</a> <span>· GitHub</span></li>
+        <li><a href="https://releasebot.io/updates/vue/vue-core">Vue core 3.5.44 release log</a> <span>· Releasebot</span></li>
+        <li><a href="https://www.npmjs.com/package/vue?activeTab=versions">vue versions (3.6.0-rc.11, 10 Oct)</a> <span>· npm</span></li>
+        <li><a href="https://vuejs.org/guide/scaling-up/ssr#cross-request-state-pollution">Vue docs: Cross-request state pollution</a> · <a href="https://vuejs.org/guide/reusability/composables">Composables</a> · <a href="https://vuejs.org/guide/scaling-up/state-management">State management</a> <span>· vuejs.org</span></li>
+        <li><a href="https://github.com/the-machine-herald/machineherald.io/pull/2591">Vite patches three dev-server advisories (8.3.3, 8.2.4, 8.1.6, 7.3.7, 6.4.4)</a> <span>· The Machine Herald</span></li>
+        <li><a href="https://github.com/vuejs/router/releases/tag/v5.4.0">Vue Router v5.4.0</a> · <a href="https://vuedigest.com/github-releases/vuejs/router">release summary</a> <span>· GitHub / VueDigest</span></li>
+        <li><a href="https://vuedigest.com/github-releases/vuejs/pinia">Pinia 4.1.0 release summary</a> · <a href="https://vuedigest.com/github-releases/nuxt/ui">Nuxt UI 4.12.0 release summary</a> <span>· VueDigest</span></li>
+        <li><a href="https://vuedigest.com/conferences">Vue &amp; Nuxt conferences (Vue Fes Japan 24 Oct)</a> · <a href="https://vuefes.jp/2026/">vuefes.jp</a> · <a href="https://dev.events/vue">dev.events/vue</a></li>
+        <li><a href="https://engineering.cowrywise.com/article/how-we-migrated-our-largest-app-from-nuxt-2-to-nuxt-3">How we migrated our largest app from Nuxt 2 to Nuxt 3</a> <span>· Cowrywise Engineering</span></li>
+        <li><a href="https://www.monterail.com/blog/top-companies-using-vue-js">Top companies using Vue.js</a> <span>· Monterail</span></li>
+        <li><a href="https://www.greatfrontend.com/blog/vue-interview-questions">Vue.js interview questions 2026</a> <span>· GreatFrontEnd</span></li>
+        <li><a href="https://github.com/softwaredeveloperhub01/Vue-Interview-Questions-and-Answers">Vue interview questions and answers (Q36, Q47, Q92)</a> <span>· GitHub</span></li>
+        <li><a href="https://www.secondtalent.com/interview-guide/nuxtjs-developers/">Nuxt.js developer interview guide (Q9, Q10, Q13, Q16)</a> <span>· SecondTalent</span></li>
+        <li><a href="https://vuemastery.com/blog/nuxt-3-state-mangement-pinia-vs-usestate">Nuxt state management: Pinia vs useState</a> <span>· Vue Mastery</span></li>
+        <li><a href="https://climbtheladder.com/nuxt-interview-questions">10 Nuxt interview questions (#3, #6)</a> <span>· ClimbTheLadder</span></li>
+        <li><a href="https://hyring.com/jobseeker-toolkit/interview-questions/technical/nuxtjs">Nuxt.js interview questions (Q6)</a> <span>· Hyring</span></li>
+      </ol>
+    </section>
+  </main>
+</div>
+
+<footer>Generated by Claude on Friday 16 October 2026 for the Week 42 issue. A new issue replaces this one every Friday at 10:00 (Asia/Dhaka).</footer>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var code=btn.closest('.code').querySelector('pre').innerText;
+    var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+    try{navigator.clipboard.writeText(code).then(done,function(){sel(btn)})}catch(e){sel(btn)}
+  });
+});
+function sel(btn){var r=document.createRange();r.selectNodeContents(btn.closest('.code').querySelector('pre'));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';}
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

@@ -1,0 +1,675 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Friday Java Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F3F5F2; --surface:#FFFFFF; --ink:#18221D; --muted:#56635C; --line:#D9E0DB;
+  --accent:#2F6B4A; --accent-soft:#E2EEE6; --amber:#9A6212; --amber-soft:#F6ECDC;
+  --code-bg:#15201A; --code-ink:#E4EDE7; --code-dim:#8FA398; --code-key:#9FD3B0; --code-str:#E8C58A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+    --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+    --code-bg:#0B110E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+  --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+  --code-bg:#0B110E;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.6 var(--body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;font-family:var(--body)}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mast{display:grid;gap:14px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.mast-top{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline}
+.demo-pill{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber);padding:6px 9px;border-radius:4px}
+.lede{font-size:17px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font:500 12.5px/1 var(--body);text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:7px 10px;border-radius:999px;background:var(--surface)}
+.toc a:hover{border-color:var(--accent);color:var(--accent)}
+section{display:grid;gap:16px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:6px}
+/* radar */
+.radar{display:grid;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.radar-row{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.radar-row:first-child{border-top:0}
+.radar-date{font:500 12.5px/1.5 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin-right:6px;vertical-align:2px}
+.tag.ga{background:var(--accent-soft);color:var(--accent)}
+.tag.pre{background:var(--amber-soft);color:var(--amber)}
+.tag.eol{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.radar-row p{font-size:14px;color:var(--muted);margin-top:3px}
+/* code */
+.code{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:8px;overflow:hidden}
+.code-bar{flex-wrap:wrap;gap:8px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #ffffff14;font:500 11.5px/1 var(--mono);color:var(--code-dim)}
+.copy{font:600 11px/1 var(--mono);background:transparent;color:var(--code-dim);border:1px solid #ffffff26;border-radius:4px;padding:5px 8px;cursor:pointer}
+.copy:hover{color:var(--code-ink);border-color:#ffffff55}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--mono);tab-size:2}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim);font-style:italic}
+/* feature: snippet of the week */
+.feature{display:grid;gap:16px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+.eli5{background:var(--amber-soft);border-radius:8px;padding:18px;display:grid;gap:10px}
+.eli5 .eyebrow{color:var(--amber)}
+.eli5 p{font-size:14.5px}
+@media (max-width:720px){.feature{grid-template-columns:1fr}.radar-row{grid-template-columns:1fr;gap:4px}}
+/* levels */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start}
+.meter{display:flex;gap:3px}
+.meter i{width:18px;height:4px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.level p{font-size:14px;color:var(--muted)}
+@media (max-width:720px){.levels{grid-template-columns:1fr}}
+/* tips */
+.tips{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.tips li{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.tips li:first-child{border-top:0}
+.tips .n{font:600 12px/1.6 var(--mono);color:var(--accent);min-width:3ch}
+.tips code,p code,td code,.qa code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.tips p{font-size:14px;color:var(--muted);margin-top:2px}
+/* qa */
+.qa{display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;gap:12px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+summary .lvl{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);flex:none;width:52px}
+summary::after{content:"+";margin-left:auto;color:var(--muted);font-family:var(--mono)}
+details[open] summary::after{content:"–"}
+.ans{padding:0 16px 16px 80px;display:grid;gap:8px;font-size:14.5px}
+@media (max-width:560px){.ans{padding-left:16px}}
+/* coding interview */
+.iq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:760px){.iq-grid{grid-template-columns:1fr}}
+.iq{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0}
+.iq-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.iq .task{font-size:14.5px}
+.iq .task li{margin-bottom:4px}
+.iq ul.task{margin:0;padding-left:18px}
+.iq details{border-color:var(--accent);background:transparent}
+.iq details summary{color:var(--accent);padding:10px 14px}
+.iq details summary::after{color:var(--accent)}
+.iq .sol{padding:0 14px 14px;display:grid;gap:10px;font-size:14px}
+.iq .sol p code,.iq .task code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.cx{display:flex;flex-wrap:wrap;gap:6px}
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font:600 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+/* two col lists */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.do{color:var(--accent)} .dont{color:var(--amber)}
+/* case study */
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:13.5px}
+.track{height:12px;background:var(--accent-soft);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.fill.warn{background:var(--amber)}
+@media (max-width:560px){.bar-row{grid-template-columns:1fr 60px}.bar-row .track{grid-column:1/-1;order:3}}
+.note{font-size:12.5px;color:var(--muted)}
+/* goals */
+.goals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.goals label{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px}
+.goals input{accent-color:var(--accent);margin-top:4px}
+.goals input:checked + span{color:var(--muted);text-decoration:line-through}
+/* sources */
+.sources{columns:2 280px;column-gap:24px;font-size:13.5px;padding-left:18px;margin:0}
+.sources li{break-inside:avoid;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a,.copy{transition:border-color .15s,color .15s}}
+</style>
+
+</head><body>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Issue W42 · Friday 16 Oct 2026 · 10:00 Dhaka</span>
+  </div>
+  <h1>Friday Java Brief</h1>
+  <p class="lede">JDK 28 is filling up. Structured concurrency is proposed as final (JEP 543), two ZGC JEPs and ahead-of-time code compilation are on the way, and JetBrains put its Air agent hub into the IDEs. This week's coding theme is bad input: finding duplicates in an array, and turning an invalid request into a clean 400.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#radar">This week</a><a href="#snippet">Snippet of the week</a><a href="#newfeature">New Java feature</a><a href="#agentic">Agentic Java &amp; AI</a><a href="#levels">Basic → Advanced</a><a href="#tips">Tips &amp; tricks</a><a href="#interview">Interview Q&amp;A</a><a href="#coding">Coding interview</a><a href="#practices">Best practices</a><a href="#industry">Industry adoption</a><a href="#case">Real problem</a><a href="#goals">Goals</a>
+  </nav>
+</header>
+
+<section id="radar">
+  <div class="sec-head"><span class="eyebrow">Known things this week</span><h2>Release radar</h2></div>
+  <div class="radar">
+    <div class="radar-row"><span class="radar-date">13–14 Oct 2026</span><div><h3><span class="tag pre">Preview</span>Structured concurrency proposed final for JDK 28 (JEP 543)</h3><p>After two incubator rounds (JDK 19–20) and seven previews (JDK 21–27), JEP 543 would finalize <code>StructuredTaskScope</code> with no changes. JEP 545 (faster ZGC startup and warmup) and JEP 546 (adaptive heap sizing for ZGC) were also proposed to target JDK 28. Reviews closed 13–14 Oct.</p></div></div>
+    <div class="radar-row"><span class="radar-date">6 Oct 2026</span><div><h3><span class="tag pre">Preview</span>JDK 28 targets PEM encodings and AOT code compilation</h3><p>JEP 542 (PEM encodings of cryptographic objects) was targeted on 6 Oct, after JEP 544 (ahead-of-time code compilation, for faster startup and warmup) a week earlier.</p></div></div>
+    <div class="radar-row"><span class="radar-date">5 Oct 2026</span><div><h3><span class="tag pre">Milestone</span>JDK 28 EA build 19, and cheaper <code>Arena.ofConfined()</code></h3><p>Early-access build 19 is out. In JDK 28, small FFM allocations from a confined arena come from reusable per-thread pools. Oracle's benchmark shows a 5-byte allocation going from 15.9 ns to 1.05 ns on an Apple M4, with no code changes.</p></div></div>
+    <div class="radar-row"><span class="radar-date">Oct 2026</span><div><h3><span class="tag ga">GA</span>LangChain4j 1.21.0 and 1.22.0</h3><p>1.21 adds experimental decision models (<code>DecisionModel</code>, <code>DecisionServices</code>, <code>RoutingChatModel</code>). 1.22 adds <code>OpenAiDecisionModel</code> and a <code>BedrockBatchChatModel</code> for the Bedrock batch inference API.</p></div></div>
+    <div class="radar-row"><span class="radar-date">8 Oct 2026</span><div><h3><span class="tag ga">GA</span>Apache Grails 8.0.0</h3><p>Needs JDK 21 and Gradle 9.7. Controllers are now REST resources, and Grails Promises run on the Spring Boot task executor. Open Liberty 26.0.0.10 also shipped with JDK 27 support and G1 as its default GC.</p></div></div>
+    <div class="radar-row"><span class="radar-date">7 Oct 2026</span><div><h3><span class="tag pre">Security</span>Netty 4.2.19 fixes 16 CVEs (via Micronaut 5.2.2)</h3><p>The Micronaut upgrade fixes HTTP request/response smuggling and unbounded resource use in Netty's HTTP, HTTP/2 and HTTP/3 codecs. If your Boot service uses WebFlux on Reactor Netty, check which Netty version it pulls in. The next Spring "Patch Thursday" is 22 Oct.</p></div></div>
+  </div>
+</section>
+
+<section id="snippet">
+  <div class="sec-head"><span class="eyebrow">Snippet of the week</span><h2>Self-deleting documents with a MongoDB TTL index</h2>
+  <p>Password-reset tokens, OTP codes and idempotency keys should disappear on their own. A TTL index makes MongoDB delete each document a fixed time after the date in one field, so you don't need a cleanup job.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>ResetTokens.java · Spring Data MongoDB</span><button class="copy" type="button" data-copy="c1">Copy</button></div>
+<pre id="c1"><span class="k">@Document</span>(<span class="s">"password_reset_tokens"</span>)
+<span class="k">record</span> ResetToken(<span class="k">@Id</span> String token, String userId, Instant createdAt) {}
+
+<span class="k">@Configuration</span>
+<span class="k">class</span> ResetTokenIndexes {
+
+  <span class="c">// Runs once at startup; does nothing if the index already exists</span>
+  <span class="k">@Bean</span>
+  ApplicationRunner resetTokenTtl(MongoTemplate mongo) {
+    <span class="k">return</span> args -&gt; mongo.indexOps(ResetToken.<span class="k">class</span>)
+        .ensureIndex(<span class="k">new</span> Index()
+            .on(<span class="s">"createdAt"</span>, Sort.Direction.ASC)
+            .expire(Duration.ofMinutes(<span class="s">15</span>)));
+  }
+}
+
+<span class="c">// Save with: new ResetToken(uuid, userId, Instant.now())</span>
+<span class="c">// About 15 minutes later MongoDB removes it by itself</span></pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>Each token gets a sticker with the time it was made. A cleaner walks past now and then and throws away anything whose sticker is older than 15 minutes.</p>
+      <span class="eyebrow" style="margin-top:6px">Why it matters</span>
+      <p>The index only works on a BSON date field (a Java <code>Instant</code> is stored as one), and it must be a single-field index. Deletion isn't instant, because a background thread does the cleanup. So also check <code>createdAt</code> in code when you validate a token. Spring Data doesn't create indexes from annotations unless <code>spring.data.mongodb.auto-index-creation=true</code>, which is why this snippet creates the index explicitly.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="newfeature">
+  <div class="sec-head"><span class="eyebrow">New Java feature · JDK 27 · JEP 533 · Preview (final proposed in JEP 543)</span><h2>Structured concurrency: run calls in parallel as one unit</h2>
+  <p><code>StructuredTaskScope</code> forks subtasks (each on a virtual thread by default) and treats them as one unit. If one fails, the others are cancelled, and no thread outlives the <code>try</code> block. In JDK 27, <code>join()</code> throws a checked <code>ExecutionException</code> that wraps the first failure.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>OrderPage.java · javac --release 27 --enable-preview</span><button class="copy" type="button" data-copy="c3">Copy</button></div>
+<pre id="c3"><span class="c">// Before: a thread pool and two futures. If the customer call</span>
+<span class="c">// fails, the order call keeps running and nobody cancels it.</span>
+OrderPage loadOld(String id) <span class="k">throws</span> Exception {
+  Future&lt;Order&gt; order = pool.submit(() -&gt; orders.find(id));
+  Future&lt;Customer&gt; cust = pool.submit(() -&gt; customers.forOrder(id));
+  <span class="k">return new</span> OrderPage(order.get(), cust.get());
+}
+
+<span class="c">// After (JDK 27 preview): one scope owns both calls</span>
+<span class="k">import</span> java.util.concurrent.StructuredTaskScope;
+<span class="k">import</span> java.util.concurrent.StructuredTaskScope.Subtask;
+
+OrderPage load(String id)
+    <span class="k">throws</span> InterruptedException, ExecutionException {
+  <span class="k">try</span> (<span class="k">var</span> scope = StructuredTaskScope.open()) {
+    Subtask&lt;Order&gt; order = scope.fork(() -&gt; orders.find(id));
+    Subtask&lt;Customer&gt; cust = scope.fork(() -&gt; customers.forOrder(id));
+
+    scope.join();  <span class="c">// one fails → the other is cancelled</span>
+
+    <span class="k">return new</span> OrderPage(order.get(), cust.get());
+  }               <span class="c">// close(): no thread left behind</span>
+}
+
+<span class="c">// Run: java --enable-preview OrderPage.java</span></pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>You send two friends to buy bread and milk. With the old way, if the bread shop is closed, the milk friend keeps walking anyway. With a scope, you're holding both their hands. If one stops, you call the other one back, and nobody goes home alone.</p>
+      <span class="eyebrow" style="margin-top:6px">Use it for</span>
+      <p>An endpoint that calls two or three services or MongoDB queries at once and needs all the results. Use <code>StructuredTaskScope.open(Joiner.anySuccessfulOrThrow())</code> when the first good answer is enough, like calling two mirrors of one service.</p>
+      <span class="eyebrow" style="margin-top:6px">Status</span>
+      <p>Seventh preview in JDK 27 (needs <code>--enable-preview</code>, and only compiles on JDK 27). JEP 543 proposes making it final in JDK 28 with no changes. Learn it now, but wait for JDK 28 before production use.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="agentic">
+  <div class="sec-head"><span class="eyebrow">Agentic Java development · Java AI features</span><h2>Agents on the JVM this month</h2>
+  <p>LangChain4j added "decision models" for routing, a new Java MCP runtime reached 1.0, and JetBrains put Air, its hub for running coding agents side by side, into the 2026.3 IDE EAP.</p></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Framework / tool</th><th>Who's behind it</th><th>How people use it</th><th>Maturity</th></tr></thead>
+    <tbody>
+      <tr><td>Spring AI 2.0.1</td><td>Spring team (Broadcom)</td><td>Tool calling with <code>@Tool</code> methods, structured output, RAG and MCP in Boot apps. 2.0.1 (21 Aug) fixed seven CVEs. 2.1 is in milestones.</td><td><span class="tag ga">Stable</span></td></tr>
+      <tr><td>LangChain4j 1.22</td><td>LangChain4j community</td><td>AI services in plain Java or Quarkus/Spring. New decision models classify or route a request before a full chat call. Bedrock batch inference support.</td><td><span class="tag ga">Stable</span> <span class="tag pre">Decisions exp.</span></td></tr>
+      <tr><td>Google ADK for Java 1.11</td><td>Google</td><td>Code-first agents. 1.11 adds thread-safe session event methods (<code>immutableEvents()</code>, <code>addEvent()</code>) and rewind support.</td><td><span class="tag ga">GA</span></td></tr>
+      <tr><td>Tachyon MCP 1.0</td><td>Konstantin Pavlov</td><td>MCP servers on Netty with <code>@McpTool</code> methods on virtual threads, a Spring Boot starter and a TestKit. Supports two MCP protocol versions with the same handler code.</td><td><span class="tag pre">New (2 Oct)</span></td></tr>
+      <tr><td>Embabel 1.0</td><td>Rod Johnson (creator of Spring)</td><td>Goal-oriented planning on top of Spring AI: you declare actions and goals, and the planner picks the steps at runtime.</td><td><span class="tag ga">GA (Aug 2026)</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="code">
+    <div class="code-bar"><span>Spring AI 2.0 · let the model call a read-only MongoDB tool</span><button class="copy" type="button" data-copy="c4">Copy</button></div>
+<pre id="c4"><span class="k">import</span> org.springframework.ai.tool.annotation.Tool;
+<span class="k">import</span> org.springframework.ai.tool.annotation.ToolParam;
+
+<span class="k">@Component</span>
+<span class="k">class</span> OrderTools {
+  <span class="k">private final</span> OrderRepository orders;   <span class="c">// MongoRepository&lt;Order, String&gt;</span>
+  OrderTools(OrderRepository orders) { <span class="k">this</span>.orders = orders; }
+
+  <span class="k">@Tool</span>(description = <span class="s">"Get the status of an order by its number, e.g. ORD-000042"</span>)
+  String orderStatus(<span class="k">@ToolParam</span>(description = <span class="s">"Order number"</span>) String orderNumber) {
+    <span class="k">return</span> orders.findByOrderNumber(orderNumber)   <span class="c">// Optional&lt;Order&gt;</span>
+        .map(o -&gt; o.status().name())
+        .orElse(<span class="s">"NOT_FOUND"</span>);
+  }
+}
+
+<span class="k">@RestController</span>
+<span class="k">class</span> SupportController {
+  <span class="k">private final</span> ChatClient chat;
+
+  SupportController(ChatClient.Builder builder, OrderTools tools) {
+    <span class="k">this</span>.chat = builder
+        .defaultSystem(<span class="s">"You answer order questions. Use the tools. Never guess a status."</span>)
+        .defaultTools(tools)
+        .build();
+  }
+
+  <span class="k">@PostMapping</span>(<span class="s">"/api/support/ask"</span>)
+  String ask(<span class="k">@RequestBody</span> String question) {
+    <span class="k">return</span> chat.prompt().user(question).call().content();
+  }
+}</pre>
+  </div>
+
+  <div class="pair">
+    <div class="box"><h3>What people are doing</h3><ul>
+      <li><strong>Giving each agent step only the tools it needs.</strong> Ricardo Mello's agentic warehouse series on foojay uses Spring AI with planner, executor and reporter roles. An analysis step can read inventory but can't create orders, and each run is saved to MongoDB as an <code>AgentRun</code>.</li>
+      <li><strong>Starting agents only after the data is committed.</strong> The same series triggers the agent from a <code>@TransactionalEventListener</code> in the <code>AFTER_COMMIT</code> phase, together with <code>@Async</code>.</li>
+      <li><strong>Routing with a cheap call first.</strong> LangChain4j's new decision models and <code>RoutingChatModel</code> pick a path or a model before running the expensive chat.</li>
+      <li><strong>Learning agent patterns from the Spring team.</strong> Christian Tzolov's talk "Agentic Patterns and Tool Calling with Spring AI" was featured in This Week in Spring (13 Oct).</li>
+    </ul></div>
+    <div class="box"><h3>Agentic tools in the Java workflow</h3><ul>
+      <li><strong>JetBrains Air</strong> (EAP in the 2026.3 IDEs, 2 Oct) runs Claude Agent, Codex, Gemini, Copilot and Junie side by side, each in its own temporary worktree. Agents can use the IDE's debugger, profiler and database tools.</li>
+      <li><strong>Lathe</strong>, a new Java language server by Alexey Gavrilov, builds its project model from your Maven build and ships an MCP server for coding agents.</li>
+      <li><strong>Check your agent's work.</strong> foojay's "Did Your AI Agent Run the Debugger?" and "Can You Explain the Diff Your AI Agent Just Wrote?" are good reads before you merge agent PRs.</li>
+      <li><strong>Try this week:</strong> ask your agent (Claude Code, Junie or another) to list every <code>@RequestBody</code> in your service that has no <code>@Valid</code>, then write one MockMvc test that posts invalid JSON and expects a 400. That's this week's Spring question.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="levels">
+  <div class="sec-head"><span class="eyebrow">Learning path · request validation, from basic to advanced</span><h2>Basic → Advanced</h2></div>
+  <div class="levels">
+    <article class="level"><div class="meter" aria-label="Basic"><i class="on"></i><i></i><i></i></div><h3>Constraints + <code>@Valid</code></h3><p>Put <code>@NotBlank</code>, <code>@Email</code> and <code>@Min</code> on record components, add <code>spring-boot-starter-validation</code>, and mark the body <code>@Valid @RequestBody</code>. Failures become a 400 before your code runs.</p></article>
+    <article class="level"><div class="meter" aria-label="Intermediate"><i class="on"></i><i class="on"></i><i></i></div><h3>Your own constraint</h3><p>When no built-in annotation fits (a Bangladeshi mobile number, an SKU format), write an annotation plus a <code>ConstraintValidator</code>. It works on fields, parameters and list elements.</p></article>
+    <article class="level"><div class="meter" aria-label="Advanced"><i class="on"></i><i class="on"></i><i class="on"></i></div><h3>Method validation</h3><p>Constraints directly on controller parameters (<code>@PathVariable @Min(1) long id</code>) use Spring's built-in method validation and raise <code>HandlerMethodValidationException</code>. Remove class-level <code>@Validated</code> from controllers to use it.</p></article>
+  </div>
+  <div class="code">
+    <div class="code-bar"><span>Intermediate · BdMobile.java + BdMobileValidator.java</span><button class="copy" type="button" data-copy="c2">Copy</button></div>
+<pre id="c2"><span class="k">@Documented</span>
+<span class="k">@Constraint</span>(validatedBy = BdMobileValidator.<span class="k">class</span>)
+<span class="k">@Target</span>({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE_USE})
+<span class="k">@Retention</span>(RetentionPolicy.RUNTIME)
+<span class="k">public @interface</span> BdMobile {
+  String message() <span class="k">default</span> <span class="s">"must be a Bangladeshi mobile number, e.g. 01712345678"</span>;
+  Class&lt;?&gt;[] groups() <span class="k">default</span> {};
+  Class&lt;? <span class="k">extends</span> Payload&gt;[] payload() <span class="k">default</span> {};
+}
+
+<span class="k">public class</span> BdMobileValidator <span class="k">implements</span> ConstraintValidator&lt;BdMobile, String&gt; {
+  <span class="c">// 01XXXXXXXXX or +8801XXXXXXXXX; the digit after "1" is 3–9</span>
+  <span class="k">private static final</span> Pattern MOBILE = Pattern.compile(<span class="s">"^(?:\\+?880|0)1[3-9]\\d{8}$"</span>);
+
+  <span class="k">@Override</span>
+  <span class="k">public boolean</span> isValid(String value, ConstraintValidatorContext ctx) {
+    <span class="k">return</span> value == <span class="k">null</span> || MOBILE.matcher(value).matches(); <span class="c">// null → let @NotBlank decide</span>
+  }
+}
+
+<span class="c">// Use it: record SignupRequest(@NotBlank @BdMobile String phone) {}</span></pre>
+  </div>
+</section>
+
+<section id="tips">
+  <div class="sec-head"><span class="eyebrow">Must-have this week</span><h2>Tips &amp; tricks</h2></div>
+  <ol class="tips">
+    <li><span class="n">T1</span><div><h3>Turn on RFC 9457 error bodies with one property</h3><p><code>spring.mvc.problemdetails.enabled=true</code> makes Boot register a <code>ResponseEntityExceptionHandler</code>, so built-in errors (validation, 405, 415 and so on) come back as <code>application/problem+json</code>. If you write your own advice for one of those exceptions, it must be ordered ahead of Boot's handler.</p></div></li>
+    <li><span class="n">T2</span><div><h3>Validate list elements, not just the list</h3><p><code>@NotEmpty List&lt;OrderLine&gt; lines</code> only checks the list. Write <code>@NotEmpty List&lt;@Valid OrderLine&gt; lines</code> to check every line, or <code>List&lt;@NotBlank String&gt; tags</code> for simple values.</p></div></li>
+    <li><span class="n">T3</span><div><h3>Handle both validation exceptions</h3><p><code>@Valid</code> on a body raises <code>MethodArgumentNotValidException</code>. A constraint directly on a parameter (<code>@RequestParam @Max(100) int size</code>) switches the method to method validation and raises <code>HandlerMethodValidationException</code>. Spring's docs say to handle both.</p></div></li>
+    <li><span class="n">T4</span><div><h3>MongoDB indexes aren't created for you</h3><p><code>spring.data.mongodb.auto-index-creation</code> is off by default, so <code>@Indexed</code> does nothing on its own. Turn it on for small apps, or create indexes explicitly with <code>mongoTemplate.indexOps(Type.class).ensureIndex(...)</code> as in the snippet above.</p></div></li>
+    <li><span class="n">T5</span><div><h3>Customize the default validation message</h3><p>Spring resolves the problem-detail message code <code>problemDetail.org.springframework.web.bind.MethodArgumentNotValidException</code> from <code>messages.properties</code>. Argument <code>{1}</code> is the list of field errors, e.g. <code>...=Request validation failed: {1}</code>.</p></div></li>
+  </ol>
+</section>
+
+<section id="interview">
+  <div class="sec-head"><span class="eyebrow">Industry &amp; interview questions</span><h2>Interview Q&amp;A</h2></div>
+  <div class="qa">
+    <details open><summary><span class="lvl">Basic</span><code>@Valid</code> or <code>@Validated</code>: what's the difference?</summary><div class="ans"><p><code>@Valid</code> is the standard Jakarta Bean Validation annotation. It validates an object and cascades into nested fields marked <code>@Valid</code>. <code>@Validated</code> is Spring's version. It also accepts validation groups (<code>@Validated(OnCreate.class)</code>), and on a class it turns on method validation through an AOP proxy, for example on a <code>@Service</code>.</p><p>On a <code>@RequestBody</code> parameter both work. Use <code>@Valid</code> unless you need groups.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>Why does a request with a blank name still get saved?</summary><div class="ans"><p>The usual causes: no <code>@Valid</code> on the <code>@RequestBody</code> parameter; <code>spring-boot-starter-validation</code> isn't on the classpath, so there's no validator; the constraint is on a nested object or list element without <code>@Valid</code> to cascade; or the parameter has a <code>BindingResult</code> right after it, so errors are handed to your method and nobody checks them.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>What are the rules and limits of a MongoDB TTL index?</summary><div class="ans"><p>It's a single-field index (compound indexes can't have a TTL) on a BSON date, or an array of dates, in which case the oldest date counts. A document expires <code>expireAfterSeconds</code> after the date in that field. With a value of 0, the field itself is the expiry time. Deletion is done by a background thread, so expired documents can still be read for a short time. You can change the time on an existing index with <code>collMod</code>.</p></div></details>
+    <details><summary><span class="lvl">Senior</span>Structured concurrency vs <code>CompletableFuture</code>: when do you pick which?</summary><div class="ans"><p><code>CompletableFuture</code> is good for async pipelines and callbacks, but its tasks have no owner. If one fails, the others keep running unless you cancel them yourself, and a thread dump doesn't show which request started them. A <code>StructuredTaskScope</code> ties subtasks to a block of code: failure cancels the siblings, <code>close()</code> waits for every thread to finish, and thread dumps show the parent-child tree.</p><p>Since each subtask is a blocking call on a virtual thread, the code reads top to bottom. Today it's preview in JDK 27 (JEP 533), proposed final for JDK 28 (JEP 543). For production on JDK 21/25, use <code>CompletableFuture</code> or a virtual-thread executor.</p></div></details>
+  </div>
+</section>
+
+<section id="coding">
+  <div class="sec-head"><span class="eyebrow">Coding interview · one Java + one Spring Boot every week</span><h2>Week 4: write the code</h2>
+  <p>Try each one on paper or in your IDE for 15 minutes before opening the solution.</p></div>
+  <div class="iq-grid">
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Java · Week 4</span><span class="tag ga">Easy</span></div>
+      <h3>Find the duplicates in an array</h3>
+      <ul class="task">
+        <li>Write <code>List&lt;Integer&gt; findDuplicates(int[] nums)</code>.</li>
+        <li>Return every value that appears more than once, <strong>each only once</strong>, in the order it was first repeated.</li>
+        <li>Don't sort or change the input. Aim for O(n) time.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Expected</span></div>
+<pre>findDuplicates(<span class="k">new int</span>[]{<span class="s">4, 3, 2, 7, 8, 2, 3, 1</span>})  <span class="c">// [2, 3]</span>
+findDuplicates(<span class="k">new int</span>[]{<span class="s">3, 1, 3, 1, 2</span>})           <span class="c">// [3, 1]</span>
+findDuplicates(<span class="k">new int</span>[]{<span class="s">5, 5, 5, 5</span>})              <span class="c">// [5]</span>
+findDuplicates(<span class="k">new int</span>[]{<span class="s">1, 2, 3</span>})                 <span class="c">// []</span>
+findDuplicates(<span class="k">new int</span>[]{})                        <span class="c">// []</span></pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <div class="code">
+            <div class="code-bar"><span>Duplicates.java</span><button class="copy" type="button" data-copy="iq1">Copy</button></div>
+<pre id="iq1"><span class="k">import</span> java.util.*;
+
+<span class="k">public class</span> Duplicates {
+
+  <span class="k">public static</span> List&lt;Integer&gt; findDuplicates(<span class="k">int</span>[] nums) {
+    Set&lt;Integer&gt; seen = <span class="k">new</span> HashSet&lt;&gt;();
+    Set&lt;Integer&gt; dups = <span class="k">new</span> LinkedHashSet&lt;&gt;(); <span class="c">// keeps insertion order</span>
+    <span class="k">for</span> (<span class="k">int</span> n : nums) {
+      <span class="k">if</span> (!seen.add(n)) {   <span class="c">// add() returns false if n was already there</span>
+        dups.add(n);         <span class="c">// a Set, so 5,5,5,5 reports 5 once</span>
+      }
+    }
+    <span class="k">return new</span> ArrayList&lt;&gt;(dups);
+  }
+
+  <span class="k">public static void</span> main(String[] args) {
+    System.out.println(findDuplicates(<span class="k">new int</span>[]{<span class="s">4, 3, 2, 7, 8, 2, 3, 1</span>})); <span class="c">// [2, 3]</span>
+    System.out.println(findDuplicates(<span class="k">new int</span>[]{<span class="s">3, 1, 3, 1, 2</span>}));          <span class="c">// [3, 1]</span>
+    System.out.println(findDuplicates(<span class="k">new int</span>[]{<span class="s">5, 5, 5, 5</span>}));             <span class="c">// [5]</span>
+  }
+}</pre>
+          </div>
+          <p><strong>How it works.</strong> <code>Set.add</code> returns <code>false</code> when the value is already present, so one call both checks and records. The first time a value fails <code>add</code>, it's a duplicate. Putting it in a <code>LinkedHashSet</code> removes repeats and keeps the order they were found in.</p>
+          <div class="cx"><span class="tag ga">Time O(n)</span><span class="tag ga">Space O(n)</span></div>
+          <p><strong>Follow-up they'll ask.</strong> "Values are 1..n and you may change the array. Use O(1) extra space." Walk the array, and for each value <code>v</code> flip the sign of <code>nums[|v| - 1]</code>. If it's already negative, <code>|v|</code> is a duplicate. They may also ask for counts: <code>Arrays.stream(nums).boxed().collect(Collectors.groupingBy(x -&gt; x, Collectors.counting()))</code>, which is Week 8's topic.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Spring Boot · Week 4</span><span class="tag pre">Medium</span></div>
+      <h3>Junk orders are being saved</h3>
+      <ul class="task">
+        <li>Posting the JSON below returns <strong>201 Created</strong>, and the order is saved to MongoDB. Explain why.</li>
+        <li>Fix it so it returns <strong>400</strong>, and every order line is checked too.</li>
+        <li>Return the errors as <code>application/problem+json</code> with an <code>errors</code> map of field → message.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Buggy code</span></div>
+<pre><span class="k">public record</span> OrderLine(<span class="k">@NotBlank</span> String sku, <span class="k">@Min</span>(<span class="s">1</span>) <span class="k">int</span> quantity) {}
+
+<span class="k">public record</span> CreateOrderRequest(
+    <span class="k">@NotBlank</span> String customerId,
+    <span class="k">@Email</span> String email,
+    <span class="k">@NotEmpty</span> List&lt;OrderLine&gt; lines) {}
+
+<span class="k">@RestController</span>
+<span class="k">@RequestMapping</span>(<span class="s">"/api/orders"</span>)
+<span class="k">class</span> OrderController {
+  <span class="k">private final</span> OrderRepository orders; <span class="c">// MongoRepository&lt;Order, String&gt;</span>
+  OrderController(OrderRepository orders) { <span class="k">this</span>.orders = orders; }
+
+  <span class="k">@PostMapping</span>
+  ResponseEntity&lt;Order&gt; create(<span class="k">@RequestBody</span> CreateOrderRequest req) {
+    Order saved = orders.save(Order.from(req));
+    <span class="k">return</span> ResponseEntity.created(URI.create(<span class="s">"/api/orders/"</span> + saved.id()))
+        .body(saved);
+  }
+}
+
+<span class="c">// POST /api/orders</span>
+<span class="c">// {"customerId":"", "email":"nope", "lines":[{"sku":"", "quantity":0}]}</span></pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <p><strong>Problem 1.</strong> No <code>@Valid</code> on the <code>@RequestBody</code>, so the constraints are never checked. Annotations on a record are only metadata until something validates the object. <strong>Problem 2.</strong> Even with <code>@Valid</code>, <code>List&lt;OrderLine&gt;</code> isn't cascaded, so <code>@NotBlank sku</code> and <code>@Min(1) quantity</code> would still be skipped. Also check that <code>spring-boot-starter-validation</code> is a dependency; without it there's no validator.</p>
+          <div class="code">
+            <div class="code-bar"><span>Fixed: request, controller, ValidationErrors.java</span><button class="copy" type="button" data-copy="iq2">Copy</button></div>
+<pre id="iq2"><span class="k">public record</span> CreateOrderRequest(
+    <span class="k">@NotBlank</span> String customerId,
+    <span class="k">@Email</span> String email,
+    <span class="k">@NotEmpty</span> List&lt;<span class="k">@Valid</span> OrderLine&gt; lines) {}   <span class="c">// cascade into each line</span>
+
+<span class="k">@PostMapping</span>
+ResponseEntity&lt;Order&gt; create(<span class="k">@Valid @RequestBody</span> CreateOrderRequest req) {
+  Order saved = orders.save(Order.from(req));
+  <span class="k">return</span> ResponseEntity.created(URI.create(<span class="s">"/api/orders/"</span> + saved.id()))
+      .body(saved);
+}
+
+<span class="k">@RestControllerAdvice</span>
+<span class="k">class</span> ValidationErrors {
+
+  <span class="k">@ExceptionHandler</span>(MethodArgumentNotValidException.<span class="k">class</span>)
+  ProblemDetail onInvalidBody(MethodArgumentNotValidException ex) {
+    Map&lt;String, String&gt; errors = <span class="k">new</span> LinkedHashMap&lt;&gt;();
+    ex.getBindingResult().getFieldErrors().forEach(fe -&gt;
+        errors.putIfAbsent(fe.getField(), fe.getDefaultMessage()));
+
+    ProblemDetail pd = ProblemDetail.forStatusAndDetail(
+        HttpStatus.BAD_REQUEST, <span class="s">"Request validation failed"</span>);
+    pd.setTitle(<span class="s">"Invalid order"</span>);
+    pd.setProperty(<span class="s">"errors"</span>, errors);   <span class="c">// rendered as a top-level field</span>
+    <span class="k">return</span> pd;
+  }
+}
+
+<span class="c">// Response: 400, Content-Type: application/problem+json</span>
+<span class="c">// {"type":"about:blank","title":"Invalid order","status":400,</span>
+<span class="c">//  "detail":"Request validation failed","instance":"/api/orders",</span>
+<span class="c">//  "errors":{"customerId":"must not be blank",</span>
+<span class="c">//            "email":"must be a well-formed email address",</span>
+<span class="c">//            "lines[0].sku":"must not be blank",</span>
+<span class="c">//            "lines[0].quantity":"must be greater than or equal to 1"}}</span>
+<span class="c">// (the order of the errors can vary)</span></pre>
+          </div>
+          <p><strong>How it works.</strong> <code>@Valid</code> makes Spring MVC validate the body before calling your method. On failure it throws <code>MethodArgumentNotValidException</code>, so <code>save()</code> never runs. <code>List&lt;@Valid OrderLine&gt;</code> is a container-element constraint that validates each line, and nested errors get paths like <code>lines[0].sku</code>. Returning a <code>ProblemDetail</code> sets the status and the <code>application/problem+json</code> content type. Next week goes deeper into <code>@RestControllerAdvice</code> and <code>ProblemDetail</code>.</p>
+          <p><strong>Follow-up they'll ask.</strong> "Add <code>@GetMapping("/{id}")</code> with <code>@PathVariable @Size(min = 24, max = 24) String id</code>. What's thrown?" A constraint directly on a parameter triggers method validation, which raises <code>HandlerMethodValidationException</code>, not <code>MethodArgumentNotValidException</code>, so handle both. Malformed JSON is a different case: <code>HttpMessageNotReadableException</code>, also a 400.</p>
+        </div>
+      </details>
+    </article>
+
+  </div>
+
+  <details>
+    <summary><span class="lvl">Plan</span>The 20-week question plan</summary>
+    <div class="tbl" style="border:0;border-radius:0;border-top:1px solid var(--line)"><table>
+      <thead><tr><th>Week</th><th>Java (write a program)</th><th>Spring Boot (write or fix the code)</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1 · done</td><td>Palindrome string</td><td>Controller that never returns 404</td></tr>
+        <tr><td class="num">2 · done</td><td>Anagram check</td><td>Profiles + <code>@ConfigurationProperties</code> record</td></tr>
+        <tr><td class="num">3 · done</td><td>First non-repeating character</td><td>Circular dependency, constructor injection</td></tr>
+        <tr><td class="num">4 · now</td><td>Find duplicates in an array</td><td><code>@Valid</code> request validation → clean 400</td></tr>
+        <tr><td class="num">5</td><td>Second largest without sorting</td><td><code>@RestControllerAdvice</code> + ProblemDetail</td></tr>
+        <tr><td class="num">6</td><td>Fibonacci: loop, recursion, memo</td><td>JPA N+1 query fix</td></tr>
+        <tr><td class="num">7</td><td>Primes up to n (sieve)</td><td><code>@Transactional</code> self-invocation bug</td></tr>
+        <tr><td class="num">8</td><td>Word frequency with streams</td><td>Pagination with <code>Pageable</code> on MongoDB</td></tr>
+        <tr><td class="num">9</td><td>Remove duplicates, keep order</td><td>Custom MongoDB query + the index it needs</td></tr>
+        <tr><td class="num">10</td><td>Reverse a linked list</td><td>Secure an endpoint with <code>SecurityFilterChain</code></td></tr>
+        <tr><td class="num">11</td><td>Balanced brackets with a Deque</td><td><code>@WebMvcTest</code> + MockMvc test</td></tr>
+        <tr><td class="num">12</td><td>Merge two sorted arrays</td><td>Custom Actuator health indicator</td></tr>
+        <tr><td class="num">13</td><td>Binary search</td><td>Structured logging + Micrometer tracing</td></tr>
+        <tr><td class="num">14</td><td>LRU cache with LinkedHashMap</td><td><code>@Cacheable</code> with eviction</td></tr>
+        <tr><td class="num">15</td><td>equals/hashCode bug in a map key</td><td><code>@Async</code> + virtual threads</td></tr>
+        <tr><td class="num">16</td><td>Immutable class</td><td>Convert an endpoint to WebFlux</td></tr>
+        <tr><td class="num">17</td><td>Thread-safe lazy singleton</td><td>Spring Modulith module boundaries</td></tr>
+        <tr><td class="num">18</td><td>Producer-consumer, BlockingQueue</td><td>HTTP client with timeouts and retry</td></tr>
+        <tr><td class="num">19</td><td>Combine two calls, CompletableFuture</td><td>Idempotent POST with Idempotency-Key</td></tr>
+        <tr><td class="num">20</td><td>Fix ConcurrentModificationException</td><td>Fix a Boot 3 → 4 migration break</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+
+  <div class="box">
+    <h3>Go deeper: this week's two topics</h3>
+    <ul>
+      <li><a href="https://howtodoinjava.com/puzzles/find-all-duplicate-elements/">Find, count and remove duplicate elements from an array · HowToDoInJava</a> (Set, Map and stream versions)</li>
+      <li><a href="https://stackabuse.com/java-finding-duplicate-elements-in-a-stream/">Finding duplicate elements in a stream · Stack Abuse</a></li>
+      <li><a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html">Validation in controllers · Spring Framework reference</a> (<code>MethodArgumentNotValidException</code> vs <code>HandlerMethodValidationException</code>)</li>
+      <li><a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html">Error responses and ProblemDetail · Spring Framework reference</a></li>
+      <li><a href="https://reflectoring.io/bean-validation-with-spring-boot/">Validation with Spring Boot: the complete guide · Reflectoring</a></li>
+      <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a> (the order the Spring track follows)</li>
+    </ul>
+  </div>
+</section>
+
+<section id="practices">
+  <div class="sec-head"><span class="eyebrow">Best practices · Industry practices</span><h2>Do this, avoid that</h2></div>
+  <div class="pair">
+    <div class="box"><h3 class="do">Do</h3><ul>
+      <li>Validate at the edge: <code>@Valid</code> on every <code>@RequestBody</code>, with request records separate from your <code>@Document</code> classes.</li>
+      <li>Return one consistent error format (<code>ProblemDetail</code>) for every 4xx, with field paths a front end can map to inputs.</li>
+      <li>Let MongoDB expire short-lived data with TTL indexes, and still check the expiry in code.</li>
+      <li>Create the indexes your queries need explicitly, and review them in code review like schema changes.</li>
+      <li>Give AI agents read-only, narrowly scoped tools first, and add write tools behind a human approval step.</li>
+    </ul></div>
+    <div class="box"><h3 class="dont">Avoid</h3><ul>
+      <li>Adding <code>BindingResult</code> after a <code>@Valid</code> parameter and then never checking it.</li>
+      <li>Returning stack traces or exception class names in 400 responses.</li>
+      <li>A scheduled <code>deleteAll</code> job for expired tokens when a TTL index can do it.</li>
+      <li>Relying on <code>@Indexed</code> with <code>auto-index-creation</code> left off. The index never gets created.</li>
+      <li>Shipping preview APIs like <code>StructuredTaskScope</code> on JDK 27 to production. Wait for the final version in JDK 28.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="industry">
+  <div class="sec-head"><span class="eyebrow">How other industries adopt it</span><h2>Patterns by industry</h2><p>General adoption patterns tied to this week's topics. Only the price-comparison row names a company, and that comes from its own engineering blog.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Industry</th><th>What they use</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Price comparison (idealo)</td><td>MongoDB compound indexes, compressed large fields, bulk writes</td><td>Heavy event writes and API reads share one cluster, and the API has a P99 latency target. See the case study below.</td></tr>
+      <tr><td>Fintech &amp; mobile wallets</td><td>Strict request validation, custom constraints, TTL'd OTP documents</td><td>Phone numbers, amounts and one-time codes must be rejected early with clear errors, and codes must expire.</td></tr>
+      <tr><td>E-commerce</td><td>Parallel fan-out (order, customer, stock) on virtual threads</td><td>A product or order page often needs three backend calls, and running them in parallel cuts page latency to roughly the slowest call.</td></tr>
+      <tr><td>Logistics &amp; warehousing</td><td>Agents with capability-scoped tools (Spring AI)</td><td>Replenishment decisions after each shipment, with the system, not the model, setting what the agent may do.</td></tr>
+      <tr><td>Platform teams</td><td>Agent hubs in the IDE (JetBrains Air), MCP servers for build tools</td><td>Several agents run in isolated worktrees, and engineers review diffs before merging.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="case">
+  <div class="sec-head"><span class="eyebrow">Real problem, solved with data</span><h2>"P99 went over 500 ms when writes picked up"</h2></div>
+  <div class="case">
+    <p><strong>Problem.</strong> At idealo, a price-comparison site, event-processing writes and API reads shared one MongoDB cluster. Above about 2,000 events per second, the API's P99 latency rose past 500 ms and broke its SLA.</p>
+    <p><strong>Diagnosis.</strong> The profiler showed MongoDB examining 5 documents for every 1 it returned: about 21 million read a day to return 4 million, because the indexes didn't match the query filters. The slowest requests also hit very large documents, where about 90% of the size was a single <code>offerList</code> field, and one query could transfer up to 8 MB.</p>
+    <div class="bars" role="img" aria-label="idealo MongoDB tuning, before vs after: API P99 above 500 ms down to under 100 ms; documents examined per day 21 million down to about 4 million; event throughput 2,000 up to 9,000 per second.">
+      <div class="bar-row"><span>API P99 · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">&gt;500 ms</span></div>
+      <div class="bar-row"><span>API P99 · after</span><div class="track"><div class="fill" style="width:20%"></div></div><span class="num">&lt;100 ms</span></div>
+      <div class="bar-row"><span>Docs examined/day · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">21 M</span></div>
+      <div class="bar-row"><span>Docs examined/day · after</span><div class="track"><div class="fill" style="width:19%"></div></div><span class="num">≈4 M</span></div>
+      <div class="bar-row"><span>Events/s · before</span><div class="track"><div class="fill warn" style="width:22.2%"></div></div><span class="num">2,000</span></div>
+      <div class="bar-row"><span>Events/s · after</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="num">9,000</span></div>
+    </div>
+    <p><strong>Fix.</strong> (1) Compound indexes that match the filters brought the ratio to 1:1. Returning 4 M documents now means examining about 4 M, 4 ÷ 21 ≈ 19% of the old work, and about 99% of slow queries disappeared. (2) The team compressed <code>offerList</code> with Zstd in the application. (3) It batched Kafka events into MongoDB bulk writes: 100 events now take 1 round trip instead of 100. Result: P99 stayed below 100 ms, at most 100 ÷ 500 = 20% of the old latency. Throughput went from 2,000 to 9,000 events/s, which is 9,000 ÷ 2,000 = 4.5× (the post rounds this to "4X").</p>
+    <p class="note">Real numbers from idealo's tech blog post "Advanced MongoDB Performance Tuning" by Sankarganesh Eswaran (2021). The "after" bar for documents examined uses the 1:1 ratio the post reports, applied to 4 M returned. The lesson for a Spring Boot + MongoDB service: check <code>totalDocsExamined</code> vs <code>nReturned</code> with <code>explain()</code> before adding hardware.</p>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="sec-head"><span class="eyebrow">Goals for next week</span><h2>Try it before next Friday</h2><p>Ticks are saved in this browser only.</p></div>
+  <ul class="goals">
+    <li><label><input type="checkbox" id="g1"><span>Find one <code>@RequestBody</code> without <code>@Valid</code> in your project, fix it, and add a test that posts invalid JSON and expects a 400.</span></label></li>
+    <li><label><input type="checkbox" id="g2"><span>Add a TTL index to one short-lived MongoDB collection (tokens, OTPs, sessions) and confirm it with <code>db.collection.getIndexes()</code>.</span></label></li>
+    <li><label><input type="checkbox" id="g3"><span>Run the structured concurrency example on JDK 27 with <code>--enable-preview</code>, and make one subtask throw to watch the other get cancelled.</span></label></li>
+    <li><label><input type="checkbox" id="g4"><span>Solve Week 5 (second largest without sorting; <code>@RestControllerAdvice</code> + ProblemDetail) before opening the solution.</span></label></li>
+  </ul>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><span class="eyebrow">Sources this week</span></div>
+  <ol class="sources">
+    <li><a href="https://www.infoq.com/news/2026/10/java-news-roundup-oct05-2026/">Java News Roundup, 5 Oct 2026 · InfoQ</a></li>
+    <li><a href="https://www.infoq.com/news/2026/10/java-news-roundup-sep28-2026/">Java News Roundup, 28 Sep 2026 · InfoQ</a></li>
+    <li><a href="https://www.infoq.com/news/2026/09/java-news-roundup-sep07-2026/">Java News Roundup, 7 Sep 2026 (JEP 543 candidate) · InfoQ</a></li>
+    <li><a href="https://openjdk.org/projects/jdk/28/">JDK 28 project page · OpenJDK</a></li>
+    <li><a href="https://openjdk.org/jeps/542">JEP 542: PEM Encodings of Cryptographic Objects · OpenJDK</a></li>
+    <li><a href="https://openjdk.org/jeps/533">JEP 533: Structured Concurrency (Seventh Preview) · OpenJDK</a></li>
+    <li><a href="https://cr.openjdk.org/~alanb/api/java.base/java/util/concurrent/StructuredTaskScope.html">StructuredTaskScope API (JDK 27) · OpenJDK</a></li>
+    <li><a href="https://www.happycoders.eu/java/structured-concurrency-structuredtaskscope/">Structured Concurrency in Java 27 · HappyCoders</a></li>
+    <li><a href="https://inside.java/2026/10/12/devoxxbelgium-structured-concurrency/">Structured Concurrency Looms (Devoxx Belgium) · Inside.java</a></li>
+    <li><a href="https://inside.java/2026/10/05/confined-pools/">Making Arena.ofConfined() Even Cheaper in JDK 28 · Inside.java</a></li>
+    <li><a href="https://inside.java/">Inside.java (October posts)</a></li>
+    <li><a href="https://spring.io/blog/2026/10/13/this-week-in-spring-october-13th-2026/">This Week in Spring, 13 Oct 2026</a></li>
+    <li><a href="https://spring.io/blog/2026/09/21/releasing-spring-for-modern-challenges/">Releasing Spring for Modern Challenges (Patch Thursday) · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/08/21/spring-ai-2-0-1-available-now/">Spring AI 2.0.1 · spring.io</a></li>
+    <li><a href="https://docs.spring.io/spring-ai/reference/api/tools.html">Tool calling · Spring AI reference</a></li>
+    <li><a href="https://endoflife.date/spring-boot">Spring Boot support dates · endoflife.date</a></li>
+    <li><a href="https://blog.jetbrains.com/idea/2026/10/java-annotated-monthly-october-2026/">Java Annotated Monthly, October 2026 · JetBrains</a></li>
+    <li><a href="https://blog.jetbrains.com/ai/2026/10/air-in-ides-eap/">Air in JetBrains IDEs (EAP) · JetBrains</a></li>
+    <li><a href="https://blog.jetbrains.com/blog/2026/09/22/introducing-jetbrains-air/">Introducing JetBrains Air · JetBrains</a></li>
+    <li><a href="https://kpavlov.me/blog/tachyon-mcp-1.0/">Tachyon MCP 1.0 · Konstantin Pavlov</a></li>
+    <li><a href="https://infoq.com/news/2026/08/embabel-1">Embabel reaches 1.0 · InfoQ</a></li>
+    <li><a href="https://foojay.io/today/building-an-agentic-warehouse-management-system-part-2-java-and-spring-ai/">Agentic warehouse system, part 2 · foojay</a></li>
+    <li><a href="https://foojay.io/today/did-your-ai-agent-run-the-debugger-one-jvm-bug-two-agent-runs/">Did Your AI Agent Run the Debugger? · foojay</a></li>
+    <li><a href="https://foojay.io/today/can-you-explain-the-diff-your-ai-agent-just-wrote/">Can You Explain the Diff Your AI Agent Just Wrote? · foojay</a></li>
+    <li><a href="https://www.youtube.com/watch?v=ILn2GX8s1FM">Agentic Patterns and Tool Calling with Spring AI · YouTube</a></li>
+    <li><a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html">Validation · Spring Framework reference</a></li>
+    <li><a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html">Error responses · Spring Framework reference</a></li>
+    <li><a href="https://docs.spring.io/spring-data/mongodb/reference/5.0/mongodb/template-collection-management.html">Index and collection management · Spring Data MongoDB 5.0</a></li>
+    <li><a href="https://www.mongodb.com/docs/v8.0/tutorial/expire-data/">Expire data with TTL indexes · MongoDB docs</a></li>
+    <li><a href="https://medium.com/idealo-tech-blog/advanced-mongodb-performance-tuning-2ddcd01a27d2">Advanced MongoDB Performance Tuning · idealo tech blog</a></li>
+    <li><a href="https://howtodoinjava.com/puzzles/find-all-duplicate-elements/">Find duplicate elements · HowToDoInJava</a></li>
+    <li><a href="https://stackabuse.com/java-finding-duplicate-elements-in-a-stream/">Duplicates in a stream · Stack Abuse</a></li>
+    <li><a href="https://reflectoring.io/bean-validation-with-spring-boot/">Validation with Spring Boot · Reflectoring</a></li>
+    <li><a href="https://www.digitalocean.com/community/tutorials/java-programming-interview-questions">Java programming interview questions · DigitalOcean</a></li>
+    <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a></li>
+  </ol>
+</section>
+
+<footer>Friday Java Brief · generated every Friday at 10:00 Asia/Dhaka · Issue W42, Week 4 of the coding series</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.copy); var txt=el.innerText;
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected'}
+    try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+  });
+});
+document.querySelectorAll('.goals input').forEach(function(cb){
+  var key='fjb-2026-10-16-'+cb.id;
+  try{cb.checked=localStorage.getItem(key)==='1'}catch(e){}
+  cb.addEventListener('change',function(){try{localStorage.setItem(key,cb.checked?'1':'0')}catch(e){}});
+});
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

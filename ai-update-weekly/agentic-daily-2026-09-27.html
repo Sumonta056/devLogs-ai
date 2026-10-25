@@ -1,0 +1,731 @@
+<title>Agentic Daily 27 Sep 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F5F1; --surface:#FFFFFF; --sunk:#EBEDE6; --ink:#1A2220; --muted:#5A6560; --line:#D9DDD5;
+  --accent:#0E6B5A; --accent-soft:#DDEEE8; --amber:#9A6412; --amber-soft:#F6EBD6; --red:#A63D32;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"IBM Plex Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111615; --surface:#181F1D; --sunk:#1F2725; --ink:#E4EAE6; --muted:#9AA7A1; --line:#2C3633;
+    --accent:#52C7AA; --accent-soft:#17332D; --amber:#E0AE5C; --amber-soft:#33291A; --red:#E88A7F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111615; --surface:#181F1D; --sunk:#1F2725; --ink:#E4EAE6; --muted:#9AA7A1; --line:#2C3633;
+  --accent:#52C7AA; --accent-soft:#17332D; --amber:#E0AE5C; --amber-soft:#33291A; --red:#E88A7F;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+
+/* masthead */
+.mast{display:grid;gap:14px;padding-block:8px 22px;border-bottom:2px solid var(--ink)}
+.edition{display:flex;flex-wrap:wrap;gap:8px 18px;font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.edition b{color:var(--ink);font-weight:500}
+.demo-flag{color:var(--amber)}
+.mast h1{font-size:clamp(34px,6vw,56px);line-height:1.02;font-weight:700}
+.mast p{margin:0;max-width:64ch;color:var(--muted)}
+.agents{display:flex;flex-wrap:wrap;gap:8px}
+.agent{font:12px/1 var(--mono);padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.agent i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;font-style:normal}
+
+/* nav */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding-block:12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+nav.toc a{flex:none;font:500 13px/1 var(--body);text-decoration:none;color:var(--ink);padding:8px 12px;border-radius:6px;background:var(--sunk)}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+.progress{flex:none;margin-left:auto;font:12px/1 var(--mono);color:var(--muted);align-self:center;padding-left:10px}
+
+section{padding-top:40px;scroll-margin-top:60px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.sec-head h2{font-size:26px;font-weight:700}
+.sec-head .kicker{font:12px/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+
+/* key learnings */
+.learn{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.learn div{background:var(--accent-soft);border-radius:10px;padding:16px}
+.learn .n{font:500 12px/1 var(--mono);color:var(--accent);letter-spacing:.06em}
+.learn h3{font-size:17px;margin:8px 0 6px;line-height:1.25}
+.learn p{margin:0;font-size:14px;color:var(--ink)}
+
+/* items */
+.items{display:grid;gap:12px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;gap:10px}
+.item.done{opacity:.55}
+.item-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.item h3{font-size:18px;line-height:1.3;font-weight:500}
+.item h3 a{color:var(--ink);text-decoration:none}
+.item h3 a:hover{color:var(--accent);text-decoration:underline}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font:12px/1.4 var(--mono);color:var(--muted)}
+.tag{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:4px;background:var(--sunk);color:var(--muted)}
+.tag.new{background:var(--amber-soft);color:var(--amber)}
+.tag.off{background:var(--accent-soft);color:var(--accent)}
+.item ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.item li{max-width:78ch}
+.item li b{font-weight:600}
+.check{flex:none;display:flex;align-items:center;gap:6px;font:12px/1 var(--mono);color:var(--muted);cursor:pointer;user-select:none;padding-top:3px}
+.check input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+code{font:13px/1.4 var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+
+/* tips */
+.tips{counter-reset:t;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 28px;border-top:1px solid var(--line)}
+.tip{display:grid;grid-template-columns:34px 1fr;gap:4px 10px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tip::before{counter-increment:t;content:counter(t,decimal-leading-zero);font:500 13px/1.6 var(--mono);color:var(--accent)}
+.tip p{margin:0}
+.tip a{font:12px var(--mono);grid-column:2}
+
+/* suggestions */
+.stack{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stack-row{display:grid;grid-template-columns:200px 1fr;border-top:1px solid var(--line)}
+.stack-row:first-child{border-top:0}
+.stack-row h3{font-size:15px;padding:16px 18px;background:var(--sunk);font-weight:500;line-height:1.35}
+.stack-row p{margin:0;padding:16px 18px}
+@media (max-width:640px){.stack-row{grid-template-columns:1fr}.stack-row h3{padding-bottom:10px}}
+
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td.stars{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+td .bar{height:4px;background:var(--accent);border-radius:2px;margin-top:6px;opacity:.7}
+td a{font-weight:500}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0;max-width:80ch}
+
+/* video grid */
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.vid{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:8px;align-content:start}
+.vid .play{display:flex;align-items:center;gap:8px;font:12px var(--mono);color:var(--muted)}
+.vid .play svg{flex:none}
+.vid h3{font-size:16px;line-height:1.3;font-weight:500}
+.vid h3 a{color:var(--ink);text-decoration:none}
+.vid h3 a:hover{color:var(--accent)}
+.vid ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.res a.card{display:grid;gap:6px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.res a.card:hover{border-color:var(--accent)}
+.res .card b{font-family:var(--display);font-size:16px;font-weight:500}
+.res .card span{font-size:13px;color:var(--muted)}
+.res .card em{font:12px var(--mono);font-style:normal;color:var(--accent);overflow-wrap:anywhere}
+
+footer{margin-top:48px;padding-top:18px;border-top:2px solid var(--ink);display:grid;gap:8px;font-size:13px;color:var(--muted)}
+footer p{margin:0;max-width:80ch}
+@media (prefers-reduced-motion:no-preference){.item,.vid,.res a.card{transition:opacity .2s,border-color .2s}}
+
+/* picks of the day */
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.pick{align-content:start;border-top:3px solid var(--accent)}
+.pick .cat{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+.pick p{margin:0;font-size:14px}
+.pick ul{font-size:14px}
+.pick .src{font:12px/1.4 var(--mono);color:var(--muted)}
+.try{position:relative;background:var(--sunk);border:1px solid var(--line);border-radius:8px;min-width:0}
+.try .lbl{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 0 12px;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.try pre{margin:0;padding:8px 12px 12px;overflow-x:auto;font:12.5px/1.5 var(--mono);white-space:pre;color:var(--ink)}
+.copy{font:500 11px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.pick .stackline{font-size:13px;color:var(--muted);border-left:2px solid var(--amber);padding-left:10px}
+.pick .stackline b{color:var(--amber);font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="edition">
+      <span><b>Edition</b> Sun 27 Sep 2026</span>
+      <span><b>Window</b> 23–27 Sep</span>
+      <span><b>For</b> Mridul · Dhaka</span>
+    </div>
+    <h1>Agentic Dev Daily</h1>
+    <p>Claude and agentic development news, workflows, tips, repos, docs and videos, plus nine picks of the day, gathered by five research agents and turned into study notes. Tick items off as you read them; your progress is saved in this browser.</p>
+    <div class="agents" aria-label="Research agents in this run">
+      <span class="agent"><i></i>Trends &amp; news</span>
+      <span class="agent"><i></i>Community usage &amp; tips</span>
+      <span class="agent"><i></i>GitHub &amp; market resources</span>
+      <span class="agent"><i></i>Official docs &amp; YouTube</span>
+      <span class="agent"><i></i>Picks of the day</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#learnings">Key learnings</a>
+    <a href="#picks">Picks of the day</a>
+    <a href="#trending">Trending</a>
+    <a href="#usage">How others use it</a>
+    <a href="#tips">Tips &amp; tricks</a>
+    <a href="#suggest">For your stack</a>
+    <a href="#github">GitHub</a>
+    <a href="#official">Official</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#market">Best resources</a>
+    <span class="progress" id="progress">0 read</span>
+  </nav>
+
+  <!-- KEY LEARNINGS -->
+  <section id="learnings">
+    <div class="sec-head"><h2>Key learnings today</h2><span class="kicker">Read these first</span></div>
+    <div class="learn">
+      <div><span class="n">01</span><h3>Treat model upgrades like dependency upgrades</h3><p>Claude Code 2.1.283 lets admins pin an exact model list and deny others, so a new model no longer reaches everyone automatically. Test first, then allow.</p></div>
+      <div><span class="n">02</span><h3>Re-tune your configs for each new model</h3><p>The new <code>/doctor prompt-audit</code> flags CLAUDE.md, skill and agent instructions written for older models. Rules that helped weaker models can hold newer ones back.</p></div>
+      <div><span class="n">03</span><h3>MCP servers and skills now have a storefront</h3><p>The Claude Marketplace launched with 2,000+ connectors and plugins, and a submission portal is reported. Check there before building your own integration.</p></div>
+      <div><span class="n">04</span><h3>Agent swarms work best as funnels</h3><p>Anthropic's ~950-agent enzyme search worked as staged fan-out → filter → short human-readable list. The same pattern applies to large code or log analysis.</p></div>
+    </div>
+  </section>
+
+  <!-- PICKS -->
+  <section id="picks">
+    <div class="sec-head"><h2>Picks of the day</h2><span class="kicker">9 picks · one per category</span></div>
+    <div class="picks">
+
+      <article class="item pick" data-id="p1">
+        <div class="item-top"><span class="cat">Agent Skill of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/anthropics/skills/blob/main/skills/webapp-testing/SKILL.md" target="_blank" rel="noopener">webapp-testing</a></h3>
+        <div class="src">Official · anthropics/skills (example-skills plugin)</div>
+        <p>A skill that tests local web apps by having Claude write Python Playwright scripts. It bundles a <code>with_server.py</code> helper that starts your servers, waits until they're ready, then runs the script.</p>
+        <ul>
+          <li>Decision tree (static vs dynamic, server running or not) plus a "reconnaissance-then-action" pattern: screenshot or inspect first, then pick selectors.</li>
+          <li>Tells Claude to run bundled scripts with <code>--help</code> as black boxes, keeping big helper files out of context.</li>
+          <li>Names the classic SPA pitfall: inspecting the DOM before <code>networkidle</code>.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it<button class="copy" type="button">Copy</button></div><pre>/plugin marketplace add anthropics/skills
+/plugin install example-skills@anthropic-agent-skills
+
+# excerpt from SKILL.md (multiple servers)
+python scripts/with_server.py \
+  --server "cd backend &amp;&amp; python server.py" --port 3000 \
+  --server "cd frontend &amp;&amp; npm run dev" --port 5173 \
+  -- python your_automation.py</pre></div>
+        <p class="stackline"><b>For your stack:</b> swap the servers for <code>./mvnw spring-boot:run</code> on 8080 and Nuxt <code>npm run dev</code> on 3000 for a full-stack smoke test (our adaptation).</p>
+      </article>
+
+      <article class="item pick" data-id="p2">
+        <div class="item-top"><span class="cat">Agent Rule of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://platform.claude.com/docs/de/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Investigate before answering</a></h3>
+        <div class="src">Official · Claude prompting best practices (link is the German-locale page; snippet is English)</div>
+        <p>A drop-in instruction block that stops the agent from making claims about files it hasn't opened. It targets a very common failure: confidently describing or "fixing" code it never read.</p>
+        <ul>
+          <li>Prevents hallucinated method names, fields and config keys.</li>
+          <li>Forces a Read before any claim, especially when you name a file.</li>
+          <li>Short enough to paste straight into CLAUDE.md or AGENTS.md.</li>
+        </ul>
+        <div class="try"><div class="lbl">Paste into CLAUDE.md<button class="copy" type="button">Copy</button></div><pre>&lt;investigate_before_answering&gt;
+Never speculate about code you have not opened. If the user references a specific file,
+you MUST read the file before answering. Make sure to investigate and read relevant
+files BEFORE answering questions about the codebase. Never make any claims about code
+before investigating unless you are certain of the correct answer - give grounded and
+hallucination-free answers.
+&lt;/investigate_before_answering&gt;</pre></div>
+        <p class="stackline"><b>For your stack:</b> most valuable with Spring auto-configuration and Nuxt auto-imports, where behavior lives in files the agent tends not to open.</p>
+      </article>
+
+      <article class="item pick" data-id="p3">
+        <div class="item-top"><span class="cat">Claude Repository of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/davila7/claude-code-templates" target="_blank" rel="noopener">davila7/claude-code-templates</a></h3>
+        <div class="src">Community · ~30.8k stars (repo page, 27 Sep) · MIT</div>
+        <p>A CLI and web catalog (aitmpl.com) of ready-made Claude Code components: agents, commands, MCPs, settings, hooks and skills, each installable with npx. It also has analytics, chat and health-check modes.</p>
+        <ul>
+          <li>One command installs a mix of components instead of copying files by hand.</li>
+          <li><code>--health-check</code> diagnoses a broken Claude Code setup.</li>
+          <li>Keeps credits and licenses of upstream components.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it<button class="copy" type="button">Copy</button></div><pre>npx claude-code-templates@latest                 # interactive browser
+npx claude-code-templates@latest --health-check
+npx claude-code-templates@latest --agent development-team/frontend-developer \
+  --command testing/generate-tests --mcp development/github-integration --yes</pre></div>
+        <p class="stackline"><b>For your stack:</b> search the catalog for Vue, Spring and MongoDB components before writing your own, and read each one before installing, since they're community-contributed.</p>
+      </article>
+
+      <article class="item pick" data-id="p4">
+        <div class="item-top"><span class="cat">Claude Agent of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/02-language-specialists/spring-boot-engineer.md" target="_blank" rel="noopener">spring-boot-engineer</a></h3>
+        <div class="src">Community · VoltAgent/awesome-claude-code-subagents · tools: Read, Write, Edit, Bash, Glob, Grep · model: sonnet</div>
+        <p>A subagent for a senior Spring Boot 3+ engineer covering microservices, reactive programming, Spring Cloud and cloud-native Java. It carries a delivery checklist: Java 17+, GraalVM support, 85%+ test coverage, API docs and security hardening.</p>
+        <ul>
+          <li>Keeps Spring work in a focused context with a clear "when invoked" workflow.</li>
+          <li>File and shell tools only, no web tools: reasonable for backend changes.</li>
+          <li>The checklist gives the main agent acceptance criteria to check against.</li>
+        </ul>
+        <div class="try"><div class="lbl">.claude/agents/spring-boot-engineer.md (frontmatter)<button class="copy" type="button">Copy</button></div><pre>---
+name: spring-boot-engineer
+description: "Use this agent when building enterprise Spring Boot 3+ applications requiring microservices architecture, cloud-native deployment, or reactive programming patterns."
+tools: Read, Write, Edit, Bash, Glob, Grep
+model: sonnet
+---
+# full file:
+curl -o .claude/agents/spring-boot-engineer.md https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/main/categories/02-language-specialists/spring-boot-engineer.md</pre></div>
+        <p class="stackline"><b>For your stack:</b> direct fit. Step 1 queries a "context manager" agent from the same collection; if you don't install it, change that step to "Read CLAUDE.md, pom.xml and application.yml".</p>
+      </article>
+
+      <article class="item pick" data-id="p5">
+        <div class="item-top"><span class="cat">Claude Resource of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents</a></h3>
+        <div class="src">Official · Anthropic Engineering · 29 Sep 2025</div>
+        <p>Anthropic's essay on treating context as a limited budget to curate, not just a prompt to write. It covers what good context looks like, just-in-time retrieval and techniques for long tasks.</p>
+        <ul>
+          <li>Explains "context rot" and aims for "the smallest possible set of high-signal tokens".</li>
+          <li>Load data just in time through file paths, queries and links instead of stuffing it in up front.</li>
+          <li>Three long-task techniques: compaction, structured notes and sub-agents, the ideas behind <code>/compact</code>, CLAUDE.md and subagents.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it · 15 min<button class="copy" type="button">Copy</button></div><pre>1. Read "Context Engineering for Long-Horizon Tasks".
+2. Open your CLAUDE.md and delete anything Claude
+   could find with a quick grep.
+3. Replace pasted docs with pointers, e.g.
+   "API contract: see backend/src/main/resources/openapi.yaml"</pre></div>
+        <p class="stackline"><b>Quote:</b> "Every new token introduced depletes this budget by some amount, increasing the need to carefully curate the tokens available to the LLM."</p>
+      </article>
+
+      <article class="item pick" data-id="p6">
+        <div class="item-top"><span class="cat">MCP Server of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://github.com/mongodb-js/mongodb-mcp-server" target="_blank" rel="noopener">MongoDB MCP Server</a></h3>
+        <div class="src">Official (MongoDB) · ~1.1k stars (repo page, 27 Sep) · v3.0.4</div>
+        <p>MongoDB's own MCP server connecting Claude to databases and Atlas clusters. Tools cover queries, aggregations, indexes and collections, plus Atlas admin.</p>
+        <ul>
+          <li>Claude can check real collection schemas while writing Spring Data repositories.</li>
+          <li><code>--readOnly</code> doesn't register create, update or delete tools at all.</li>
+          <li><code>--indexCheck</code> rejects queries that would scan a whole collection.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it · command adapted, not run<button class="copy" type="button">Copy</button></div><pre>claude mcp add mongodb \
+  --env MDB_MCP_CONNECTION_STRING="mongodb://localhost:27017/myDatabase" \
+  -- npx -y mongodb-mcp-server@latest --readOnly --indexCheck
+claude mcp list    # expect: Connected</pre></div>
+        <p class="stackline"><b>Security:</b> keep <code>--readOnly</code> on and point it at local or dev databases only. Pass credentials as env vars, not arguments. The env value is saved in <code>~/.claude.json</code>, so use a dev-only credential. Destructive tools ask for confirmation by default. The command is assembled from the README's JSON config plus <a href="https://code.claude.com/docs/en/mcp-quickstart" target="_blank" rel="noopener">Claude Code MCP syntax</a>; there's also an official plugin: <code>claude plugin install mongodb@claude-plugins-official</code>.</p>
+      </article>
+
+      <article class="item pick" data-id="p7">
+        <div class="item-top"><span class="cat">Hook of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Re-inject context after compaction</a></h3>
+        <div class="src">Official · Claude Code hooks guide · SessionStart + matcher "compact"</div>
+        <p>A SessionStart hook that runs after every compaction. Whatever the command prints to stdout is added to Claude's context, restoring rules the summary may have dropped.</p>
+        <ul>
+          <li>Fixes the mid-session drift where Claude "forgets" conventions after auto-compaction.</li>
+          <li>Deterministic: the reminder is always injected.</li>
+          <li>Swap the echo for a dynamic command like <code>git log --oneline -5</code>, as the docs suggest.</li>
+        </ul>
+        <div class="try"><div class="lbl">.claude/settings.json<button class="copy" type="button">Copy</button></div><pre>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Reminder: backend is Spring Boot (./mvnw test before commit); frontend is Nuxt 3 (npm run lint). Recent work:'; git log --oneline -5"
+          }
+        ]
+      }
+    ]
+  }
+}</pre></div>
+        <p class="stackline"><b>For your stack:</b> the structure is from the docs; the echo text is tailored. For context you want at every session start, the docs recommend CLAUDE.md instead.</p>
+      </article>
+
+      <article class="item pick" data-id="p8">
+        <div class="item-top"><span class="cat">Command of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener"><code>/btw</code> side questions</a></h3>
+        <div class="src">Official · Claude Code interactive mode docs</div>
+        <p>Ask a quick question about the current work without adding it to conversation history. Claude answers from what's already in context and shows the answer in a dismissible overlay.</p>
+        <ul>
+          <li>Works while Claude is still running, without interrupting the turn.</li>
+          <li>Keeps "what was that again?" out of your context; cheap while the cache is warm.</li>
+          <li>Press <code>f</code> to fork it into a background subagent when you need tools. No tool access otherwise.</li>
+        </ul>
+        <div class="try"><div class="lbl">Try it<button class="copy" type="button">Copy</button></div><pre>/btw what was the name of that config file again?
+/btw which repository class did you say handles the Mongo pagination?</pre></div>
+        <p class="stackline"><b>Note:</b> the first line is the docs example, the second is an adaptation. The VS Code panel needs extension v2.1.227+.</p>
+      </article>
+
+      <article class="item pick" data-id="p9">
+        <div class="item-top"><span class="cat">Prompt pattern of the day</span><label class="check"><input type="checkbox"> read</label></div>
+        <h3><a href="https://platform.claude.com/docs/de/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Explain why a rule exists</a></h3>
+        <div class="src">Official · prompting best practices, "Add context to improve performance"</div>
+        <p>Instead of a bare command, state the reason behind the rule. Claude then applies it more reliably and extends it sensibly to cases the rule didn't spell out.</p>
+        <ul>
+          <li>Bare rules get applied too literally or ignored at the edges.</li>
+          <li>The reason covers related cases without writing a separate rule for each.</li>
+          <li>CLAUDE.md is easier to maintain when the purpose sits next to the rule.</li>
+        </ul>
+        <div class="try"><div class="lbl">Before → after<button class="copy" type="button">Copy</button></div><pre># official example
+Before: NEVER use ellipses
+After:  Your response will be read aloud by a text-to-speech engine, so never
+        use ellipses since the text-to-speech engine will not know how to
+        pronounce them.
+
+# adapted for Spring + Mongo
+Before: Never call MongoTemplate directly in controllers.
+After:  Controllers must not call MongoTemplate directly, because all Mongo
+        access goes through services that apply tenant filtering and
+        @Transactional boundaries; skipping them leaks cross-tenant data.</pre></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TRENDING -->
+  <section id="trending">
+    <div class="sec-head"><h2>What's trending</h2><span class="kicker">8 items · 23–25 Sep</span></div>
+    <div class="items">
+      <article class="item" data-id="t1">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.283: model allow-lists, prompt audit and MCP fixes</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Release</span><span class="tag off">Official</span><span>Claude Code changelog</span><span>25 Sep 2026</span><span><a href="https://releasebot.io/updates/anthropic/claude-code" target="_blank" rel="noopener">Releasebot</a></span></div>
+        <ul>
+          <li><b>What:</b> Managed settings <code>availableModelsMatch: "exact"</code> and <code>deniedModels</code> control which models can be used. <code>/doctor prompt-audit</code> audits CLAUDE.md, skills, agents and commands for patterns written for older models. MCP, WebFetch and WebSearch output can go to OpenTelemetry with <code>OTEL_LOG_TOOL_CONTENT=1</code>, and <code>/context</code> now counts MCP server instructions.</li>
+          <li><b>Why it matters:</b> Admins can stop new models rolling out to everyone automatically. MCP fixes cover lost progress notifications, orphaned stdio servers and a brief 404 breaking remote servers for the whole session.</li>
+          <li><b>Do:</b> Run <code>/doctor prompt-audit</code> on your repos and re-run <code>claude plugin validate</code>, which is stricter now.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t2">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.282: prose width and resumed-session fixes</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Release</span><span class="tag off">Official</span><span>Claude Code changelog</span><span>24 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> <code>maxProseWidth</code> caps prose width in wide terminals while tables and code stay full width. Fixes resumed sessions re-sending altered messages, thinking dropped after slash commands, "Invalid data in redacted_thinking block" errors and compaction failing on a refused summary.</li>
+          <li><b>Why it matters:</b> Long-running and resumed sessions are more stable, which matters most for SDK and headless use.</li>
+          <li><b>Do:</b> Upgrade if you've hit 400 or redacted_thinking errors on <code>/resume</code>.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t3">
+        <div class="item-top"><h3><a href="https://claude.com/blog/claude-marketplace" target="_blank" rel="noopener">Claude Marketplace launches</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Product</span><span class="tag off">Official</span><span>Claude blog</span><span>23 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> One hub for plugins, connectors, agents, products and service partners, launching with 2,000+ connectors and plugins from Atlassian, Google, Microsoft, Notion, Salesforce and others.</li>
+          <li><b>Why it matters:</b> MCP connectors and skills now have an official distribution channel, and teams can spend part of committed Anthropic spend on marketplace products.</li>
+          <li><b>Do:</b> Browse <a href="https://claude.com/marketplace/connectors-plugins" target="_blank" rel="noopener">connectors &amp; plugins</a> before building an integration yourself.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t4">
+        <div class="item-top"><h3><a href="https://cryptobriefing.com/claude-plugin-mcp-connector-submission-portal/" target="_blank" rel="noopener">Submission portal for plugins and MCP connectors</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Ecosystem</span><span>CryptoBriefing / Releasebot</span><span>25 Sep 2026</span><span class="tag">Unverified</span></div>
+        <ul>
+          <li><b>What:</b> Paid-plan users can reportedly submit a remote MCP connector or a GitHub-hosted plugin, with automatic validation, safety scans, review tracking and post-launch analytics.</li>
+          <li><b>Why it matters:</b> You could publish internal MCP servers and skills to Claude users. No official Anthropic page was found, and the "MCP 2.0" label in one report is unconfirmed.</li>
+          <li><b>Do:</b> Package servers as plugins and run <code>claude plugin validate</code> before submitting.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t5">
+        <div class="item-top"><h3><a href="https://releasebot.io/updates/anthropic/claude-developer-platform" target="_blank" rel="noopener">Platform: cache diagnostics GA, refusal billing change</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">API</span><span>Releasebot (third-party)</span><span>23–24 Sep 2026</span><span class="tag">Check official notes</span></div>
+        <ul>
+          <li><b>What:</b> Cache diagnostics are out of beta: the <code>cache-diagnosis-2026-04-07</code> header is no longer needed and <code>/v1/messages</code> responses always include <code>diagnostics</code>. Charges resumed for some pre-output refusals.</li>
+          <li><b>Why it matters:</b> Strict response parsers may choke on the new field, and cost dashboards may shift.</li>
+          <li><b>Do:</b> Remove the old beta header and confirm against the <a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener">official release notes</a> (the fetch was blocked for us).</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t6">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/news/claude-discovers-novel-enzyme-system" target="_blank" rel="noopener">~950 Claude agents find a CRISPR-like enzyme system</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Research</span><span class="tag off">Official</span><span>Anthropic</span><span>23 Sep 2026</span><span><a href="https://news.ycombinator.com/item?id=49820134" target="_blank" rel="noopener">HN · ~780 pts</a></span></div>
+        <ul>
+          <li><b>What:</b> Agents searched a DNA database for 21 hours using 210M tokens, gathered 200k+ reverse transcriptases, flagged ~3,500 candidates and narrowed them to 20 with written reports.</li>
+          <li><b>Why it matters:</b> A public reference design for a large search-and-triage swarm. HN is largely skeptical: no functional assays or peer review yet.</li>
+          <li><b>Do:</b> Borrow the funnel: fan out, filter in stages, end with a list a human can read.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t7">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">Anthropic Threat Intelligence Report, September 2026</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Security</span><span class="tag off">Official</span><span>Anthropic</span><span>Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> Most operations described were run or orchestrated by AI, including multi-agent attack frameworks, stolen API keys used against dozens of targets and zero-day hunting with memory across sessions.</li>
+          <li><b>Why it matters:</b> Agent credentials and the AI supply chain are attack targets in their own right.</li>
+          <li><b>Do:</b> Scope and rotate API keys, keep them out of agent environments and log tool output.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="t8">
+        <div class="item-top"><h3><a href="https://aiagentstore.ai/ai-agent-news/this-week" target="_blank" rel="noopener">Competitors: ChatGPT work agents, Universal Commerce Protocol, Headless 360</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Ecosystem</span><span>AI Agent Store (aggregator)</span><span>24 Sep 2026</span></div>
+        <ul>
+          <li><b>What:</b> OpenAI added voice-driven work agents to ChatGPT mobile. Google and Worldline released the Universal Commerce Protocol for agent payments. Salesforce showed "Headless 360" at Dreamforce, and Alibaba announced AgentCore.</li>
+          <li><b>Why it matters:</b> Agent protocols are spreading into commerce and payments alongside MCP.</li>
+          <li><b>Do:</b> Nothing to act on for Claude work yet; watch UCP if you build purchasing agents.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- USAGE -->
+  <section id="usage">
+    <div class="sec-head"><h2>How others are using it</h2><span class="kicker">5 real workflows</span></div>
+    <div class="items">
+      <article class="item" data-id="u1">
+        <div class="item-top"><h3><a href="https://piotrminkowski.com/2026/03/24/claude-code-template-for-spring-boot/" target="_blank" rel="noopener">A Claude Code template for Spring Boot</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Spring Boot</span><span>Piotr Minkowski</span><span>24 Mar 2026</span></div>
+        <ul>
+          <li>CLAUDE.md in six parts: plan mode for 3+ step tasks, a self-improvement loop that logs corrections in <code>tasks/lessons.md</code>, "verification before done", and rules for when to use skills and agents.</li>
+          <li><code>.claude/skills/</code> holds java-architect, spring-boot-engineer, jpa-patterns, api-contract-review and more; <code>.claude/agents/</code> holds 8 roles including code-reviewer and test-automator.</li>
+          <li>Requires positive and negative tests for all generated code and uses <code>/agents</code>, <code>/skills</code> and <code>/cost</code> to see what's loaded.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u2">
+        <div class="item-top"><h3><a href="https://hidekazu-konishi.com/entry/claude_code_extension_layers_decision_guide.html" target="_blank" rel="noopener">Which extension layer? A decision guide</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag new">Updated 25 Sep</span><span>Hidekazu Konishi</span></div>
+        <ul>
+          <li>Six questions pick the layer: deterministic → hooks/permissions; external system → MCP; every session → CLAUDE.md or path rules; on-demand procedure → skill; isolation → subagent; cross-repo → plugin.</li>
+          <li>Load timing: CLAUDE.md and MCP tool names are always in context; skill bodies and MCP schemas load on demand; hooks and subagents run outside the main context.</li>
+          <li>Main anti-pattern: enforcing guarantees with prose. "never edit .env" in CLAUDE.md is a request; a PreToolUse deny is a guarantee.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u3">
+        <div class="item-top"><h3><a href="https://thepromptshelf.dev/blog/claude-code-tdd-enforcement/" target="_blank" rel="noopener">Enforcing TDD with hooks and the red-green loop</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">TDD</span><span>The Prompt Shelf</span><span>5 Apr 2026</span></div>
+        <ul>
+          <li>Prompt-only TDD fails because instructions drift after compaction.</li>
+          <li>A PreToolUse <code>tdd_guard.py</code> on Write/Edit exits 2 when no matching test file exists; a PostToolUse script runs tests and feeds output back.</li>
+          <li>Limit: it checks that a test exists, not that it's good, so review still matters.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u4">
+        <div class="item-top"><h3><a href="https://www.aakashx.com/blog/parallel-claude-code-agents/" target="_blank" rel="noopener">Parallel agents: a safe eight-phase workflow</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Parallelism</span><span>Aakash Ahuja</span><span>16 May 2026</span></div>
+        <ul>
+          <li>Plan, scaffold shared contracts, split by ownership, dispatch to worktrees, test, merge in dependency order, validate, clean up.</li>
+          <li>Agents own non-overlapping directories; only one touches lockfiles, migrations or contracts.</li>
+          <li>Worktrees stop file collisions but not contract drift. Your job becomes managing branches.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="u5">
+        <div class="item-top"><h3><a href="https://alexop.dev/posts/why-you-dont-need-nuxt-mcp-claude-code/" target="_blank" rel="noopener">Why you don't need the Nuxt MCP with Claude Code</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag">Nuxt</span><span>Alexander Opalic</span><span>31 Dec 2025</span></div>
+        <ul>
+          <li>MCP costs context through large tool definitions and redundant intermediate results.</li>
+          <li>Instead, a "Nuxt Content Specialist" subagent fetches <code>content.nuxt.com/llms.txt</code>, picks relevant pages and reads them in its own context.</li>
+          <li>The author claims about 98% fewer tokens (his figure, not verified).</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section id="tips">
+    <div class="sec-head"><h2>Tips &amp; tricks</h2><span class="kicker">10 you can apply today</span></div>
+    <div class="tips">
+      <div class="tip"><p>Use hooks as the deterministic shell: SessionStart to inject branch and recent commits, and a Stop gate until tests pass.</p><a href="https://blakecrosley.com/blog/claude-code-hooks-explained" target="_blank" rel="noopener">Blake Crosley · hooks explained</a></div>
+      <div class="tip"><p>Route many small hook scripts through one registered dispatcher to keep settings.json simple.</p><a href="https://blakecrosley.com/blog/claude-code-hooks-explained" target="_blank" rel="noopener">Blake Crosley · hooks explained</a></div>
+      <div class="tip"><p>Add deny rules like <code>Read(./node_modules/**)</code>, <code>Read(./dist/**)</code> and <code>Read(./**/*.log)</code> to <code>.claude/settings.json</code>.</p><a href="https://buildtolaunch.substack.com/p/claude-code-token-optimization" target="_blank" rel="noopener">Build to Launch · token optimization</a></div>
+      <div class="tip"><p>Keep CLAUDE.md to rules and file pointers, not full docs.</p><a href="https://buildtolaunch.substack.com/p/claude-code-token-optimization" target="_blank" rel="noopener">Build to Launch · token optimization</a></div>
+      <div class="tip"><p>Compact while the session is still healthy, not once it's overloaded.</p><a href="https://www.kdnuggets.com/7-practical-ways-to-reduce-claude-code-token-usage" target="_blank" rel="noopener">KDnuggets · 7 ways to cut tokens</a></div>
+      <div class="tip"><p>Point Claude at exact files and line ranges instead of asking it to "look around".</p><a href="https://www.kdnuggets.com/7-practical-ways-to-reduce-claude-code-token-usage" target="_blank" rel="noopener">KDnuggets · 7 ways to cut tokens</a></div>
+      <div class="tip"><p>Add <code>.claude/worktrees/</code> to .gitignore, and list .env files in <code>.worktreeinclude</code> so each worktree gets them.</p><a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Claude Code docs · worktrees</a></div>
+      <div class="tip"><p>Put <code>isolation: worktree</code> in a subagent's frontmatter so it always gets its own checkout; <code>claude --worktree "#1234"</code> branches from a PR.</p><a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Claude Code docs · worktrees</a></div>
+      <div class="tip"><p>Plan for 4–5 parallel agents at most on a laptop: each worktree needs its own node_modules, and stateful DB servers collide.</p><a href="https://www.developersdigest.tech/blog/git-worktrees-claude-code-parallel-agents-guide" target="_blank" rel="noopener">Developers Digest · worktrees guide</a></div>
+      <div class="tip"><p>Install the official MongoDB plugin: <code>claude plugin install mongodb@claude-plugins-official</code>, then <code>/reload-plugins</code>.</p><a href="https://www.mongodb.com/docs/claude/" target="_blank" rel="noopener">MongoDB docs · Claude</a></div>
+    </div>
+  </section>
+
+  <!-- SUGGESTIONS -->
+  <section id="suggest">
+    <div class="sec-head"><h2>Suggestions for your stack</h2><span class="kicker">Nuxt · Spring Boot · MongoDB</span></div>
+    <div class="stack">
+      <div class="stack-row"><h3>Add a lessons loop</h3><p>Borrow Minkowski's <code>tasks/lessons.md</code>: every time you correct Claude on a Spring or Nuxt convention, it appends the lesson, and CLAUDE.md tells it to read that file first. Then run <code>/doctor prompt-audit</code> to trim rules written for older models.</p></div>
+      <div class="stack-row"><h3>Move guarantees into hooks</h3><p>Deny edits to <code>.env</code> and <code>application-prod.yml</code> with a PreToolUse hook, add a Stop hook that won't finish until the affected module's tests pass, and add today's SessionStart "compact" hook so conventions survive compaction.</p></div>
+      <div class="stack-row"><h3>TDD guard on both stacks</h3><p>Adapt <code>tdd_guard.py</code> so editing <code>src/main/java/**/X.java</code> requires <code>XTest.java</code>, and editing a component or composable requires a matching <code>*.spec.ts</code>. Pair it with <code>./mvnw -q test -Dtest=XTest</code> or <code>npx vitest run &lt;file&gt;</code>.</p></div>
+      <div class="stack-row"><h3>MongoDB MCP, read-only, dev only</h3><p>Use the MongoDB MCP server with <code>--readOnly --indexCheck</code> against a local database to check schemas and indexes while writing repositories. Keep Testcontainers for tests, not the MCP server.</p></div>
+      <div class="stack-row"><h3>Nuxt docs via llms.txt, not MCP</h3><p>Create <code>.claude/agents/nuxt-docs.md</code>, a research subagent that reads Nuxt's llms.txt and returns only what's relevant. Pair it with the spring-boot-engineer agent for backend work, each in its own worktree with its own ports.</p></div>
+    </div>
+  </section>
+
+  <!-- GITHUB -->
+  <section id="github">
+    <div class="sec-head"><h2>Most-starred GitHub resources</h2><span class="kicker">Stars seen 27 Sep 2026</span></div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Repo</th><th>What it is · how to use it</th><th style="text-align:right">Stars</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/obra/superpowers" target="_blank" rel="noopener">obra/superpowers</a></td><td>Skills framework: spec, plan, TDD and subagent-driven work. Install as a plugin.</td><td class="stars">289.8k<div class="bar" style="width:100%"></div></td></tr>
+          <tr><td><a href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">affaan-m/ECC</a> <span class="tag new">Rising</span></td><td>68 agents, 292 skills, 94 commands. <code>/plugin marketplace add https://github.com/affaan-m/ECC</code>, then pick what you need. Was 263.0k on 20 Sep.</td><td class="stars">268k+<div class="bar" style="width:92%"></div></td></tr>
+          <tr><td><a href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">anthropics/claude-code</a> <span class="tag off">Official</span></td><td>Claude Code itself. <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</td><td class="stars">148k<div class="bar" style="width:51%"></div></td></tr>
+          <tr><td><a href="https://github.com/garrytan/gstack" target="_blank" rel="noopener">garrytan/gstack</a> <span class="tag new">Rising</span></td><td>Garry Tan's "virtual engineering team": 23 roles and a think → plan → build → review → test → ship loop (<code>/autoplan</code>, <code>/review</code>, <code>/qa</code>, <code>/ship</code>). Clone into <code>~/.claude/skills/gstack</code> and run <code>./setup</code> (needs Bun).</td><td class="stars">134k<div class="bar" style="width:46%"></div></td></tr>
+          <tr><td><a href="https://github.com/Graphify-Labs/graphify" target="_blank" rel="noopener">Graphify-Labs/graphify</a> <span class="tag new">Rising</span></td><td>Turns a codebase into a queryable knowledge graph, parsed locally with tree-sitter. <code>uv tool install graphifyy &amp;&amp; graphify install</code>, then <code>/graphify .</code>. Was 119.7k on 20 Sep.</td><td class="stars">122k<div class="bar" style="width:42%"></div></td></tr>
+          <tr><td><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">JuliusBrussee/caveman</a></td><td>Skill that makes agent replies terse to save output tokens. <code>npx skills add JuliusBrussee/caveman</code>, then <code>/caveman lite</code>.</td><td class="stars">103.3k<div class="bar" style="width:36%"></div></td></tr>
+          <tr><td><a href="https://github.com/addyosmani/agent-skills" target="_blank" rel="noopener">addyosmani/agent-skills</a> <span class="tag new">Rising</span></td><td>Addy Osmani's engineering workflows: 25 skills, <code>/spec</code>, <code>/plan</code>, <code>/build</code>, <code>/test</code>, <code>/review</code>, <code>/ship</code>. <code>npx skills add addyosmani/agent-skills</code>.</td><td class="stars">99.2k<div class="bar" style="width:34%"></div></td></tr>
+          <tr><td><a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">rtk-ai/rtk</a></td><td>Rust CLI proxy that compresses shell output before the agent reads it (claims 60–90% fewer tokens). <code>brew install rtk &amp;&amp; rtk init -g</code>.</td><td class="stars">80.4k<div class="bar" style="width:28%"></div></td></tr>
+          <tr><td><a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" rel="noopener">shareAI-lab/learn-claude-code</a></td><td>17-chapter course on building an agent harness yourself: loop, tools, hooks, subagents, memory, MCP. Start with <code>s01_agent_loop</code>.</td><td class="stars">77.6k<div class="bar" style="width:27%"></div></td></tr>
+          <tr><td><a href="https://github.com/shanraisshan/claude-code-best-practice" target="_blank" rel="noopener">shanraisshan/claude-code-best-practice</a></td><td>Reference for subagents, commands, skills, hooks, MCP, settings and 10+ community workflows. Browse and copy patterns.</td><td class="stars">66.1k<div class="bar" style="width:23%"></div></td></tr>
+          <tr><td><a href="https://github.com/yetone/magpie" target="_blank" rel="noopener">yetone/magpie</a> <span class="tag new">New · trending</span></td><td>Menu-bar and terminal app that sets which model each coding agent uses. Try it on a spare machine first.</td><td class="stars">1.2k<div class="bar" style="width:1%"></div></td></tr>
+          <tr><td><a href="https://github.com/mikehasa/golive-skill" target="_blank" rel="noopener">mikehasa/golive-skill</a> <span class="tag new">New · trending</span></td><td>Alpha skill that deploys an agent-built app to your own accounts (Vercel/Netlify, Supabase/Neon, DNS, Stripe test mode). Review before trusting it with credentials.</td><td class="stars">821<div class="bar" style="width:1%"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">All counts were read from repo pages on 27 Sep (GitHub rounds them). The GitHub search API and github.com/trending weren't reachable this run, so "rising" is based on a 20 Sep claude-code topic leaderboard and "trending" on a 27 Sep daily digest mirror.</p>
+  </section>
+
+  <!-- OFFICIAL -->
+  <section id="official">
+    <div class="sec-head"><h2>Official Claude resources</h2><span class="kicker">Anthropic docs and engineering blog</span></div>
+    <div class="items">
+      <article class="item" data-id="o1">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">How we built Claude Code auto mode</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Engineering blog</span><span>25 Mar 2026</span></div>
+        <ul>
+          <li>Two layers: a prompt-injection check on incoming content, and a classifier that reviews each action before it runs.</li>
+          <li>A fast yes/no check runs first, with fuller reasoning only when needed. False positives drop from 8.5% to 0.4%.</li>
+          <li>Honest about limits: it still misses about 17% of truly risky actions, and a blocked agent is steered to a safer approach.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o2">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener">Harness design for long-running application development</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Engineering blog</span><span>24 Mar 2026</span></div>
+        <ul>
+          <li>Separate planner, generator and evaluator agents, because agents grading their own work praise mediocre results.</li>
+          <li>Turns subjective frontend quality into concrete grading criteria: design, originality, craft, functionality.</li>
+          <li>"Every component in a harness encodes an assumption about what the model can't do", so revisit scaffolding with each new model.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o3">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">Scaling Managed Agents: decoupling the brain from the hands</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Engineering blog</span><span>8 Apr 2026</span></div>
+        <ul>
+          <li>Separates the "brain" (Claude plus harness) from the "hands" (sandboxes and tools), so each can fail or be swapped independently.</li>
+          <li>About 60% faster median time-to-first-token, over 90% faster at p95.</li>
+          <li>The session log lives outside the context window, so the harness pulls slices of past events on demand.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o4">
+        <div class="item-top"><h3><a href="https://www.anthropic.com/engineering/how-we-contain-claude" target="_blank" rel="noopener">How we contain Claude across products</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Engineering blog</span><span>25 May 2026</span></div>
+        <ul>
+          <li>Three overlapping layers: environment (sandboxes, VMs), model (classifiers, prompts) and filtering outside content.</li>
+          <li>Throwaway containers for claude.ai, sandboxing with a human in the loop for Claude Code, full VMs for Cowork.</li>
+          <li>The worst failures came from Anthropic's own custom code, such as a proxy leaking data through approved domains.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o5">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Docs</span><span><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a></span></div>
+        <ul>
+          <li>Shell commands at fixed lifecycle points, so formatting, notifications and rule checks always happen.</li>
+          <li>Also covers hooks that ask a Claude model to make judgment calls.</li>
+          <li>Starts with a desktop notification when Claude is waiting for input.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o6">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Docs</span></div>
+        <ul>
+          <li>Each subagent has its own context window, system prompt, tools and permissions, and returns only a summary.</li>
+          <li>Markdown files with YAML frontmatter in <code>.claude/agents/</code>: tools, model, permission mode, memory, MCP servers, skills.</li>
+          <li>Invoked automatically by description, by @-mention, with <code>--agent</code>, or in the background.</li>
+        </ul>
+      </article>
+      <article class="item" data-id="o7">
+        <div class="item-top"><h3><a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Run Claude Code programmatically</a></h3><label class="check"><input type="checkbox"> read</label></div>
+        <div class="meta"><span class="tag off">Docs</span><span><a href="https://code.claude.com/docs/en/github-actions" target="_blank" rel="noopener">GitHub Actions</a></span><span class="tag">Seen in search only</span></div>
+        <ul>
+          <li>Running Claude Code without the interactive screen, for scripts and CI.</li>
+          <li>Pair with the GitHub Actions guide to run reviews or fixes on PRs.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- YOUTUBE -->
+  <section id="youtube">
+    <div class="sec-head"><h2>YouTube videos</h2><span class="kicker">Talks, workshops and tutorials</span></div>
+    <div class="vids">
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>@claude · 6 May 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=GMIWm5y90xA" target="_blank" rel="noopener">Code with Claude 2026: Opening Keynote</a></h3>
+        <ul><li>Ami Vora, Cat Wu and Boris Cherny.</li><li>Announces Multiagent Orchestration, Outcomes, Dreaming and Routines.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>@claude · May 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=IMZa42k6L6M" target="_blank" rel="noopener">What's New in Claude Code, with Dickson Tsai</a></h3>
+        <ul><li>Round-up of Code Review, Remote Agents and CI Auto-fix.</li><li>Good catch-up on features you may have missed.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>@claude · May 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=E9gaQHrw_rg" target="_blank" rel="noopener">Get to production faster with Claude Managed Agents</a></h3>
+        <ul><li>Jess Yan and Lance Martin on Multiagent Orchestration, Outcomes and Dreaming.</li><li>Pairs with the Managed Agents engineering post above.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Likely @claude · unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=YPOgIvC_RwA" target="_blank" rel="noopener">Memory and dreaming for self-learning agents</a></h3>
+        <ul><li>Agent memory and the "Dreaming" feature from the keynote.</li><li>For agents that learn across sessions.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Channel unverified · 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=qyPCVqFUyDo" target="_blank" rel="noopener">Boris Cherny: we cut 80% of Claude Code's prompt</a></h3>
+        <ul><li>Removing system-prompt scaffolding as models improved.</li><li>Same idea as the harness-design post: drop what the model no longer needs.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Channel unverified · 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=kAVRFYgCPg0" target="_blank" rel="noopener">The Future of MCP, David Soria Parra</a></h3>
+        <ul><li>MCP's co-creator on the 2026 roadmap.</li><li>Short and widely recommended for server builders.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Agentics Day · unverified</span>
+        <h3><a href="https://www.youtube.com/watch?v=k-bfLnR0VGo" target="_blank" rel="noopener">MCP in 2026: Context is All You Need</a></h3>
+        <ul><li>MCP as the context layer for agents.</li><li>Pairs with today's context engineering pick.</li></ul>
+      </div>
+      <div class="vid">
+        <span class="play"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor" opacity=".18"/><path d="M7 5.5v7l5.5-3.5z" fill="currentColor"/></svg>Channel unverified · 2026</span>
+        <h3><a href="https://www.youtube.com/watch?v=b8SV4U6fEIc" target="_blank" rel="noopener">How auto mode works with Claude Code</a></h3>
+        <ul><li>Walkthrough of the auto permission mode.</li><li>Pairs with the auto mode engineering post.</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section id="market">
+    <div class="sec-head"><h2>Best resources in the market</h2><span class="kicker">Courses, docs, newsletters</span></div>
+    <div class="res">
+      <a class="card" href="https://www.deeplearning.ai/courses/claude-code-a-highly-agentic-coding-assistant" target="_blank" rel="noopener"><b>DeepLearning.AI · Claude Code</b><span>Free short course: "A Highly Agentic Coding Assistant".</span><em>deeplearning.ai</em></a>
+      <a class="card" href="https://learn.deeplearning.ai/courses/agent-skills-with-anthropic/lesson/cniu9b/skills-with-claude-code" target="_blank" rel="noopener"><b>Agent Skills with Anthropic</b><span>Building skills for Claude Code and the Agent SDK (links to a lesson page).</span><em>learn.deeplearning.ai</em></a>
+      <a class="card" href="https://www.coursera.org/learn/claude-code" target="_blank" rel="noopener"><b>Coursera · Claude Code</b><span>Software engineering with generative AI agents.</span><em>coursera.org</em></a>
+      <a class="card" href="https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/" target="_blank" rel="noopener"><b>Simon Willison · Agentic Engineering Patterns</b><span>Ongoing guide to getting good results from coding agents; also on his Substack.</span><em>simonwillison.net</em></a>
+      <a class="card" href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener"><b>Claude Code docs</b><span>The official Claude Code reference: settings, hooks, subagents, plugins, MCP.</span><em>code.claude.com</em></a>
+      <a class="card" href="https://github.com/agentskills/agentskills" target="_blank" rel="noopener"><b>Agent Skills specification</b><span>The open SKILL.md standard and its documentation.</span><em>github.com/agentskills</em></a>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>How this edition was made:</b> five research agents searched the web in parallel, covering trends and news, community usage, GitHub and market resources, official docs and YouTube, and the nine picks of the day. Every link comes from a search result or page the agents saw. Picks were checked against the previous edition so none repeat.</p>
+    <p><b>Caveats:</b> the platform release notes and the plugin submission portal come from third-party trackers (Releasebot, CryptoBriefing) and weren't confirmed on official pages. Star counts were read from repo pages on 27 Sep because the GitHub API was unavailable. YouTube was rate-limited, so channels marked "unverified" weren't confirmed. The MongoDB <code>claude mcp add</code> command is adapted from its README and wasn't run. Snippets marked "adapted" are tailored versions of the credited source.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY='agentic-daily-read-2026-09-27', state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
+  var items=document.querySelectorAll('.item[data-id]'), prog=document.getElementById('progress');
+  function update(){
+    var n=0; items.forEach(function(el){ if(state[el.dataset.id]) n++; });
+    prog.textContent=n+' / '+items.length+' read';
+  }
+  items.forEach(function(el){
+    var cb=el.querySelector('.check input'); if(!cb) return;
+    cb.id='read-'+el.dataset.id;
+    cb.checked=!!state[el.dataset.id]; el.classList.toggle('done',cb.checked);
+    cb.addEventListener('change',function(){
+      state[el.dataset.id]=cb.checked; el.classList.toggle('done',cb.checked);
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+      update();
+    });
+  });
+  update();
+
+  function selectText(pre){
+    try{var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}catch(e){}
+  }
+  document.querySelectorAll('.try .copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pre=btn.closest('.try').querySelector('pre'), text=pre.textContent;
+      function done(label){ btn.textContent=label; setTimeout(function(){btn.textContent='Copy';},1600); }
+      try{
+        navigator.clipboard.writeText(text).then(function(){ done('Copied'); }).catch(function(){ selectText(pre); done('Selected'); });
+      }catch(e){ selectText(pre); done('Selected'); }
+    });
+  });
+})();
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>

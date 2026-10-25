@@ -1,0 +1,589 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Friday Java Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F3F5F2; --surface:#FFFFFF; --ink:#18221D; --muted:#56635C; --line:#D9E0DB;
+  --accent:#2F6B4A; --accent-soft:#E2EEE6; --amber:#9A6212; --amber-soft:#F6ECDC;
+  --code-bg:#15201A; --code-ink:#E4EDE7; --code-dim:#8FA398; --code-key:#9FD3B0; --code-str:#E8C58A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+    --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+    --code-bg:#0B110E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+  --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+  --code-bg:#0B110E;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.6 var(--body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;font-family:var(--body)}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mast{display:grid;gap:14px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.mast-top{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline}
+.demo-pill{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber);padding:6px 9px;border-radius:4px}
+.lede{font-size:17px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font:500 12.5px/1 var(--body);text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:7px 10px;border-radius:999px;background:var(--surface)}
+.toc a:hover{border-color:var(--accent);color:var(--accent)}
+section{display:grid;gap:16px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:6px}
+/* radar */
+.radar{display:grid;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.radar-row{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.radar-row:first-child{border-top:0}
+.radar-date{font:500 12.5px/1.5 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin-right:6px;vertical-align:2px}
+.tag.ga{background:var(--accent-soft);color:var(--accent)}
+.tag.pre{background:var(--amber-soft);color:var(--amber)}
+.tag.eol{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.radar-row p{font-size:14px;color:var(--muted);margin-top:3px}
+/* code */
+.code{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:8px;overflow:hidden}
+.code-bar{flex-wrap:wrap;gap:8px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #ffffff14;font:500 11.5px/1 var(--mono);color:var(--code-dim)}
+.copy{font:600 11px/1 var(--mono);background:transparent;color:var(--code-dim);border:1px solid #ffffff26;border-radius:4px;padding:5px 8px;cursor:pointer}
+.copy:hover{color:var(--code-ink);border-color:#ffffff55}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--mono);tab-size:2}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim);font-style:italic}
+/* feature: snippet of the week */
+.feature{display:grid;gap:16px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+.eli5{background:var(--amber-soft);border-radius:8px;padding:18px;display:grid;gap:10px}
+.eli5 .eyebrow{color:var(--amber)}
+.eli5 p{font-size:14.5px}
+@media (max-width:720px){.feature{grid-template-columns:1fr}.radar-row{grid-template-columns:1fr;gap:4px}}
+/* levels */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start}
+.meter{display:flex;gap:3px}
+.meter i{width:18px;height:4px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.level p{font-size:14px;color:var(--muted)}
+@media (max-width:720px){.levels{grid-template-columns:1fr}}
+/* tips */
+.tips{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.tips li{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.tips li:first-child{border-top:0}
+.tips .n{font:600 12px/1.6 var(--mono);color:var(--accent);min-width:3ch}
+.tips code,p code,td code,.qa code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.tips p{font-size:14px;color:var(--muted);margin-top:2px}
+/* qa */
+.qa{display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;gap:12px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+summary .lvl{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);flex:none;width:52px}
+summary::after{content:"+";margin-left:auto;color:var(--muted);font-family:var(--mono)}
+details[open] summary::after{content:"–"}
+.ans{padding:0 16px 16px 80px;display:grid;gap:8px;font-size:14.5px}
+@media (max-width:560px){.ans{padding-left:16px}}
+/* coding interview */
+.iq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:760px){.iq-grid{grid-template-columns:1fr}}
+.iq{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0}
+.iq-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.iq .task{font-size:14.5px}
+.iq .task li{margin-bottom:4px}
+.iq ul.task{margin:0;padding-left:18px}
+.iq details{border-color:var(--accent);background:transparent}
+.iq details summary{color:var(--accent);padding:10px 14px}
+.iq details summary::after{color:var(--accent)}
+.iq .sol{padding:0 14px 14px;display:grid;gap:10px;font-size:14px}
+.iq .sol p code,.iq .task code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.cx{display:flex;flex-wrap:wrap;gap:6px}
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font:600 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+/* two col lists */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.do{color:var(--accent)} .dont{color:var(--amber)}
+/* case study */
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:13.5px}
+.track{height:12px;background:var(--accent-soft);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.fill.warn{background:var(--amber)}
+@media (max-width:560px){.bar-row{grid-template-columns:1fr 60px}.bar-row .track{grid-column:1/-1;order:3}}
+.note{font-size:12.5px;color:var(--muted)}
+/* goals */
+.goals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.goals label{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px}
+.goals input{accent-color:var(--accent);margin-top:4px}
+.goals input:checked + span{color:var(--muted);text-decoration:line-through}
+/* sources */
+.sources{columns:2 280px;column-gap:24px;font-size:13.5px;padding-left:18px;margin:0}
+.sources li{break-inside:avoid;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a,.copy{transition:border-color .15s,color .15s}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Issue W39 · Friday 25 Sep 2026 · 10:00 Dhaka</span>
+    <span class="demo-pill">Demo issue</span>
+  </div>
+  <h1>Friday Java Brief</h1>
+  <p class="lede">Your weekly 15-minute catch-up on Java and Spring Boot. This week: JDK 27 went GA, Spring Boot 4.2 hit its first milestone, Lazy Constants is the new feature to try, and Java teams are shipping AI agents with Spring AI 2.0.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#radar">This week</a><a href="#snippet">Snippet of the week</a><a href="#newfeature">New Java feature</a><a href="#agentic">Agentic Java &amp; AI</a><a href="#levels">Basic → Advanced</a><a href="#tips">Tips &amp; tricks</a><a href="#interview">Interview Q&amp;A</a><a href="#coding">Coding interview</a><a href="#practices">Best practices</a><a href="#industry">Industry adoption</a><a href="#case">Real problem</a><a href="#goals">Goals</a>
+  </nav>
+</header>
+
+<section id="radar">
+  <div class="sec-head"><span class="eyebrow">Known things this week</span><h2>Release radar</h2></div>
+  <div class="radar">
+    <div class="radar-row"><span class="radar-date">16 Sep 2026</span><div><h3><span class="tag ga">GA</span>JDK 27 is out</h3><p>Nine JEPs. Final: G1 as default GC everywhere (523), post-quantum hybrid key exchange for TLS 1.3 (527), compact object headers on by default (534), JFR in-process data redaction (536). Still preview: Lazy Constants, primitive patterns in switch, Structured Concurrency (7th preview), PEM encodings.</p></div></div>
+    <div class="radar-row"><span class="radar-date">20 Aug 2026</span><div><h3><span class="tag pre">Milestone</span>Spring Boot 4.2.0-M1</h3><p>AMQP 1.0 support with RabbitMQ-specific features, image-based build cache for Buildpacks, 113 enhancements and fixes. Try it on a branch, not in production.</p></div></div>
+    <div class="radar-row"><span class="radar-date">Aug 2026</span><div><h3><span class="tag ga">Patch</span>Spring Boot 4.1.1 is the current stable line</h3><p>4.1 brought gRPC auto-configuration, an SSRF filter for HTTP clients, lazy datasource connections and automatic trace propagation into <code>@Async</code> methods. Supports Java 17 through 26.</p></div></div>
+    <div class="radar-row"><span class="radar-date">12 Jun 2026</span><div><h3><span class="tag ga">GA</span>Spring AI 2.0</h3><p>Built on Spring Boot 4 with composable tool calling. The go-to way to add LLM features to a Spring app.</p></div></div>
+    <div class="radar-row"><span class="radar-date">Jun 2026</span><div><h3><span class="tag eol">EOL</span>Spring Boot 3.5 open-source support ended</h3><p>Only paid commercial support remains. If a project is still on 3.x, plan the move to 4.x. Boot 4.0 OSS support ends December 2026, so target 4.1.</p></div></div>
+  </div>
+</section>
+
+<section id="snippet">
+  <div class="sec-head"><span class="eyebrow">Snippet of the week</span><h2>Declarative HTTP clients with <code style="font-size:.8em">@HttpExchange</code></h2>
+  <p>Write an interface, and Spring generates the HTTP client for you. It runs on <code>RestClient</code>, so it works in any Spring Boot 3.2+ or 4.x app.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>UserClient.java + ClientConfig.java</span><button class="copy" type="button" data-copy="c1">Copy</button></div>
+<pre id="c1"><span class="k">@HttpExchange</span>(<span class="s">"/users"</span>)
+<span class="k">public interface</span> UserClient {
+
+  <span class="k">@GetExchange</span>(<span class="s">"/{id}"</span>)
+  UserDto getById(<span class="k">@PathVariable</span> Long id);
+
+  <span class="k">@PostExchange</span>
+  UserDto create(<span class="k">@RequestBody</span> CreateUserRequest body);
+}
+
+<span class="k">@Configuration</span>
+<span class="k">class</span> ClientConfig {
+
+  <span class="k">@Bean</span>
+  UserClient userClient(RestClient.Builder builder) {
+    RestClient rest = builder
+        .baseUrl(<span class="s">"https://api.example.com"</span>)
+        .build();
+    <span class="k">return</span> HttpServiceProxyFactory
+        .builderFor(RestClientAdapter.create(rest))
+        .build()
+        .createClient(UserClient.<span class="k">class</span>);
+  }
+}
+
+<span class="c">// Usage: just inject it</span>
+UserDto u = userClient.getById(<span class="s">42L</span>);</pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>Imagine a menu at a restaurant. You point at "pizza" and a pizza comes. You never walk into the kitchen.</p>
+      <p>The interface is your menu. Each method is one dish: "get user 42". Spring is the waiter who carries your order to the other server and brings the answer back as a <code>UserDto</code>.</p>
+      <p>You write the menu. Spring does all the walking.</p>
+      <span class="eyebrow" style="margin-top:6px">Why it matters</span>
+      <p>Less code to test, one place for base URL and headers, and the client reads like documentation of the remote API.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="newfeature">
+  <div class="sec-head"><span class="eyebrow">New Java feature · JDK 27 · JEP 531 · Third preview</span><h2>Lazy Constants: <code style="font-size:.8em">final</code> fields that initialise on first use</h2>
+  <p>A <code>LazyConstant</code> computes its value the first time you call <code>get()</code>, then never again. The JVM treats the result like a real constant, so it can be optimised as well as a <code>static final</code> field. It replaces the double-checked locking and holder-class tricks people write for lazy singletons.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>PricingService.java · javac/java --enable-preview --release 27</span><button class="copy" type="button" data-copy="c3">Copy</button></div>
+<pre id="c3"><span class="c">// Before: thread-safe lazy init, the hard way</span>
+<span class="k">private volatile</span> ExchangeRates rates;
+ExchangeRates rates() {
+  ExchangeRates r = rates;
+  <span class="k">if</span> (r == <span class="k">null</span>) {
+    <span class="k">synchronized</span> (<span class="k">this</span>) {
+      r = rates;
+      <span class="k">if</span> (r == <span class="k">null</span>) rates = r = loadRates();
+    }
+  }
+  <span class="k">return</span> r;
+}
+
+<span class="c">// After: JDK 27 preview</span>
+<span class="k">private final</span> LazyConstant&lt;ExchangeRates&gt; rates =
+    LazyConstant.of(() -&gt; loadRates());
+
+BigDecimal toBdt(BigDecimal usd) {
+  <span class="k">return</span> usd.multiply(rates.get().usdToBdt());
+}</pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>A lunch box with a lid. Nobody packs it until the first time someone opens it. Then it's packed once, and everyone who opens it after gets the same lunch.</p>
+      <span class="eyebrow" style="margin-top:6px">Use it for</span>
+      <p>Loggers, config loaded from disk, expensive clients or lookup tables that slow down startup.</p>
+      <span class="eyebrow" style="margin-top:6px">Status</span>
+      <p>Preview only. It was called Stable Values in JDK 25 and renamed in JDK 26, and a fourth preview is already drafted, so the API can still change. Try it in side projects, not in production.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="agentic">
+  <div class="sec-head"><span class="eyebrow">Agentic Java development · Java AI features</span><h2>How Java teams are building with AI agents</h2>
+  <p>Two things are happening at once. Java developers use coding agents inside their IDE and build tools. And they build agents <em>in</em> Java with Spring AI, LangChain4j and Embabel.</p></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Framework</th><th>Who's behind it</th><th>How people use it</th><th>Maturity</th></tr></thead>
+    <tbody>
+      <tr><td>Spring AI 2.0</td><td>Spring team (Broadcom)</td><td>Adding LLM calls, tool calling and MCP servers to existing Boot 4 apps. Advisor chains handle validation and retry loops.</td><td><span class="tag ga">GA</span></td></tr>
+      <tr><td>LangChain4j</td><td>Dmytro Liubarskyi (Red Hat), backed by Microsoft</td><td>Provider-neutral LLM APIs, RAG pipelines, agent patterns. The New Stack reports hundreds of Microsoft customers run it in production.</td><td><span class="tag ga">Stable</span> <span class="tag pre">agentic module experimental</span></td></tr>
+      <tr><td>Embabel</td><td>Rod Johnson (creator of Spring)</td><td>Goal-oriented planning on top of Spring AI: <code>@Action</code> methods become steps, and their type signatures decide what can run next.</td><td><span class="tag pre">Pre-GA</span></td></tr>
+      <tr><td>Koog</td><td>JetBrains</td><td>Kotlin-native agents with type-safe tools and fault tolerance, for JVM teams that use Kotlin.</td><td><span class="tag pre">Newer</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="code">
+    <div class="code-bar"><span>Spring AI 2.0 · expose a Spring service as agent tools</span><button class="copy" type="button" data-copy="c4">Copy</button></div>
+<pre id="c4"><span class="k">@Component</span>
+<span class="k">class</span> OrderTools {
+
+  <span class="k">private final</span> OrderRepository orders; <span class="c">// your existing MongoDB repository</span>
+  OrderTools(OrderRepository orders) { <span class="k">this</span>.orders = orders; }
+
+  <span class="k">@Tool</span>(description = <span class="s">"Find an order by its public order number"</span>)
+  OrderDto findOrder(<span class="k">@ToolParam</span>(description = <span class="s">"e.g. ORD-10293"</span>) String number) {
+    <span class="k">return</span> orders.findByNumber(number).map(OrderDto::from).orElse(<span class="k">null</span>);
+  }
+}
+
+<span class="c">// The model decides when to call findOrder; Spring AI runs the round-trip</span>
+String answer = chatClient.prompt()
+    .user(<span class="s">"Where is order ORD-10293 and when will it arrive?"</span>)
+    .tools(orderTools)
+    .call()
+    .content();</pre>
+  </div>
+
+  <div class="pair">
+    <div class="box"><h3>What people are doing</h3><ul>
+      <li><strong>Turning services into MCP servers.</strong> In Spring AI 2.0, one <code>@McpTool</code> annotation exposes a service method to Claude, Cursor or any MCP client.</li>
+      <li><strong>Choosing workflows over free-roaming agents.</strong> At Spring I/O 2026, Timo Salm and Sandra Ahlgrimm built one meal-planner in Spring AI, LangChain4j-agentic and Embabel. Their advice: use fixed steps (parallel fetch, then a validate-and-retry loop) to keep cost and behaviour predictable.</li>
+      <li><strong>Showing the model fewer tools.</strong> <code>ToolSearchToolCallingAdvisor</code> (Spring AI) and <code>@UnfoldingTools</code> (Embabel) reveal tools on demand, so the prompt isn't flooded with every tool's schema.</li>
+      <li><strong>Letting the model fix its own JSON.</strong> <code>StructuredOutputValidationAdvisor</code> checks the reply against your record type and asks the model to try again.</li>
+    </ul></div>
+    <div class="box"><h3>Agentic tools in the Java workflow</h3><ul>
+      <li><strong>IntelliJ IDEA</strong> now runs outside agents through the Agent Client Protocol (ACP) and supports Agent Skills, according to JetBrains' September roundup.</li>
+      <li><strong>Gradle</strong> is adding agent-facing features ("Gradle Is Going Agentic"), so agents can read build output and fix builds.</li>
+      <li><strong>Terminal agents</strong> such as Claude Code handle Boot 3 → 4 migrations, test writing and <code>@Transactional</code> audits across a repo. A <code>CLAUDE.md</code> with your build commands and conventions is what makes them reliable.</li>
+      <li><strong>Try this week:</strong> ask your agent to find every <code>@Transactional</code> method that calls an external API. That's the case study below.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="levels">
+  <div class="sec-head"><span class="eyebrow">Learning path · one topic per level</span><h2>Basic → Advanced</h2></div>
+  <div class="levels">
+    <article class="level"><div class="meter" aria-label="Basic"><i class="on"></i><i></i><i></i></div><h3>Records as DTOs</h3><p>Replace Lombok-heavy DTO classes with <code>record UserDto(Long id, String name) {}</code>. Jackson maps records out of the box, and they are immutable by default.</p></article>
+    <article class="level"><div class="meter" aria-label="Intermediate"><i class="on"></i><i class="on"></i><i></i></div><h3>Sealed types + pattern switch</h3><p>Model results as <code>sealed interface Result permits Ok, Err</code>, then <code>switch</code> over them. The compiler tells you when you miss a case. Final since Java 21.</p></article>
+    <article class="level"><div class="meter" aria-label="Advanced"><i class="on"></i><i class="on"></i><i class="on"></i></div><h3>Structured Concurrency</h3><p>Now in its 7th preview in JDK 27. Treat a group of subtasks as one unit: if one fails, the others are cancelled. Read about it, but keep it out of production until it is final.</p></article>
+  </div>
+  <div class="code">
+    <div class="code-bar"><span>Intermediate · PaymentResult.java (Java 21+)</span><button class="copy" type="button" data-copy="c2">Copy</button></div>
+<pre id="c2"><span class="k">sealed interface</span> PaymentResult <span class="k">permits</span> Paid, Declined, Pending {}
+<span class="k">record</span> Paid(String txId)          <span class="k">implements</span> PaymentResult {}
+<span class="k">record</span> Declined(String reason)    <span class="k">implements</span> PaymentResult {}
+<span class="k">record</span> Pending(Instant retryAt)   <span class="k">implements</span> PaymentResult {}
+
+String message(PaymentResult r) {
+  <span class="k">return switch</span> (r) {
+    <span class="k">case</span> Paid(<span class="k">var</span> tx)         -> <span class="s">"Paid: "</span> + tx;
+    <span class="k">case</span> Declined(<span class="k">var</span> why)    -> <span class="s">"Declined: "</span> + why;
+    <span class="k">case</span> Pending(<span class="k">var</span> at)      -> <span class="s">"Retry at "</span> + at;
+  }; <span class="c">// no default needed: the compiler knows every case</span>
+}</pre>
+  </div>
+</section>
+
+<section id="tips">
+  <div class="sec-head"><span class="eyebrow">Must-have this week</span><h2>Tips &amp; tricks</h2></div>
+  <ol class="tips">
+    <li><span class="n">T1</span><div><h3>Turn on virtual threads with one line</h3><p><code>spring.threads.virtual.enabled=true</code> makes Tomcat, <code>@Async</code> and scheduling use virtual threads. Great for I/O-heavy APIs. Since JDK 24, <code>synchronized</code> blocks no longer pin the carrier thread, so the old warning is mostly gone.</p></div></li>
+    <li><span class="n">T2</span><div><h3>Keep the JVM alive when only virtual threads run</h3><p>Virtual threads are daemon threads. For a scheduler-only app, add <code>spring.main.keep-alive=true</code> or the process can exit right after startup.</p></div></li>
+    <li><span class="n">T3</span><div><h3>Free memory by upgrading to JDK 27</h3><p>Compact object headers are now on by default. JetBrains' September roundup reports 10–20% less heap and 5–10% more throughput on typical workloads. Measure on your own service before and after.</p></div></li>
+    <li><span class="n">T4</span><div><h3>Lazy database connections (Boot 4.1)</h3><p><code>spring.datasource.connection-fetch=lazy</code> delays taking a physical connection until the first SQL runs. Useful when a <code>@Transactional</code> method often returns early from cache.</p></div></li>
+    <li><span class="n">T5</span><div><h3>Traces now follow <code>@Async</code> (Boot 4.1)</h3><p>Micrometer context now propagates into async methods automatically. You can delete any custom <code>TaskDecorator</code> you wrote only to copy the trace ID.</p></div></li>
+  </ol>
+</section>
+
+<section id="interview">
+  <div class="sec-head"><span class="eyebrow">Industry &amp; interview questions</span><h2>Interview Q&amp;A</h2></div>
+  <div class="qa">
+    <details open><summary><span class="lvl">Basic</span>What is the difference between <code>@Component</code> and <code>@Bean</code>?</summary><div class="ans"><p><code>@Component</code> goes on a class you own, and component scanning picks it up. <code>@Bean</code> goes on a method inside a <code>@Configuration</code> class and returns an object you build yourself. Use <code>@Bean</code> for third-party classes you cannot annotate, or when construction needs logic.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>Why does <code>@Transactional</code> sometimes do nothing?</summary><div class="ans"><p>Spring applies it through a proxy. If a method in the same class calls another <code>@Transactional</code> method with <code>this.save()</code>, the call skips the proxy and no transaction starts. Other traps: the method is <code>private</code>, or the exception is checked (only unchecked exceptions roll back by default).</p><p>Fix: move the method to another bean, or use <code>rollbackFor = Exception.class</code> for checked exceptions.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>When should you not use virtual threads?</summary><div class="ans"><p>For CPU-bound work, since they add no extra CPU. Also when you rely on a small fixed pool as a throttle: with virtual threads you can suddenly open 10,000 database calls at once. Limit concurrency with a <code>Semaphore</code> or a right-sized connection pool instead.</p></div></details>
+    <details><summary><span class="lvl">Senior</span>What changed in Spring Boot 4 that affects a migration from 3.x?</summary><div class="ans"><p>Boot 4 sits on Spring Framework 7 and Jakarta EE 11, keeps Java 17 as the baseline, adds JSpecify null-safety annotations across the portfolio, and splits auto-configuration into smaller modules. Plan for dependency renames, a Jackson 3 upgrade, and removal of APIs deprecated in 3.x.</p></div></details>
+  </div>
+</section>
+
+<section id="coding">
+  <div class="sec-head"><span class="eyebrow">Coding interview · one Java + one Spring Boot every week</span><h2>Week 1: write the code</h2>
+  <p>Try each one on paper or in your IDE for 15 minutes before opening the solution.</p></div>
+  <div class="iq-grid">
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Java · Week 1</span><span class="tag ga">Easy</span></div>
+      <h3>Is this string a palindrome?</h3>
+      <ul class="task">
+        <li>Write <code>boolean isPalindrome(String s)</code>.</li>
+        <li>Ignore case, spaces and punctuation. Only letters and digits count.</li>
+        <li>Don't use <code>StringBuilder.reverse()</code>. Aim for O(1) extra space.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Expected</span></div>
+<pre>isPalindrome(<span class="s">"A man, a plan, a canal: Panama"</span>) <span class="c">// true</span>
+isPalindrome(<span class="s">"race a car"</span>)                     <span class="c">// false</span>
+isPalindrome(<span class="s">""</span>)                               <span class="c">// true</span></pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <div class="code">
+            <div class="code-bar"><span>Palindrome.java</span><button class="copy" type="button" data-copy="iq1">Copy</button></div>
+<pre id="iq1"><span class="k">public static boolean</span> isPalindrome(String s) {
+  <span class="k">int</span> i = <span class="s">0</span>, j = s.length() - <span class="s">1</span>;
+  <span class="k">while</span> (i &lt; j) {
+    <span class="k">char</span> a = s.charAt(i), b = s.charAt(j);
+    <span class="k">if</span> (!Character.isLetterOrDigit(a)) { i++; <span class="k">continue</span>; }
+    <span class="k">if</span> (!Character.isLetterOrDigit(b)) { j--; <span class="k">continue</span>; }
+    <span class="k">if</span> (Character.toLowerCase(a) != Character.toLowerCase(b)) {
+      <span class="k">return false</span>;
+    }
+    i++;
+    j--;
+  }
+  <span class="k">return true</span>;
+}</pre>
+          </div>
+          <p><strong>How it works.</strong> Two pointers start at each end and walk inward. Skip anything that isn't a letter or digit, compare the rest in lower case, and stop at the first mismatch.</p>
+          <div class="cx"><span class="tag ga">Time O(n)</span><span class="tag ga">Space O(1)</span></div>
+          <p><strong>Follow-up they'll ask.</strong> Why not <code>new StringBuilder(clean).reverse().equals(clean)</code>? It works, but it builds two extra strings (O(n) memory). Also say what you'd do with <code>null</code>: throw, or return <code>false</code>, and agree it with the interviewer.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Spring Boot · Week 1</span><span class="tag ga">Easy</span></div>
+      <h3>Fix the endpoint that never returns 404</h3>
+      <ul class="task">
+        <li>What does <code>GET /api/users/unknown-id</code> return with this code?</li>
+        <li>Change it to return <strong>404</strong> when the user doesn't exist.</li>
+        <li>Don't return the MongoDB document directly.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>UserController.java (buggy)</span></div>
+<pre><span class="k">@RestController</span>
+<span class="k">@RequestMapping</span>(<span class="s">"/api/users"</span>)
+<span class="k">class</span> UserController {
+  <span class="k">private final</span> UserRepository repo;
+  UserController(UserRepository repo) { <span class="k">this</span>.repo = repo; }
+
+  <span class="k">@GetMapping</span>(<span class="s">"/{id}"</span>)
+  User getUser(<span class="k">@PathVariable</span> String id) {
+    <span class="k">return</span> repo.findById(id).orElse(<span class="k">null</span>);
+  }
+}</pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <p><strong>Answer.</strong> It returns <strong>200 OK with an empty body</strong>. Returning <code>null</code> from a controller method is not an error to Spring, so the client can't tell "not found" from "found".</p>
+          <div class="code">
+            <div class="code-bar"><span>UserController.java (fixed)</span><button class="copy" type="button" data-copy="iq2">Copy</button></div>
+<pre id="iq2"><span class="k">record</span> UserResponse(String id, String name, String email) {
+  <span class="k">static</span> UserResponse from(User u) {
+    <span class="k">return new</span> UserResponse(u.getId(), u.getName(), u.getEmail());
+  }
+}
+
+<span class="k">@GetMapping</span>(<span class="s">"/{id}"</span>)
+ResponseEntity&lt;UserResponse&gt; getUser(<span class="k">@PathVariable</span> String id) {
+  <span class="k">return</span> repo.findById(id)
+      .map(UserResponse::from)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+}</pre>
+          </div>
+          <p><strong>Why the record.</strong> The DTO controls exactly which fields leave the API, so adding a <code>passwordHash</code> field to the document later can't leak it.</p>
+          <p><strong>Alternative.</strong> <code>.orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))</code>. With <code>spring.mvc.problemdetails.enabled=true</code> the client gets a standard RFC 9457 error body.</p>
+          <p><strong>Follow-up they'll ask.</strong> Where would you handle this for every controller at once? In one <code>@RestControllerAdvice</code> that maps a custom <code>UserNotFoundException</code> to 404. That's Week 3.</p>
+        </div>
+      </details>
+    </article>
+
+  </div>
+
+  <details>
+    <summary><span class="lvl">Plan</span>The 20-week question plan</summary>
+    <div class="tbl" style="border:0;border-radius:0;border-top:1px solid var(--line)"><table>
+      <thead><tr><th>Week</th><th>Java (write a program)</th><th>Spring Boot (write or fix the code)</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1 · now</td><td>Palindrome string</td><td>Controller that never returns 404</td></tr>
+        <tr><td class="num">2</td><td>Anagram check</td><td>Profiles + <code>@ConfigurationProperties</code> record</td></tr>
+        <tr><td class="num">3</td><td>First non-repeating character</td><td>Circular dependency, constructor injection</td></tr>
+        <tr><td class="num">4</td><td>Find duplicates in an array</td><td><code>@Valid</code> request validation → clean 400</td></tr>
+        <tr><td class="num">5</td><td>Second largest without sorting</td><td><code>@RestControllerAdvice</code> + ProblemDetail</td></tr>
+        <tr><td class="num">6</td><td>Fibonacci: loop, recursion, memo</td><td>JPA N+1 query fix</td></tr>
+        <tr><td class="num">7</td><td>Primes up to n (sieve)</td><td><code>@Transactional</code> self-invocation bug</td></tr>
+        <tr><td class="num">8</td><td>Word frequency with streams</td><td>Pagination with <code>Pageable</code> on MongoDB</td></tr>
+        <tr><td class="num">9</td><td>Remove duplicates, keep order</td><td>Custom MongoDB query + the index it needs</td></tr>
+        <tr><td class="num">10</td><td>Reverse a linked list</td><td>Secure an endpoint with <code>SecurityFilterChain</code></td></tr>
+        <tr><td class="num">11</td><td>Balanced brackets with a Deque</td><td><code>@WebMvcTest</code> + MockMvc test</td></tr>
+        <tr><td class="num">12</td><td>Merge two sorted arrays</td><td>Custom Actuator health indicator</td></tr>
+        <tr><td class="num">13</td><td>Binary search</td><td>Structured logging + Micrometer tracing</td></tr>
+        <tr><td class="num">14</td><td>LRU cache with LinkedHashMap</td><td><code>@Cacheable</code> with eviction</td></tr>
+        <tr><td class="num">15</td><td>equals/hashCode bug in a map key</td><td><code>@Async</code> + virtual threads</td></tr>
+        <tr><td class="num">16</td><td>Immutable class</td><td>Convert an endpoint to WebFlux</td></tr>
+        <tr><td class="num">17</td><td>Thread-safe lazy singleton</td><td>Spring Modulith module boundaries</td></tr>
+        <tr><td class="num">18</td><td>Producer-consumer, BlockingQueue</td><td>HTTP client with timeouts and retry</td></tr>
+        <tr><td class="num">19</td><td>Combine two calls, CompletableFuture</td><td>Idempotent POST with Idempotency-Key</td></tr>
+        <tr><td class="num">20</td><td>Fix ConcurrentModificationException</td><td>Fix a Boot 3 → 4 migration break</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+
+  <div class="box">
+    <h3>Go deeper: similar question banks</h3>
+    <ul>
+      <li><a href="https://www.digitalocean.com/community/tutorials/java-programming-interview-questions">Java programming interview questions · DigitalOcean</a> (the style this series follows)</li>
+      <li><a href="https://www.java67.com/2020/03/top-50-java-coding-programming-problems-solutions.html">Top 53 Java programs for coding interviews · Java67</a></li>
+      <li><a href="https://javarevisited.blogspot.com/2015/01/top-20-string-coding-interview-question-programming-interview.html">Top 20 string coding questions · Javarevisited</a> (Weeks 1–3 live here)</li>
+      <li><a href="https://www.index.dev/interview-questions/spring-boot-coding-challenges">40 Spring Boot coding challenges with solutions · index.dev</a></li>
+      <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a> (the Spring track follows this order)</li>
+      <li><a href="https://www.interviewbit.com/spring-boot-interview-questions/">Spring Boot interview questions · InterviewBit</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="practices">
+  <div class="sec-head"><span class="eyebrow">Best practices · Industry practices</span><h2>Do this, avoid that</h2></div>
+  <div class="pair">
+    <div class="box"><h3 class="do">Do</h3><ul>
+      <li>Bind config to a record: <code>@ConfigurationProperties("app.mail") record MailProps(String host, int port)</code>.</li>
+      <li>Use constructor injection only. It makes beans immutable and easy to unit-test.</li>
+      <li>Return DTOs from controllers, never JPA entities or MongoDB documents.</li>
+      <li>Add a MongoDB index for every field you filter or sort on in production queries.</li>
+      <li>Keep Actuator <code>health</code> and <code>info</code> public, everything else behind auth.</li>
+    </ul></div>
+    <div class="box"><h3 class="dont">Avoid</h3><ul>
+      <li>Field injection with <code>@Autowired</code> on private fields.</li>
+      <li>Catching <code>Exception</code> in every controller. Use one <code>@RestControllerAdvice</code>.</li>
+      <li>Calling external APIs inside a DB transaction. It holds the connection while you wait.</li>
+      <li>Running preview features (Structured Concurrency, Lazy Constants) in production.</li>
+      <li>Staying on Boot 3.5 without paid support: it no longer gets free security fixes.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="industry">
+  <div class="sec-head"><span class="eyebrow">How other industries adopt it</span><h2>Patterns by industry</h2><p>Common patterns tied to this week's releases. These are general adoption patterns, not claims about named companies.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Industry</th><th>What they use</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Banking &amp; fintech</td><td>JDK 27 post-quantum TLS 1.3 (JEP 527), PEM API</td><td>Regulators ask for crypto agility now, against "harvest now, decrypt later" attacks.</td></tr>
+      <tr><td>News &amp; media</td><td>Virtual threads, declarative HTTP clients</td><td>One article page fans out to many backend calls (ads, paywall, recommendations). Cheap threads cut latency.</td></tr>
+      <tr><td>E-commerce</td><td>Spring AI 2.0 tool calling, vector search</td><td>Product search and support bots that call existing Spring services as tools.</td></tr>
+      <tr><td>Telecom &amp; IoT</td><td>Spring gRPC auto-config (Boot 4.1)</td><td>Compact binary protocol between many internal services.</td></tr>
+      <tr><td>Healthcare</td><td>JFR in-process data redaction (JEP 536)</td><td>Profile in production without leaking secrets or patient data into recordings.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="case">
+  <div class="sec-head"><span class="eyebrow">Real problem, solved with data</span><h2>"Our API times out at lunch hour"</h2></div>
+  <div class="case">
+    <p><strong>Problem.</strong> A Spring Boot API has a HikariCP pool of 10 connections. Each request opens a <code>@Transactional</code> method, calls a 300 ms external pricing API, then writes to the database. At peak, requests wait for a free connection and time out.</p>
+    <p><strong>Diagnosis.</strong> Each request holds a connection for the whole 340 ms, but only uses it for about 40 ms of SQL. The connection is idle 88% of the time it is held.</p>
+    <div class="bars" role="img" aria-label="Connection hold time per request: before 340 ms, after 40 ms. Max throughput: before 29 requests per second, after 250.">
+      <div class="bar-row"><span>Hold time · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">340 ms</span></div>
+      <div class="bar-row"><span>Hold time · after</span><div class="track"><div class="fill" style="width:11.8%"></div></div><span class="num">40 ms</span></div>
+      <div class="bar-row"><span>Max req/s · before</span><div class="track"><div class="fill warn" style="width:11.6%"></div></div><span class="num">~29</span></div>
+      <div class="bar-row"><span>Max req/s · after</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="num">~250</span></div>
+    </div>
+    <p><strong>Fix.</strong> Call the pricing API <em>before</em> the transaction starts, and keep only the write inside <code>@Transactional</code>. Max throughput ≈ pool size ÷ hold time = 10 ÷ 0.04 s = 250 req/s, up from 10 ÷ 0.34 s ≈ 29 req/s. Boot 4.1's lazy connection fetch helps too, when the code path cannot be split.</p>
+    <p class="note">Illustrative numbers for a worked example. Measure your own with <code>hikaricp.connections.usage</code> in Actuator metrics.</p>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="sec-head"><span class="eyebrow">Goals for next week</span><h2>Try it before next Friday</h2><p>Ticks are saved in this browser only.</p></div>
+  <ul class="goals">
+    <li><label><input type="checkbox" id="g1"><span>Replace one <code>RestTemplate</code> call in a side project with an <code>@HttpExchange</code> interface.</span></label></li>
+    <li><label><input type="checkbox" id="g2"><span>Run one service on JDK 27 locally and compare heap usage in Actuator.</span></label></li>
+    <li><label><input type="checkbox" id="g3"><span>Find one <code>@Transactional</code> method that calls an external API and move the call out.</span></label></li>
+    <li><label><input type="checkbox" id="g4"><span>Practise the four interview answers out loud, 60 seconds each.</span></label></li>
+  </ul>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><span class="eyebrow">Sources this week</span></div>
+  <ol class="sources">
+    <li><a href="https://www.infoq.com/news/2026/09/java27-released/">Java 27 released · InfoQ</a></li>
+    <li><a href="https://inside.java/2026/09/15/jdk-27-available/">The Arrival of Java 27 · Inside.java</a></li>
+    <li><a href="https://blog.jetbrains.com/idea/2026/09/java-annotated-monthly-september-2026/">Java Annotated Monthly, Sep 2026 · JetBrains</a></li>
+    <li><a href="https://www.infoq.com/news/2026/06/spring-boot-4-1/">Spring Boot 4.1 features · InfoQ</a></li>
+    <li><a href="https://spring.io/blog/2026/08/20/spring-boot-4-2-0-M1-available-now/">Spring Boot 4.2.0-M1 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/06/12/spring-ai-2-0-0-GA-available-now/">Spring AI 2.0 GA · spring.io</a></li>
+    <li><a href="https://endoflife.date/spring-boot">Spring Boot support dates · endoflife.date</a></li>
+    <li><a href="https://www.baeldung.com/spring-boot-4-spring-framework-7">Spring Boot 4 &amp; Framework 7 · Baeldung</a></li>
+    <li><a href="https://openjdk.org/jeps/531">JEP 531: Lazy Constants (Third Preview) · OpenJDK</a></li>
+    <li><a href="https://download.java.net/java/early_access/jdk27/docs/api/java.base/java/lang/LazyConstant.html">LazyConstant Javadoc · JDK 27</a></li>
+    <li><a href="https://softwaremill.com/jep-526-stable-values-become-lazy-constants/">Stable Values become Lazy Constants · SoftwareMill</a></li>
+    <li><a href="https://spring.io/blog/2026/06/15/spring-ai-composable-tool-calling/">Composable tool calling in Spring AI 2.0 · spring.io</a></li>
+    <li><a href="https://thenewstack.io/java-developers-get-multiple-paths-to-building-ai-agents/">Java developers get multiple paths to AI agents · The New Stack</a></li>
+    <li><a href="https://neatguycoding.com/posts/2026-05-18-spring-io-2026-comparing-agentic-ai-frameworks-for-java-by-timo-salm-sandra-ahlgrimm-sp/">Comparing agentic AI frameworks for Java · Spring I/O 2026 recap</a></li>
+  </ol>
+</section>
+
+<footer>Friday Java Brief · generated every Friday at 10:00 Asia/Dhaka · demo issue built 24 Sep 2026</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.copy); var txt=el.innerText;
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected'}
+    try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+  });
+});
+document.querySelectorAll('.goals input').forEach(function(cb){
+  var key='fjb-w39-'+cb.id;
+  try{cb.checked=localStorage.getItem(key)==='1'}catch(e){}
+  cb.addEventListener('change',function(){try{localStorage.setItem(key,cb.checked?'1':'0')}catch(e){}});
+});
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

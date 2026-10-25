@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code project setup checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --page:#F2F8FC; --ink:#1E3550; --muted:#667A90; --rule:#E2EDF5; --soft:#F5FAFD;
+  --navy:#004081; --accent:#00A9DC; --accent-ink:#0083AE; --accent-soft:#E8F6FC; --accent-line:#BFE6F5;
+  --req:#B8483F; --req-soft:#FDEEEC; --done:#2C8F5F; --done-soft:#EAF7F0; --code:#F3F7FB;
+  --sans:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --paper:#13263B; --page:#0E1D2E; --ink:#E6EEF7; --muted:#9DB0C6; --rule:#22405E; --soft:#17304A;
+  --navy:#9CC8F0; --accent:#33BDE6; --accent-ink:#62CCEE; --accent-soft:#163650; --accent-line:#245A7A;
+  --req:#F09A92; --req-soft:#3A2526; --done:#74D0A3; --done-soft:#183A2C; --code:#183049;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth}
+body{margin:0; background:var(--page); color:var(--ink); font:400 16px/1.6 var(--sans); -webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--sans); line-height:1.2; margin:0; color:var(--navy)}
+h1{font-size:clamp(26px,4vw,34px); font-weight:700; letter-spacing:-.01em}
+h2{font-size:19px; font-weight:600}
+h3{font-size:22px; font-weight:700}
+p{margin:0}
+code{font:400 .86em var(--mono); background:var(--code); padding:1px 6px; border-radius:5px; word-break:break-word}
+pre{font:400 13px/1.6 var(--mono); background:var(--code); border:1px solid var(--rule); padding:14px 16px; overflow-x:auto; margin:10px 0 0; border-radius:10px}
+
+.sheet{max-width:880px; margin:28px auto 64px; background:var(--paper); border:1px solid var(--rule); border-radius:22px; padding:28px 32px 44px}
+
+/* Header */
+.doc-head{background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:16px; padding:26px 28px; display:grid; grid-template-columns:1fr 150px; gap:20px; align-items:center}
+.brand{display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:14px; color:var(--accent-ink); background:var(--paper); border-radius:999px; padding:4px 12px 4px 8px; margin-bottom:12px}
+.brand i{width:10px; height:10px; border-radius:50%; background:var(--accent)}
+.doc-meta{color:var(--muted); margin-top:8px; max-width:58ch}
+.illus{width:100%; height:auto}
+.fields{grid-column:1 / -1; display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.fields label{display:block; font-size:13px; font-weight:500; color:var(--muted); margin-bottom:4px}
+.fields input{width:100%; font:400 15px var(--sans); color:var(--ink); background:var(--paper); border:1px solid var(--accent-line); padding:8px 12px; border-radius:10px}
+.fields input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* Summary */
+.summary{display:flex; flex-wrap:wrap; align-items:center; gap:14px 24px; padding:22px 4px 6px}
+.summary .total{font-size:28px; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums}
+.summary .total small{font-size:14px; font-weight:400; color:var(--muted)}
+.meter{flex:1 1 200px; height:10px; background:var(--accent-soft); border-radius:999px; overflow:hidden}
+.meter i{display:block; height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .3s ease}
+.req-status{font-size:14px; color:var(--muted); background:var(--req-soft); padding:4px 12px; border-radius:999px}
+.req-status b{color:var(--req); font-weight:600}
+.req-status.ok{background:var(--done-soft)}
+.req-status.ok b{color:var(--done)}
+.actions{display:flex; gap:8px; flex-wrap:wrap}
+button{font:600 14px var(--sans); color:var(--accent-ink); background:var(--paper); border:1px solid var(--accent-line); padding:8px 16px; border-radius:999px; cursor:pointer}
+button:hover{background:var(--accent-soft)}
+#btn-print{background:var(--accent); color:#fff; border-color:var(--accent)}
+#btn-print:hover{background:var(--accent-ink); border-color:var(--accent-ink)}
+button:focus-visible, input:focus-visible, summary:focus-visible, .ms-card:focus-visible{outline:3px solid var(--accent-line); outline-offset:2px}
+.legend{display:flex; flex-wrap:wrap; gap:8px 22px; font-size:14px; color:var(--muted); padding:10px 4px 0}
+.mark{display:inline-block; font-size:12px; font-weight:600; border-radius:999px; padding:1px 10px; line-height:20px; white-space:nowrap}
+.mark.req{color:var(--req); background:var(--req-soft)}
+.mark.rec{color:var(--muted); background:var(--soft); border:1px solid var(--rule)}
+
+/* Milestone cards */
+.ms-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:22px}
+.ms-card{display:block; text-decoration:none; color:inherit; background:var(--soft); border:1px solid var(--rule); border-radius:14px; padding:14px 16px}
+.ms-card:hover{border-color:var(--accent-line); background:var(--accent-soft)}
+.ms-card .ic{font-size:22px; line-height:1}
+.ms-card .k{font-size:13px; color:var(--muted); margin-top:8px}
+.ms-card .nm{font-weight:600; color:var(--navy); line-height:1.3}
+.ms-card .ct{font-size:13px; color:var(--muted); margin-top:10px; font-variant-numeric:tabular-nums}
+.ms-bar{height:6px; background:var(--paper); border-radius:999px; overflow:hidden; margin-top:6px}
+.ms-bar i{display:block; height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .3s ease}
+.ms-card.full{background:var(--done-soft); border-color:transparent}
+.ms-card.full .ct{color:var(--done); font-weight:600}
+.ms-card.full .ms-bar i{background:var(--done)}
+
+/* Milestone headers */
+.milestone{margin-top:48px; padding:18px 22px; background:var(--accent-soft); border-radius:16px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap}
+.milestone .row{display:flex; gap:14px; align-items:center}
+.milestone .ic{font-size:28px; width:52px; height:52px; display:grid; place-items:center; background:var(--paper); border-radius:14px; flex:none}
+.milestone .k{font-size:13px; color:var(--accent-ink); font-weight:600}
+.milestone .when{color:var(--muted); font-size:15px; margin-top:2px}
+.milestone .st{font-size:14px; font-weight:600; color:var(--muted); background:var(--paper); padding:5px 12px; border-radius:999px; white-space:nowrap}
+.milestone.full{background:var(--done-soft)}
+.milestone.full .st{color:var(--done)}
+
+/* Sections */
+section{margin-top:30px}
+.sec-head{display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:0 4px 8px}
+.sec-head .n{color:var(--accent-ink); font-weight:600; margin-right:8px}
+.sec-count{font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; background:var(--soft); border:1px solid var(--rule); padding:2px 10px; border-radius:999px}
+.sec-count.full{color:var(--done); background:var(--done-soft); border-color:transparent; font-weight:600}
+.sec-intro{color:var(--muted); font-size:15px; padding:0 4px; max-width:66ch}
+ul.items{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:8px}
+li.item{display:grid; grid-template-columns:26px 1fr auto; gap:4px 14px; padding:14px 16px; border:1px solid var(--rule); border-radius:12px; background:var(--paper); transition:background .15s ease, border-color .15s ease}
+li.item:hover{border-color:var(--accent-line)}
+li.item.checked{background:var(--done-soft); border-color:transparent}
+li.item input[type=checkbox]{appearance:none; -webkit-appearance:none; width:22px; height:22px; margin:1px 0 0; border:2px solid var(--accent-line); border-radius:7px; background:var(--paper); cursor:pointer; display:grid; place-items:center}
+li.item input[type=checkbox]::after{content:""; width:6px; height:11px; border:solid #fff; border-width:0 2.5px 2.5px 0; transform:rotate(45deg) translate(-1px,-1px); opacity:0}
+li.item input[type=checkbox]:checked{background:var(--done); border-color:var(--done)}
+li.item input[type=checkbox]:checked::after{opacity:1}
+li.item input[type=checkbox]:focus-visible{outline:3px solid var(--accent-line); outline-offset:2px}
+li.item > div{min-width:0}
+li.item .text{cursor:pointer}
+li.item .t{font-weight:600}
+li.item.checked .t{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--muted)}
+li.item .d{color:var(--muted); font-size:15px; margin-top:2px}
+li.item details{margin-top:6px; font-size:14px}
+li.item details .copy-row{margin-top:6px}
+li.item details button{padding:4px 12px; font-size:13px}
+.sec-intro a{color:var(--accent-ink); font-weight:600}
+li.item > .mark{align-self:start; justify-self:end; min-width:122px; text-align:center; margin-top:1px}
+li.item summary{cursor:pointer; color:var(--accent-ink); font-weight:600; width:max-content}
+
+/* Appendix */
+.appendix{margin-top:52px; padding:22px 24px; background:var(--soft); border:1px solid var(--rule); border-radius:16px}
+.appendix .sec-head{padding:0}
+.appendix p{margin-top:10px; max-width:66ch}
+.appendix pre{background:var(--paper)}
+.copy-row{display:flex; justify-content:flex-end; margin-top:8px}
+footer{margin-top:32px; padding:0 4px; color:var(--muted); font-size:13px}
+
+@media (max-width:720px){
+  .sheet{margin:0; border:0; border-radius:0; padding:16px 14px 40px}
+  .doc-head{grid-template-columns:1fr; padding:20px}
+  .illus{display:none}
+  .fields{grid-template-columns:1fr 1fr}
+  .ms-strip{grid-template-columns:1fr 1fr}
+  li.item{grid-template-columns:26px 1fr}
+  li.item > .mark{grid-column:2; justify-self:start; min-width:0; margin-top:6px}
+}
+@media print{
+  body{background:#fff}
+  .sheet{border:0; margin:0; padding:0; max-width:none}
+  .doc-head, .milestone, li.item, .ms-card{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .actions, .copy-row, li.item summary, li.item details{display:none}
+  li.item, .milestone{break-inside:avoid}
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .meter i, .ms-bar i, li.item{transition:none} }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header class="doc-head">
+    <div>
+      <span class="brand"><i></i>Cefalo engineering</span>
+      <h1>Claude Code project setup checklist</h1>
+      <p class="doc-meta">Complete this for every new repository, one milestone at a time. Finish the required items in a milestone before moving on to the next.</p>
+    </div>
+    <svg class="illus" viewBox="0 0 150 150" aria-hidden="true">
+      <circle cx="75" cy="78" r="64" fill="#D3EFFA"/>
+      <rect x="38" y="30" width="74" height="96" rx="12" fill="#fff" stroke="#00A9DC" stroke-width="3"/>
+      <rect x="58" y="22" width="34" height="16" rx="6" fill="#004081"/>
+      <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <rect x="50" y="52" width="14" height="14" rx="4" fill="#2C8F5F" stroke="#2C8F5F" stroke-width="2"/>
+        <path d="M53.5 59l3 3 5-6" stroke="#fff" stroke-width="2.5"/>
+        <path d="M72 59h28" stroke="#9FD9EF" stroke-width="5"/>
+        <rect x="50" y="76" width="14" height="14" rx="4" fill="#2C8F5F" stroke="#2C8F5F" stroke-width="2"/>
+        <path d="M53.5 83l3 3 5-6" stroke="#fff" stroke-width="2.5"/>
+        <path d="M72 83h22" stroke="#9FD9EF" stroke-width="5"/>
+        <rect x="50" y="100" width="14" height="14" rx="4" fill="#fff" stroke="#9FD9EF" stroke-width="2.5"/>
+        <path d="M72 107h26" stroke="#E2EDF5" stroke-width="5"/>
+      </g>
+      <circle cx="118" cy="40" r="6" fill="#00A9DC"/>
+      <circle cx="30" cy="112" r="4" fill="#004081" opacity=".5"/>
+    </svg>
+    <div class="fields">
+      <div><label for="f-project">Project</label><input id="f-project" type="text" autocomplete="off"></div>
+      <div><label for="f-repo">Repository</label><input id="f-repo" type="text" autocomplete="off"></div>
+      <div><label for="f-owner">Completed by</label><input id="f-owner" type="text" autocomplete="off"></div>
+      <div><label for="f-date">Date</label><input id="f-date" type="date"></div>
+    </div>
+  </header>
+
+  <div class="summary">
+    <div class="total"><span id="done-n">0</span> / <span id="all-n">0</span> <small>items complete</small></div>
+    <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+    <div class="req-status" id="req-status"></div>
+    <div class="actions">
+      <button type="button" id="btn-print">Print or save as PDF</button>
+      <button type="button" id="btn-reset">Clear all</button>
+    </div>
+  </div>
+  <div class="legend">
+    <span><span class="mark req">Required</span> must be done before the first commit with Claude</span>
+    <span><span class="mark rec">Recommended</span> do it unless there is a written reason not to</span>
+  </div>
+
+  <nav class="ms-strip" id="ms-strip" aria-label="Milestones"></nav>
+
+  <div id="sections"></div>
+
+  <section class="appendix" id="template">
+    <div class="sec-head"><h2>Shared settings starting point</h2></div>
+    <p>Copy this into <code>.claude/settings.json</code> on day one. It covers every item in section 6 that both audited projects failed. Adjust the allow list to the project's own build tools, then run the full build and test suite once with the sandbox on.</p>
+<pre id="settings-snippet">{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env*)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/credentials*)",
+      "Read(./**/secrets*)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true
+  },
+  "disableSkillShellExecution": true
+}</pre>
+    <div class="copy-row"><button type="button" data-copy="settings-snippet">Copy settings</button></div>
+
+    <p>And this pattern for <code>.mcp.json</code>, so no credential is ever written into a tracked file:</p>
+<pre id="mcp-snippet">{
+  "mcpServers": {
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server"],
+      "env": { "MDB_MCP_CONNECTION_STRING": "${MONGODB_URI}" }
+    }
+  }
+}</pre>
+    <div class="copy-row"><button type="button" data-copy="mcp-snippet">Copy MCP example</button></div>
+
+    <p>Add this <code>hooks</code> block to the same <code>.claude/settings.json</code> to wire up the project hooks from section 8. The scripts themselves are under each hook item above.</p>
+<pre id="hooks-snippet">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|MultiEdit|Write|Bash",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secrets.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous.sh" },
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/commit-gate.sh" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/format-changed.sh" },
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/test-changed.sh", "timeout": 120 }
+        ]
+      }
+    ]
+  }
+}</pre>
+    <div class="copy-row"><button type="button" data-copy="hooks-snippet">Copy hooks</button></div>
+  </section>
+
+  <footer>Ticked items are saved in this browser only. Each person who opens the link keeps their own progress. Re-run the setup audit after finishing and attach the score to the project README.</footer>
+</main>
+
+<script type="text/plain" id="ex-format">#!/usr/bin/env bash
+# PostToolUse (Edit|Write): format the file Claude just changed, in the project's style
+file=$(jq -r '.tool_input.file_path // empty')
+[ -n "$file" ] || exit 0
+cd "$CLAUDE_PROJECT_DIR" || exit 0
+
+case "$file" in
+  *.vue|*.ts|*.js|*.json|*.css|*.scss|*.md)
+    npx --no-install prettier --write "$file" >/dev/null 2>&1 ;;
+  *.java)
+    google-java-format --replace "$file" 2>/dev/null ;;
+esac
+exit 0</script>
+<script type="text/plain" id="ex-guard">#!/usr/bin/env bash
+# PreToolUse (Read|Edit|Write|Bash): extra layer on top of permissions.deny
+target=$(jq -r '.tool_input.file_path // .tool_input.command // empty')
+secret='(^|[/[:space:]"'\''])\.env([.][[:alnum:]_-]+)?([[:space:]"'\'']|$)|[.](pem|key)([[:space:]]|$)|id_rsa'
+if grep -qE "$secret" <<<"$target" && ! grep -qE '\.env\.example' <<<"$target"; then
+  echo "Blocked: .env and key files are off limits. Read .env.example for variable names instead." >&2
+  exit 2
+fi
+exit 0</script>
+<script type="text/plain" id="ex-danger">#!/usr/bin/env bash
+# PreToolUse (Bash): stop commands whose worst case is unrecoverable
+cmd=$(jq -r '.tool_input.command // empty')
+danger='rm -rf (/|~|\*|\.)([[:space:]]|$)|git push.*(--force|-f)([[:space:]]|$)|git reset --hard|drop (table|database)|\.dropDatabase\(|kubectl delete (namespace|ns)'
+if grep -qiE "$danger" <<<"$cmd"; then
+  echo "Blocked: this command is on the project's no-go list. Propose a safer alternative." >&2
+  exit 2
+fi
+exit 0</script>
+<script type="text/plain" id="ex-tests">#!/usr/bin/env bash
+# PostToolUse (Edit|Write): run only the tests for the file Claude changed
+file=$(jq -r '.tool_input.file_path // empty')
+cd "$CLAUDE_PROJECT_DIR" || exit 0
+rel=${file#"$CLAUDE_PROJECT_DIR"/}
+
+case "$rel" in
+  *.spec.ts|*Test.java) test="$rel" ;;
+  *.vue|*.ts) test="${rel%.*}.spec.ts" ;;
+  */src/main/java/*.java) test=$(sed -E 's|src/main/java|src/test/java|; s|\.java$|Test.java|' <<<"$rel") ;;
+  *) exit 0 ;;
+esac
+[ -f "$test" ] || exit 0
+
+case "$test" in
+  *.spec.ts) out=$(npx --no-install vitest run "$test" 2>&1) ;;
+  *Test.java) module=${test%%/src/*}
+              out=$(cd "$module" && ./mvnw -q test -Dtest="$(basename "$test" .java)" 2>&1) ;;
+esac || { echo "Tests failed for $rel:" >&2; echo "$out" | tail -n 30 >&2; exit 2; }
+exit 0</script>
+<script type="text/plain" id="ex-notify">{
+  "hooks": {
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "notify-send 'Claude Code' 'Turn finished'" }] }
+    ],
+    "Notification": [
+      { "hooks": [{ "type": "command", "command": "curl -s -d 'Claude Code needs you' ntfy.sh/your-private-topic >/dev/null" }] }
+    ]
+  }
+}</script>
+<script type="text/plain" id="ex-commit">#!/usr/bin/env bash
+# PreToolUse (Bash): run the team's pre-commit checks before Claude commits
+cmd=$(jq -r '.tool_input.command // empty')
+grep -qE '(^|[;&|][[:space:]]*)git commit' <<<"$cmd" || exit 0
+cd "$CLAUDE_PROJECT_DIR" || exit 0
+if ! out=$(npm run --silent precommit 2>&1); then
+  echo "Blocked: pre-commit checks failed. Fix these, then commit again:" >&2
+  echo "$out" | tail -n 30 >&2
+  exit 2
+fi
+exit 0
+
+# package.json
+"scripts": {
+  "precommit": "lint-staged && gitleaks protect --staged --redact"
+}</script>
+<script>
+const R = "req", C = "rec";
+const SECTIONS = [
+  { title: "Repository baseline",
+    intro: "Decide what is shared with the team and what stays on one machine before any Claude file is created.",
+    items: [
+      ["git-ignore-local", R, "Repository .gitignore excludes personal Claude files",
+        "Add .claude/settings.local.json and CLAUDE.local.md to the repo's own .gitignore. gym-tracker relied on a global git ignore, which teammates don't have.",
+        "<pre>.claude/settings.local.json\nCLAUDE.local.md\n.env\n.env.*\n!.env.example</pre>"],
+      ["git-ignore-env", R, ".env files are ignored and an .env.example is committed",
+        "Every secret lives in an ignored file. The example file lists the variable names with empty values."],
+      ["readme-claude", C, "README has a short \"Working with Claude Code\" section",
+        "Name the skills, agents and MCP servers the project expects, and how to set the environment variables they need."],
+      ["owner", C, "One person owns the .claude/ folder",
+        "Changes to shared settings, hooks and skills go through that person's review, like any other config."]
+    ]},
+  { title: "Memory and context (CLAUDE.md)",
+    intro: "CLAUDE.md loads at every launch. Keep it short and specific so it is followed, and so it doesn't waste context.",
+    items: [
+      ["claude-md", R, "Project CLAUDE.md exists at the repository root",
+        "Covers what the project is, the stack, the exact build, test and lint commands, folder layout, and naming conventions."],
+      ["claude-md-200", R, "Every file loaded at launch is 200 lines or fewer",
+        "Applies to CLAUDE.md, each rule without paths:, and MEMORY.md. When CLAUDE.md nears the limit, move detail into .claude/rules/."],
+      ["no-dup", R, "Nothing is written twice",
+        "Don't restate rules in CLAUDE.md that already load from .claude/rules/, and don't @-import a file that already loads as a rule. Both audited projects loaded the same text twice."],
+      ["agents-md", R, "If AGENTS.md exists, CLAUDE.md imports it instead of copying it",
+        "Make CLAUDE.md start with @AGENTS.md followed by Claude-specific lines only, or symlink one to the other. Separate copies drift; vortibhai's already had.",
+        "<pre>@AGENTS.md\n\n## Claude Code only\n- Run pnpm verify before every commit</pre>"],
+      ["imports", C, "@-imports have no cycles and nest 5 levels or fewer", ""],
+      ["subdir-md", C, "Subdirectory CLAUDE.md files hold only folder-specific notes",
+        "They must not re-import rules that already loaded from the root."],
+      ["user-md", C, "Personal preferences live in ~/.claude/CLAUDE.md, not the repo",
+        "Tone, editor habits and personal shortcuts are user scope. The project file is for things every teammate needs."],
+      ["launch-budget", C, "Total launch-time instructions are measured and kept small",
+        "Add up CLAUDE.md, rules without paths:, user CLAUDE.md and MEMORY.md. vortibhai loaded about 17k tokens of rules at every start."]
+    ]},
+  { title: "Rules (.claude/rules/)",
+    intro: "One topic per file. Area-specific rules load only when Claude touches that area.",
+    items: [
+      ["rules-dir", R, "Rules are split into topic files under .claude/rules/",
+        "For example architecture.md, testing.md, git-workflow.md, accessibility.md."],
+      ["rules-200", R, "No rule file is longer than 200 lines", ""],
+      ["rules-paths", C, "Area-specific rules declare paths: frontmatter",
+        "Frontend, admin and backend rules should load on demand, not at every launch.",
+        "<pre>---\npaths:\n  - \"app/**\"\n  - \"components/**\"\n---\n# Accessibility rules</pre>"],
+      ["rules-globs", C, "Every paths: glob matches at least one real file",
+        "A glob that matches nothing means the rule never loads. Recheck after moving folders."]
+    ]},
+  { title: "Skills (.claude/skills/)",
+    intro: "Each skill is a folder with a SKILL.md. Use skills for repeatable workflows such as new features, releases and reviews.",
+    items: [
+      ["skill-desc", R, "Every SKILL.md has a description",
+        "The description decides when Claude picks the skill, so say what it does and when to use it."],
+      ["skill-hint", R, "Skills that use $ARGUMENTS, $0, $1 declare argument-hint",
+        "vortibhai had 11 skills missing it.",
+        "<pre>---\nname: new-backend-feature\ndescription: Scaffold a Spring Boot endpoint with service, repository and tests.\nargument-hint: &lt;feature-name&gt;\n---</pre>"],
+      ["skill-dollar", R, "No literal dollar sign directly before a digit",
+        "Text like \"$0.01\" is treated as argument $0 and replaced. Write \"0.01 USD\" instead."],
+      ["skill-length", C, "description plus when_to_use is 1,536 characters or fewer", ""],
+      ["skill-fields", C, "Frontmatter uses only documented fields",
+        "Third-party skills often add license and metadata. Either strip them in a local copy or record that the warning is accepted."],
+      ["skill-effort", C, "effort values, where set, are valid", ""],
+      ["skill-vendor", R, "Third-party skills are reviewed and tracked in git",
+        "Read the full content before adding it. Both projects had vibe-security as an untracked symlink into .agents/, which teammates won't get."],
+      ["skill-migrate", C, "Old .claude/commands/ files are moved to skills",
+        "Commands still work, but .claude/skills/&lt;name&gt;/SKILL.md is the current form."]
+    ]},
+  { title: "Subagents and commands",
+    items: [
+      ["agent-fm", R, "Every agent and command file has YAML frontmatter",
+        "gym-tracker's resume-progress.md had none."],
+      ["agent-desc", R, "Every agent and command has a description", ""],
+      ["agent-manual", C, "Manual-only workflows set disable-model-invocation: true",
+        "Stops Claude from starting things like release or push steps on its own."],
+      ["agent-tools", C, "Each subagent's tools list is limited to what it needs",
+        "A reviewer agent doesn't need Write or Bash."]
+    ]},
+  { title: "Permissions and security",
+    intro: "Both audited projects scored 8 of 24 here. This section is where the most risk and the most points are.",
+    items: [
+      ["deny-env", R, "permissions.deny blocks reading .env files",
+        "Read(./.env), Read(./.env.*) and Read(./**/.env*) in .claude/settings.json. See the settings template at the end."],
+      ["deny-secrets", R, "permissions.deny blocks key and credential files",
+        "Read(./**/*.pem), Read(./**/*.key), Read(./**/credentials*), Read(./**/secrets*)."],
+      ["sandbox", R, "sandbox.enabled and sandbox.failIfUnavailable are true",
+        "Then run the real workflows once (pnpm verify, Playwright, Maven, npm) to confirm they still pass inside the sandbox."],
+      ["skill-shell", R, "disableSkillShellExecution is true",
+        "Costs nothing when no skill injects shell output, and closes that path."],
+      ["no-bypass", R, "defaultMode is never bypassPermissions in project or local settings", ""],
+      ["no-env-secrets", R, "No secret values in the env block of shared settings",
+        "Keys, tokens and passwords go in the shell environment or an ignored file."],
+      ["allow-narrow", C, "The allow list is as narrow as practical",
+        "Prefer specific commands such as Bash(pnpm test:*) over broad ones such as Bash(pnpm:*)."],
+      ["hooks-on", C, "disableAllHooks is not set to true", ""],
+      ["hooks-not-deny", C, "Security hooks are treated as extra protection, not a replacement for deny rules",
+        "A PreToolUse script does not stop the Read tool the way permissions.deny does."]
+    ]},
+  { title: "Hooks",
+    intro: 'Prompts ask Claude to behave; hooks enforce it on every single edit or command. Each hook is a small script in <code>.claude/hooks/</code>. The six hook ideas below are adapted for our stack from <a href="https://medium.com/@the_infinity/6-claude-code-hooks-i-wish-i-had-configured-sooner-915e3c540b0e" target="_blank" rel="noopener">Infinity\'s article on Medium</a>. The complete wiring is in the templates at the end.',
+    items: [
+      ["hook-layers", R, "Team hooks live in the project, personal hooks live in user settings",
+        "Formatting, guards, tests and the commit gate go in .claude/settings.json so every teammate gets them on clone. Notifications and personal conveniences go in ~/.claude/settings.json."],
+      ["hook-format", C, "Auto-format every file Claude edits",
+        "PostToolUse on Edit|Write runs Prettier for Vue and TypeScript, and google-java-format for Java. Claude's own formatting no longer leaks into diffs.",
+        "#ex-format"],
+      ["hook-secrets", R, "Secret-file guard blocks .env and key files",
+        "PreToolUse on Read|Edit|Write|Bash exits with code 2, which cancels the action and tells Claude why. This is a second layer: keep the permissions.deny rules too.",
+        "#ex-guard"],
+      ["hook-danger", R, "Dangerous-command blocklist on Bash",
+        "Blocks rm -rf on root or the whole project, force pushes, git reset --hard, DROP TABLE, dropDatabase() and namespace deletes. It allows --force-with-lease. On a normal day it never fires.",
+        "#ex-danger"],
+      ["hook-tests", C, "Related tests run after each edit",
+        "Runs only the matching .spec.ts or *Test.java, so it takes seconds rather than the full suite's minutes. A failure exits with code 2, so Claude sees it and fixes it straight away.",
+        "#ex-tests"],
+      ["hook-commit", C, "Commit quality gate before git commit",
+        "A PreToolUse hook on Bash runs npm run precommit (lint-staged and gitleaks) when it sees git commit, and blocks the commit if the checks fail. The same script serves humans through Husky.",
+        "#ex-commit"],
+      ["hook-notify", C, "Finish and attention notifications in user settings",
+        "Stop fires when a turn ends and Notification fires when Claude is waiting on you. Use notify-send on Linux, osascript on macOS, or a free ntfy.sh topic for your phone.",
+        "#ex-notify"],
+      ["hook-events", R, "Hook event names and handler types are documented ones",
+        "PreToolUse, PostToolUse, Stop, Notification and so on. A misspelled event never runs and gives no error."],
+      ["hook-paths", R, "Hook commands use $CLAUDE_PROJECT_DIR, not absolute paths",
+        "vortibhai's hooks pointed at /Users/cefalo_1/..., so they fail for every teammate and in git worktrees.",
+        "<pre>\"command\": \"$CLAUDE_PROJECT_DIR/.claude/hooks/lint.sh\"</pre>"],
+      ["hook-scripts", R, "Hook scripts are committed and executable, and jq is installed",
+        "Run chmod +x, commit .claude/hooks/, and list jq in the README setup steps, because every script reads its input with it."],
+      ["hook-test", R, "Each blocking hook was tested once on purpose",
+        "Ask Claude to read .env and to run git push --force in a scratch session, and confirm both are blocked with the message shown."],
+      ["hook-fast", C, "Hooks finish in a few seconds",
+        "PostToolUse hooks run after every edit, so a slow one slows the whole session. Set a timeout on the test hook."]
+    ]},
+  { title: "MCP servers",
+    items: [
+      ["mcp-file", R, "Project MCP servers are defined in .mcp.json at the root", ""],
+      ["mcp-vars", R, "No credential appears in .mcp.json",
+        "Use ${VARIABLE} expansion and set the value outside the repository. See the example at the end."],
+      ["mcp-rotate", R, "Any credential that was ever committed has been rotated",
+        "Removing it from the file isn't enough; it stays in git history. vortibhai's Atlas password needed rotating."],
+      ["mcp-needed", C, "Only servers the project actually uses are listed",
+        "Remove or disable servers that duplicate a claude.ai connector the team already uses."],
+      ["mcp-readme", C, "Required environment variables for MCP are listed in .env.example", ""]
+    ]},
+  { title: "Models and other settings",
+    items: [
+      ["model-ids", R, "No deprecated model IDs are pinned anywhere",
+        "Check settings, agents and skills. If nothing needs a specific model, leave it unpinned."],
+      ["statusline", C, "The statusLine command, if set, resolves on every teammate's machine", ""],
+      ["automemory", C, "autoMemoryDirectory, if set, is absolute or starts with ~/", ""]
+    ]},
+  { title: "Verification and handover",
+    intro: "Done means checked from a clean machine, not just written.",
+    items: [
+      ["audit-run", R, "The setup audit has been run and the score recorded",
+        "Target 85 or higher with zero failed checks in Permissions and security and in MCP servers."],
+      ["fresh-clone", R, "A teammate cloned the repo fresh and started Claude Code without errors",
+        "Confirms nothing depends on one person's global files, paths or untracked symlinks."],
+      ["worktree", C, "Hooks and skills work inside a git worktree", ""],
+      ["secret-test", R, "Claude refuses to read .env when asked directly",
+        "Ask it to open .env in a test session and confirm the deny rule blocks it."],
+      ["re-audit", C, "A re-audit date is set",
+        "Re-check after the first month and whenever Claude Code settings change significantly."]
+    ]}
+];
+
+const MILESTONES = [
+  { ic:"🛡️", name:"Secure foundation", when:"Day 1, before anyone runs Claude Code in the repo", secs:["Repository baseline","Permissions and security","MCP servers"] },
+  { ic:"📘", name:"Project context", when:"Week 1, once the stack and folder layout are settled", secs:["Memory and context (CLAUDE.md)","Rules (.claude/rules/)"] },
+  { ic:"⚙️", name:"Workflows and automation", when:"As repeatable tasks appear, usually weeks 1 to 3", secs:["Skills (.claude/skills/)","Subagents and commands","Hooks","Models and other settings"] },
+  { ic:"🚀", name:"Verified and handed over", when:"Before the project is declared ready for the team", secs:["Verification and handover"] }
+];
+const ORDERED = MILESTONES.flatMap((m, mi) => m.secs.map(t => Object.assign(SECTIONS.find(s => s.title === t), { ms: mi })));
+
+const KEY = "claude-project-checklist-v1";
+let state = { checks:{}, fields:{} };
+try { const s = localStorage.getItem(KEY); if (s) state = Object.assign(state, JSON.parse(s)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function exampleHtml(how){
+  if (how[0] !== "#") return how;
+  const id = how.slice(1), el = document.getElementById(id);
+  return el ? `<pre id="pre-${id}">${esc(el.textContent.trim())}</pre><div class="copy-row"><button type="button" data-copy="pre-${id}">Copy</button></div>` : "";
+}
+const root = document.getElementById("sections");
+const strip = document.getElementById("ms-strip");
+MILESTONES.forEach((m, mi) => {
+  const a = document.createElement("a"); a.className = "ms-card"; a.href = "#ms-" + mi; a.dataset.ms = mi;
+  a.innerHTML = `<div class="ic" aria-hidden="true">${m.ic}</div><div class="k">Milestone ${mi+1}</div><div class="nm">${m.name}</div><div class="ct"></div><div class="ms-bar"><i></i></div>`;
+  strip.appendChild(a);
+});
+let lastMs = -1;
+ORDERED.forEach((sec, si) => {
+  if (sec.ms !== lastMs) {
+    lastMs = sec.ms; const m = MILESTONES[sec.ms];
+    const mh = document.createElement("div"); mh.className = "milestone"; mh.id = "ms-" + sec.ms; mh.dataset.ms = sec.ms;
+    mh.innerHTML = `<div class="row"><span class="ic" aria-hidden="true">${m.ic}</span><div><div class="k">Milestone ${sec.ms+1}</div><h3>${m.name}</h3><p class="when">${m.when}</p></div></div><span class="st"></span>`;
+    root.appendChild(mh);
+  }
+  const el = document.createElement("section");
+  el.innerHTML = `<div class="sec-head"><h2><span class="n">${si+1}.</span>${sec.title}</h2><span class="sec-count" data-sec="${si}"></span></div>`
+    + (sec.intro ? `<p class="sec-intro">${sec.intro}</p>` : "");
+  const ul = document.createElement("ul"); ul.className = "items";
+  sec.items.forEach(([id, lvl, t, d, how]) => {
+    const li = document.createElement("li"); li.className = "item"; li.dataset.sec = si; li.dataset.ms = sec.ms; li.dataset.lvl = lvl;
+    const cid = "c-" + id;
+    li.innerHTML = `<input type="checkbox" id="${cid}" data-id="${id}">
+      <div><label class="text" for="${cid}"><div class="t">${t}</div>${d ? `<div class="d">${d}</div>` : ""}</label>
+      ${how ? `<details><summary>Example</summary>${exampleHtml(how)}</details>` : ""}</div>
+      <span class="mark ${lvl}">${lvl === R ? "Required" : "Recommended"}</span>`;
+    const cb = li.querySelector("input");
+    cb.checked = !!state.checks[id];
+    cb.addEventListener("change", () => { state.checks[id] = cb.checked; save(); update(); });
+    ul.appendChild(li);
+  });
+  el.appendChild(ul);
+  root.appendChild(el);
+});
+
+["project","repo","owner","date"].forEach(k => {
+  const inp = document.getElementById("f-" + k);
+  inp.value = state.fields[k] || "";
+  inp.addEventListener("input", () => { state.fields[k] = inp.value; save(); });
+});
+
+function update(){
+  const items = [...document.querySelectorAll("li.item")];
+  let done = 0, reqLeft = 0;
+  items.forEach(li => {
+    const on = li.querySelector("input").checked;
+    li.classList.toggle("checked", on);
+    if (on) done++; else if (li.dataset.lvl === R) reqLeft++;
+  });
+  document.getElementById("done-n").textContent = done;
+  document.getElementById("all-n").textContent = items.length;
+  document.getElementById("meter").style.width = (items.length ? done / items.length * 100 : 0) + "%";
+  const rs = document.getElementById("req-status");
+  rs.classList.toggle("ok", reqLeft === 0);
+  rs.innerHTML = reqLeft === 0 ? "<b>All required items done</b>" : `<b>${reqLeft} required</b> still open`;
+  document.querySelectorAll(".sec-count").forEach(sc => {
+    const si = sc.dataset.sec;
+    const own = items.filter(li => li.dataset.sec === si);
+    const d = own.filter(li => li.querySelector("input").checked).length;
+    sc.textContent = `${d} of ${own.length}`;
+    sc.classList.toggle("full", d === own.length);
+  });
+  MILESTONES.forEach((m, mi) => {
+    const own = items.filter(li => li.dataset.ms === String(mi));
+    const d = own.filter(li => li.querySelector("input").checked).length;
+    const reqOpen = own.filter(li => li.dataset.lvl === R && !li.querySelector("input").checked).length;
+    const full = d === own.length;
+    const card = strip.querySelector(`[data-ms="${mi}"]`);
+    card.classList.toggle("full", full);
+    card.querySelector(".ct").textContent = full ? "✓ Complete" : `${d} of ${own.length} done`;
+    card.querySelector(".ms-bar i").style.width = (d / own.length * 100) + "%";
+    const mh = root.querySelector(`.milestone[data-ms="${mi}"]`);
+    mh.classList.toggle("full", full);
+    mh.querySelector(".st").textContent = full ? "✓ Milestone complete" : reqOpen ? `${reqOpen} required open` : `${d} of ${own.length} done`;
+  });
+}
+update();
+
+document.getElementById("btn-print").addEventListener("click", () => window.print());
+document.getElementById("btn-reset").addEventListener("click", () => {
+  if (!confirm("Clear every tick and the project details?")) return;
+  state = { checks:{}, fields:{} }; save();
+  document.querySelectorAll("li.item input").forEach(cb => cb.checked = false);
+  ["project","repo","owner","date"].forEach(k => document.getElementById("f-" + k).value = "");
+  update();
+});
+document.querySelectorAll("[data-copy]").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const txt = document.getElementById(btn.dataset.copy).textContent;
+    const label = btn.textContent;
+    try { await navigator.clipboard.writeText(txt); btn.textContent = "Copied"; }
+    catch(e) { btn.textContent = "Select the text to copy"; }
+    setTimeout(() => btn.textContent = label, 1600);
+  });
+});
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>
