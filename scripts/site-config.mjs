@@ -122,6 +122,18 @@ export const REPORTS = [
     tags: ['Investing', 'Stock market', 'Bangladesh', 'Basics'],
   },
   {
+    dir: 'build-my-own',
+    kind: 'guides',
+    title: 'Build My Own',
+    short: 'Build My Own',
+    visibility: 'public',
+    color: '#6d28d9', on: '#ffffff', ink: '#6d28d9',
+    icon: 'hammer',
+    cadence: 'Weekly',
+    about: 'Each week I build one new website or app that solves a problem in my daily use. Each page shows the problem, the build, and what I learned.',
+    tags: ['Side projects', 'Daily tools', 'Web apps', 'Weekly build'],
+  },
+  {
     dir: 'personal-guide',
     kind: 'guides',
     title: 'Personal Guide',
