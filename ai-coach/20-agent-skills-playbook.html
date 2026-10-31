@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Which skill, when — agent skills playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&family=Overpass+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --col:#E8ECF0; --ink:#18202B; --muted:#56616F; --rule:#D3D9E0; --track:#E3E7EC;
+  --sp:#2B63C8; --mp:#C98A00; --egm:#13896A; --ps:#A3329B;
+  --sp-t:#2457B3; --mp-t:#8A5E00; --egm-t:#0F7458; --ps-t:#8E2B87;
+  --p1:#18202B; --p1-ink:#FFFFFF; --p2:#5A6676; --win:#0F7458;
+  --sans:"Overpass","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"Overpass Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161C; --surface:#1B2129; --col:#161B22; --ink:#E6EAF0; --muted:#9AA5B2; --rule:#2D3542; --track:#262E3A;
+    --sp:#6B9BF2; --mp:#F2B638; --egm:#3FCB9C; --ps:#DA6BD0;
+    --sp-t:#8DB2F5; --mp-t:#F2C25C; --egm-t:#5FD6AE; --ps-t:#E58BDC;
+    --p1:#E6EAF0; --p1-ink:#12161C; --p2:#8D98A6; --win:#5FD6AE; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161C; --surface:#1B2129; --col:#161B22; --ink:#E6EAF0; --muted:#9AA5B2; --rule:#2D3542; --track:#262E3A;
+  --sp:#6B9BF2; --mp:#F2B638; --egm:#3FCB9C; --ps:#DA6BD0;
+  --sp-t:#8DB2F5; --mp-t:#F2C25C; --egm-t:#5FD6AE; --ps-t:#E58BDC;
+  --p1:#E6EAF0; --p1-ink:#12161C; --p2:#8D98A6; --win:#5FD6AE; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sp);outline-offset:2px;border-radius:6px}
+code{font-family:var(--mono);font-size:.86em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* Sticky nav */
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--rule)}
+nav.top .wrap{display:flex;align-items:center;gap:6px;height:56px;overflow-x:auto}
+.brand{font-weight:900;letter-spacing:-.02em;margin-right:14px;white-space:nowrap}
+nav.top a{text-decoration:none;font-weight:600;font-size:.92rem;padding:7px 12px;border-radius:999px;white-space:nowrap;color:var(--muted)}
+nav.top a:hover{color:var(--ink);background:var(--bg)}
+nav.top a.pick{background:var(--ink);color:var(--bg)}
+
+/* Hero */
+header{padding:52px 0 0}
+h1{font-weight:900;font-size:clamp(2.5rem,7vw,5rem);line-height:.95;letter-spacing:-.03em;margin:0 0 18px;max-width:13ch}
+.lede{max-width:64ch;color:var(--muted);font-size:1.1rem;margin:0}
+.lede b{color:var(--ink);font-weight:600}
+
+h2{font-weight:900;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.02em;line-height:1.05;margin:0 0 10px}
+.intro{color:var(--muted);max-width:66ch;margin:0 0 26px}
+section.block{padding:76px 0 0}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:14px}
+.note{font-size:.85rem;color:var(--muted);margin:10px 0 0}
+
+/* Kit legend */
+.kits{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:36px 0 0}
+.kit{padding:18px;display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--k)}
+.kit h3{margin:0;font-size:1.08rem;font-weight:800;line-height:1.2}
+.kit .by{font-size:.82rem;color:var(--muted);margin:0}
+.kit p{margin:0;font-size:.92rem}
+.kit pre{margin:2px 0 0;padding:9px 11px;background:var(--bg);border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:.72rem;line-height:1.5}
+
+/* Map */
+.mapbox{margin:28px 0 0;overflow-x:auto}
+.mapbox svg{display:block;min-width:820px;width:100%;height:auto}
+.st-label{font-family:var(--sans);font-weight:800;font-size:13px;fill:var(--ink)}
+.st-num{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.line-name{font-family:var(--sans);font-weight:800;font-size:12px}
+
+/* Heatmap */
+.heat{overflow-x:auto;margin-top:18px}
+.heat table{border-collapse:separate;border-spacing:4px;min-width:820px;width:100%}
+.heat th{font-size:.8rem;font-weight:800;text-align:center;padding:4px 2px;color:var(--ink)}
+.heat th.rowh{text-align:left;white-space:nowrap;padding-right:10px;font-size:.9rem}
+.heat td{height:46px;border-radius:8px;text-align:center;font-size:.72rem;font-weight:700;color:var(--ink);position:relative}
+.heat td span{position:relative}
+.heat td::before{content:"";position:absolute;inset:0;border-radius:8px;background:var(--k);opacity:var(--o)}
+.heat td.s0{background:transparent;border:1.5px dashed var(--rule);color:var(--muted)}
+.heat td.s3 span{color:var(--surface)}
+.scale{display:flex;flex-wrap:wrap;gap:16px;font-size:.82rem;color:var(--muted);margin-top:10px}
+.scale i{display:inline-block;width:18px;height:12px;border-radius:3px;background:var(--ink);vertical-align:-1px;margin-right:6px}
+
+/* Spectrum */
+.spectrum{padding:26px 22px 22px;margin-top:22px}
+.spec-bar{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--track),var(--rule));margin:58px 8px 14px}
+.spec-pin{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--k);border:3px solid var(--surface);box-shadow:0 0 0 1.5px var(--k)}
+.spec-pin b{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--kt)}
+.spec-pin.low b{bottom:auto;top:26px}
+.spec-ends{display:flex;justify-content:space-between;gap:20px;font-size:.84rem;color:var(--muted);margin-top:40px}
+.spec-ends div{max-width:44%}
+.spec-ends div:last-child{text-align:right}
+
+/* Board */
+.controls{display:flex;flex-wrap:wrap;gap:16px 30px;align-items:flex-start;margin:0 0 18px}
+.group{display:flex;flex-direction:column;gap:6px}
+.group > span{font-size:.8rem;font-weight:600;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--rule);background:var(--surface);font-size:.84rem;font-weight:600;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--ink)}
+.chip[aria-pressed="false"]{opacity:.5}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--k);flex:none}
+.seg{display:inline-flex;border:1.5px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:6px 14px;font-size:.84rem;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.progress{font-size:.84rem;color:var(--muted)} .progress b{color:var(--ink)}
+.reset{background:none;border:0;padding:0;font-size:.84rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:flex-start}
+.board-wrap{overflow-x:auto;padding:4px 24px 12px;margin:0 -24px;scroll-snap-type:x proximity}
+.board{display:flex;gap:12px;align-items:flex-start;width:max-content}
+.column{width:262px;flex:none;background:var(--col);border-radius:14px;padding:12px;scroll-snap-align:start;border:1px solid var(--rule)}
+.col-head{display:flex;align-items:baseline;gap:8px;padding:2px 4px 8px}
+.col-num{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.col-title{font-weight:800;font-size:1rem;line-height:1.2;flex:1}
+.col-count{font-family:var(--mono);font-size:.76rem;color:var(--muted);background:var(--surface);border-radius:999px;padding:1px 8px}
+.lane-label{font-size:.76rem;font-weight:700;color:var(--muted);margin:12px 4px 6px;display:flex;align-items:center;gap:6px}
+.lane-label.first{margin-top:2px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.empty{font-size:.82rem;color:var(--muted);padding:8px 4px;margin:0}
+.card{background:var(--surface);border-radius:10px;padding:9px 11px 9px 14px;border:1px solid var(--rule);box-shadow:inset 4px 0 0 var(--k)}
+.card.done{opacity:.55} .card.done .name{text-decoration:line-through}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.name{font-family:var(--mono);font-weight:600;font-size:.82rem;color:var(--kt);flex:1;word-break:break-word;line-height:1.35}
+.badge{flex:none;font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:6px;line-height:1.4}
+.b1{background:var(--p1);color:var(--p1-ink)} .b2{border:1.5px solid var(--p2);color:var(--p2)} .b3{border:1.5px dashed var(--p2);color:var(--p2)}
+.when{font-size:.82rem;margin:4px 0 7px;line-height:1.4}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.74rem;color:var(--muted)}
+.check{display:inline-flex;align-items:center;gap:5px;cursor:pointer;font-weight:600}
+.check input{accent-color:var(--k);width:15px;height:15px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:.84rem;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+
+/* Evidence */
+.evid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.evid .panel{padding:18px;border-top:6px solid var(--k)}
+.evid h3{margin:0 0 4px;font-size:1.05rem;font-weight:800}
+.evid .verdict{margin:0 0 12px;font-size:.9rem;font-weight:600;color:var(--kt)}
+.evid h4{margin:12px 0 4px;font-size:.82rem;font-weight:800;color:var(--muted)}
+.evid ul{margin:0;padding-left:1.05em}
+.evid li{font-size:.88rem;margin:0 0 6px}
+.src{color:var(--muted);font-size:.8rem;white-space:nowrap}
+.study{margin-top:14px;padding:22px}
+.study h3{margin:0 0 4px;font-size:1.15rem;font-weight:800}
+.study > p{margin:0 0 16px;color:var(--muted);font-size:.92rem;max-width:72ch}
+.sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.size{border:1px solid var(--rule);border-radius:12px;padding:14px}
+.size b{display:block;font-size:.95rem}
+.size .arrow{font-size:1.8rem;font-weight:900;line-height:1.1;margin:4px 0}
+.size.bad .arrow{color:var(--ps-t)} .size.even .arrow{color:var(--muted)} .size.good .arrow{color:var(--egm-t)}
+.size p{margin:0;font-size:.85rem}
+
+/* Best picks */
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+.pickcard{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.pk-head{padding:18px 20px 14px;border-bottom:1px solid var(--rule)}
+.pk-area{font-size:1.5rem;font-weight:900;letter-spacing:-.02em;margin:0;line-height:1.1}
+.pk-q{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.pk-win{padding:16px 20px;background:var(--bg);border-left:6px solid var(--k)}
+.pk-win .lbl{font-size:.78rem;font-weight:800;color:var(--win)}
+.pk-win .skill{font-family:var(--mono);font-weight:600;font-size:1.05rem;color:var(--kt);margin:2px 0 0;word-break:break-word}
+.pk-win .kitname{font-size:.8rem;color:var(--muted)}
+.pk-win p{margin:8px 0 0;font-size:.9rem}
+.pk-body{padding:14px 20px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.pk-row{display:flex;gap:10px;align-items:flex-start;font-size:.88rem}
+.pk-row .tag{flex:none;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:6px;border:1.5px solid var(--rule);color:var(--muted);margin-top:1px;min-width:74px;text-align:center}
+.pk-row code{color:var(--kt);font-weight:600}
+.pk-ev{margin:4px 0 0;padding:10px 0 0;border-top:1px dashed var(--rule)}
+.pk-ev ul{margin:4px 0 0;padding-left:1.05em}
+.pk-ev li{font-size:.84rem;margin:0 0 5px;color:var(--muted)}
+.pk-ev li b{color:var(--ink);font-weight:600}
+.cheat{margin-top:18px;padding:0;overflow-x:auto}
+.cheat table{border-collapse:collapse;width:100%;min-width:640px}
+.cheat th,.cheat td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);font-size:.88rem;vertical-align:top}
+.cheat th{font-size:.8rem;color:var(--muted);font-weight:800}
+.cheat tr:last-child td{border-bottom:0}
+.cheat td:first-child{font-weight:800}
+.cheat code{font-weight:600;color:var(--kt)}
+
+footer{padding:72px 0 56px;color:var(--muted);font-size:.86rem}
+footer ul{padding-left:1.1em;margin:8px 0 16px} footer li{margin:4px 0}
+
+.k-sp{--k:var(--sp);--kt:var(--sp-t)} .k-mp{--k:var(--mp);--kt:var(--mp-t)}
+.k-egm{--k:var(--egm);--kt:var(--egm-t)} .k-ps{--k:var(--ps);--kt:var(--ps-t)}
+
+@media (max-width:760px){
+  body{font-size:16px} header{padding-top:32px}
+  .sizes{grid-template-columns:1fr}
+  .column{width:80vw;max-width:290px}
+  .picks{grid-template-columns:1fr}
+  .spec-ends div{max-width:48%}
+}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Sections">
+  <div class="wrap">
+    <span class="brand">Which skill, when</span>
+    <a href="#overview">Overview</a>
+    <a href="#board">Kanban board</a>
+    <a href="#evidence">What people say</a>
+    <a href="#best" class="pick">Best picks</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<header>
+  <h1>Which skill, when</h1>
+  <p class="lede">Four widely used agent skill kits — <b>Superpowers</b>, <b>Matt Pocock’s Skills</b>, Google’s <b>Elephant-Goldfish Model</b> and <b>pstack</b> — placed on one product-development line, checked against what people report after using them, and boiled down to one best pick per job.</p>
+  <div class="kits" id="kits"></div>
+</header>
+
+<!-- OVERVIEW -->
+<section class="block" id="overview">
+  <h2>Who is strong where</h2>
+  <p class="intro">The heatmap scores each kit at each phase, from what its skills cover and what users report. Darker means stronger. Scores are an editorial read of the sources at the bottom, not a benchmark.</p>
+  <div class="panel heat" id="heat"></div>
+  <div class="scale"><span><i style="opacity:.15"></i>Has a skill</span><span><i style="opacity:.45"></i>Good</span><span><i style="opacity:1"></i>Best in class</span><span>Dashed: nothing here</span></div>
+
+  <div class="panel spectrum">
+    <h3 style="margin:0;font-size:1.15rem;font-weight:800">How much each kit takes over</h3>
+    <div class="spec-bar" id="spectrum"></div>
+    <div class="spec-ends">
+      <div><b style="color:var(--ink)">Light anchors.</b> Assumes the model is mostly right; you type a command when you want it.</div>
+      <div><b style="color:var(--ink)">Enforced method.</b> Assumes the model will cut corners; skills fire on their own and block shortcuts.</div>
+    </div>
+  </div>
+
+  <div class="panel mapbox" id="map" aria-label="Transit-style map of kits across phases"></div>
+  <p class="note">The line view: a dot means the kit has at least one skill at that stop. Select a stop to filter the board below to it.</p>
+</section>
+
+<!-- BOARD -->
+<section class="block" id="board">
+  <h2>Kanban board</h2>
+  <p class="intro">All 61 skills, by phase and priority. P1 is the default pick at that stop, P2 a strong alternative, P3 situational. Tick what you’ve adopted; ticks stay in this browser.</p>
+  <div class="controls">
+    <div class="group"><span>Columns</span>
+      <div class="seg" role="group" aria-label="Arrange columns by">
+        <button type="button" data-view="phase" aria-pressed="true">Phase</button>
+        <button type="button" data-view="priority" aria-pressed="false">Priority</button>
+        <button type="button" data-view="kit" aria-pressed="false">Kit</button>
+      </div>
+    </div>
+    <div class="group"><span>Kits</span><div class="chips" id="kit-chips"></div></div>
+    <div class="group"><span>Priority</span><div class="chips" id="pri-chips"></div></div>
+    <div class="group"><span>Adopted</span><div class="progress" id="progress"></div><button type="button" class="reset" id="reset">Clear ticks</button></div>
+  </div>
+  <div class="board-wrap"><div class="board" id="boardcols"></div></div>
+  <div class="legend">
+    <span><span class="badge b1">P1</span>Must-use</span>
+    <span><span class="badge b2">P2</span>Recommended</span>
+    <span><span class="badge b3">P3</span>Situational</span>
+  </div>
+</section>
+
+<!-- EVIDENCE -->
+<section class="block" id="evidence">
+  <h2>What people say after using them</h2>
+  <p class="intro">Hands-on reports, comparisons and press coverage, condensed per kit. Paraphrased; follow the source links for the full accounts.</p>
+  <div class="evid" id="evid"></div>
+
+  <div class="panel study">
+    <h3>The one controlled test: does size of task matter?</h3>
+    <p>Mejba Ahmed ran 12 capped, fully automated Claude Code sessions — six with Superpowers, six without — on simple, medium and complex tasks. Overall the plugin was about 9% cheaper and used around 14% fewer tokens, but the average hides the real finding:</p>
+    <div class="sizes">
+      <div class="size bad"><b>Simple tasks</b><div class="arrow">More tokens</div><p>Planning a 50-line script with no ambiguity is pure overhead.</p></div>
+      <div class="size even"><b>Medium tasks</b><div class="arrow">Break-even</div><p>Similar cost, noticeably better-structured code.</p></div>
+      <div class="size good"><b>Complex tasks</b><div class="arrow">Savings</div><p>Planning prevented the expensive “built the wrong thing, restart” failure. Costs clustered 2–3× tighter.</p></div>
+    </div>
+    <p class="note">Twelve sessions is directional, and the author bypassed the human-in-the-loop steps the plugin is designed around. <a href="https://www.mejba.me/blog/superpowers-plugin-claude-code-review">Read the full write-up</a>.</p>
+  </div>
+</section>
+
+<!-- BEST PICKS -->
+<section class="block" id="best">
+  <h2>Best picks</h2>
+  <p class="intro">One winner per job, a runner-up for when the winner doesn’t fit, and what to avoid. Picks weigh the user reports above more heavily than the projects’ own claims.</p>
+  <div class="picks" id="picks"></div>
+
+  <div class="panel cheat">
+    <table>
+      <thead><tr><th>Job</th><th>Best pick</th><th>Runner-up</th><th>Skip it when</th></tr></thead>
+      <tbody id="cheat"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p><b>Sources</b></p>
+  <ul>
+    <li><a href="https://github.com/obra/superpowers">obra/superpowers</a> README · <a href="https://www.aihero.dev/skills">aihero.dev/skills</a> · <a href="https://github.com/google/elephant-goldfish-model">google/elephant-goldfish-model</a> · <a href="https://github.com/michael-denyer/pstack-claude/blob/main/docs/reference.md#slash-commands">pstack-claude reference</a></li>
+    <li><a href="https://www.mejba.me/blog/superpowers-plugin-claude-code-review">Mejba Ahmed — 12-session Superpowers test</a></li>
+    <li><a href="https://sparkone.nl/en/blog/skills-van-anderen-lenen/">SparkOne (Jeroen Vonk) — on Theo’s review of Pocock’s skills and pstack</a></li>
+    <li><a href="https://www.besthub.dev/articles/exploring-grill-with-docs-a-new-rival-to-superpowers-in-ai-coding-skills-ac31c21fdc7d">BestHub — /grill-with-docs vs Superpowers on a real iOS app</a></li>
+    <li><a href="https://www.helpnetsecurity.com/2026/10/26/google-elephant-goldfish-model-plugin/">Help Net Security — EGM review phases and limits</a></li>
+    <li><a href="https://www.jrockowitz.com/blog/vibing-drupal-grill-me">Jacob Rockowitz — /grill-me in Drupal work</a> · <a href="https://ithelp.ithome.com.tw/articles/10417559">iThome — Pocock tdd, code-review, grill-me walkthrough</a></li>
+    <li><a href="https://www.skills.sh/mattpocock/skills">skills.sh install counts</a> · <a href="https://reddit.sentinel-team.org/posts/1tlvwfi/snapshots/2026-05-30T02%3A41%3A26.708778Z">Reddit thread on Superpowers brainstorming</a> · <a href="https://shiporskip.io/compare/mattpocock-skills-agent-engineering-npm-2026-vs-superpowers-tdd-agentic-workflow-ai-coding-claude-cursor-codex">Ship or Skip reviewer panel</a></li>
+  </ul>
+  <p>Heatmap scores, priorities and best picks are an editorial synthesis of these sources, October 2026. pstack has far fewer independent write-ups than the others, so its picks rest on fewer reports. Command prefixes shown are for Claude Code.</p>
+</footer>
+</div>
+
+<script>
+const KITS = {
+  sp:{name:"Superpowers", by:"Jesse Vincent · Prime Radiant", style:"Opinionated, auto-triggering method: brainstorm → plan → subagents with TDD → review.", install:"/plugin install superpowers@claude-plugins-official"},
+  mp:{name:"Matt Pocock’s Skills", by:"Matt Pocock · AI Hero", style:"Small slash commands that chain. Mostly manual — you call them when you want them.", install:"claude plugins install mattpocock-skills"},
+  egm:{name:"Elephant-Goldfish", by:"Google (open source)", style:"Deep-context agent writes the design; zero-context reviewers attack it before any code.", install:"claude plugin marketplace add google/elephant-goldfish-model\nclaude plugin install egm@egm"},
+  ps:{name:"pstack", by:"Lauren Tan · port by Michael Denyer", style:"Rigorous late-cycle toolkit: blast radius, multi-model review, CI and PR babysitting.", install:"npx skills add https://github.com/michael-denyer/pstack-claude/tree/main/plugins/pstack/skills --skill \"*\" --agent \"*\" --yes"}
+};
+const KO = ["sp","mp","egm","ps"];
+const PHASES = ["Orient","Explore","Specify","Plan","Build","Test & debug","Review","Ship","Maintain"];
+const PRI = {1:"Must-use",2:"Recommended",3:"Situational"};
+
+const SCORES = { // 0..3 per phase
+  sp:[1,2,1,3,3,3,2,2,1],
+  mp:[2,3,2,2,2,2,2,1,2],
+  egm:[2,2,3,1,0,0,1,0,2],
+  ps:[2,1,2,0,1,2,3,3,2]
+};
+
+const CARDS = [
+ [0,"egm","egm-bootstrap","Unfamiliar repo with thin or stale docs.",1],
+ [0,"ps","/how · /why","How a subsystem works and why it was built that way.",1],
+ [0,"mp","/setup-matt-pocock-skills","Once per repo so Pocock’s skills know the project.",2],
+ [0,"ps","/recall","Coming back after a break.",2],
+ [0,"mp","/ask-matt","Not sure which skill fits.",3],
+ [0,"sp","using-superpowers","Auto-loaded; makes the agent check skills first.",3],
+ [1,"mp","/grill-with-docs","Interview on a plan; records decisions, glossary and ADRs.",1],
+ [1,"mp","/grill-me","One question at a time until every decision is made.",1],
+ [1,"sp","brainstorming","Auto-fires before building; turns intent into a design.",2],
+ [1,"egm","egm-brainstorm","No-code debate; fresh reviewers challenge the idea.",2],
+ [1,"mp","/wayfinder","Large effort — map and settle the decisions.",2],
+ [1,"mp","/research · /prototype","Cited answer, or throwaway code to settle a question.",3],
+ [1,"ps","/poteto-mode","pstack’s entry point for non-trivial tasks.",3],
+ [1,"ps","/figure-it-out","No existing playbook fits.",3],
+ [2,"egm","egm-draft","Brief → design doc naming files to change.",1],
+ [2,"egm","egm-review","Zero-context reviewers try to break the design.",1],
+ [2,"egm","egm-resolve","Agree on changes from review findings.",1],
+ [2,"mp","/to-spec","Agreed conversation → written spec.",2],
+ [2,"ps","/architect","Settle types and module shape before coding.",2],
+ [2,"mp","/domain-modeling · /codebase-design","Sharpen vocabulary; design deep modules.",3],
+ [2,"ps","/arena","Parallel design attempts — expensive.",3],
+ [3,"sp","writing-plans","2–5 minute tasks with paths, code and checks.",1],
+ [3,"sp","using-git-worktrees","Isolated branch with a clean test baseline.",1],
+ [3,"mp","/to-tickets","Spec → small agent-buildable tickets in your tracker.",2],
+ [3,"mp","/triage","Raw issues → pick-up-able work.",3],
+ [4,"sp","subagent-driven-development","Fresh subagent per task, reviewed after each.",1],
+ [4,"sp","executing-plans","Cheaper: inline, one review at the end.",2],
+ [4,"mp","/implement","Finished spec → code, test-first.",2],
+ [4,"mp","/implement-spec","Whole spec with parallel subagents.",2],
+ [4,"sp","dispatching-parallel-agents","Independent tasks run concurrently.",3],
+ [4,"ps","/swarm","Fan out workers, one aggregated report.",3],
+ [5,"sp","test-driven-development","Failing test first, always.",1],
+ [5,"sp","verification-before-completion","Run checks before claiming done.",1],
+ [5,"sp","systematic-debugging","Four-phase root-cause process.",1],
+ [5,"mp","/diagnosing-bugs","Hard bug — start from a failing repro.",2],
+ [5,"mp","/tdd","One test at a time, red-green-refactor.",2],
+ [5,"ps","/tdd","Failing test, then the fix.",3],
+ [5,"ps","/why","Unclear intent in old code.",3],
+ [6,"ps","/blast-radius","What breaks beyond the diff, proven by running code.",1],
+ [6,"mp","/code-review","Diff vs your standards and the spec.",1],
+ [6,"sp","receiving-code-review","Act on feedback with checks, not blind agreement.",2],
+ [6,"sp","requesting-code-review","Between tasks; blocks on critical issues.",2],
+ [6,"ps","/interrogate","Three different models attack the diff.",2],
+ [6,"ps","/deslop · /no-comments","Clean AI tells and noise before review.",3],
+ [6,"ps","/thermo-nuclear-code-quality-review","Extremely strict maintainability audit.",3],
+ [6,"egm","egm-review-loop","Configured reviewer group for a task.",3],
+ [7,"ps","/make-pr-easy-to-review","Clean history, better description.",1],
+ [7,"ps","/babysit","Watch the PR, fix CI and comments (needs gh).",1],
+ [7,"sp","finishing-a-development-branch","Tests, then merge / PR / keep / discard.",2],
+ [7,"mp","/pr","The shape a PR body should take.",2],
+ [7,"ps","/fix-ci · /fix-merge-conflicts","Failing checks and conflicts, non-interactively.",2],
+ [7,"ps","/technical-writing","PR text, commits, READMEs, RFCs.",3],
+ [7,"ps","/get-pr-comments","Summarise review comments.",3],
+ [8,"mp","/retro","After a session — suggest repo improvements.",1],
+ [8,"ps","/reflect","Capture lessons as a skill edit.",1],
+ [8,"egm","egm-drift-report","Docs vs current source, periodically.",2],
+ [8,"mp","/handoff","Let another agent continue a long session.",2],
+ [8,"mp","/improve-codebase-architecture","Find modules worth refactoring.",2],
+ [8,"ps","/automate-me","Draft your own personal mode skill.",3],
+ [8,"ps","/what-did-i-get-done","Summarise your commits for a period.",3],
+ [8,"sp","writing-skills · diagnosing-superpowers","Author skills; debug a bad session.",3]
+].map(c => ({phase:c[0],kit:c[1],name:c[2],when:c[3],pri:c[4]}));
+
+const SPECTRUM = [
+  {k:"mp", x:12, low:false, label:"Pocock — mostly manual, tiny skills"},
+  {k:"ps", x:45, low:true,  label:"pstack — auto-routes non-trivial work"},
+  {k:"egm",x:62, low:false, label:"EGM — gated phases, you approve"},
+  {k:"sp", x:90, low:true,  label:"Superpowers — hooks enforce every step"}
+];
+
+const EVID = [
+ {k:"sp", verdict:"Best when the task is big; overhead when it isn’t.",
+  good:[
+   ["Months later it’s still installed in a heavy tester’s setup; on complex tasks it stopped “built the wrong thing” restarts.","Mejba Ahmed","https://www.mejba.me/blog/superpowers-plugin-claude-code-review"],
+   ["verification-before-completion is the one skill that tester would keep if he could keep only one.","Mejba Ahmed","https://www.mejba.me/blog/superpowers-plugin-claude-code-review"],
+   ["systematic-debugging rescued sessions that were spiralling into token-burning guess loops.","Mejba Ahmed","https://www.mejba.me/blog/superpowers-plugin-claude-code-review"],
+   ["Reviewers single out worktree isolation and the mandatory test phase.","Ship or Skip panel","https://shiporskip.io/compare/mattpocock-skills-agent-engineering-npm-2026-vs-superpowers-tdd-agentic-workflow-ai-coding-claude-cursor-codex"]],
+  bad:[
+   ["A ten-line fix can trigger the full method; prefixing “quick task, skip planning” mostly works.","Mejba Ahmed","https://www.mejba.me/blog/superpowers-plugin-claude-code-review"],
+   ["Brainstorming tends to do a short self-review and hurry on to planning.","Reddit","https://reddit.sentinel-team.org/posts/1tlvwfi/snapshots/2026-05-30T02%3A41%3A26.708778Z"],
+   ["Around 3,300 lines across 14 skills, pushed by hooks — heavy compared with Pocock’s.","BestHub","https://www.besthub.dev/articles/exploring-grill-with-docs-a-new-rival-to-superpowers-in-ai-coding-skills-ac31c21fdc7d"]]},
+ {k:"mp", verdict:"Best at asking the right questions; you stay in control.",
+  good:[
+   ["Theo, a self-declared sceptic of skill repos, found Pocock’s grilling asks harder questions than other brainstorming skills.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["On an iOS app, /grill-with-docs drove 16 explicit decisions and produced a glossary plus four ADRs.","BestHub","https://www.besthub.dev/articles/exploring-grill-with-docs-a-new-rival-to-superpowers-in-ai-coding-skills-ac31c21fdc7d"],
+   ["A Drupal developer calls /grill-me a game-changer for learning and hard problems.","Jacob Rockowitz","https://www.jrockowitz.com/blog/vibing-drupal-grill-me"],
+   ["grill-me, tdd and improve-codebase-architecture are its most installed skills.","skills.sh","https://www.skills.sh/mattpocock/skills"]],
+  bad:[
+   ["The full grill → spec → tickets → implement flow is a whole method; some borrow single files instead.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["Its writing style (heavy em dashes) leaked into one user’s agent replies.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["For already disciplined engineers it can add ceremony without much speed.","Ship or Skip panel","https://shiporskip.io/compare/mattpocock-skills-agent-engineering-npm-2026-vs-superpowers-tdd-agentic-workflow-ai-coding-claude-cursor-codex"]]},
+ {k:"egm", verdict:"Best design review there is; it stops before code.",
+  good:[
+   ["One reviewer must explain the design back; if it gets it wrong, the doc is sent back as ambiguous.","Help Net Security","https://www.helpnetsecurity.com/2026/10/26/google-elephant-goldfish-model-plugin/"],
+   ["A final reviewer gives go/no-go on whether file paths, data structures and signatures are all pinned down.","Help Net Security","https://www.helpnetsecurity.com/2026/10/26/google-elephant-goldfish-model-plugin/"],
+   ["Google reports thousands of engineers using it daily for production code.","Google / README","https://github.com/google/elephant-goldfish-model"]],
+  bad:[
+   ["Security isn’t on the reviewer list by default — add a security-minded reviewer yourself.","Help Net Security","https://www.helpnetsecurity.com/2026/10/26/google-elephant-goldfish-model-plugin/"],
+   ["Needs fresh subagents; without them the review stops. Overkill for a small, clear fix.","README","https://github.com/google/elephant-goldfish-model"],
+   ["Brand new to the public (October 2026) — few outside reports yet.","",""]]},
+ {k:"ps", verdict:"Best last mile: what breaks, and getting the PR merged.",
+  good:[
+   ["blast-radius was adopted by a reviewer because nothing else in his setup asked what a change breaks elsewhere.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["unslop and the show-your-work decision log were also picked as worth copying.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["The only kit that automates the CI-fix and review-comment loop.","pstack reference","https://github.com/michael-denyer/pstack-claude/blob/main/docs/reference.md#slash-commands"]],
+  bad:[
+   ["arena runs a task several times in parallel — Theo said it cost him hundreds of dollars.","SparkOne","https://sparkone.nl/en/blog/skills-van-anderen-lenen/"],
+   ["Parts are wired to Cursor and don’t fully work elsewhere; delegation is unverified on several runtimes.","SparkOne / reference","https://github.com/michael-denyer/pstack-claude/blob/main/docs/reference.md#runtime-support"]]}
+];
+
+const PICKS = [
+ {area:"Exploring", q:"What are we actually building?",
+  win:["mp","/grill-with-docs"], why:"Asks one question at a time down the decision tree, proposes an answer for each, and writes the outcome to a glossary and ADRs so later sessions inherit it.",
+  runner:["sp","brainstorming","You want it to happen automatically on every feature."],
+  also:["egm","egm-brainstorm","Feature with real architectural trade-offs."],
+  avoid:"Skipping it for “obvious” features — the reported failure is the agent misreading intent in the first minute.",
+  ev:[["Harder questions","than other brainstorming skills, per Theo’s review"],["16 decisions + 4 ADRs","on one real iOS app"],["Most installed","skill in Pocock’s set"]]},
+ {area:"Planning", q:"How do we break it into safe steps?",
+  win:["sp","writing-plans"], why:"Produces 2–5 minute tasks with exact file paths and checks, saved as a document — a crashed session resumes from the plan, not from memory. Pair with git worktrees.",
+  runner:["mp","/to-spec → /to-tickets","Your team works from GitHub or Jira issues."],
+  also:["egm","egm-draft → egm-review","The design itself needs stress-testing before planning."],
+  avoid:"Planning trivial tasks. Simple tasks cost more tokens with a planning phase.",
+  ev:[["Plans persist","so interrupted work resumes cleanly"],["36 stories → 7 linked issues","via /to-tickets on a real app"],["Goldfish go/no-go","on file paths and signatures in EGM"]]},
+ {area:"Plan execution", q:"Who builds it, and how do we keep it on rails?",
+  win:["sp","subagent-driven-development"], why:"A fresh subagent per task with a review after each. In testing, complex builds avoided restarts and costs became predictable.",
+  runner:["mp","/implement-spec","You already followed Pocock’s spec-and-tickets flow."],
+  also:["sp","executing-plans","Tokens matter more than per-task review."],
+  avoid:"pstack /arena on a budget — N parallel attempts cost roughly N times the tokens.",
+  ev:[["2–3× tighter","cost spread on complex tasks"],["Hours","of autonomous work on a plan, per its README"],["Hundreds of dollars","Theo’s reported arena spend"]]},
+ {area:"Review", q:"Is this change actually safe to merge?",
+  win:["ps","/blast-radius"], why:"Looks beyond the diff for what else the change can break and proves it by running code — the question other review skills don’t ask. Follow with Pocock’s /code-review for standards and spec fit.",
+  runner:["mp","/code-review","Routine changes; checks standards and the spec in parallel."],
+  also:["sp","receiving-code-review","Stops the agent blindly applying every comment."],
+  avoid:"Treating AI review as sign-off. EGM’s own docs say it doesn’t replace tests or human judgement.",
+  ev:[["Adopted","by a sceptical reviewer for its unique question"],["Two axes","standards + spec in /code-review"],["No security reviewer","by default in EGM — add one"]]},
+ {area:"Test", q:"Does it really work?",
+  win:["sp","test-driven-development + verification-before-completion"], why:"Tests exist by construction, and the agent must run the checks and read the output before claiming done. Test coverage was the clearest win in the 12-session test.",
+  runner:["mp","/tdd","You want a lighter, one-test-at-a-time loop you call yourself."],
+  also:["ps","/tdd","Fixing a specific bug test-first."],
+  avoid:"Trusting the planned path alone — unplanned runs occasionally caught odd edge cases the planned ones missed. Add edge-case tests deliberately.",
+  ev:[["Clearest win","test coverage in the controlled test"],["The keeper","verification is the one skill the tester would keep"],["Team friction","TDD enforcement annoys non-testers"]]},
+ {area:"Investigation", q:"Why is it broken, or why is it built like this?",
+  win:["sp","systematic-debugging"], why:"Forces root cause before any fix through a four-phase process. Reported to rescue sessions stuck in guess-and-patch loops.",
+  runner:["mp","/diagnosing-bugs","You can reproduce it; start from a failing repro."],
+  also:["ps","/how · /why","Understanding unfamiliar code or past decisions, not a bug."],
+  avoid:"Letting the agent patch symptoms before a reproduction exists.",
+  ev:[["Rescued sessions","from token-burning guess loops"],["Repro first","Pocock lets the agent auto-call diagnose"],["Parallel evidence","pstack /why digs across tools"]]}
+];
+
+const SKIP = {
+ "Exploring":"The task is a one-line, unambiguous change.",
+ "Planning":"Quick scripts and throwaway prototypes.",
+ "Plan execution":"A single small edit — just do it.",
+ "Review":"Never skip; scale down to /code-review only.",
+ "Test":"Exploratory prototypes you will delete.",
+ "Investigation":"The cause is already obvious from the error."
+};
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const state = {view:"phase", kits:new Set(KO), pris:new Set([1,2,3]), phase:null, done:new Set()};
+const KEY = "skills-playbook-done";
+try { const s = JSON.parse(localStorage.getItem(KEY) || "[]"); if (Array.isArray(s)) s.forEach(n => state.done.add(n)); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...state.done])); } catch(e) {} };
+
+function drawKits(){
+  document.getElementById("kits").innerHTML = KO.map(k => `<article class="panel kit k-${k}">
+    <h3>${esc(KITS[k].name)}</h3><p class="by">${esc(KITS[k].by)}</p><p>${esc(KITS[k].style)}</p>
+    <pre><code>${esc(KITS[k].install)}</code></pre></article>`).join("");
+}
+
+function drawHeat(){
+  const words = ["—","Has","Good","Best"];
+  let h = `<table><thead><tr><th></th>${PHASES.map(p=>`<th>${esc(p)}</th>`).join("")}</tr></thead><tbody>`;
+  KO.forEach(k => {
+    h += `<tr class="k-${k}"><th class="rowh" style="color:var(--${k}-t)">${esc(KITS[k].name)}</th>`;
+    SCORES[k].forEach((s,i) => {
+      const o = [0,.15,.45,1][s];
+      h += `<td class="s${s}" style="--o:${o}" title="${esc(KITS[k].name)} · ${esc(PHASES[i])}: ${words[s]}"><span>${s===3?"Best":s===0?"":""}</span></td>`;
+    });
+    h += `</tr>`;
+  });
+  document.getElementById("heat").innerHTML = h + `</tbody></table>`;
+}
+
+function drawSpectrum(){
+  document.getElementById("spectrum").innerHTML = SPECTRUM.map(s =>
+    `<span class="spec-pin k-${s.k}${s.low?" low":""}" style="left:${s.x}%"><b>${esc(s.label)}</b></span>`).join("");
+}
+
+function drawMap(){
+  const n = PHASES.length, W = 1080, left = 150, right = 40, top = 64, gap = 40, step = (W-left-right)/(n-1);
+  const H = top + gap*KO.length + 10;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Kit lines across phases">`;
+  KO.forEach((k,i) => {
+    const y = top + 18 + i*gap;
+    const has = PHASES.map((_,j) => CARDS.some(c => c.kit===k && c.phase===j));
+    s += `<text class="line-name" x="16" y="${y+4}" style="fill:var(--${k}-t)">${esc(KITS[k].name)}</text>`;
+    s += `<line x1="${left}" y1="${y}" x2="${W-right}" y2="${y}" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>`;
+    for (let j=0;j<n-1;j++) if (has[j]&&has[j+1]) s += `<line x1="${left+j*step}" y1="${y}" x2="${left+(j+1)*step}" y2="${y}" stroke="var(--${k})" stroke-width="6" stroke-linecap="round"/>`;
+    has.forEach((h,j) => { if (h) s += `<circle cx="${left+j*step}" cy="${y}" r="8" fill="var(--surface)" stroke="var(--${k})" stroke-width="4"/>`; });
+  });
+  PHASES.forEach((p,j) => {
+    const x = left + j*step;
+    s += `<g class="station" tabindex="0" role="button" aria-label="Show ${esc(p)} on the board" data-phase="${j}" style="cursor:pointer">
+      <rect x="${x-step/2}" y="0" width="${step}" height="${H}" fill="transparent"/>
+      <text class="st-num" x="${x}" y="24" text-anchor="middle">${j+1}</text>
+      <text class="st-label" x="${x}" y="44" text-anchor="middle">${esc(p)}</text></g>`;
+  });
+  document.getElementById("map").innerHTML = s + `</svg>`;
+  document.querySelectorAll(".station").forEach(g => {
+    const go = () => { state.view = "phase"; state.phase = +g.dataset.phase; syncSeg(); renderBoard(); location.hash = "board"; };
+    g.addEventListener("click", go);
+    g.addEventListener("keydown", e => { if (e.key==="Enter"||e.key===" ") { e.preventDefault(); go(); } });
+  });
+}
+
+function cardHTML(c, showPhase){
+  const d = state.done.has(c.name);
+  return `<article class="card k-${c.kit}${d?" done":""}">
+    <div class="card-top"><div class="name">${esc(c.name)}</div><span class="badge b${c.pri}" title="${PRI[c.pri]}">P${c.pri}</span></div>
+    <p class="when">${esc(c.when)}</p>
+    <div class="meta"><span>${esc(showPhase ? PHASES[c.phase] + " · " + KITS[c.kit].name : KITS[c.kit].name)}</span>
+    <label class="check"><input type="checkbox" data-name="${esc(c.name)}" ${d?"checked":""}> Adopted</label></div></article>`;
+}
+
+function renderBoard(){
+  const vis = CARDS.filter(c => state.kits.has(c.kit) && state.pris.has(c.pri));
+  let cols;
+  if (state.view === "phase") {
+    const idx = state.phase === null ? PHASES.map((_,i)=>i) : [state.phase];
+    cols = idx.map(i => ({num:i+1, title:PHASES[i], lanes:[1,2,3].map(p => ({pri:p, items:vis.filter(c=>c.phase===i&&c.pri===p)})), sp:false}));
+  } else if (state.view === "priority") {
+    cols = [1,2,3].map(p => ({num:"P"+p, title:PRI[p], lanes:[{items:vis.filter(c=>c.pri===p).sort((a,b)=>a.phase-b.phase)}], sp:true}));
+  } else {
+    cols = KO.map(k => ({kit:k, title:KITS[k].name, lanes:[{items:vis.filter(c=>c.kit===k).sort((a,b)=>a.phase-b.phase||a.pri-b.pri)}], sp:true}));
+  }
+  let html = cols.map(col => {
+    const count = col.lanes.reduce((n,l)=>n+l.items.length,0);
+    let first = true;
+    const lanes = col.lanes.map(l => {
+      if (l.pri && !l.items.length) return "";
+      const lab = l.pri ? `<div class="lane-label${first?" first":""}"><span class="badge b${l.pri}">P${l.pri}</span>${PRI[l.pri]}</div>` : "";
+      first = false;
+      return lab + `<div class="cards">${l.items.map(c=>cardHTML(c,col.sp)).join("")}</div>`;
+    }).join("");
+    return `<section class="column${col.kit?" k-"+col.kit:""}" aria-label="${esc(col.title)}">
+      <div class="col-head">${col.kit?`<span class="dot"></span>`:`<span class="col-num">${col.num}</span>`}<span class="col-title">${esc(col.title)}</span><span class="col-count">${count}</span></div>
+      ${count?lanes:`<p class="empty">Nothing matches the current filters.</p>`}</section>`;
+  }).join("");
+  if (state.view==="phase" && state.phase!==null) html += `<section class="column" style="background:transparent;border-style:dashed"><button type="button" class="reset" id="allphases" style="padding:8px 4px">Show all phases</button></section>`;
+  document.getElementById("boardcols").innerHTML = html;
+  const all = document.getElementById("allphases"); if (all) all.onclick = () => { state.phase = null; renderBoard(); };
+  const ad = CARDS.filter(c=>state.done.has(c.name)).length, p1 = CARDS.filter(c=>c.pri===1), p1d = p1.filter(c=>state.done.has(c.name)).length;
+  document.getElementById("progress").innerHTML = `<b>${ad}</b> of ${CARDS.length} · <b>${p1d}</b> of ${p1.length} must-use`;
+}
+
+function drawChips(){
+  document.getElementById("kit-chips").innerHTML = KO.map(k => `<button type="button" class="chip k-${k}" data-kit="${k}" aria-pressed="${state.kits.has(k)}"><span class="dot"></span>${esc(KITS[k].name)}</button>`).join("");
+  document.getElementById("pri-chips").innerHTML = [1,2,3].map(p => `<button type="button" class="chip" data-pri="${p}" aria-pressed="${state.pris.has(p)}"><span class="badge b${p}">P${p}</span>${PRI[p]}</button>`).join("");
+}
+function syncSeg(){ document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view===state.view)); }
+
+function drawEvidence(){
+  const li = a => `<li>${esc(a[0])}${a[1]?` <span class="src">— ${a[2]?`<a href="${esc(a[2])}">${esc(a[1])}</a>`:esc(a[1])}</span>`:""}</li>`;
+  document.getElementById("evid").innerHTML = EVID.map(e => `<article class="panel k-${e.k}">
+    <h3>${esc(KITS[e.k].name)}</h3><p class="verdict">${esc(e.verdict)}</p>
+    <h4>What works</h4><ul>${e.good.map(li).join("")}</ul>
+    <h4>What grates</h4><ul>${e.bad.map(li).join("")}</ul></article>`).join("");
+}
+
+function drawPicks(){
+  const k = a => `<code class="k-${a[0]}" style="color:var(--${a[0]}-t)">${esc(a[1])}</code>`;
+  document.getElementById("picks").innerHTML = PICKS.map(p => `<article class="panel pickcard">
+    <div class="pk-head"><h3 class="pk-area">${esc(p.area)}</h3><p class="pk-q">${esc(p.q)}</p></div>
+    <div class="pk-win k-${p.win[0]}"><div class="lbl">Best pick</div><div class="skill">${esc(p.win[1])}</div><div class="kitname">${esc(KITS[p.win[0]].name)}</div><p>${esc(p.why)}</p></div>
+    <div class="pk-body">
+      <div class="pk-row"><span class="tag">Runner-up</span><span>${k(p.runner)} <span class="src">${esc(KITS[p.runner[0]].name)}</span> — ${esc(p.runner[2])}</span></div>
+      <div class="pk-row"><span class="tag">Also</span><span>${k(p.also)} <span class="src">${esc(KITS[p.also[0]].name)}</span> — ${esc(p.also[2])}</span></div>
+      <div class="pk-row"><span class="tag">Avoid</span><span>${esc(p.avoid)}</span></div>
+      <div class="pk-ev"><ul>${p.ev.map(e=>`<li><b>${esc(e[0])}</b> — ${esc(e[1])}</li>`).join("")}</ul></div>
+    </div></article>`).join("");
+  document.getElementById("cheat").innerHTML = PICKS.map(p => `<tr><td>${esc(p.area)}</td>
+    <td><code style="color:var(--${p.win[0]}-t)">${esc(p.win[1])}</code><br><span class="src">${esc(KITS[p.win[0]].name)}</span></td>
+    <td><code style="color:var(--${p.runner[0]}-t)">${esc(p.runner[1])}</code><br><span class="src">${esc(KITS[p.runner[0]].name)}</span></td>
+    <td>${esc(SKIP[p.area])}</td></tr>`).join("");
+}
+
+document.addEventListener("click", e => {
+  const v = e.target.closest("[data-view]");
+  if (v) { state.view = v.dataset.view; state.phase = null; syncSeg(); renderBoard(); return; }
+  const kk = e.target.closest("[data-kit]");
+  if (kk) { const id = kk.dataset.kit; state.kits.has(id)?state.kits.delete(id):state.kits.add(id); drawChips(); renderBoard(); return; }
+  const pp = e.target.closest("[data-pri]");
+  if (pp) { const id = +pp.dataset.pri; state.pris.has(id)?state.pris.delete(id):state.pris.add(id); drawChips(); renderBoard(); return; }
+  if (e.target.id === "reset") { state.done.clear(); save(); renderBoard(); }
+});
+document.addEventListener("change", e => {
+  if (e.target.matches("input[data-name]")) { const n = e.target.dataset.name; e.target.checked?state.done.add(n):state.done.delete(n); save(); renderBoard(); }
+});
+
+drawKits(); drawHeat(); drawSpectrum(); drawMap(); drawChips(); renderBoard(); drawEvidence(); drawPicks();
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

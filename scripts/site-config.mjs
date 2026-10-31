@@ -80,6 +80,11 @@ export const REPORTS = [
       '13-orca-field-guide.html',
       '14-harness-engineering-slide-book.html',
       '15-12-rules-prompting-claude-opus-5-5.html',
+      '16-how-anthropic-engineers-use-claude-code.html',
+      '17-use-claude-like-a-senior-developer.html',
+      '18-how-a-change-gets-reviewed.html',
+      '19-ai-coaching-resource-roundup.html',
+      '20-agent-skills-playbook.html',
     ],
     titles: {
       '01-claude-code-configuration.html': 'Session 1: Claude Code Configuration & Extensibility',
@@ -97,6 +102,11 @@ export const REPORTS = [
       '13-orca-field-guide.html': 'Session 13: Orca Field Guide',
       '14-harness-engineering-slide-book.html': 'Session 14: Harness Engineering Slide Book',
       '15-12-rules-prompting-claude-opus-5-5.html': 'Session 15: 12 Rules for Prompting Claude Opus 5.5',
+      '16-how-anthropic-engineers-use-claude-code.html': 'Session 16: How Anthropic Engineers Use Claude Code',
+      '17-use-claude-like-a-senior-developer.html': 'Session 17: How to Use Claude Like a Senior Developer',
+      '18-how-a-change-gets-reviewed.html': 'Session 18: How a Change Gets Reviewed',
+      '19-ai-coaching-resource-roundup.html': 'Session 19: AI Coaching Resource Roundup',
+      '20-agent-skills-playbook.html': 'Session 20: Which Skill, When',
     },
   },
   {

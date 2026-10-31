@@ -1,0 +1,706 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Friday Java Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F3F5F2; --surface:#FFFFFF; --ink:#18221D; --muted:#56635C; --line:#D9E0DB;
+  --accent:#2F6B4A; --accent-soft:#E2EEE6; --amber:#9A6212; --amber-soft:#F6ECDC;
+  --code-bg:#15201A; --code-ink:#E4EDE7; --code-dim:#8FA398; --code-key:#9FD3B0; --code-str:#E8C58A;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+    --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+    --code-bg:#0B110E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#101714; --surface:#17211C; --ink:#E3EAE5; --muted:#9AAAA1; --line:#2A3831;
+  --accent:#7CC39A; --accent-soft:#1F3328; --amber:#E0B266; --amber-soft:#322715;
+  --code-bg:#0B110E;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.6 var(--body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;font-family:var(--body)}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mast{display:grid;gap:14px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.mast-top{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline}
+.demo-pill{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber);padding:6px 9px;border-radius:4px}
+.lede{font-size:17px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font:500 12.5px/1 var(--body);text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:7px 10px;border-radius:999px;background:var(--surface)}
+.toc a:hover{border-color:var(--accent);color:var(--accent)}
+section{display:grid;gap:16px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:6px}
+/* radar */
+.radar{display:grid;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.radar-row{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.radar-row:first-child{border-top:0}
+.radar-date{font:500 12.5px/1.5 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin-right:6px;vertical-align:2px}
+.tag.ga{background:var(--accent-soft);color:var(--accent)}
+.tag.pre{background:var(--amber-soft);color:var(--amber)}
+.tag.eol{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.radar-row p{font-size:14px;color:var(--muted);margin-top:3px}
+/* code */
+.code{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:8px;overflow:hidden}
+.code-bar{flex-wrap:wrap;gap:8px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #ffffff14;font:500 11.5px/1 var(--mono);color:var(--code-dim)}
+.copy{font:600 11px/1 var(--mono);background:transparent;color:var(--code-dim);border:1px solid #ffffff26;border-radius:4px;padding:5px 8px;cursor:pointer}
+.copy:hover{color:var(--code-ink);border-color:#ffffff55}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--mono);tab-size:2}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim);font-style:italic}
+/* feature: snippet of the week */
+.feature{display:grid;gap:16px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+.eli5{background:var(--amber-soft);border-radius:8px;padding:18px;display:grid;gap:10px}
+.eli5 .eyebrow{color:var(--amber)}
+.eli5 p{font-size:14.5px}
+@media (max-width:720px){.feature{grid-template-columns:1fr}.radar-row{grid-template-columns:1fr;gap:4px}}
+/* levels */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start}
+.meter{display:flex;gap:3px}
+.meter i{width:18px;height:4px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.level p{font-size:14px;color:var(--muted)}
+@media (max-width:720px){.levels{grid-template-columns:1fr}}
+/* tips */
+.tips{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.tips li{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.tips li:first-child{border-top:0}
+.tips .n{font:600 12px/1.6 var(--mono);color:var(--accent);min-width:3ch}
+.tips code,p code,td code,.qa code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.tips p{font-size:14px;color:var(--muted);margin-top:2px}
+/* qa */
+.qa{display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;gap:12px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+summary .lvl{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);flex:none;width:52px}
+summary::after{content:"+";margin-left:auto;color:var(--muted);font-family:var(--mono)}
+details[open] summary::after{content:"–"}
+.ans{padding:0 16px 16px 80px;display:grid;gap:8px;font-size:14.5px}
+@media (max-width:560px){.ans{padding-left:16px}}
+/* coding interview */
+.iq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:760px){.iq-grid{grid-template-columns:1fr}}
+.iq{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0}
+.iq-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.iq .task{font-size:14.5px}
+.iq .task li{margin-bottom:4px}
+.iq ul.task{margin:0;padding-left:18px}
+.iq details{border-color:var(--accent);background:transparent}
+.iq details summary{color:var(--accent);padding:10px 14px}
+.iq details summary::after{color:var(--accent)}
+.iq .sol{padding:0 14px 14px;display:grid;gap:10px;font-size:14px}
+.iq .sol p code,.iq .task code{font:12.5px var(--mono);background:var(--accent-soft);color:var(--ink);padding:1px 5px;border-radius:3px}
+.cx{display:flex;flex-wrap:wrap;gap:6px}
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font:600 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+/* two col lists */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.do{color:var(--accent)} .dont{color:var(--amber)}
+/* case study */
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:13.5px}
+.track{height:12px;background:var(--accent-soft);border-radius:2px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.fill.warn{background:var(--amber)}
+@media (max-width:560px){.bar-row{grid-template-columns:1fr 60px}.bar-row .track{grid-column:1/-1;order:3}}
+.note{font-size:12.5px;color:var(--muted)}
+/* goals */
+.goals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.goals label{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px}
+.goals input{accent-color:var(--accent);margin-top:4px}
+.goals input:checked + span{color:var(--muted);text-decoration:line-through}
+/* sources */
+.sources{columns:2 280px;column-gap:24px;font-size:13.5px;padding-left:18px;margin:0}
+.sources li{break-inside:avoid;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.toc a,.copy{transition:border-color .15s,color .15s}}
+</style>
+
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Issue W44 · Friday 30 Oct 2026 · 10:00 Dhaka</span>
+  </div>
+  <h1>Friday Java Brief</h1>
+  <p class="lede">A second emergency Java patch landed on 24 Oct, JDK 28 picked up ahead-of-time code compilation, and the Valhalla team asked everyone to test value classes. The coding theme is doing the same work over and over: Fibonacci three ways, and the JPA N+1 query.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#radar">This week</a><a href="#snippet">Snippet of the week</a><a href="#newfeature">New Java feature</a><a href="#agentic">Agentic Java &amp; AI</a><a href="#levels">Basic → Advanced</a><a href="#tips">Tips &amp; tricks</a><a href="#interview">Interview Q&amp;A</a><a href="#coding">Coding interview</a><a href="#practices">Best practices</a><a href="#industry">Industry adoption</a><a href="#case">Real problem</a><a href="#goals">Goals</a>
+  </nav>
+</header>
+
+<section id="radar">
+  <div class="sec-head"><span class="eyebrow">Known things this week</span><h2>Release radar</h2></div>
+  <div class="radar">
+    <div class="radar-row"><span class="radar-date">24 Oct 2026</span><div><h3><span class="tag pre">Security</span>Second eMudhra alert: CVE-2026-114820 (CVSS 9.1)</h3><p>Three days after the first fix, Oracle issued another JSSE alert that removes a set of eMudhra-related <strong>root</strong> CA certificates. The affected list includes the 21 Oct <code>.0.2</code> builds (for example 21.0.13.0.2 and 25.0.5.0.2), so update base images a third time this month. GraalVM native images capture the trust store at build time, so rebuild them too.</p></div></div>
+    <div class="radar-row"><span class="radar-date">25 Oct 2026</span><div><h3><span class="tag pre">Preview</span>JDK 28 targets ahead-of-time code compilation (JEP 544)</h3><p>JEP 544 is now targeted, joining structured concurrency (JEP 543, final) and value objects (JEP 401, preview). The proposed schedule: Rampdown Phase One on 3 Dec 2026 and GA on 9 Mar 2027. Early-access build 21 is out.</p></div></div>
+    <div class="radar-row"><span class="radar-date">27 Oct 2026</span><div><h3><span class="tag pre">Preview</span>Quality heads-up: test your code with value classes</h3><p>With preview features on in JDK 28, 30 JDK classes become value classes, including <code>Integer</code>, <code>Optional</code> and many <code>java.time</code> types. <code>==</code> then compares field values, and synchronizing on these objects or putting them in a <code>WeakHashMap</code> can throw <code>IdentityException</code>.</p></div></div>
+    <div class="radar-row"><span class="radar-date">22 Oct 2026</span><div><h3><span class="tag ga">Patch</span>Spring Data 2026.0.2 and 2025.1.8</h3><p>Service releases with bug fixes and dependency upgrades: Spring Data MongoDB 5.1.2 and JPA 4.1.2 (2026.0.x line), and MongoDB 5.0.8 and JPA 4.0.8 (2025.1.x line). Spring Security 7.2.0-RC1, Spring Cloud 2026.0.0-RC1 and Spring Modulith 2.2 RC1 shipped on the same train.</p></div></div>
+    <div class="radar-row"><span class="radar-date">22 Oct 2026</span><div><h3><span class="tag ga">GA</span>WildFly 42 and Apache POI 6.0.0</h3><p>WildFly 42 adds virtual threads to its Jakarta Concurrency implementation. Apache POI 6 needs JDK 17 and removes deprecated methods. If you export Excel reports with POI, plan the upgrade as a small migration.</p></div></div>
+  </div>
+</section>
+
+<section id="snippet">
+  <div class="sec-head"><span class="eyebrow">Snippet of the week</span><h2>The MongoDB version of N+1: one lookup per row</h2>
+  <p>A list endpoint loads 100 orders, then calls <code>customers.findById(...)</code> inside the loop. That's 101 round trips. Collect the ids, fetch them all in one <code>$in</code> query, and join in memory.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>OrderListService.java · Spring Data MongoDB</span><button class="copy" type="button" data-copy="c1">Copy</button></div>
+<pre id="c1"><span class="k">record</span> OrderView(String number, String customerName) {}
+
+<span class="k">@Service</span>
+<span class="k">class</span> OrderListService {
+
+  <span class="k">private final</span> OrderRepository orders;       <span class="c">// MongoRepository&lt;Order, String&gt;</span>
+  <span class="k">private final</span> CustomerRepository customers; <span class="c">// MongoRepository&lt;Customer, String&gt;</span>
+
+  OrderListService(OrderRepository orders, CustomerRepository customers) {
+    <span class="k">this</span>.orders = orders;
+    <span class="k">this</span>.customers = customers;
+  }
+
+  List&lt;OrderView&gt; openOrders() {
+    List&lt;Order&gt; list = orders.findByStatus(Status.OPEN);        <span class="c">// query 1</span>
+
+    Set&lt;String&gt; ids = list.stream()
+        .map(Order::customerId)
+        .collect(Collectors.toSet());
+
+    Map&lt;String, String&gt; names = <span class="k">new</span> HashMap&lt;&gt;();
+    customers.findAllById(ids)                                   <span class="c">// query 2: _id $in [...]</span>
+        .forEach(c -&gt; names.put(c.id(), c.name()));
+
+    <span class="k">return</span> list.stream()
+        .map(o -&gt; <span class="k">new</span> OrderView(o.number(),
+            names.getOrDefault(o.customerId(), <span class="s">"(deleted customer)"</span>)))
+        .toList();
+  }
+}
+<span class="c">// Before: 1 + N queries. After: always 2, however many orders.</span></pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>You need milk for 20 friends. You can walk to the shop 20 times, buying one carton each trip, or write one shopping list and go once. Each trip is short, but the walking adds up.</p>
+      <span class="eyebrow" style="margin-top:6px">Why it matters</span>
+      <p>Each query is fast, so no single one shows up in the slow-query log. The cost is round-trip latency multiplied by N. <code>findAllById</code> becomes one query on <code>_id</code>, which is always indexed. Using a <code>Set</code> removes repeated customer ids before the query. For very large lists, page the orders first (that's Week 8's topic).</p>
+    </aside>
+  </div>
+</section>
+
+<section id="newfeature">
+  <div class="sec-head"><span class="eyebrow">New Java feature · JDK 25 · JEP 512 · Final</span><h2>Compact source files and instance <code style="font-size:.8em">main</code> methods</h2>
+  <p>A <code>.java</code> file can now be just methods and fields. The compiler wraps them in an implicit class. <code>main</code> no longer needs <code>public</code>, <code>static</code> or <code>String[] args</code>. The whole <code>java.base</code> module is imported automatically, and the new <code>java.lang.IO</code> class gives you <code>print</code>, <code>println</code> and <code>readln</code>. Final in JDK 25, so no flags are needed.</p></div>
+  <div class="feature">
+    <div class="code">
+      <div class="code-bar"><span>Fib.java · java Fib.java (JDK 25 or newer)</span><button class="copy" type="button" data-copy="c3">Copy</button></div>
+<pre id="c3"><span class="c">// Before (JDK 21): the full ceremony</span>
+<span class="k">import</span> java.util.List;
+
+<span class="k">public class</span> FibOld {
+  <span class="k">public static void</span> main(String[] args) {
+    List&lt;Integer&gt; ns = List.of(<span class="s">5, 10, 20</span>);
+    <span class="k">for</span> (<span class="k">int</span> n : ns) System.out.println(n + <span class="s">" → "</span> + fib(n));
+  }
+  <span class="k">static long</span> fib(<span class="k">int</span> n) {
+    <span class="k">long</span> a = <span class="s">0</span>, b = <span class="s">1</span>;
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; n; i++) { <span class="k">long</span> t = a + b; a = b; b = t; }
+    <span class="k">return</span> a;
+  }
+}
+
+<span class="c">// After (JDK 25+): the whole file, nothing else</span>
+<span class="k">void</span> main() {
+  <span class="k">for</span> (<span class="k">int</span> n : List.of(<span class="s">5, 10, 20</span>)) {   <span class="c">// List: java.base is auto-imported</span>
+    IO.println(n + <span class="s">" → "</span> + fib(n));
+  }
+}
+
+<span class="k">long</span> fib(<span class="k">int</span> n) {
+  <span class="k">long</span> a = <span class="s">0</span>, b = <span class="s">1</span>;
+  <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; n; i++) { <span class="k">long</span> t = a + b; a = b; b = t; }
+  <span class="k">return</span> a;
+}
+<span class="c">// $ java Fib.java</span>
+<span class="c">// 5 → 5</span>
+<span class="c">// 10 → 55</span>
+<span class="c">// 20 → 6765</span></pre>
+    </div>
+    <aside class="eli5">
+      <span class="eyebrow">Explain like I'm 5</span>
+      <p>Before, writing a two-line note meant filling in a whole official form: name, address, stamp. Now you can just write the note. Java fills in the form for you.</p>
+      <span class="eyebrow" style="margin-top:6px">Use it for</span>
+      <p>Interview practice (this week's Fibonacci in one file), small scripts, quick checks of an API, and teaching. Run with <code>java Fib.java</code>, no separate compile step. When a script grows, add a class declaration and it becomes normal Java again.</p>
+      <span class="eyebrow" style="margin-top:6px">Status</span>
+      <p>Final in JDK 25 (LTS), after previews in JDK 21–24. Not useful inside a Spring Boot app, because an implicit class can't be referenced by other classes. It's for scripts and learning.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="agentic">
+  <div class="sec-head"><span class="eyebrow">Agentic Java development · Java AI features</span><h2>Agents on the JVM this month</h2>
+  <p>The big theme this week is giving agents real IDE tools: Netflix wrapped a headless JetBrains language server for its coding agents, and JetBrains shipped IntelliJ's Java support for VS Code and Cursor. Spring AI 2.1 is at RC1.</p></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Framework / tool</th><th>Who's behind it</th><th>How people use it</th><th>Maturity</th></tr></thead>
+    <tbody>
+      <tr><td>Spring AI 2.1</td><td>Spring team (Broadcom)</td><td>ChatClient, tools, RAG and MCP in Boot apps. Recent community recipes cover faster embeddings for RAG and MCP Apps that render rich UIs.</td><td><span class="tag ga">2.0.2 GA</span> <span class="tag pre">2.1 RC1</span></td></tr>
+      <tr><td>LangChain4j 1.22</td><td>LangChain4j community</td><td>Declarative AI services: an interface with <code>@SystemMessage</code>/<code>@UserMessage</code> returns typed results. 1.21–1.22 added decision models and Bedrock batch inference.</td><td><span class="tag ga">Stable</span></td></tr>
+      <tr><td>Embabel 1.0</td><td>Rod Johnson (creator of Spring)</td><td>Goal-oriented action planning over typed records. It shows Jakarta validation constraints to the model and re-prompts when the output is invalid.</td><td><span class="tag ga">GA</span></td></tr>
+      <tr><td>Koog 1.2</td><td>JetBrains</td><td>Agent strategies with a Java API, Spring Boot starters and an Agent Skills module.</td><td><span class="tag ga">GA</span></td></tr>
+      <tr><td>MCP Java SDK 2.0.x</td><td>MCP project, with the Spring team</td><td>MCP servers and clients in plain Java, and the base of Spring AI's MCP support.</td><td><span class="tag ga">GA</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="code">
+    <div class="code-bar"><span>LangChain4j · an N+1 reviewer that returns a typed record</span><button class="copy" type="button" data-copy="c4">Copy</button></div>
+<pre id="c4"><span class="k">import</span> dev.langchain4j.model.openai.OpenAiChatModel;
+<span class="k">import</span> dev.langchain4j.service.AiServices;
+<span class="k">import</span> dev.langchain4j.service.SystemMessage;
+<span class="k">import</span> dev.langchain4j.service.UserMessage;
+<span class="k">import</span> dev.langchain4j.service.V;
+<span class="k">import</span> java.nio.file.Files;
+<span class="k">import</span> java.nio.file.Path;
+
+<span class="k">record</span> FetchReview(<span class="k">boolean</span> nPlusOneRisk, String reason, String suggestedFix) {}
+
+<span class="k">interface</span> FetchReviewer {
+  <span class="k">@SystemMessage</span>(<span class="s">"You review Spring Data JPA and MongoDB code for N+1 query problems."</span>)
+  <span class="k">@UserMessage</span>(<span class="s">"Review this code:\n{{code}}"</span>)
+  FetchReview review(<span class="k">@V</span>(<span class="s">"code"</span>) String code);
+}
+
+<span class="k">var</span> model = OpenAiChatModel.builder()
+    .apiKey(System.getenv(<span class="s">"OPENAI_API_KEY"</span>))
+    .modelName(<span class="s">"gpt-4o-mini"</span>)
+    .build();
+
+FetchReviewer reviewer = AiServices.create(FetchReviewer.<span class="k">class</span>, model);
+FetchReview r = reviewer.review(Files.readString(Path.of(<span class="s">"OrderController.java"</span>)));
+<span class="k">if</span> (r.nPlusOneRisk()) System.out.println(r.reason() + <span class="s">" → "</span> + r.suggestedFix());
+<span class="c">// Treat it as a hint, not proof: confirm with a statement-count test (see T3).</span></pre>
+  </div>
+
+  <div class="pair">
+    <div class="box"><h3>What people are doing</h3><ul>
+      <li><strong>Giving agents an IDE's brain.</strong> Netflix built a daemon and CLI around a headless JetBrains language server, compiled as a GraalVM native executable. Claude Code and Codex call the CLI, and Netflix reports agents were typically 20–30% more efficient, about 65% in the best case.</li>
+      <li><strong>Letting agents use the debugger.</strong> On A Bootiful Podcast (22 Oct), JetBrains' Anton Arhipov described IntelliJ's MCP and ACP integrations giving agents refactoring and debugging tools, with an agent diagnosing and fixing a failing test.</li>
+      <li><strong>Speeding up RAG.</strong> Craig Walls' Spring AI recipes this month cover faster embeddings for RAG and rendering rich UIs with MCP Apps.</li>
+      <li><strong>Writing docs for agents.</strong> Spock 2.5 publishes its documentation in Markdown so AI agents can read it.</li>
+    </ul></div>
+    <div class="box"><h3>Agentic tools in the Java workflow</h3><ul>
+      <li><strong>IntelliJ Java and Kotlin for VS Code and Cursor 1.0</strong> (15 Oct) brings IntelliJ's language server and debugger to those editors. It needs an Ultimate subscription after a 30-day trial.</li>
+      <li><strong>Junie and JetBrains Air</strong> run agents inside the IDE. Air, still experimental, orchestrates several agents side by side.</li>
+      <li><strong>Terminal agents</strong> such as Claude Code work best when a test can tell them "too many queries" with a red build, not a log line.</li>
+      <li><strong>Try this week:</strong> ask your agent to add <code>hibernate.generate_statistics=true</code> to a test profile, write a test that calls your list endpoint and fails if more than 3 SQL statements run, then fix what it finds. That's this week's Spring question.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="levels">
+  <div class="sec-head"><span class="eyebrow">Learning path · fetching data, from basic to advanced</span><h2>Basic → Advanced</h2></div>
+  <div class="levels">
+    <article class="level"><div class="meter" aria-label="Basic"><i class="on"></i><i></i><i></i></div><h3>Make <code>@ManyToOne</code> lazy</h3><p><code>@ManyToOne</code> and <code>@OneToOne</code> default to EAGER, so every query loads the parent too, with extra selects. Write <code>@ManyToOne(fetch = FetchType.LAZY)</code> everywhere, and fetch the association explicitly when a use case needs it.</p></article>
+    <article class="level"><div class="meter" aria-label="Intermediate"><i class="on"></i><i class="on"></i><i></i></div><h3>Fetch what the use case needs</h3><p>Per query, load the association in the same SQL: <code>@EntityGraph(attributePaths = "customer")</code> on a repository method, or <code>join fetch</code> in JPQL. For read-only lists, a DTO projection selects only the columns you show.</p></article>
+    <article class="level"><div class="meter" aria-label="Advanced"><i class="on"></i><i class="on"></i><i class="on"></i></div><h3>Value classes (JDK 28 preview)</h3><p>JEP 401 makes value objects without identity. With <code>--enable-preview</code> on JDK 28, <code>Integer</code> and <code>LocalDate</code> become value classes, so <code>==</code> compares values. <strong>Preview only, not for production</strong>, but run your test suite against an EA build now.</p></article>
+  </div>
+  <div class="code">
+    <div class="code-bar"><span>Intermediate · PurchaseOrderRepository.java · Spring Data JPA</span><button class="copy" type="button" data-copy="c2">Copy</button></div>
+<pre id="c2"><span class="k">public interface</span> PurchaseOrderRepository <span class="k">extends</span> JpaRepository&lt;PurchaseOrder, Long&gt; {
+
+  <span class="c">// Entity + its customer in one SQL (LEFT OUTER JOIN), no @NamedEntityGraph needed</span>
+  <span class="k">@EntityGraph</span>(attributePaths = <span class="s">"customer"</span>)
+  List&lt;PurchaseOrder&gt; findByStatus(Status status);
+
+  <span class="c">// Read-only list: select just two columns into a record</span>
+  <span class="k">@Query</span>(<span class="s">"""
+      select new com.example.shop.OrderSummary(o.number, c.name)
+      from PurchaseOrder o join o.customer c
+      where o.status = :status
+      """</span>)
+  List&lt;OrderSummary&gt; findSummaries(<span class="k">@Param</span>(<span class="s">"status"</span>) Status status);
+}
+
+<span class="c">// package com.example.shop;</span>
+<span class="c">// public record OrderSummary(String number, String customerName) {}</span></pre>
+  </div>
+</section>
+
+<section id="tips">
+  <div class="sec-head"><span class="eyebrow">Must-have this week</span><h2>Tips &amp; tricks</h2></div>
+  <ol class="tips">
+    <li><span class="n">T1</span><div><h3>Turn off Open Session in View</h3><p><code>spring.jpa.open-in-view</code> is <code>true</code> by default (Boot logs a warning about it). It keeps the session open while JSON is written, so lazy loads in the controller or serializer quietly run extra queries. Set it to <code>false</code> and they fail fast with <code>LazyInitializationException</code> instead.</p></div></li>
+    <li><span class="n">T2</span><div><h3>A safety net: batch fetching</h3><p><code>spring.jpa.properties.hibernate.default_batch_fetch_size=50</code> makes Hibernate load lazy associations for up to 50 parents with one <code>IN (...)</code> query. 200 lazy loads become 4 queries. It's a net, not a fix: still fetch what each use case needs.</p></div></li>
+    <li><span class="n">T3</span><div><h3>Count statements in tests</h3><p>In a test profile, set <code>spring.jpa.properties.hibernate.generate_statistics=true</code>, then read <code>entityManagerFactory.unwrap(SessionFactory.class).getStatistics().getPrepareStatementCount()</code> before and after a call. Assert the difference, so a new N+1 breaks the build.</p></div></li>
+    <li><span class="n">T4</span><div><h3>MongoDB <code>@DBRef</code> has the same trap</h3><p>Each <code>@DBRef</code> on a document is resolved with its own query when the document is read (or on first access if <code>lazy = true</code>). A list of 100 orders with a <code>@DBRef</code> customer means up to 100 extra queries. For list endpoints, store the id and batch with <code>findAllById</code>, as in the snippet.</p></div></li>
+    <li><span class="n">T5</span><div><h3>Rebuild native images after a trust-store fix</h3><p>Both eMudhra fixes change the JDK's CA certificates. A GraalVM native image keeps the trust store from build time, so updating the JDK on the build machine isn't enough: rebuild and redeploy the image.</p></div></li>
+  </ol>
+</section>
+
+<section id="interview">
+  <div class="sec-head"><span class="eyebrow">Industry &amp; interview questions</span><h2>Interview Q&amp;A</h2></div>
+  <div class="qa">
+    <details open><summary><span class="lvl">Basic</span>What is the N+1 query problem?</summary><div class="ans"><p>You run one query to load N rows, then the code triggers one more query per row to load something related, for example each order's customer. That's N+1 queries where 1 or 2 would do. Each query is fast, so it rarely shows up in the slow-query log, but the round trips add up and grow with the data.</p><p>It happens with lazy associations accessed in a loop, with EAGER associations loaded by a JPQL query that doesn't fetch them, and in MongoDB with per-row lookups or <code>@DBRef</code>.</p></div></details>
+    <details><summary><span class="lvl">Mid</span><code>join fetch</code>, <code>@EntityGraph</code> or batch fetching: when do you use which?</summary><div class="ans"><p><code>join fetch</code> in JPQL gives full control and works with a custom <code>where</code>. <code>@EntityGraph(attributePaths = ...)</code> does the same for derived query methods without writing JPQL. Both load the association in the same SQL.</p><p>Batch fetching (<code>default_batch_fetch_size</code> or <code>@BatchSize</code>) keeps the association lazy but loads it for many parents with one <code>IN</code> query. Use it for collections on paged results, where fetch-joining a collection would make Hibernate paginate in memory.</p></div></details>
+    <details><summary><span class="lvl">Mid</span>Why does the naive recursive Fibonacci get so slow?</summary><div class="ans"><p>Each call makes two more calls, and the same values are computed again and again. <code>fib(40)</code> makes 331,160,281 calls (that's <code>2 × fib(41) − 1</code>). Time grows exponentially, about 1.618<sup>n</sup>. Memoization stores each result once, so it's O(n). The loop needs only the last two values, so it's O(n) time and O(1) space with no stack depth risk.</p></div></details>
+    <details><summary><span class="lvl">Senior</span>How do you stop N+1 regressions across a team?</summary><div class="ans"><p>Make them visible and make them fail. Turn off Open Session in View so lazy loads outside a transaction throw. Make <code>@ManyToOne</code> lazy by convention. Add statement-count assertions to integration tests for list endpoints (Hibernate statistics, or Vlad Mihalcea's Hypersistence Utils). In production, watch queries per request in your tracing, since a page that issues 300 fast queries still looks healthy in the slow-query log.</p><p>Design-wise, prefer DTO projections for read-only lists and keep entity graphs per use case, not one global EAGER setting.</p></div></details>
+  </div>
+</section>
+
+<section id="coding">
+  <div class="sec-head"><span class="eyebrow">Coding interview · one Java + one Spring Boot every week</span><h2>Week 6: write the code</h2>
+  <p>Try each one on paper or in your IDE for 15 minutes before opening the solution.</p></div>
+  <div class="iq-grid">
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Java · Week 6</span><span class="tag ga">Easy</span></div>
+      <h3>Fibonacci three ways</h3>
+      <ul class="task">
+        <li>Write <code>long fibRecursive(int n)</code>, <code>long fibMemo(int n)</code> and <code>long fibIterative(int n)</code>, with <code>fib(0) = 0</code> and <code>fib(1) = 1</code>.</li>
+        <li>Throw <code>IllegalArgumentException</code> for <code>n &lt; 0</code>. <code>fib(92)</code> is the largest that fits in a <code>long</code>, so <code>fibMemo</code> and <code>fibIterative</code> must throw <code>ArithmeticException</code> on overflow instead of returning a wrong number.</li>
+        <li>State the time and space of each version.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Expected</span></div>
+<pre>fibIterative(<span class="s">0</span>)    <span class="c">// 0</span>
+fibIterative(<span class="s">1</span>)    <span class="c">// 1</span>
+fibIterative(<span class="s">10</span>)   <span class="c">// 55</span>
+fibRecursive(<span class="s">40</span>)   <span class="c">// 102334155  (noticeably slow)</span>
+fibMemo(<span class="s">50</span>)        <span class="c">// 12586269025</span>
+fibIterative(<span class="s">92</span>)   <span class="c">// 7540113804746346429</span>
+fibIterative(<span class="s">93</span>)   <span class="c">// ArithmeticException: long overflow</span></pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <div class="code">
+            <div class="code-bar"><span>Fib.java</span><button class="copy" type="button" data-copy="iq1">Copy</button></div>
+<pre id="iq1"><span class="k">import</span> java.util.Arrays;
+
+<span class="k">public class</span> Fib {
+
+  <span class="c">// 1. Plain recursion: O(1.618^n) time, O(n) stack</span>
+  <span class="k">public static long</span> fibRecursive(<span class="k">int</span> n) {
+    <span class="k">if</span> (n &lt; <span class="s">0</span>) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"n must be &gt;= 0"</span>);
+    <span class="k">if</span> (n &lt; <span class="s">2</span>) <span class="k">return</span> n;
+    <span class="k">return</span> fibRecursive(n - <span class="s">1</span>) + fibRecursive(n - <span class="s">2</span>);
+  }
+
+  <span class="c">// 2. Memoized recursion: O(n) time, O(n) space</span>
+  <span class="k">public static long</span> fibMemo(<span class="k">int</span> n) {
+    <span class="k">if</span> (n &lt; <span class="s">0</span>) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"n must be &gt;= 0"</span>);
+    <span class="k">long</span>[] memo = <span class="k">new long</span>[n + <span class="s">1</span>];
+    Arrays.fill(memo, -<span class="s">1</span>);               <span class="c">// -1 = not computed yet</span>
+    <span class="k">return</span> fibMemo(n, memo);
+  }
+
+  <span class="k">private static long</span> fibMemo(<span class="k">int</span> n, <span class="k">long</span>[] memo) {
+    <span class="k">if</span> (n &lt; <span class="s">2</span>) <span class="k">return</span> n;
+    <span class="k">if</span> (memo[n] != -<span class="s">1</span>) <span class="k">return</span> memo[n];
+    memo[n] = Math.addExact(fibMemo(n - <span class="s">1</span>, memo), fibMemo(n - <span class="s">2</span>, memo));
+    <span class="k">return</span> memo[n];
+  }
+
+  <span class="c">// 3. Loop: O(n) time, O(1) space</span>
+  <span class="k">public static long</span> fibIterative(<span class="k">int</span> n) {
+    <span class="k">if</span> (n &lt; <span class="s">0</span>) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"n must be &gt;= 0"</span>);
+    <span class="k">if</span> (n == <span class="s">0</span>) <span class="k">return</span> <span class="s">0</span>;
+    <span class="k">long</span> prev = <span class="s">0</span>, curr = <span class="s">1</span>;
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="s">2</span>; i &lt;= n; i++) {
+      <span class="k">long</span> next = Math.addExact(prev, curr); <span class="c">// throws on overflow</span>
+      prev = curr;
+      curr = next;
+    }
+    <span class="k">return</span> curr;
+  }
+
+  <span class="k">public static void</span> main(String[] args) {
+    System.out.println(fibIterative(<span class="s">10</span>));  <span class="c">// 55</span>
+    System.out.println(fibRecursive(<span class="s">40</span>));  <span class="c">// 102334155</span>
+    System.out.println(fibMemo(<span class="s">50</span>));       <span class="c">// 12586269025</span>
+    System.out.println(fibIterative(<span class="s">92</span>));  <span class="c">// 7540113804746346429</span>
+    fibIterative(<span class="s">93</span>);                      <span class="c">// ArithmeticException: long overflow</span>
+  }
+}</pre>
+          </div>
+          <p><strong>How it works.</strong> The recursive version recomputes the same values: <code>fib(40)</code> makes 331,160,281 calls. The memo array stores each answer the first time, so every <code>n</code> is computed once. The loop keeps only the last two numbers. <code>Math.addExact</code> turns a silent overflow at <code>fib(93)</code> into an exception.</p>
+          <div class="cx"><span class="tag ga">Recursive: Time O(φ^n) · Space O(n)</span><span class="tag ga">Memo: Time O(n) · Space O(n)</span><span class="tag ga">Loop: Time O(n) · Space O(1)</span></div>
+          <p><strong>Follow-up they'll ask.</strong> "Why not memoize with <code>map.computeIfAbsent(n, k -&gt; fib(k - 1) + fib(k - 2))</code>?" Because the function changes the same <code>HashMap</code> while it runs, and since Java 9 <code>HashMap.computeIfAbsent</code> throws <code>ConcurrentModificationException</code> when it detects that. Use an array or a plain <code>get</code>/<code>put</code>. Also: "fib(1000)?" Switch to <code>BigInteger</code>. "Faster than O(n)?" Fast doubling or matrix power gives O(log n).</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="iq">
+      <div class="iq-head"><span class="eyebrow">Spring Boot · Week 6</span><span class="tag pre">Medium</span></div>
+      <h3>The open-orders page runs 151 queries</h3>
+      <ul class="task">
+        <li>There are 200 open orders from 150 different customers. Calling the endpoint runs <strong>151</strong> SQL statements. Explain where they come from and why it's 151, not 201.</li>
+        <li>Fix it so the endpoint runs <strong>one</strong> statement, and make <code>customer</code> lazy.</li>
+        <li>Add a test that fails if someone brings the N+1 back.</li>
+      </ul>
+      <div class="code">
+        <div class="code-bar"><span>Buggy code</span></div>
+<pre><span class="k">@Entity</span>
+<span class="k">public class</span> PurchaseOrder {
+  <span class="k">@Id @GeneratedValue</span> <span class="k">private</span> Long id;
+  <span class="k">private</span> String number;
+  <span class="k">@Enumerated</span>(EnumType.STRING) <span class="k">private</span> Status status;
+  <span class="k">@ManyToOne</span> <span class="k">private</span> Customer customer;
+  <span class="c">// getters ...</span>
+}
+
+<span class="k">public interface</span> PurchaseOrderRepository <span class="k">extends</span> JpaRepository&lt;PurchaseOrder, Long&gt; {
+  <span class="k">@Query</span>(<span class="s">"select o from PurchaseOrder o where o.status = :status"</span>)
+  List&lt;PurchaseOrder&gt; findByStatus(<span class="k">@Param</span>(<span class="s">"status"</span>) Status status);
+}
+
+<span class="k">public record</span> OrderSummary(String number, String customerName) {}
+
+<span class="k">@RestController</span>
+<span class="k">class</span> OrderController {
+  <span class="k">private final</span> PurchaseOrderRepository orders;
+  OrderController(PurchaseOrderRepository orders) { <span class="k">this</span>.orders = orders; }
+
+  <span class="k">@GetMapping</span>(<span class="s">"/api/orders/open"</span>)
+  List&lt;OrderSummary&gt; open() {
+    <span class="k">return</span> orders.findByStatus(Status.OPEN).stream()
+        .map(o -&gt; <span class="k">new</span> OrderSummary(o.getNumber(), o.getCustomer().getName()))
+        .toList();
+  }
+}</pre>
+      </div>
+      <details>
+        <summary>Show solution</summary>
+        <div class="sol">
+          <p><strong>Where the queries come from.</strong> <code>@ManyToOne</code> is EAGER by default. The JPQL query selects only orders (statement 1), so Hibernate then loads each order's customer with a separate select. Hibernate keeps loaded entities in the persistence context, so each <em>distinct</em> customer is loaded once: 1 + 150 = 151. With all 200 orders from different customers it would be 201. Switching to LAZY alone doesn't help: the selects just move into the <code>.map(...)</code> loop (and, with Open Session in View on, nobody notices).</p>
+          <div class="code">
+            <div class="code-bar"><span>Fixed: entity, repository, OrderQueryCountTest.java</span><button class="copy" type="button" data-copy="iq2">Copy</button></div>
+<pre id="iq2"><span class="c">// 1. Entity: lazy by default</span>
+<span class="k">@ManyToOne</span>(fetch = FetchType.LAZY)
+<span class="k">private</span> Customer customer;
+
+<span class="c">// 2. Repository: fetch the customer in the same SQL when this use case needs it</span>
+<span class="k">public interface</span> PurchaseOrderRepository <span class="k">extends</span> JpaRepository&lt;PurchaseOrder, Long&gt; {
+
+  <span class="k">@Query</span>(<span class="s">"select o from PurchaseOrder o join fetch o.customer where o.status = :status"</span>)
+  List&lt;PurchaseOrder&gt; findByStatus(<span class="k">@Param</span>(<span class="s">"status"</span>) Status status);
+
+  <span class="c">// Alternative for this read-only page: select only the two columns</span>
+  <span class="k">@Query</span>(<span class="s">"""
+      select new com.example.shop.OrderSummary(o.number, c.name)
+      from PurchaseOrder o join o.customer c
+      where o.status = :status
+      """</span>)
+  List&lt;OrderSummary&gt; findSummaries(<span class="k">@Param</span>(<span class="s">"status"</span>) Status status);
+}
+
+<span class="c">// 3. Guard test (assumes test data with several open orders)</span>
+<span class="k">@SpringBootTest</span>(properties = {
+    <span class="s">"spring.jpa.properties.hibernate.generate_statistics=true"</span>,
+    <span class="s">"spring.jpa.open-in-view=false"</span> })
+<span class="k">class</span> OrderQueryCountTest {
+
+  <span class="k">@Autowired</span> EntityManagerFactory emf;
+  <span class="k">@Autowired</span> OrderController controller;
+
+  <span class="k">@Test</span>
+  <span class="k">void</span> openOrdersRunOneStatement() {
+    Statistics stats = emf.unwrap(SessionFactory.<span class="k">class</span>).getStatistics();
+    stats.clear();
+
+    List&lt;OrderSummary&gt; result = controller.open();
+
+    assertThat(result).isNotEmpty();
+    assertThat(stats.getPrepareStatementCount()).isEqualTo(<span class="s">1</span>);
+  }
+}</pre>
+          </div>
+          <p><strong>How it works.</strong> <code>join fetch</code> tells Hibernate to load each order's customer in the same SQL with an inner join, so the loop reads data that's already in memory. The DTO version is even lighter: no entities, no persistence context, just two columns. <code>@EntityGraph(attributePaths = "customer")</code> on a derived method does the same as <code>join fetch</code> (with a left outer join). The test reads Hibernate's statement counter, so the build turns red if a lazy load sneaks back in.</p>
+          <p><strong>Follow-up they'll ask.</strong> "Now the page also shows order lines, and it's paged." Don't <code>join fetch</code> a collection together with <code>Pageable</code>: Hibernate can't limit rows in SQL then, so it loads everything and pages in memory, with a warning. Page the order ids first, then fetch the lines for those ids, or set <code>spring.jpa.properties.hibernate.default_batch_fetch_size</code> so the lines load in a few <code>IN</code> queries.</p>
+        </div>
+      </details>
+    </article>
+
+  </div>
+
+  <details>
+    <summary><span class="lvl">Plan</span>The 20-week question plan</summary>
+    <div class="tbl" style="border:0;border-radius:0;border-top:1px solid var(--line)"><table>
+      <thead><tr><th>Week</th><th>Java (write a program)</th><th>Spring Boot (write or fix the code)</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1 · done</td><td>Palindrome string</td><td>Controller that never returns 404</td></tr>
+        <tr><td class="num">2 · done</td><td>Anagram check</td><td>Profiles + <code>@ConfigurationProperties</code> record</td></tr>
+        <tr><td class="num">3 · done</td><td>First non-repeating character</td><td>Circular dependency, constructor injection</td></tr>
+        <tr><td class="num">4 · done</td><td>Find duplicates in an array</td><td><code>@Valid</code> request validation → clean 400</td></tr>
+        <tr><td class="num">5 · done</td><td>Second largest without sorting</td><td><code>@RestControllerAdvice</code> + ProblemDetail</td></tr>
+        <tr><td class="num">6 · now</td><td>Fibonacci: loop, recursion, memo</td><td>JPA N+1 query fix</td></tr>
+        <tr><td class="num">7</td><td>Primes up to n (sieve)</td><td><code>@Transactional</code> self-invocation bug</td></tr>
+        <tr><td class="num">8</td><td>Word frequency with streams</td><td>Pagination with <code>Pageable</code> on MongoDB</td></tr>
+        <tr><td class="num">9</td><td>Remove duplicates, keep order</td><td>Custom MongoDB query + the index it needs</td></tr>
+        <tr><td class="num">10</td><td>Reverse a linked list</td><td>Secure an endpoint with <code>SecurityFilterChain</code></td></tr>
+        <tr><td class="num">11</td><td>Balanced brackets with a Deque</td><td><code>@WebMvcTest</code> + MockMvc test</td></tr>
+        <tr><td class="num">12</td><td>Merge two sorted arrays</td><td>Custom Actuator health indicator</td></tr>
+        <tr><td class="num">13</td><td>Binary search</td><td>Structured logging + Micrometer tracing</td></tr>
+        <tr><td class="num">14</td><td>LRU cache with LinkedHashMap</td><td><code>@Cacheable</code> with eviction</td></tr>
+        <tr><td class="num">15</td><td>equals/hashCode bug in a map key</td><td><code>@Async</code> + virtual threads</td></tr>
+        <tr><td class="num">16</td><td>Immutable class</td><td>Convert an endpoint to WebFlux</td></tr>
+        <tr><td class="num">17</td><td>Thread-safe lazy singleton</td><td>Spring Modulith module boundaries</td></tr>
+        <tr><td class="num">18</td><td>Producer-consumer, BlockingQueue</td><td>HTTP client with timeouts and retry</td></tr>
+        <tr><td class="num">19</td><td>Combine two calls, CompletableFuture</td><td>Idempotent POST with Idempotency-Key</td></tr>
+        <tr><td class="num">20</td><td>Fix ConcurrentModificationException</td><td>Fix a Boot 3 → 4 migration break</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+
+  <div class="box">
+    <h3>Go deeper: this week's two topics</h3>
+    <ul>
+      <li><a href="https://interviewcake.com/concept/java/memoization">Memoization in Java · Interview Cake</a> (why recursive Fibonacci repeats work, and the memo fix)</li>
+      <li><a href="https://codeahoy.com/java/Fibonacci">Fibonacci series in Java · CodeAhoy</a> (loop and recursive versions side by side)</li>
+      <li><a href="https://vladmihalcea.com/n-plus-1-query-problem/">N+1 query problem with JPA and Hibernate · Vlad Mihalcea</a></li>
+      <li><a href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html">Query methods and <code>@EntityGraph</code> · Spring Data JPA reference</a></li>
+      <li><a href="https://dev.to/taras_antoniuk_ea6a2fe7ee/how-join-fetch-reduced-database-load-by-94-a-real-world-case-study-40c">How JOIN FETCH reduced database load by 94% · DEV Community</a> (this week's case study)</li>
+      <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a> (the order the Spring track follows)</li>
+    </ul>
+  </div>
+</section>
+
+<section id="practices">
+  <div class="sec-head"><span class="eyebrow">Best practices · Industry practices</span><h2>Do this, avoid that</h2></div>
+  <div class="pair">
+    <div class="box"><h3 class="do">Do</h3><ul>
+      <li>Map every <code>@ManyToOne</code> and <code>@OneToOne</code> as <code>LAZY</code>, and fetch associations per use case with <code>join fetch</code> or <code>@EntityGraph</code>.</li>
+      <li>Use DTO projections (records) for read-only list pages.</li>
+      <li>Batch MongoDB lookups with <code>findAllById</code> (one <code>$in</code> query) instead of <code>findById</code> in a loop.</li>
+      <li>Assert SQL statement counts in integration tests for list endpoints.</li>
+      <li>Update JDKs and rebuild native images after both eMudhra fixes (21 and 24 Oct).</li>
+    </ul></div>
+    <div class="box"><h3 class="dont">Avoid</h3><ul>
+      <li>Leaving <code>spring.jpa.open-in-view</code> on. It hides lazy loading until production traffic finds it.</li>
+      <li><code>join fetch</code> on a collection together with <code>Pageable</code>. Hibernate pages in memory.</li>
+      <li>Switching to <code>EAGER</code> to "fix" a <code>LazyInitializationException</code>. It makes every query heavier.</li>
+      <li><code>HashMap.computeIfAbsent</code> with a recursive function. It throws <code>ConcurrentModificationException</code>.</li>
+      <li>Relying on value-class (<code>==</code>) behaviour from the JDK 28 preview in production code.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="industry">
+  <div class="sec-head"><span class="eyebrow">How other industries adopt it</span><h2>Patterns by industry</h2><p>Rows naming a company or project are from this week's sources. The others are general patterns, not claims about named companies.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Industry</th><th>What they use</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Streaming (Netflix)</td><td>A headless JetBrains language server behind a CLI for coding agents</td><td>Agents get real code navigation instead of text search. Netflix reports 20–30% more efficient agents, up to about 65%.</td></tr>
+      <tr><td>Exchange-rate service (case study)</td><td><code>LEFT JOIN FETCH</code> in Spring Data JPA, Hibernate statistics</td><td>The case study below: one service went from 33 to 2 SQL statements per request.</td></tr>
+      <tr><td>E-commerce</td><td>DTO projections and batch lookups for order lists</td><td>List pages are the most-hit endpoints, and one query per row grows with the catalog.</td></tr>
+      <tr><td>SaaS on MongoDB</td><td>Ids plus batched <code>$in</code> reads instead of <code>@DBRef</code></td><td>Predictable query counts per request and simpler documents.</td></tr>
+      <tr><td>Platform teams</td><td>JDK trust-store updates and native-image rebuilds</td><td>The eMudhra fixes change CA certificates, which a native image captures at build time.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="case">
+  <div class="sec-head"><span class="eyebrow">Real problem, solved with data</span><h2>"31 extra queries to show 15 exchange rates"</h2></div>
+  <div class="case">
+    <p><strong>Problem.</strong> A Spring Boot service listed exchange rates. Each <code>ExternalExchangeRate</code> has two lazy <code>@ManyToOne</code> links, <code>currencyFrom</code> and <code>currencyTo</code>. The code looped over the rates and read both currency codes.</p>
+    <p><strong>Diagnosis.</strong> With SQL logging and Hibernate statistics turned on in the dev profile, the endpoint showed 33 prepared statements and 31 entities fetched one at a time: the SQL log was full of <code>select ... from currencies where id = ?</code>.</p>
+    <div class="bars" role="img" aria-label="Before vs after JOIN FETCH: SQL statements 33 vs 2; response time 48 vs 37 ms; prepare time about 413 vs 61 microseconds.">
+      <div class="bar-row"><span>SQL statements · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">33</span></div>
+      <div class="bar-row"><span>SQL statements · after</span><div class="track"><div class="fill" style="width:6.1%"></div></div><span class="num">2</span></div>
+      <div class="bar-row"><span>Response · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">48 ms</span></div>
+      <div class="bar-row"><span>Response · after</span><div class="track"><div class="fill" style="width:77.1%"></div></div><span class="num">37 ms</span></div>
+      <div class="bar-row"><span>Prepare time · before</span><div class="track"><div class="fill warn" style="width:100%"></div></div><span class="num">~413 µs</span></div>
+      <div class="bar-row"><span>Prepare time · after</span><div class="track"><div class="fill" style="width:14.8%"></div></div><span class="num">~61 µs</span></div>
+    </div>
+    <p><strong>Fix.</strong> Add <code>LEFT JOIN FETCH e.currencyFrom LEFT JOIN FETCH e.currencyTo</code> to the repository queries, with a separate <code>countQuery</code> for paged methods. The author applied it to 48 methods across 7 modules. Statements went from 33 to 2: (33 − 2) ÷ 33 ≈ 94% fewer. Response time went from 48 to 37 ms: 11 ÷ 48 ≈ 23% faster. Statement prepare time went from about 413 to 61 µs: 352 ÷ 413 ≈ 85% less.</p>
+    <p class="note">Real numbers from Taras Antoniuk, "How JOIN FETCH Reduced Database Load by 94%: A Real-World Case Study" (DEV Community, 15 Dec 2025). Measured with 15 records on a local PostgreSQL, so the time savings will be bigger with more rows and a remote database; the article's 1,000-row figures are estimates, not measurements. "Database load" here means statement count.</p>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="sec-head"><span class="eyebrow">Goals for next week</span><h2>Try it before next Friday</h2><p>Ticks are saved in this browser only.</p></div>
+  <ul class="goals">
+    <li><label><input type="checkbox" id="g1"><span>Find one list endpoint in your MongoDB service that calls a repository inside a loop, and replace it with one <code>findAllById</code> batch.</span></label></li>
+    <li><label><input type="checkbox" id="g2"><span>Check your Java base images and native-image builds were rebuilt after the 24 Oct eMudhra alert (CVE-2026-114820).</span></label></li>
+    <li><label><input type="checkbox" id="g3"><span>Write all three Fibonacci versions from memory as one compact source file (<code>void main()</code>) and run it with <code>java Fib.java</code> on JDK 25.</span></label></li>
+    <li><label><input type="checkbox" id="g4"><span>Solve Week 7 (primes up to n with a sieve; <code>@Transactional</code> self-invocation bug) before opening the solution.</span></label></li>
+  </ul>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><span class="eyebrow">Sources this week</span></div>
+  <ol class="sources">
+    <li><a href="https://www.oracle.com/security-alerts/alert-CVE-2026-114820.html">Oracle Security Alert CVE-2026-114820</a></li>
+    <li><a href="https://www.infoq.com/news/2026/10/java-news-roundup-oct19-2026/">Java News Roundup, 19 Oct 2026 (JDK 28 schedule, eMudhra, WildFly 42, POI 6) · InfoQ</a></li>
+    <li><a href="https://www.infoq.com/news/2026/10/java-news-roundup-oct05-2026/">Java News Roundup, 5 Oct 2026 (LangChain4j 1.22, Spock 2.5) · InfoQ</a></li>
+    <li><a href="https://jvm-weekly.com/p/the-rest-of-the-story-october-edition">The Rest of the Story: October Edition · JVM Weekly vol. 197</a></li>
+    <li><a href="https://inside.java/2026/10/25/jep544-target-jdk28/">JEP 544 targeted to JDK 28 · Inside.java</a></li>
+    <li><a href="https://inside.java/2026/10/21/jep543-target-jdk28/">JEP 543 targeted to JDK 28 · Inside.java</a></li>
+    <li><a href="https://inside.java/2026/09/20/jep401-target-jdk28/">JEP 401 targeted to JDK 28 · Inside.java</a></li>
+    <li><a href="https://inside.java/2026/10/27/quality-heads-up/">Quality Outreach Heads-up, JDK 28: Value Classes · Inside.java</a></li>
+    <li><a href="https://spring.io/blog/2026/10/22/spring-data-2026-0-2-and-2025-1-8-released">Spring Data 2026.0.2 and 2025.1.8 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/10/23/spring-security-7">Spring Security 7.2.0-RC1 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/10/23/spring-ai-2-1-0-RC1-available-now">Spring AI 2.1.0-RC1 and 2.0.2 · spring.io</a></li>
+    <li><a href="https://spring.io/blog/2026/10/27/this-week-in-spring-october-27th-2026/">This Week in Spring, 27 Oct 2026</a></li>
+    <li><a href="https://spring.io/blog/2026/10/22/a-bootiful-podcast-anton-arhipov">A Bootiful Podcast: Anton Arhipov · spring.io</a></li>
+    <li><a href="https://thenewstack.io/spring-creator-java-type-system-agentic-ai-rod-johnson/">Spring creator wants Java's type system to tame agentic AI · The New Stack</a></li>
+    <li><a href="https://www.infoq.com/news/2026/08/embabel-1/">Embabel Agent Framework reaches 1.0 · InfoQ</a></li>
+    <li><a href="https://openjdk.org/jeps/512">JEP 512: Compact Source Files and Instance Main Methods · OpenJDK</a></li>
+    <li><a href="https://www.happycoders.eu/java/java-25-features/">Java 25 features · HappyCoders</a></li>
+    <li><a href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html">Query methods and entity graphs · Spring Data JPA reference</a></li>
+    <li><a href="https://vladmihalcea.com/n-plus-1-query-problem/">N+1 query problem with JPA and Hibernate · Vlad Mihalcea</a></li>
+    <li><a href="https://dev.to/taras_antoniuk_ea6a2fe7ee/how-join-fetch-reduced-database-load-by-94-a-real-world-case-study-40c">How JOIN FETCH reduced database load by 94% · DEV Community</a></li>
+    <li><a href="https://interviewcake.com/concept/java/memoization">Memoization · Interview Cake</a></li>
+    <li><a href="https://codeahoy.com/java/Fibonacci">Fibonacci series in Java · CodeAhoy</a></li>
+    <li><a href="https://www.digitalocean.com/community/tutorials/java-programming-interview-questions">Java programming interview questions · DigitalOcean</a></li>
+    <li><a href="https://vladmihalcea.com/trainings/spring-boot-from-basic-to-advanced/">Spring Boot from Basic to Advanced · Vlad Mihalcea</a></li>
+  </ol>
+</section>
+
+<footer>Friday Java Brief · generated every Friday at 10:00 Asia/Dhaka · Issue W44, Week 6 of the coding series</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.copy); var txt=el.innerText;
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected'}
+    try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+  });
+});
+document.querySelectorAll('.goals input').forEach(function(cb){
+  var key='fjb-2026-10-30-'+cb.id;
+  try{cb.checked=localStorage.getItem(key)==='1'}catch(e){}
+  cb.addEventListener('change',function(){try{localStorage.setItem(key,cb.checked?'1':'0')}catch(e){}});
+});
+</script>
+
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body></html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design Patterns in Spring Boot — field guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F7; --surface:#FFFFFF; --ink:#18212E; --muted:#5A6677; --line:#D9DEE5;
+  --accent:#0F6E6A; --accent-soft:#DDEFEC;
+  --creational:#0F6E6A; --structural:#4A55A8; --behavioral:#8A4FA0; --architectural:#B0602A;
+  --code-bg:#0F1A24; --code-ink:#D6E2EA;
+  --good:#1F7A4D; --bad:#A8461A;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151B; --surface:#171E26; --ink:#E3E8EE; --muted:#93A0AF; --line:#2A3440;
+    --accent:#4FC1B8; --accent-soft:#15302F;
+    --creational:#4FC1B8; --structural:#8D96E6; --behavioral:#C79ADA; --architectural:#E59A62;
+    --code-bg:#0B1219; --code-ink:#D6E2EA; --diagram-bg:#F4F6F8;
+    --good:#5CC48F; --bad:#E58A62;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151B; --surface:#171E26; --ink:#E3E8EE; --muted:#93A0AF; --line:#2A3440;
+  --accent:#4FC1B8; --accent-soft:#15302F;
+  --creational:#4FC1B8; --structural:#8D96E6; --behavioral:#C79ADA; --architectural:#E59A62;
+  --code-bg:#0B1219; --code-ink:#D6E2EA; --diagram-bg:#F4F6F8;
+  --good:#5CC48F; --bad:#E58A62;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;line-height:1.1;margin:0}
+code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+p code,li code,td code{font-size:.86em;background:var(--accent-soft);padding:.1em .35em;border-radius:4px}
+
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1240px;margin:0 auto;gap:48px;padding:0 28px}
+nav.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;height:100dvh;overflow:auto;padding:36px 0 40px}
+.brand{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.01em;margin-bottom:28px;display:block;color:var(--ink);text-decoration:none}
+.brand span{display:block;font-family:"Instrument Sans",sans-serif;font-weight:400;font-size:.85rem;color:var(--muted);letter-spacing:0;margin-top:2px}
+.navgroup{margin-bottom:20px}
+.navgroup h4{margin:0 0 6px;font-size:.8rem;font-weight:600;color:var(--cat)}
+.navgroup a{display:block;padding:5px 10px;margin-left:-10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:.95rem;border-left:2px solid transparent}
+.navgroup a:hover{color:var(--ink)}
+.navgroup a.active{color:var(--ink);background:var(--surface);border-left-color:var(--cat);font-weight:600}
+.themeToggle{margin-top:18px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+
+main{padding:56px 0 120px;min-width:0}
+.hero{max-width:780px;margin-bottom:48px}
+.hero h1{font-size:clamp(2.3rem,5.5vw,3.9rem);font-weight:800;letter-spacing:-.03em}
+.hero p{color:var(--muted);font-size:1.12rem;max-width:62ch;margin:18px 0 0}
+
+.index{border-top:2px solid var(--ink);margin-bottom:72px;max-width:900px}
+.index .row{display:grid;grid-template-columns:150px 1fr 1.4fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline;text-decoration:none;color:var(--ink)}
+.index .row:hover .name{color:var(--cat)}
+.index .cat{font-size:.85rem;color:var(--cat);font-weight:600}
+.index .name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.25rem}
+.index .solves{color:var(--muted);font-size:.97rem}
+
+.c-creational{--cat:var(--creational)} .c-structural{--cat:var(--structural)}
+.c-behavioral{--cat:var(--behavioral)} .c-architectural{--cat:var(--architectural)}
+
+section.pattern{padding-top:40px;margin-bottom:96px;max-width:900px}
+.phead{border-left:6px solid var(--cat);padding-left:22px;margin-bottom:30px}
+.phead .cat{color:var(--cat);font-weight:600;font-size:.95rem}
+.phead h2{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:4px 0 10px}
+.phead .intent{font-size:1.15rem;color:var(--ink);max-width:60ch;margin:0}
+h3{font-size:1.3rem;font-weight:700;margin:40px 0 12px;letter-spacing:-.01em}
+.prose{max-width:68ch}
+.prose p{margin:0 0 14px}
+
+.flowgrid{display:grid;grid-template-columns:1fr;gap:22px}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto}
+.dg{display:block;width:100%;min-width:620px;height:auto}
+.dg .n{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.dg .k{fill:color-mix(in srgb,var(--cat) 13%,var(--surface));stroke:var(--cat);stroke-width:2}
+.dg .i{fill:var(--surface);stroke:var(--muted);stroke-width:1.4;stroke-dasharray:5 4}
+.dg .g{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4;opacity:.8}
+.dg .lane{fill:color-mix(in srgb,var(--ink) 5%,transparent)}
+.dg .ok{fill:color-mix(in srgb,var(--good) 15%,var(--surface));stroke:var(--good);stroke-width:2}
+.dg .bad{fill:color-mix(in srgb,var(--bad) 15%,var(--surface));stroke:var(--bad);stroke-width:2}
+.dg .warn{fill:color-mix(in srgb,#C98A1B 16%,var(--surface));stroke:#C98A1B;stroke-width:2}
+.dg .t{fill:var(--ink);font:600 14px "Instrument Sans",system-ui,sans-serif}
+.dg .s{fill:var(--muted);font:12.5px "Instrument Sans",system-ui,sans-serif}
+.dg .gl{fill:var(--muted);font:600 12.5px "Instrument Sans",system-ui,sans-serif}
+.dg .hotlbl{fill:var(--cat)}
+.dg .e{fill:none;stroke:var(--muted);stroke-width:1.6}
+.dg .e.hot{stroke:var(--cat);stroke-width:2.2}
+.dg .e.dash{stroke-dasharray:6 5}
+.dg .ah{fill:var(--muted)} .dg .ah.hot{fill:var(--cat)}
+.dg .elbg{fill:var(--surface)}
+.dg .el{fill:var(--muted);font:500 12px "Instrument Sans",system-ui,sans-serif}
+.dg .el.hot{fill:var(--cat)}
+@media (min-width:961px){ol.steps{display:grid;grid-template-columns:1fr 1fr;column-gap:28px}}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 14px 40px;font-size:.98rem}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--cat);color:var(--surface);font-weight:700;font-size:.8rem;display:grid;place-items:center}
+
+.codeblock{margin:16px 0;border-radius:10px;overflow:hidden;background:var(--code-bg);border:1px solid #22313E}
+.codebar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:#16242F;color:#9FB2C2;font-size:.82rem;font-family:"JetBrains Mono",monospace}
+.codebar button{background:none;border:1px solid #2E4252;color:#C9D6E0;border-radius:5px;padding:3px 9px;font:inherit;cursor:pointer}
+.codebar button:hover{border-color:#5B7A90}
+.codeblock pre{margin:0;padding:16px 18px;overflow-x:auto;font-size:.84rem;line-height:1.6;color:var(--code-ink)}
+.codeblock code{background:none;padding:0}
+.hljs-keyword,.hljs-built_in{color:#FF9E7A}
+.hljs-type,.hljs-title.class_{color:#7FD1C7}
+.hljs-title.function_{color:#9DB8FF}
+.hljs-string{color:#C3E88D}
+.hljs-number,.hljs-literal{color:#F7C66B}
+.hljs-comment{color:#6F8597;font-style:italic}
+.hljs-meta{color:#D9A6F2}
+.hljs-attr{color:#7FD1C7}
+.hljs-params{color:var(--code-ink)}
+
+.casestudy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.casestudy div{padding:18px 20px;font-size:.96rem}
+.casestudy div+div{border-left:1px solid var(--line)}
+.casestudy b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:1.02rem;margin-bottom:6px;color:var(--cat)}
+.wild{font-size:.98rem}
+.wild li{margin-bottom:6px}
+
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.fit h4{margin:0 0 8px;font-size:1rem}
+.fit .yes h4{color:var(--good)} .fit .no h4{color:var(--bad)}
+.fit ul{margin:0;padding-left:20px;font-size:.96rem}
+.fit li{margin-bottom:6px}
+
+.compare{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.compare table{border-collapse:collapse;width:100%;min-width:640px;font-size:.94rem}
+.compare th,.compare td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.compare th{font-weight:600;background:var(--bg)}
+.compare tr:last-child td{border-bottom:none}
+
+footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:20px;max-width:900px}
+
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr;gap:0;padding:0 18px}
+  nav.side{position:sticky;height:auto;padding:10px 0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--line);margin:0 -18px;padding-left:18px;padding-right:18px}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+  .brand,.themeToggle{display:none}
+  .navgroup{display:contents}
+  .navgroup h4{display:none}
+  .navgroup a{margin:0;border-left:none;border-bottom:2px solid transparent;border-radius:0;padding:6px 8px}
+  .navgroup a.active{background:none;border-bottom-color:var(--cat)}
+  main{padding-top:32px}
+  .flowgrid,.fit{grid-template-columns:1fr}
+  .casestudy{grid-template-columns:1fr}
+  .casestudy div+div{border-left:none;border-top:1px solid var(--line)}
+  .index .row{grid-template-columns:1fr;gap:2px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="side" aria-label="Patterns">
+  <a class="brand" href="#overview">Patterns field guide<span>Java 17+ · Spring Boot 3</span></a>
+  <div class="navgroup c-creational"><h4>Creational</h4><a href="#factory">Factory</a><a href="#singleton">Singleton</a></div>
+  <div class="navgroup c-behavioral"><h4>Behavioral</h4><a href="#strategy">Strategy</a><a href="#observer">Observer</a></div>
+  <div class="navgroup c-structural"><h4>Structural</h4><a href="#adapter">Adapter</a><a href="#decorator">Decorator</a></div>
+  <div class="navgroup c-architectural"><h4>Architectural</h4><a href="#cqrs">CQRS</a><a href="#circuit-breaker">Circuit Breaker</a><a href="#compare">Side by side</a></div>
+  <button class="themeToggle" type="button" id="themeToggle">Switch theme</button>
+</nav>
+
+<main>
+<header class="hero" id="overview">
+  <h1>Eight patterns, one Spring Boot codebase</h1>
+  <p>Each pattern below comes with the problem it solves, a flow diagram, production-style Spring Boot code, a use case scenario and a case study. The examples share one world — a news and commerce platform — so you can see how the patterns sit next to each other in a real service.</p>
+</header>
+
+<div class="index" role="list">
+  <a class="row c-creational" href="#factory" role="listitem"><span class="cat">Creational</span><span class="name">Factory</span><span class="solves">Pick the right implementation without <code>if/else</code> chains</span></a>
+  <a class="row c-creational" href="#singleton" role="listitem"><span class="cat">Creational</span><span class="name">Singleton</span><span class="solves">Exactly one shared instance of an expensive or stateful object</span></a>
+  <a class="row c-behavioral" href="#strategy" role="listitem"><span class="cat">Behavioral</span><span class="name">Strategy</span><span class="solves">Swap algorithms at runtime behind one interface</span></a>
+  <a class="row c-behavioral" href="#observer" role="listitem"><span class="cat">Behavioral</span><span class="name">Observer</span><span class="solves">Let many components react to one event without coupling</span></a>
+  <a class="row c-structural" href="#adapter" role="listitem"><span class="cat">Structural</span><span class="name">Adapter</span><span class="solves">Make a third-party API fit the interface your code expects</span></a>
+  <a class="row c-structural" href="#decorator" role="listitem"><span class="cat">Structural</span><span class="name">Decorator</span><span class="solves">Stack extra behaviour (cache, metrics) around an object</span></a>
+  <a class="row c-architectural" href="#cqrs" role="listitem"><span class="cat">Architectural</span><span class="name">CQRS</span><span class="solves">Separate models for writing and reading data</span></a>
+  <a class="row c-architectural" href="#circuit-breaker" role="listitem"><span class="cat">Architectural</span><span class="name">Circuit Breaker</span><span class="solves">Stop hammering a failing dependency and fail fast with a fallback</span></a>
+</div>
+
+<!-- ================= FACTORY ================= -->
+<section class="pattern c-creational" id="factory">
+  <div class="phead">
+    <div class="cat">Creational pattern</div>
+    <h2>Factory</h2>
+    <p class="intent">Hand the “which object do I need?” decision to one place, so callers ask for a capability instead of constructing a concrete class.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>Checkout supports bKash, Nagad and card payments. Without a factory, <code>CheckoutService</code> grows a <code>switch</code> on the payment method and imports every gateway class. Adding Rocket next month means editing checkout code, retesting it and risking a regression in a path that touches money.</p>
+    <p>A factory owns the mapping from “payment method” to “gateway object”. Checkout only knows the <code>PaymentGateway</code> interface. New gateway? Add one class annotated with <code>@Component</code> — nothing else changes.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 900 330" role="img" aria-label="Factory pattern: checkout asks the factory for a gateway by payment method" xmlns="http://www.w3.org/2000/svg"><defs><marker id="fac-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="fac-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="130" width="175" height="60" rx="10"/><text class="t" x="97.5" y="156.0" text-anchor="middle">CheckoutController</text><text class="s" x="97.5" y="175.0" text-anchor="middle">POST /checkout</text><rect class="n" x="225" y="130" width="195" height="60" rx="10"/><text class="t" x="322.5" y="156.0" text-anchor="middle">CheckoutService</text><text class="s" x="322.5" y="175.0" text-anchor="middle">knows only the interface</text><rect class="k" x="480" y="112" width="210" height="96" rx="10"/><text class="t" x="585.0" y="147.0" text-anchor="middle">PaymentGatewayFactory</text><text class="s" x="585.0" y="166.0" text-anchor="middle">Map&lt;Method, Gateway&gt;</text><text class="s" x="585.0" y="183.0" text-anchor="middle">built at startup</text><rect class="g" x="715" y="14" width="180" height="302" rx="12"/><text class="gl" x="729" y="34">implements</text><rect class="n" x="728" y="44" width="155" height="70" rx="10"/><text class="t" x="805.5" y="75.0" text-anchor="middle">BkashGateway</text><text class="s" x="805.5" y="94.0" text-anchor="middle">BKASH</text><rect class="k" x="728" y="130" width="155" height="70" rx="10"/><text class="t" x="805.5" y="161.0" text-anchor="middle">NagadGateway</text><text class="s" x="805.5" y="180.0" text-anchor="middle">NAGAD</text><rect class="n" x="728" y="216" width="155" height="70" rx="10"/><text class="t" x="805.5" y="247.0" text-anchor="middle">CardGateway</text><text class="s" x="805.5" y="266.0" text-anchor="middle">CARD</text><path class="e" d="M185,160 L223,160" marker-end="url(#fac-a)"/><path class="e hot" d="M420,160 L478,160" marker-end="url(#fac-h)"/><rect class="elbg" x="409.5" y="133" width="79.0" height="18" rx="4"/><text class="el hot" x="449" y="146" text-anchor="middle">get(NAGAD)</text><path class="e dash" d="M690,140 C710,140 705,79 726,79" marker-end="url(#fac-a)"/><path class="e hot" d="M690,165 L726,165" marker-end="url(#fac-h)"/><path class="e dash" d="M690,185 C710,185 705,251 726,251" marker-end="url(#fac-a)"/><text class="s" x="585" y="238" text-anchor="middle">Unknown method → 400</text><text class="s" x="585" y="256" text-anchor="middle">Duplicate → fails at startup</text><text class="s" x="800" y="308" text-anchor="middle">PaymentGateway</text></svg></div>
+    <ol class="steps">
+      <li>At startup Spring finds every bean implementing <code>PaymentGateway</code> and injects them as a list into the factory.</li>
+      <li>The factory indexes them by <code>method()</code> into an immutable map — duplicates fail fast at boot.</li>
+      <li>A request arrives with <code>method = NAGAD</code>; checkout calls <code>factory.get(NAGAD)</code>.</li>
+      <li>The factory returns <code>NagadGateway</code>; checkout calls <code>pay()</code> on the interface and never sees the concrete type.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="PaymentGateway.java"><script type="text/plain">
+public enum PaymentMethod { BKASH, NAGAD, CARD }
+
+public record PaymentRequest(String orderId, PaymentMethod method, BigDecimal amount, String payerRef) {}
+
+public record PaymentResult(boolean success, String transactionId, String message) {
+    public static PaymentResult ok(String txId) { return new PaymentResult(true, txId, "OK"); }
+    public static PaymentResult failed(String reason) { return new PaymentResult(false, null, reason); }
+}
+
+public interface PaymentGateway {
+    PaymentMethod method();
+    PaymentResult pay(PaymentRequest request);
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="gateways/*.java"><script type="text/plain">
+@Component
+public class BkashGateway implements PaymentGateway {
+    private final RestClient bkashClient;
+
+    public BkashGateway(@Qualifier("bkashRestClient") RestClient bkashClient) {
+        this.bkashClient = bkashClient;
+    }
+
+    @Override public PaymentMethod method() { return PaymentMethod.BKASH; }
+
+    @Override
+    public PaymentResult pay(PaymentRequest request) {
+        BkashPaymentResponse res = bkashClient.post()
+                .uri("/checkout/payment/create")
+                .body(Map.of("amount", request.amount(), "merchantInvoiceNumber", request.orderId()))
+                .retrieve()
+                .body(BkashPaymentResponse.class);
+        return res != null && "0000".equals(res.statusCode())
+                ? PaymentResult.ok(res.paymentID())
+                : PaymentResult.failed("bKash rejected the payment");
+    }
+}
+
+@Component
+public class NagadGateway implements PaymentGateway {
+    @Override public PaymentMethod method() { return PaymentMethod.NAGAD; }
+    @Override public PaymentResult pay(PaymentRequest request) { /* Nagad API call */ return PaymentResult.ok("NG-" + request.orderId()); }
+}
+
+@Component
+public class CardGateway implements PaymentGateway {
+    @Override public PaymentMethod method() { return PaymentMethod.CARD; }
+    @Override public PaymentResult pay(PaymentRequest request) { /* card processor call */ return PaymentResult.ok("CD-" + request.orderId()); }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="PaymentGatewayFactory.java"><script type="text/plain">
+@Component
+public class PaymentGatewayFactory {
+
+    private final Map<PaymentMethod, PaymentGateway> gateways;
+
+    // Spring injects every PaymentGateway bean it finds
+    public PaymentGatewayFactory(List<PaymentGateway> all) {
+        this.gateways = all.stream().collect(Collectors.toUnmodifiableMap(
+                PaymentGateway::method,
+                Function.identity(),
+                (a, b) -> { throw new IllegalStateException("Two gateways registered for " + a.method()); }
+        ));
+    }
+
+    public PaymentGateway get(PaymentMethod method) {
+        PaymentGateway gateway = gateways.get(method);
+        if (gateway == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported payment method: " + method);
+        }
+        return gateway;
+    }
+}
+
+@Service
+public class CheckoutService {
+    private final PaymentGatewayFactory gatewayFactory;
+
+    public CheckoutService(PaymentGatewayFactory gatewayFactory) {
+        this.gatewayFactory = gatewayFactory;
+    }
+
+    public PaymentResult checkout(PaymentRequest request) {
+        return gatewayFactory.get(request.method()).pay(request);
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>A customer on an e-commerce site picks Nagad at checkout. The controller builds a <code>PaymentRequest</code>, <code>CheckoutService</code> asks the factory for the Nagad gateway and calls <code>pay()</code>. When the business signs Rocket as a fourth provider, a developer adds <code>RocketGateway</code> plus one enum value. Checkout, its tests and the other three gateways stay untouched.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>A 140-line <code>switch</code> in checkout. Every new provider meant editing the most sensitive class in the system, and two providers once shared a copy-pasted branch with the wrong merchant key.</div>
+    <div><b>Change</b>Each provider became an isolated <code>@Component</code> with its own config and tests. The factory map rejected duplicate registrations at startup.</div>
+    <div><b>Result</b>Adding a provider became a one-class pull request. Checkout code froze, and a misconfigured provider now fails the deploy instead of failing a real payment.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Spring’s own <code>BeanFactory</code> / <code>ApplicationContext</code> — the container is a giant factory you ask for objects by type or name.</li>
+    <li><code>DriverManager.getConnection(url)</code> in JDBC picks the right driver from the URL prefix.</li>
+    <li><code>Calendar.getInstance()</code> and <code>NumberFormat.getInstance(locale)</code> in the JDK.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>You choose between several implementations of one interface based on input.</li><li>The set of implementations grows over time.</li><li>Construction needs config or validation callers shouldn’t care about.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>There is only one implementation and no sign of a second.</li><li>A plain <code>new</code> on a simple value object would do.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= SINGLETON ================= -->
+<section class="pattern c-creational" id="singleton">
+  <div class="phead">
+    <div class="cat">Creational pattern</div>
+    <h2>Singleton</h2>
+    <p class="intent">Guarantee one instance of a class and give everyone the same shared access point to it.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>Some objects are expensive or must be shared: an HTTP client with a connection pool, a cache, a rate limiter that counts OTP requests. If every service creates its own, you waste memory and sockets — and worse, a rate limiter with three instances lets attackers through three times.</p>
+    <p>In plain Java you write the singleton yourself. In Spring, every bean is a singleton per <code>ApplicationContext</code> by default, so the container does it for you. The real skill is keeping that shared instance thread-safe.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 320" role="img" aria-label="Singleton pattern: three callers share one rate limiter bean" xmlns="http://www.w3.org/2000/svg"><defs><marker id="sin-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="sin-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="30" width="180" height="60" rx="10"/><text class="t" x="100.0" y="65.0" text-anchor="middle">OtpController</text><rect class="n" x="10" y="130" width="180" height="60" rx="10"/><text class="t" x="100.0" y="165.0" text-anchor="middle">LoginService</text><rect class="n" x="4" y="230" width="196" height="60" rx="10"/><text class="t" x="102.0" y="265.0" text-anchor="middle">PasswordResetService</text><rect class="g" x="250" y="20" width="340" height="280" rx="12"/><text class="gl" x="264" y="40">Spring ApplicationContext</text><rect class="k" x="285" y="110" width="270" height="100" rx="10"/><text class="t" x="420.0" y="147.0" text-anchor="middle">OtpRateLimiter</text><text class="s" x="420.0" y="166.0" text-anchor="middle">@Component, singleton scope</text><text class="s" x="420.0" y="183.0" text-anchor="middle">one shared instance</text><text class="s" x="420" y="270" text-anchor="middle">Created once at startup</text><path class="n" d="M650,119 A100.0,9 0 0 1 850,119 V201 A100.0,9 0 0 1 650,201 Z"/><path class="n" style="fill:none" d="M650,119 A100.0,9 0 0 0 850,119"/><text class="t" x="750.0" y="151.5" text-anchor="middle">ConcurrentHashMap</text><text class="s" x="750.0" y="170.5" text-anchor="middle">phone → AtomicInteger</text><text class="s" x="750.0" y="187.5" text-anchor="middle">thread-safe counters</text><rect class="i" x="650" y="236" width="200" height="54" rx="10"/><text class="t" x="750.0" y="259.0" text-anchor="middle">@Scheduled reset</text><text class="s" x="750.0" y="278.0" text-anchor="middle">every 60 s</text><path class="e hot" d="M190,60 C240,60 240,130 283,135" marker-end="url(#sin-h)"/><path class="e hot" d="M190,160 L283,160" marker-end="url(#sin-h)"/><rect class="elbg" x="189.8" y="139" width="92.4" height="18" rx="4"/><text class="el hot" x="236" y="152" text-anchor="middle">tryAcquire()</text><path class="e hot" d="M190,260 C240,260 240,190 283,185" marker-end="url(#sin-h)"/><path class="e" d="M555,160 L648,160" marker-end="url(#sin-a)"/><rect class="elbg" x="550.45" y="139" width="99.10000000000001" height="18" rx="4"/><text class="el" x="600" y="152" text-anchor="middle">read / update</text><path class="e dash" d="M750,236 L750,212" marker-end="url(#sin-a)"/><text class="s" x="650" y="50" text-anchor="start">Same reference injected</text><text class="s" x="650" y="68" text-anchor="start">into every caller</text></svg></div>
+    <ol class="steps">
+      <li>Spring creates <code>OtpRateLimiter</code> once during startup.</li>
+      <li>Every class that needs it gets the same reference through constructor injection.</li>
+      <li>Concurrent requests update the shared counters through thread-safe structures.</li>
+      <li>A scheduled task clears the window each minute — one place, one state.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="ClassicSingleton.java  (plain Java, for reference)"><script type="text/plain">
+// Thread-safe, lazy, no synchronization cost: the holder idiom
+public final class AppClock {
+    private AppClock() {}
+
+    private static final class Holder {
+        private static final AppClock INSTANCE = new AppClock();
+    }
+
+    public static AppClock getInstance() { return Holder.INSTANCE; }
+
+    public Instant now() { return Instant.now(); }
+}
+
+// Even simpler, serialization- and reflection-safe:
+public enum IdGenerator {
+    INSTANCE;
+    private final AtomicLong seq = new AtomicLong();
+    public long next() { return seq.incrementAndGet(); }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="OtpRateLimiter.java  (the Spring way)"><script type="text/plain">
+@Component // singleton scope is the default — one instance per ApplicationContext
+public class OtpRateLimiter {
+
+    private static final int MAX_PER_MINUTE = 3;
+
+    // Shared mutable state MUST be thread-safe: many request threads hit this bean at once
+    private final ConcurrentHashMap<String, AtomicInteger> attempts = new ConcurrentHashMap<>();
+
+    public boolean tryAcquire(String phone) {
+        int count = attempts.computeIfAbsent(phone, k -> new AtomicInteger()).incrementAndGet();
+        return count <= MAX_PER_MINUTE;
+    }
+
+    @Scheduled(fixedRate = 60_000)
+    void resetWindow() {
+        attempts.clear();
+    }
+}
+
+@Configuration
+@EnableScheduling
+public class HttpClientConfig {
+
+    @Bean // created once, connection pool shared by every caller
+    public RestClient paymentRestClient(RestClient.Builder builder) {
+        return builder
+                .baseUrl("https://payments.internal")
+                .requestFactory(new JdkClientHttpRequestFactory(
+                        HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()))
+                .build();
+    }
+}
+
+@RestController
+@RequestMapping("/otp")
+public class OtpController {
+    private final OtpRateLimiter limiter;
+    private final OtpService otpService;
+
+    public OtpController(OtpRateLimiter limiter, OtpService otpService) {
+        this.limiter = limiter;
+        this.otpService = otpService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> send(@RequestParam String phone) {
+        if (!limiter.tryAcquire(phone)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+        otpService.sendOtp(phone);
+        return ResponseEntity.accepted().build();
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>Someone scripts 500 OTP requests to one phone number. Because <code>OtpController</code>, <code>LoginService</code> and <code>PasswordResetService</code> all share the same <code>OtpRateLimiter</code> bean, the fourth request inside a minute gets a <code>429</code> no matter which endpoint it hits. With separate instances, each endpoint would have allowed three — nine SMS charges instead of three.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>A developer marked a cart helper bean with a mutable <code>HashMap</code> field, assuming “one per request”. It was a singleton, so carts leaked between users under load.</div>
+    <div><b>Change</b>Stateless beans by default; shared state moved to <code>ConcurrentHashMap</code> or Redis; request-specific data kept in method parameters.</div>
+    <div><b>Result</b>No more cross-user data. The team added a code-review rule: any field on a singleton bean that isn’t <code>final</code> and thread-safe needs a comment explaining why.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Every default-scoped Spring bean — controllers, services, repositories.</li>
+    <li><code>Runtime.getRuntime()</code> in the JDK.</li>
+    <li>A HikariCP <code>DataSource</code> — one pool per application, shared by all repositories.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>The object is expensive (pools, clients, caches) or must have one source of truth.</li><li>It is stateless, or its state is thread-safe.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>You need one instance across a cluster — a JVM singleton is per pod; use Redis or a database.</li><li>You’d store per-user or per-request data in fields; use request scope or parameters.</li><li>Hand-rolled static singletons in a Spring app — they hide dependencies and hurt testing.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= STRATEGY ================= -->
+<section class="pattern c-behavioral" id="strategy">
+  <div class="phead">
+    <div class="cat">Behavioral pattern</div>
+    <h2>Strategy</h2>
+    <p class="intent">Put each variant of an algorithm behind the same interface, so the caller can pick one at runtime without knowing how it works.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>A news site’s front page ranks articles differently per reader: logged-in readers with reading history get personalised ranking, anonymous visitors get trending stories, and if everything else fails the page shows latest-first. Mixing all three algorithms in one method makes it untestable and impossible to A/B test.</p>
+    <p>Strategy splits each ranking algorithm into its own class. <code>FrontPageService</code> only decides <em>which</em> strategy applies; the strategies decide <em>how</em> to rank.</p>
+    <p><b>Factory vs Strategy:</b> they look alike in Spring because both use an interface plus a map of beans. Factory is about <em>getting</em> the right object; Strategy is about <em>swapping behaviour</em>. In practice a factory often hands you a strategy.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 360" role="img" aria-label="Strategy pattern: front page picks a ranking algorithm by reader context" xmlns="http://www.w3.org/2000/svg"><defs><marker id="str-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="str-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="140" width="140" height="60" rx="10"/><text class="t" x="80.0" y="166.0" text-anchor="middle">Reader</text><text class="s" x="80.0" y="185.0" text-anchor="middle">opens front page</text><rect class="n" x="185" y="140" width="170" height="60" rx="10"/><text class="t" x="270.0" y="166.0" text-anchor="middle">FrontPageService</text><text class="s" x="270.0" y="185.0" text-anchor="middle">chooses, never ranks</text><path class="n" d="M470,120.0 L555.0,170 L470,220.0 L385.0,170 Z"/><text class="t" x="470" y="175" text-anchor="middle">Reader context?</text><rect class="g" x="600" y="14" width="250" height="300" rx="12"/><text class="gl" x="614" y="34">implements RankingStrategy</text><rect class="k" x="620" y="50" width="210" height="62" rx="10"/><text class="t" x="725.0" y="77.0" text-anchor="middle">PersonalizedRanking</text><text class="s" x="725.0" y="96.0" text-anchor="middle">preferred sections first</text><rect class="n" x="620" y="136" width="210" height="66" rx="10"/><text class="t" x="725.0" y="165.0" text-anchor="middle">TrendingRanking</text><text class="s" x="725.0" y="184.0" text-anchor="middle">views decayed by age</text><rect class="n" x="620" y="228" width="210" height="66" rx="10"/><text class="t" x="725.0" y="257.0" text-anchor="middle">LatestFirstRanking</text><text class="s" x="725.0" y="276.0" text-anchor="middle">newest first</text><path class="e" d="M150,170 L183,170" marker-end="url(#str-a)"/><path class="e" d="M355,170 L383,170" marker-end="url(#str-a)"/><path class="e hot" d="M470,120 V81 H618" marker-end="url(#str-h)"/><rect class="elbg" x="460.35" y="57" width="139.3" height="18" rx="4"/><text class="el hot" x="530" y="70" text-anchor="middle">logged in + history</text><path class="e" d="M555,170 L618,170" marker-end="url(#str-a)"/><rect class="elbg" x="549.85" y="149" width="72.30000000000001" height="18" rx="4"/><text class="el" x="586" y="162" text-anchor="middle">anonymous</text><path class="e" d="M470,220 V261 H618" marker-end="url(#str-a)"/><rect class="elbg" x="457.0" y="269" width="146.0" height="18" rx="4"/><text class="el" x="530" y="282" text-anchor="middle">A/B flag or fallback</text><path class="e dash" d="M725,314 V340 H270 V202" marker-end="url(#str-a)"/><rect class="elbg" x="433.7" y="321" width="132.60000000000002" height="18" rx="4"/><text class="el" x="500" y="334" text-anchor="middle">ranked list, top N</text></svg></div>
+    <ol class="steps">
+      <li>A reader requests the front page.</li>
+      <li><code>FrontPageService</code> inspects the reader context and any experiment flag.</li>
+      <li>It picks a <code>RankingStrategy</code> by key from an injected map.</li>
+      <li>The strategy ranks the candidate articles; the service returns the top results.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="RankingStrategy.java"><script type="text/plain">
+public interface RankingStrategy {
+    String key();
+    List<Article> rank(List<Article> candidates, ReaderContext reader);
+}
+
+public record ReaderContext(String readerId, boolean loggedIn, Set<String> preferredSections, String experimentVariant) {
+    public boolean hasHistory() { return preferredSections != null && !preferredSections.isEmpty(); }
+}
+
+@Component
+class LatestFirstRanking implements RankingStrategy {
+    public String key() { return "latest"; }
+    public List<Article> rank(List<Article> candidates, ReaderContext reader) {
+        return candidates.stream()
+                .sorted(Comparator.comparing(Article::publishedAt).reversed())
+                .toList();
+    }
+}
+
+@Component
+class TrendingRanking implements RankingStrategy {
+    public String key() { return "trending"; }
+    public List<Article> rank(List<Article> candidates, ReaderContext reader) {
+        return candidates.stream()
+                .sorted(Comparator.comparingDouble(TrendingRanking::score).reversed())
+                .toList();
+    }
+    // views decay with age so a 2-day-old hit doesn't beat fresh news forever
+    private static double score(Article a) {
+        double hours = Duration.between(a.publishedAt(), Instant.now()).toMinutes() / 60.0;
+        return a.viewsLastHour() / Math.pow(hours + 2, 1.5);
+    }
+}
+
+@Component
+class PersonalizedRanking implements RankingStrategy {
+    public String key() { return "personalized"; }
+    public List<Article> rank(List<Article> candidates, ReaderContext reader) {
+        return candidates.stream()
+                .sorted(Comparator.comparingInt((Article a) ->
+                                reader.preferredSections().contains(a.section()) ? 1 : 0)
+                        .thenComparing(Article::publishedAt)
+                        .reversed())
+                .toList();
+    }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="FrontPageService.java"><script type="text/plain">
+@Service
+public class FrontPageService {
+
+    private final Map<String, RankingStrategy> strategies;
+    private final ArticleRepository articles;
+
+    public FrontPageService(List<RankingStrategy> all, ArticleRepository articles) {
+        this.strategies = all.stream().collect(Collectors.toUnmodifiableMap(RankingStrategy::key, s -> s));
+        this.articles = articles;
+    }
+
+    public List<Article> frontPage(ReaderContext reader, int size) {
+        RankingStrategy strategy = strategies.getOrDefault(chooseKey(reader), strategies.get("latest"));
+        return strategy.rank(articles.findPublishedSince(Instant.now().minus(Duration.ofHours(48))), reader)
+                .stream().limit(size).toList();
+    }
+
+    private String chooseKey(ReaderContext reader) {
+        if (reader.experimentVariant() != null) return reader.experimentVariant(); // A/B test override
+        if (reader.loggedIn() && reader.hasHistory()) return "personalized";
+        return "trending";
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>The product team wants to test whether trending ranking beats personalised ranking for subscribers. They set <code>experimentVariant = "trending"</code> for 10% of logged-in readers. No ranking code changes — the service just picks a different strategy, and each strategy has its own unit tests with fixed article lists.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>One <code>rankArticles()</code> method with nested <code>if</code>s for login state, section and experiments. Every tweak to personalisation broke trending in some edge case.</div>
+    <div><b>Change</b>Three strategy classes, each pure and unit-tested. Selection logic shrank to a few lines in the service.</div>
+    <div><b>Result</b>Experiments became configuration rather than code changes, and a new “editor’s picks” strategy shipped as one new class.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li><code>Comparator</code> passed to <code>List.sort()</code> — the classic JDK strategy.</li>
+    <li>Spring Security’s <code>PasswordEncoder</code>, with <code>DelegatingPasswordEncoder</code> choosing bcrypt, argon2 and others by prefix.</li>
+    <li>Spring’s <code>AuthenticationProvider</code> list and <code>ResourceLoader</code> strategies.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>Several algorithms solve the same problem and the choice depends on context.</li><li>You want to A/B test or toggle behaviour via config.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>There are two branches that will never change — an <code>if</code> is clearer.</li><li>The “strategies” need very different inputs; forcing one interface hides real differences.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= OBSERVER ================= -->
+<section class="pattern c-behavioral" id="observer">
+  <div class="phead">
+    <div class="cat">Behavioral pattern</div>
+    <h2>Observer</h2>
+    <p class="intent">When something happens, announce it once; any number of listeners react on their own, and the announcer doesn’t know who they are.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>When an editor publishes an article, the platform must update the search index, send push notifications, purge the CDN cache and log analytics. If <code>PublishingService</code> calls all four directly, it depends on four teams’ code, and a slow push provider delays the editor’s click.</p>
+    <p>With Observer, publishing raises an <code>ArticlePublishedEvent</code>. Each concern subscribes on its own. Spring’s <code>ApplicationEventPublisher</code> and <code>@EventListener</code> give you this inside one service; Kafka or RabbitMQ give you the same idea across services.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 380" role="img" aria-label="Observer pattern: one publish event fans out to independent listeners" xmlns="http://www.w3.org/2000/svg"><defs><marker id="obs-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="obs-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="48" width="150" height="60" rx="10"/><text class="t" x="85.0" y="74.0" text-anchor="middle">Editor</text><text class="s" x="85.0" y="93.0" text-anchor="middle">clicks Publish</text><rect class="n" x="320" y="40" width="220" height="76" rx="10"/><text class="t" x="430.0" y="65.0" text-anchor="middle">PublishingService</text><text class="s" x="430.0" y="84.0" text-anchor="middle">@Transactional publish()</text><text class="s" x="430.0" y="101.0" text-anchor="middle">knows no listeners</text><path class="n" d="M640,45 A100.0,9 0 0 1 840,45 V111 A100.0,9 0 0 1 640,111 Z"/><path class="n" style="fill:none" d="M640,45 A100.0,9 0 0 0 840,45"/><text class="t" x="740.0" y="78.5" text-anchor="middle">Database</text><text class="s" x="740.0" y="97.5" text-anchor="middle">status = PUBLISHED</text><rect class="k" x="100" y="182" width="680" height="60" rx="10"/><text class="t" x="440.0" y="208.0" text-anchor="middle">ApplicationEventPublisher</text><text class="s" x="440.0" y="227.0" text-anchor="middle">ArticlePublishedEvent, delivered AFTER_COMMIT</text><rect class="n" x="6" y="294" width="202" height="66" rx="10"/><text class="t" x="107.0" y="323.0" text-anchor="middle">SearchIndexListener</text><text class="s" x="107.0" y="342.0" text-anchor="middle">index the article</text><rect class="n" x="220" y="294" width="206" height="66" rx="10"/><text class="t" x="323.0" y="323.0" text-anchor="middle">PushNotificationListener</text><text class="s" x="323.0" y="342.0" text-anchor="middle">@Async, notify followers</text><rect class="n" x="438" y="294" width="196" height="66" rx="10"/><text class="t" x="536.0" y="323.0" text-anchor="middle">CdnPurgeListener</text><text class="s" x="536.0" y="342.0" text-anchor="middle">purge section page</text><rect class="i" x="646" y="294" width="208" height="66" rx="10"/><text class="t" x="750.0" y="323.0" text-anchor="middle">Next listener</text><text class="s" x="750.0" y="342.0" text-anchor="middle">added later, no edits</text><path class="e" d="M160,78 L318,78" marker-end="url(#obs-a)"/><rect class="elbg" x="197.15" y="57" width="85.7" height="18" rx="4"/><text class="el" x="240" y="70" text-anchor="middle">publish(id)</text><path class="e" d="M540,78 L638,78" marker-end="url(#obs-a)"/><rect class="elbg" x="569.6" y="57" width="38.8" height="18" rx="4"/><text class="el" x="589" y="70" text-anchor="middle">save</text><path class="e hot" d="M430,116 L430,180" marker-end="url(#obs-h)"/><rect class="elbg" x="430" y="141" width="105.8" height="18" rx="4"/><text class="el hot" x="436" y="154" text-anchor="start">publishEvent()</text><path class="e hot" d="M107,242 L107,292" marker-end="url(#obs-h)"/><path class="e hot" d="M323,242 L323,292" marker-end="url(#obs-h)"/><path class="e hot" d="M536,242 L536,292" marker-end="url(#obs-h)"/><path class="e dash" d="M750,242 L750,292" marker-end="url(#obs-a)"/></svg></div>
+    <ol class="steps">
+      <li>The editor clicks publish; the service updates the article inside a transaction.</li>
+      <li>It publishes an <code>ArticlePublishedEvent</code> — a small immutable record.</li>
+      <li>After the transaction commits, Spring delivers the event to every listener.</li>
+      <li>Slow listeners run <code>@Async</code> so the editor gets an instant response.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="PublishingService.java"><script type="text/plain">
+public record ArticlePublishedEvent(String articleId, String section, String title, Instant publishedAt) {}
+
+@Service
+public class PublishingService {
+    private final ArticleRepository articles;
+    private final ApplicationEventPublisher events;
+
+    public PublishingService(ArticleRepository articles, ApplicationEventPublisher events) {
+        this.articles = articles;
+        this.events = events;
+    }
+
+    @Transactional
+    public void publish(String articleId) {
+        Article article = articles.findById(articleId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        article.markPublished(Instant.now());
+        articles.save(article);
+
+        // The publisher knows nothing about who listens
+        events.publishEvent(new ArticlePublishedEvent(
+                article.getId(), article.getSection(), article.getTitle(), article.getPublishedAt()));
+    }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="listeners/*.java"><script type="text/plain">
+@Component
+class SearchIndexListener {
+    private final SearchIndexClient search;
+    SearchIndexListener(SearchIndexClient search) { this.search = search; }
+
+    // Runs only if the publish transaction committed — no indexing of rolled-back articles
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    void onPublished(ArticlePublishedEvent event) {
+        search.index(event.articleId());
+    }
+}
+
+@Component
+class PushNotificationListener {
+    private final PushClient push;
+    PushNotificationListener(PushClient push) { this.push = push; }
+
+    @Async // slow third-party call must not block the editor
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    void onPublished(ArticlePublishedEvent event) {
+        push.sendToTopic("section-" + event.section(), event.title(), "/article/" + event.articleId());
+    }
+}
+
+@Component
+class CdnPurgeListener {
+    private final CdnClient cdn;
+    CdnPurgeListener(CdnClient cdn) { this.cdn = cdn; }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    void onPublished(ArticlePublishedEvent event) {
+        cdn.purge("/", "/section/" + event.section());
+    }
+}
+
+@Configuration
+@EnableAsync
+class AsyncConfig {
+    @Bean
+    ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor ex = new ThreadPoolTaskExecutor();
+        ex.setCorePoolSize(4);
+        ex.setMaxPoolSize(16);
+        ex.setQueueCapacity(500);
+        ex.setThreadNamePrefix("event-");
+        ex.initialize();
+        return ex;
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>Breaking news drops. The editor hits publish and gets a response in about 80 ms. Within seconds the article is searchable, the section page is fresh on the CDN, and followers of that section get a push notification. Next quarter the analytics team adds a <code>ReadingTimeEstimateListener</code> without touching <code>PublishingService</code>.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>Publishing called search, push and CDN in sequence. When the push provider had a 20-second outage, editors saw publish spinners hang and clicked again, creating duplicates.</div>
+    <div><b>Change</b>Side effects moved into <code>AFTER_COMMIT</code> listeners, push made <code>@Async</code>. Later, cross-service events moved to Kafka with an outbox table.</div>
+    <div><b>Result</b>Publish latency stopped depending on third parties, and each listener can fail and retry without affecting the others.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Spring’s <code>ApplicationEvent</code> system, including <code>ContextRefreshedEvent</code> and <code>ApplicationReadyEvent</code>.</li>
+    <li>DOM <code>addEventListener</code> and Vue’s <code>watch</code>/<code>emit</code> on the frontend.</li>
+    <li>Kafka topics and consumer groups — Observer at distributed scale.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>One action triggers several independent side effects.</li><li>New reactions get added over time by different people.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>The caller needs the listener’s result to continue — that’s a direct call.</li><li>Ordering across listeners matters a lot; implicit flow gets hard to debug.</li><li>In-memory events must survive a crash — use an outbox plus a broker.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= ADAPTER ================= -->
+<section class="pattern c-structural" id="adapter">
+  <div class="phead">
+    <div class="cat">Structural pattern</div>
+    <h2>Adapter</h2>
+    <p class="intent">Wrap an incompatible class so it looks like the interface your code already expects — a travel plug for APIs.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>Your app sends OTP and order SMS through a simple <code>SmsSender.send(phone, text)</code> interface. The SMS vendor’s SDK wants a <code>SmsPayload</code> with a different phone format, an encoding flag for Bangla text, and returns status codes as strings. Spreading that SDK through your services ties you to the vendor forever.</p>
+    <p>An adapter implements <code>SmsSender</code> and translates calls to and from the vendor SDK. Switching vendors means writing a new adapter, not rewriting every caller.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 900 320" role="img" aria-label="Adapter pattern: your SmsSender interface wraps the vendor SDK" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ada-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="ada-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="60" width="160" height="60" rx="10"/><text class="t" x="90.0" y="95.0" text-anchor="middle">OtpService</text><rect class="n" x="10" y="170" width="160" height="60" rx="10"/><text class="t" x="90.0" y="205.0" text-anchor="middle">OrderNotifier</text><rect class="i" x="215" y="105" width="175" height="80" rx="10"/><text class="t" x="302.5" y="132.0" text-anchor="middle">SmsSender</text><text class="s" x="302.5" y="151.0" text-anchor="middle">your interface</text><text class="s" x="302.5" y="168.0" text-anchor="middle">send(phone, text)</text><rect class="k" x="450" y="82" width="225" height="126" rx="10"/><text class="t" x="562.5" y="123.0" text-anchor="middle">VendorSmsAdapter</text><text class="s" x="562.5" y="142.0" text-anchor="middle">01712… → 8801712…</text><text class="s" x="562.5" y="159.0" text-anchor="middle">Bangla → UNICODE</text><text class="s" x="562.5" y="176.0" text-anchor="middle">status ≠ 200 → exception</text><rect class="n" x="740" y="105" width="155" height="80" rx="10"/><text class="t" x="817.5" y="132.0" text-anchor="middle">Vendor SDK</text><text class="s" x="817.5" y="151.0" text-anchor="middle">submit(SmsPayload)</text><text class="s" x="817.5" y="168.0" text-anchor="middle">can’t change</text><rect class="i" x="450" y="250" width="225" height="56" rx="10"/><text class="t" x="562.5" y="274.0" text-anchor="middle">LoggingSmsAdapter</text><text class="s" x="562.5" y="293.0" text-anchor="middle">@Profile(&quot;local&quot;)</text><path class="e" d="M170,90 C200,90 195,130 213,135" marker-end="url(#ada-a)"/><path class="e" d="M170,200 C200,200 195,160 213,155" marker-end="url(#ada-a)"/><path class="e hot" d="M390,145 L448,145" marker-end="url(#ada-h)"/><rect class="elbg" x="382.85" y="124" width="72.30000000000001" height="18" rx="4"/><text class="el hot" x="419" y="137" text-anchor="middle">routes to</text><path class="e hot" d="M675,130 L738,130" marker-end="url(#ada-h)"/><path class="e dash" d="M738,160 L677,160" marker-end="url(#ada-a)"/><text class="s" x="817" y="206" text-anchor="middle">returns VendorResponse</text><path class="e dash" d="M302,185 V278 H448" marker-end="url(#ada-a)"/><rect class="elbg" x="293.85" y="257" width="72.30000000000001" height="18" rx="4"/><text class="el" x="330" y="270" text-anchor="middle">on laptop</text></svg></div>
+    <ol class="steps">
+      <li><code>OtpService</code> calls <code>smsSender.send("01712345678", text)</code>.</li>
+      <li>The adapter normalises the number to <code>8801712345678</code> and detects Bangla text to set Unicode encoding.</li>
+      <li>It calls the vendor SDK’s <code>submit()</code> with the vendor’s payload type.</li>
+      <li>It converts the vendor’s response into either success or your own <code>SmsDeliveryException</code>.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="SmsSender.java  (your interface)"><script type="text/plain">
+public interface SmsSender {
+    void send(String phone, String message);
+}
+
+public class SmsDeliveryException extends RuntimeException {
+    public SmsDeliveryException(String message) { super(message); }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="vendor SDK  (you can't change this)"><script type="text/plain">
+// Shipped in the vendor's jar
+public class VendorSmsClient {
+    public VendorResponse submit(SmsPayload payload) { /* HTTP call */ }
+}
+public record SmsPayload(String msisdn, String body, String encoding, String senderId) {}
+public record VendorResponse(String statusCode, String reason, String messageId) {}
+</script></div>
+  <div class="code" data-lang="java" data-file="VendorSmsAdapter.java"><script type="text/plain">
+@Component
+@Profile("!local")
+public class VendorSmsAdapter implements SmsSender {
+
+    private static final Pattern NON_ASCII = Pattern.compile("[^\\x00-\\x7F]");
+
+    private final VendorSmsClient client;
+    private final String senderId;
+
+    public VendorSmsAdapter(VendorSmsClient client, @Value("${sms.sender-id}") String senderId) {
+        this.client = client;
+        this.senderId = senderId;
+    }
+
+    @Override
+    public void send(String phone, String message) {
+        SmsPayload payload = new SmsPayload(
+                toMsisdn(phone),
+                message,
+                NON_ASCII.matcher(message).find() ? "UNICODE" : "TEXT", // Bangla needs Unicode
+                senderId);
+
+        VendorResponse response = client.submit(payload);
+
+        if (!"200".equals(response.statusCode())) {
+            throw new SmsDeliveryException("SMS failed: " + response.reason());
+        }
+    }
+
+    // 01712345678 / +8801712345678 / 8801712345678  ->  8801712345678
+    static String toMsisdn(String phone) {
+        String digits = phone.replaceAll("\\D", "");
+        if (digits.startsWith("880")) return digits;
+        if (digits.startsWith("0")) return "88" + digits;
+        throw new IllegalArgumentException("Unrecognised phone number: " + phone);
+    }
+}
+
+@Component
+@Profile("local")
+public class LoggingSmsAdapter implements SmsSender {
+    private static final Logger log = LoggerFactory.getLogger(LoggingSmsAdapter.class);
+    @Override
+    public void send(String phone, String message) {
+        log.info("[fake SMS] to={} text={}", phone, message);
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>Marketing negotiates a cheaper SMS vendor. The team writes <code>NewVendorSmsAdapter</code>, runs both adapters side by side behind a feature flag for a week, then deletes the old one. <code>OtpService</code>, <code>OrderNotifier</code> and their tests never change. On a laptop, the <code>local</code> profile swaps in the logging adapter so no real SMS is sent.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>Vendor SDK classes were imported in 11 services. Bangla OTPs arrived as question marks because one caller forgot the Unicode flag.</div>
+    <div><b>Change</b>One adapter owned number formatting, encoding and error mapping. The SDK was only imported in that class.</div>
+    <div><b>Result</b>The encoding bug was fixed in one line for every caller, and the later vendor switch took two days instead of a sprint.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Spring MVC’s <code>HandlerAdapter</code> lets <code>DispatcherServlet</code> call any kind of handler the same way.</li>
+    <li>SLF4J bindings adapt Logback, Log4j2 and JUL to one logging API.</li>
+    <li><code>Arrays.asList()</code> and <code>InputStreamReader</code> (bytes to characters) in the JDK.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>Integrating third-party SDKs, legacy systems or external APIs.</li><li>You want to keep vendor types out of your domain code.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>You own both sides — just change the interface.</li><li>The adapter would need to fake behaviour the target can’t really do.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= DECORATOR ================= -->
+<section class="pattern c-structural" id="decorator">
+  <div class="phead">
+    <div class="cat">Structural pattern</div>
+    <h2>Decorator</h2>
+    <p class="intent">Wrap an object in another object with the same interface to add behaviour — caching, metrics, retries — without changing the original.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>The front page fetches article data from a content API. You need caching, and you need latency metrics. Putting both inside <code>HttpArticleClient</code> mixes networking, caching and observability in one class, and you can’t test or turn them off independently.</p>
+    <p>Decorators each add one responsibility and delegate the rest. They stack like layers: <code>Timed → Caching → Http</code>. Spring’s <code>@Cacheable</code> and <code>@Transactional</code> are decorators generated as proxies.</p>
+    <p><b>Adapter vs Decorator:</b> an adapter <em>changes</em> the interface; a decorator <em>keeps</em> it and adds behaviour.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 330" role="img" aria-label="Decorator pattern: timing wraps caching wraps the HTTP client" xmlns="http://www.w3.org/2000/svg"><defs><marker id="dec-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="dec-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="4" y="135" width="170" height="60" rx="10"/><text class="t" x="89.0" y="161.0" text-anchor="middle">FrontPageService</text><text class="s" x="89.0" y="180.0" text-anchor="middle">injects ArticleClient</text><rect class="k" x="225" y="16" width="630" height="298" rx="16" style="fill-opacity:.55"/><text class="gl hotlbl" x="243" y="40">TimedArticleClient: starts timer, records latency</text><rect class="k" x="252" y="58" width="576" height="230" rx="14"/><text class="gl hotlbl" x="270" y="82">CachingArticleClient: Caffeine, 10k entries, 2 min TTL</text><path class="n" d="M285,129 A100.0,9 0 0 1 485,129 V221 A100.0,9 0 0 1 285,221 Z"/><path class="n" style="fill:none" d="M285,129 A100.0,9 0 0 0 485,129"/><text class="t" x="385.0" y="166.5" text-anchor="middle">Cache</text><text class="s" x="385.0" y="185.5" text-anchor="middle">hit → return now</text><text class="s" x="385.0" y="202.5" text-anchor="middle">no network</text><rect class="n" x="580" y="120" width="210" height="110" rx="10"/><text class="t" x="685.0" y="162.0" text-anchor="middle">HttpArticleClient</text><text class="s" x="685.0" y="181.0" text-anchor="middle">GET /articles/{id}</text><text class="s" x="685.0" y="198.0" text-anchor="middle">only on cache miss</text><path class="e hot" d="M174,165 L283,165" marker-end="url(#dec-h)"/><rect class="elbg" x="160.85" y="144" width="72.30000000000001" height="18" rx="4"/><text class="el hot" x="197" y="157" text-anchor="middle">fetch(id)</text><path class="e" d="M487,150 L578,150" marker-end="url(#dec-a)"/><rect class="elbg" x="512.6" y="129" width="38.8" height="18" rx="4"/><text class="el" x="532" y="142" text-anchor="middle">miss</text><path class="e dash" d="M578,200 L487,200" marker-end="url(#dec-a)"/><rect class="elbg" x="509.25" y="179" width="45.5" height="18" rx="4"/><text class="el" x="532" y="192" text-anchor="middle">store</text><text class="s" x="535" y="270" text-anchor="middle">Same ArticleClient interface at every layer</text></svg></div>
+    <ol class="steps">
+      <li><code>FrontPageService</code> depends on <code>ArticleClient</code> and has no idea it’s wrapped.</li>
+      <li>The timing decorator starts a Micrometer timer and delegates.</li>
+      <li>The caching decorator returns a cached article or delegates to the HTTP client.</li>
+      <li>The result travels back out through the layers; latency is recorded.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="ArticleClient + decorators"><script type="text/plain">
+public interface ArticleClient {
+    Article fetch(String id);
+}
+
+@Component
+public class HttpArticleClient implements ArticleClient {
+    private final RestClient contentApi;
+    public HttpArticleClient(@Qualifier("contentApiRestClient") RestClient contentApi) {
+        this.contentApi = contentApi;
+    }
+    @Override
+    public Article fetch(String id) {
+        return contentApi.get().uri("/articles/{id}", id).retrieve().body(Article.class);
+    }
+}
+
+public class CachingArticleClient implements ArticleClient {
+    private final ArticleClient delegate;
+    private final Cache<String, Article> cache; // Caffeine
+
+    public CachingArticleClient(ArticleClient delegate, Cache<String, Article> cache) {
+        this.delegate = delegate;
+        this.cache = cache;
+    }
+    @Override
+    public Article fetch(String id) {
+        return cache.get(id, delegate::fetch);
+    }
+}
+
+public class TimedArticleClient implements ArticleClient {
+    private final ArticleClient delegate;
+    private final Timer timer;
+
+    public TimedArticleClient(ArticleClient delegate, Timer timer) {
+        this.delegate = delegate;
+        this.timer = timer;
+    }
+    @Override
+    public Article fetch(String id) {
+        return timer.record(() -> delegate.fetch(id));
+    }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="ArticleClientConfig.java  (assemble the layers)"><script type="text/plain">
+@Configuration
+public class ArticleClientConfig {
+
+    @Bean
+    @Primary // anything injecting ArticleClient gets the fully decorated stack
+    public ArticleClient articleClient(HttpArticleClient http, MeterRegistry registry) {
+        Cache<String, Article> cache = Caffeine.newBuilder()
+                .maximumSize(10_000)
+                .expireAfterWrite(Duration.ofMinutes(2))
+                .recordStats()
+                .build();
+
+        ArticleClient cached = new CachingArticleClient(http, cache);
+        return new TimedArticleClient(cached, registry.timer("article.client.fetch"));
+    }
+}
+
+// Spring does the same thing for you with annotations, via a proxy decorator:
+@Service
+class SectionService {
+    @Cacheable(cacheNames = "sections", key = "#slug")
+    public Section bySlug(String slug) { /* slow lookup */ return null; }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>Traffic spikes on election night. The caching layer serves the same hot articles from memory, so the content API sees a fraction of the calls. Grafana shows <code>article.client.fetch</code> p99 drop from hundreds of milliseconds to near zero. When debugging stale data, an engineer flips one config flag to assemble the stack without the caching layer — the HTTP client and service code are unchanged.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>Caching, retry and logging lived inside the HTTP client with boolean flags. Tests needed WireMock just to verify the cache.</div>
+    <div><b>Change</b>Each concern became a small decorator with its own unit test using a fake delegate.</div>
+    <div><b>Result</b>Layers can be reordered (metrics outside cache measures what callers feel; inside measures the API) and added per environment.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Java I/O: <code>new BufferedReader(new InputStreamReader(inputStream))</code>.</li>
+    <li>Spring AOP proxies behind <code>@Transactional</code>, <code>@Cacheable</code>, <code>@Async</code> and <code>@Retryable</code>.</li>
+    <li><code>Collections.unmodifiableList()</code> and <code>synchronizedMap()</code>.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>You want to add cross-cutting behaviour without touching the core class.</li><li>Behaviours need to be combined in different ways per environment.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>The interface is huge — every decorator must delegate every method.</li><li>An annotation like <code>@Cacheable</code> already does it cleanly.</li><li>Deep stacks make stack traces hard to read; keep it to a few layers.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= CQRS ================= -->
+<section class="pattern c-architectural" id="cqrs">
+  <div class="phead">
+    <div class="cat">Architectural pattern</div>
+    <h2>CQRS</h2>
+    <p class="intent">Command Query Responsibility Segregation: use one model to change data and a different, read-optimised model to query it.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>An order system writes with strict rules — stock checks, totals, state transitions — and wants a normalised relational schema. But the “My orders” page and the admin dashboard want fast, denormalised, searchable data with joins across five tables. One model forces a compromise: slow reads or a messy write model.</p>
+    <p>CQRS splits the two. <b>Commands</b> (<code>PlaceOrder</code>, <code>CancelOrder</code>) go through a domain model into PostgreSQL. Each change emits an event, and a <b>projector</b> builds a flat read model in MongoDB or OpenSearch. <b>Queries</b> only touch the read model. The cost: reads become eventually consistent.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 400" role="img" aria-label="CQRS: commands write to PostgreSQL, a projector feeds the MongoDB read model" xmlns="http://www.w3.org/2000/svg"><defs><marker id="cqr-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="cqr-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="lane" x="150" y="10" width="700" height="175" rx="12"/><text class="gl" x="164" y="32">Write side: commands</text><rect class="lane" x="150" y="215" width="700" height="175" rx="12"/><text class="gl" x="164" y="237">Read side: queries</text><rect class="n" x="10" y="170" width="120" height="60" rx="10"/><text class="t" x="70.0" y="196.0" text-anchor="middle">Client</text><text class="s" x="70.0" y="215.0" text-anchor="middle">web / app</text><rect class="n" x="190" y="70" width="210" height="76" rx="10"/><text class="t" x="295.0" y="95.0" text-anchor="middle">OrderCommandService</text><text class="s" x="295.0" y="114.0" text-anchor="middle">validate rules</text><text class="s" x="295.0" y="131.0" text-anchor="middle">reserve stock</text><path class="n" d="M450,69 A85.0,9 0 0 1 620,69 V147 A85.0,9 0 0 1 450,147 Z"/><path class="n" style="fill:none" d="M450,69 A85.0,9 0 0 0 620,69"/><text class="t" x="535.0" y="99.5" text-anchor="middle">PostgreSQL</text><text class="s" x="535.0" y="118.5" text-anchor="middle">write model</text><text class="s" x="535.0" y="135.5" text-anchor="middle">normalised</text><rect class="n" x="190" y="276" width="210" height="76" rx="10"/><text class="t" x="295.0" y="301.0" text-anchor="middle">OrderQueryService</text><text class="s" x="295.0" y="320.0" text-anchor="middle">no joins</text><text class="s" x="295.0" y="337.0" text-anchor="middle">paged history</text><path class="n" d="M450,275 A85.0,9 0 0 1 620,275 V353 A85.0,9 0 0 1 450,353 Z"/><path class="n" style="fill:none" d="M450,275 A85.0,9 0 0 0 620,275"/><text class="t" x="535.0" y="305.5" text-anchor="middle">MongoDB</text><text class="s" x="535.0" y="324.5" text-anchor="middle">read model</text><text class="s" x="535.0" y="341.5" text-anchor="middle">OrderSummary docs</text><rect class="k" x="665" y="158" width="175" height="84" rx="10"/><text class="t" x="752.5" y="187.0" text-anchor="middle">Projector</text><text class="s" x="752.5" y="206.0" text-anchor="middle">AFTER_COMMIT</text><text class="s" x="752.5" y="223.0" text-anchor="middle">or Kafka consumer</text><path class="e" d="M130,185 C160,185 160,108 188,108" marker-end="url(#cqr-a)"/><rect class="elbg" x="146" y="127" width="92.4" height="18" rx="4"/><text class="el" x="152" y="140" text-anchor="start">POST /orders</text><path class="e" d="M130,215 C160,215 160,314 188,314" marker-end="url(#cqr-a)"/><rect class="elbg" x="146" y="255" width="85.7" height="18" rx="4"/><text class="el" x="152" y="268" text-anchor="start">GET history</text><path class="e" d="M400,108 L448,108" marker-end="url(#cqr-a)"/><path class="e" d="M400,314 L448,314" marker-end="url(#cqr-a)"/><path class="e hot" d="M620,100 C700,100 752,110 752,156" marker-end="url(#cqr-h)"/><rect class="elbg" x="647.15" y="77" width="85.7" height="18" rx="4"/><text class="el hot" x="690" y="90" text-anchor="middle">OrderPlaced</text><path class="e hot" d="M752,242 C752,300 700,314 622,314" marker-end="url(#cqr-h)"/><rect class="elbg" x="685.9" y="287" width="52.2" height="18" rx="4"/><text class="el hot" x="712" y="300" text-anchor="middle">upsert</text><text class="s" x="742" y="258" text-anchor="end">eventually consistent</text></svg></div>
+    <ol class="steps">
+      <li>The client sends a <code>PlaceOrderCommand</code>; the command service validates business rules and saves to PostgreSQL.</li>
+      <li>After commit, an <code>OrderPlaced</code> event is published.</li>
+      <li>The projector writes a flat <code>OrderSummary</code> document to MongoDB.</li>
+      <li>“My orders” queries hit only the read model — fast, indexed, no joins.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="java" data-file="command side"><script type="text/plain">
+public record PlaceOrderCommand(@NotBlank String customerId, @NotEmpty List<@Valid OrderLine> lines) {}
+public record OrderLine(@NotBlank String sku, @Positive int quantity, @Positive BigDecimal unitPrice) {}
+public record OrderPlaced(String orderId, String customerId, BigDecimal total, int itemCount, Instant placedAt) {}
+
+@Service
+public class OrderCommandService {
+    private final OrderRepository orders;          // Spring Data JPA -> PostgreSQL
+    private final InventoryService inventory;
+    private final ApplicationEventPublisher events;
+
+    public OrderCommandService(OrderRepository orders, InventoryService inventory, ApplicationEventPublisher events) {
+        this.orders = orders;
+        this.inventory = inventory;
+        this.events = events;
+    }
+
+    @Transactional
+    public String handle(PlaceOrderCommand cmd) {
+        cmd.lines().forEach(l -> inventory.reserve(l.sku(), l.quantity())); // invariant: stock available
+        Order order = Order.place(cmd.customerId(), cmd.lines());           // domain rules live here
+        orders.save(order);
+
+        events.publishEvent(new OrderPlaced(order.getId(), order.getCustomerId(),
+                order.total(), order.itemCount(), order.getCreatedAt()));
+        return order.getId();
+    }
+}
+</script></div>
+  <div class="code" data-lang="java" data-file="projection + query side"><script type="text/plain">
+@Document("order_summaries")
+public record OrderSummary(@Id String orderId, @Indexed String customerId, BigDecimal total,
+                           int itemCount, String status, Instant placedAt) {}
+
+public interface OrderSummaryRepository extends MongoRepository<OrderSummary, String> {
+    Page<OrderSummary> findByCustomerIdOrderByPlacedAtDesc(String customerId, Pageable pageable);
+}
+
+@Component
+class OrderSummaryProjector {
+    private final OrderSummaryRepository summaries;
+    OrderSummaryProjector(OrderSummaryRepository summaries) { this.summaries = summaries; }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    void on(OrderPlaced e) {
+        // idempotent: same orderId overwrites, so replays are safe
+        summaries.save(new OrderSummary(e.orderId(), e.customerId(), e.total(), e.itemCount(), "PLACED", e.placedAt()));
+    }
+}
+
+@Service
+public class OrderQueryService {
+    private final OrderSummaryRepository summaries;
+    public OrderQueryService(OrderSummaryRepository summaries) { this.summaries = summaries; }
+
+    public Page<OrderSummary> history(String customerId, Pageable pageable) {
+        return summaries.findByCustomerIdOrderByPlacedAtDesc(customerId, pageable);
+    }
+}
+
+@RestController
+@RequestMapping("/orders")
+class OrderController {
+    private final OrderCommandService commands;
+    private final OrderQueryService queries;
+
+    OrderController(OrderCommandService commands, OrderQueryService queries) {
+        this.commands = commands;
+        this.queries = queries;
+    }
+
+    @PostMapping
+    ResponseEntity<Map<String, String>> place(@Valid @RequestBody PlaceOrderCommand cmd) {
+        String id = commands.handle(cmd);
+        return ResponseEntity.accepted().body(Map.of("orderId", id));
+    }
+
+    @GetMapping("/customer/{customerId}")
+    Page<OrderSummary> history(@PathVariable String customerId, Pageable pageable) {
+        return queries.history(customerId, pageable);
+    }
+}
+</script></div>
+  <div class="prose"><p><b>Production note:</b> an in-memory event is lost if the pod dies between commit and projection. For real systems, write the event to an <b>outbox table</b> in the same transaction and relay it to Kafka (Debezium or a scheduled poller); projectors consume from Kafka. Return <code>202 Accepted</code> and let the UI show the new order optimistically.</p></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>During an 11.11 sale, order writes jump tenfold, and customers refresh “My orders” constantly. The write side scales on PostgreSQL with short transactions; the read side scales independently on MongoDB replicas. A customer may see their new order a moment after placing it — acceptable — while dashboards never lock order tables.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>The admin dashboard ran a six-table join on the live orders database. During sales it caused lock waits and slowed checkout itself.</div>
+    <div><b>Change</b>Dashboard and order history moved to projections in a search/document store, fed by events from the write side.</div>
+    <div><b>Result</b>Checkout latency stopped tracking dashboard usage. New read views became new projectors that replay history — no schema change on the write side.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>The term was coined by Greg Young, building on Bertrand Meyer’s command–query separation; Martin Fowler’s write-up popularised it.</li>
+    <li>Axon Framework for Java is built around CQRS and event sourcing.</li>
+    <li>Search-heavy products commonly keep a relational source of truth and an OpenSearch/Elasticsearch read index — CQRS in practice.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>Reads and writes have very different shapes or load.</li><li>You need several read views (search, dashboard, history) of the same data.</li><li>Complex business rules live on the write side.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>It’s simple CRUD — CQRS doubles the moving parts.</li><li>Users must always read their own write instantly and you can’t design around it.</li><li>The team has no way to monitor and rebuild projections.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= CIRCUIT BREAKER ================= -->
+<section class="pattern c-architectural" id="circuit-breaker">
+  <div class="phead">
+    <div class="cat">Architectural / resilience pattern</div>
+    <h2>Circuit Breaker</h2>
+    <p class="intent">Watch calls to a dependency; when it keeps failing, stop calling it for a while and return a fallback, then carefully test whether it has recovered.</p>
+  </div>
+
+  <h3>The problem it solves</h3>
+  <div class="prose">
+    <p>The front page calls a recommendation service. When it slows to 10-second responses, every front-page request waits, Tomcat threads pile up, and soon the whole site is down — because one non-critical widget is sick. That is a cascading failure.</p>
+    <p>A circuit breaker counts failures and slow calls. Past a threshold it <b>opens</b>: calls fail immediately and go to a fallback (latest articles). After a wait it goes <b>half-open</b>, lets a few trial calls through, and <b>closes</b> again if they succeed.</p>
+  </div>
+
+  <h3>How it flows</h3>
+  <div class="flowgrid">
+    <div class="diagram"><svg class="dg" viewBox="0 0 860 390" role="img" aria-label="Circuit breaker state machine: closed, open, half-open" xmlns="http://www.w3.org/2000/svg"><defs><marker id="cbr-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker><marker id="cbr-h" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path class="ah hot" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="ok" x="60" y="110" width="200" height="90" rx="45"/><text class="t" x="160.0" y="142.0" text-anchor="middle">Closed</text><text class="s" x="160.0" y="161.0" text-anchor="middle">calls go through</text><text class="s" x="160.0" y="178.0" text-anchor="middle">outcomes recorded</text><rect class="bad" x="600" y="110" width="200" height="90" rx="45"/><text class="t" x="700.0" y="142.0" text-anchor="middle">Open</text><text class="s" x="700.0" y="161.0" text-anchor="middle">no calls to service</text><text class="s" x="700.0" y="178.0" text-anchor="middle">fallback instantly</text><rect class="warn" x="330" y="260" width="200" height="90" rx="45"/><text class="t" x="430.0" y="292.0" text-anchor="middle">Half-open</text><text class="s" x="430.0" y="311.0" text-anchor="middle">3 trial calls</text><text class="s" x="430.0" y="328.0" text-anchor="middle">allowed through</text><path class="e" d="M10,155 L58,155" marker-end="url(#cbr-a)"/><path class="e" d="M200,108 C260,30 600,30 660,108" marker-end="url(#cbr-a)"/><rect class="elbg" x="286.65" y="33" width="286.7" height="18" rx="4"/><text class="el" x="430" y="46" text-anchor="middle">≥ 50% of last 20 calls fail or take &gt; 2 s</text><path class="e" d="M700,200 C700,290 600,300 532,300" marker-end="url(#cbr-a)"/><rect class="elbg" x="620.5" y="273" width="79.0" height="18" rx="4"/><text class="el" x="660" y="286" text-anchor="middle">after 30 s</text><path class="e" d="M532,330 C640,350 760,300 760,202" marker-end="url(#cbr-a)"/><rect class="elbg" x="633.75" y="339" width="112.5" height="18" rx="4"/><text class="el" x="690" y="352" text-anchor="middle">any trial fails</text><path class="e" d="M328,305 C200,305 160,260 160,202" marker-end="url(#cbr-a)"/><rect class="elbg" x="157.1" y="277" width="105.8" height="18" rx="4"/><text class="el" x="210" y="290" text-anchor="middle">trials succeed</text><rect class="i" x="600" y="14" width="200" height="44" rx="10"/><text class="t" x="700.0" y="41.0" text-anchor="middle">Fallback: latest articles</text><path class="e dash" d="M700,108 L700,60" marker-end="url(#cbr-a)"/></svg></div>
+    <ol class="steps">
+      <li><b>Closed:</b> calls go through; Resilience4j records outcomes in a sliding window.</li>
+      <li>Half of the last 20 calls fail or exceed 2 s — the breaker trips to <b>Open</b>.</li>
+      <li><b>Open:</b> calls return the fallback instantly, no network, no waiting threads.</li>
+      <li>After 30 s, <b>Half-open:</b> three trial calls decide whether to close or reopen.</li>
+    </ol>
+  </div>
+
+  <h3>Spring Boot implementation</h3>
+  <div class="code" data-lang="xml" data-file="pom.xml  (dependencies)"><script type="text/plain">
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+</script></div>
+  <div class="code" data-lang="yaml" data-file="application.yml"><script type="text/plain">
+resilience4j:
+  circuitbreaker:
+    instances:
+      recommendations:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        register-health-indicator: true
+
+management:
+  endpoints.web.exposure.include: health,circuitbreakers,metrics
+  health.circuitbreakers.enabled: true
+</script></div>
+  <div class="code" data-lang="java" data-file="RecommendationClient.java"><script type="text/plain">
+@Service
+public class RecommendationClient {
+
+    private static final Logger log = LoggerFactory.getLogger(RecommendationClient.class);
+
+    private final RestClient recommendationApi;
+    private final ArticleRepository articles;
+
+    public RecommendationClient(@Qualifier("recommendationRestClient") RestClient recommendationApi,
+                                ArticleRepository articles) {
+        this.recommendationApi = recommendationApi;
+        this.articles = articles;
+    }
+
+    @CircuitBreaker(name = "recommendations", fallbackMethod = "latestArticles")
+    public List<ArticleCard> forReader(String readerId) {
+        return recommendationApi.get()
+                .uri("/recommendations/{readerId}?limit=10", readerId)
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<ArticleCard>>() {});
+    }
+
+    // Same parameters + a Throwable. Called on failure AND when the circuit is open.
+    private List<ArticleCard> latestArticles(String readerId, Throwable cause) {
+        if (cause instanceof CallNotPermittedException) {
+            log.debug("Recommendations circuit open, serving latest for {}", readerId);
+        } else {
+            log.warn("Recommendations failed: {}", cause.toString());
+        }
+        return articles.findTop10ByStatusOrderByPublishedAtDesc(ArticleStatus.PUBLISHED)
+                .stream().map(ArticleCard::from).toList();
+    }
+}
+
+@Configuration
+class RecommendationClientConfig {
+    @Bean
+    RestClient recommendationRestClient(RestClient.Builder builder) {
+        // The breaker can only see "slow" if calls actually time out — always set timeouts
+        SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
+        rf.setConnectTimeout(Duration.ofMillis(500));
+        rf.setReadTimeout(Duration.ofSeconds(3));
+        return builder.baseUrl("http://recommendation-service").requestFactory(rf).build();
+    }
+}
+</script></div>
+
+  <h3>Use case scenario</h3>
+  <div class="prose"><p>The recommendation service’s database fails over and responses take 8 seconds. Within the first ten or so requests the breaker opens. For the next 30 seconds every reader instantly gets the “Latest news” block instead of “Recommended for you”. The front page stays fast, the struggling service gets breathing room to recover, and <code>/actuator/health</code> shows the breaker state so on-call can see what happened.</p></div>
+
+  <h3>Case study</h3>
+  <div class="casestudy">
+    <div><b>Before</b>A slow optional widget exhausted the Tomcat thread pool. The entire site returned 503s although articles and the database were healthy.</div>
+    <div><b>Change</b>Timeouts on every outbound client, a Resilience4j breaker per dependency, and a meaningful fallback for each.</div>
+    <div><b>Result</b>The next recommendation outage degraded one widget instead of the whole site. Alerts now fire on breaker state, not on angry readers.</div>
+  </div>
+
+  <h3>Seen in the wild</h3>
+  <ul class="wild">
+    <li>Popularised by Michael Nygard’s book <em>Release It!</em>.</li>
+    <li>Netflix built Hystrix for this; it is now in maintenance mode and Resilience4j is the usual choice for Spring Boot 3.</li>
+    <li>Service meshes like Istio and gateways like Kong offer outlier detection and passive health checks — the same idea at the network layer.</li>
+  </ul>
+
+  <h3>When to reach for it</h3>
+  <div class="fit">
+    <div class="yes"><h4>Use when</h4><ul><li>Calling remote services that can be slow or down.</li><li>You have a sensible fallback or can fail fast without harm.</li><li>One dependency’s failure could exhaust shared resources.</li></ul></div>
+    <div class="no"><h4>Avoid when</h4><ul><li>Calls are local, in-process and cheap.</li><li>No timeouts are configured — fix that first, the breaker depends on it.</li><li>Writes that must not be skipped silently; there, prefer queues and retries.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= COMPARE ================= -->
+<section class="pattern" id="compare" style="--cat:var(--accent)">
+  <div class="phead">
+    <div class="cat">Recap</div>
+    <h2>Side by side</h2>
+    <p class="intent">The question each pattern answers, and where Spring already hands it to you.</p>
+  </div>
+  <div class="compare">
+    <table>
+      <thead><tr><th>Pattern</th><th>Question it answers</th><th>Spring Boot hook</th><th>Example here</th></tr></thead>
+      <tbody>
+        <tr><td>Factory</td><td>Which implementation do I need?</td><td><code>List&lt;Interface&gt;</code> injection into a map</td><td>bKash / Nagad / card gateway</td></tr>
+        <tr><td>Singleton</td><td>How do we share one instance safely?</td><td>Default bean scope</td><td>OTP rate limiter, HTTP client</td></tr>
+        <tr><td>Strategy</td><td>Which algorithm should run now?</td><td>Beans keyed by name, chosen at runtime</td><td>Front-page ranking</td></tr>
+        <tr><td>Observer</td><td>Who needs to know this happened?</td><td><code>ApplicationEventPublisher</code>, <code>@TransactionalEventListener</code></td><td>Article published</td></tr>
+        <tr><td>Adapter</td><td>How do I fit this foreign API?</td><td><code>@Component</code> implementing your port, <code>@Profile</code></td><td>SMS vendor SDK</td></tr>
+        <tr><td>Decorator</td><td>How do I add behaviour without editing it?</td><td><code>@Primary</code> composed bean, AOP proxies</td><td>Cached, timed article client</td></tr>
+        <tr><td>CQRS</td><td>Should reads and writes share a model?</td><td>JPA write side, Mongo/OpenSearch projections</td><td>Orders and order history</td></tr>
+        <tr><td>Circuit Breaker</td><td>What if a dependency is failing?</td><td>Resilience4j <code>@CircuitBreaker</code></td><td>Recommendations fallback</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Code targets Java 17+ and Spring Boot 3.2+ (<code>RestClient</code>). Imports omitted for brevity; Caffeine, Micrometer and Resilience4j are the only non-starter libraries used.</footer>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function(){
+  // Build code blocks from raw <script type="text/plain"> so generics need no escaping
+  document.querySelectorAll('.code').forEach(function(holder){
+    var raw = holder.querySelector('script').textContent.replace(/^\n/, '').replace(/\s+$/, '');
+    var lang = holder.dataset.lang || 'java';
+    var wrap = document.createElement('div'); wrap.className = 'codeblock';
+    var bar = document.createElement('div'); bar.className = 'codebar';
+    var name = document.createElement('span'); name.textContent = holder.dataset.file || lang;
+    var btn = document.createElement('button'); btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function(){
+      var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(raw).then(done, function(){ btn.textContent = 'Select & copy'; });
+      } else { btn.textContent = 'Select & copy'; }
+    });
+    bar.appendChild(name); bar.appendChild(btn);
+    var pre = document.createElement('pre'); var code = document.createElement('code');
+    code.className = 'language-' + lang; code.textContent = raw;
+    pre.appendChild(code); wrap.appendChild(bar); wrap.appendChild(pre);
+    holder.replaceWith(wrap);
+    if (window.hljs) { try { hljs.highlightElement(code); } catch(e){} }
+  });
+
+  // Active nav item
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.side .navgroup a'));
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting && map[en.target.id]) {
+          links.forEach(function(a){ a.classList.remove('active'); });
+          map[en.target.id].classList.add('active');
+          if (window.matchMedia('(max-width:960px)').matches) {
+            map[en.target.id].scrollIntoView({block:'nearest', inline:'center'});
+          }
+        }
+      });
+    }, {rootMargin:'-30% 0px -60% 0px'});
+    document.querySelectorAll('section.pattern').forEach(function(s){ io.observe(s); });
+  }
+
+  // Deep link: #factory, #cqrs, ...
+  var h = (location.hash || '').slice(1);
+  if (h && document.getElementById(h)) {
+    setTimeout(function(){ document.getElementById(h).scrollIntoView(); }, 300);
+  }
+
+  // Theme toggle
+  var t = document.getElementById('themeToggle');
+  try { var saved = localStorage.getItem('theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch(e){}
+  t.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme')
+      || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch(e){}
+  });
+})();
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>

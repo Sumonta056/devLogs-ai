@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How a change gets reviewed — Claude Code team flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAEFF4; --surface:#FFFFFF; --sunk:#DDE4EC; --ink:#17243A; --muted:#55657C; --line:#C3CEDB;
+  --auto:#11806F; --auto-soft:#D3EEE9; --human:#B87503; --human-soft:#F7E6C6; --rec:#6447B8; --rec-soft:#E4DCF7;
+  --block:#C23B3B;
+  color-scheme: light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1724; --surface:#18233A; --sunk:#111B2C; --ink:#E6ECF5; --muted:#9AAAC2; --line:#2C3B56;
+    --auto:#3FC2AC; --auto-soft:#16352F; --human:#EDB04A; --human-soft:#3A2D12; --rec:#A58DF0; --rec-soft:#2A2147; --block:#F07A7A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1724; --surface:#18233A; --sunk:#111B2C; --ink:#E6ECF5; --muted:#9AAAC2; --line:#2C3B56;
+  --auto:#3FC2AC; --auto-soft:#16352F; --human:#EDB04A; --human-soft:#3A2D12; --rec:#A58DF0; --rec-soft:#2A2147; --block:#F07A7A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif;line-height:1.1;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:2rem 1.25rem 4rem}
+header{display:grid;gap:.75rem;margin-bottom:1.75rem}
+h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;font-size:.92rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:3px;display:inline-block}
+.sw.auto{background:var(--auto)} .sw.human{background:var(--human)} .sw.rec{background:var(--rec)}
+
+.tabs{display:flex;gap:.25rem;background:var(--sunk);padding:.3rem;border-radius:12px;width:max-content;max-width:100%;overflow-x:auto;margin-bottom:1.5rem}
+.tabs button{all:unset;cursor:pointer;padding:.55rem 1rem;border-radius:9px;font-weight:700;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.tabs button:focus-visible,button:focus-visible{outline:3px solid var(--auto);outline-offset:2px}
+.panel[hidden]{display:none}
+
+/* ---------- pipeline ---------- */
+.flow{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start}
+.rail{position:relative;padding-left:2.1rem}
+.pipe{position:absolute;left:.85rem;top:.6rem;bottom:.6rem;width:4px;border-radius:4px;background:var(--line)}
+.pipe-fill{position:absolute;left:0;top:0;width:100%;border-radius:4px;background:var(--ink);transition:height .45s ease}
+.packet{position:absolute;left:calc(.85rem - 9px);width:22px;height:22px;border-radius:50%;background:var(--surface);border:5px solid var(--ink);transition:top .45s cubic-bezier(.5,0,.2,1),left .45s cubic-bezier(.5,0,.2,1);z-index:2}
+.phase{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:.85rem;color:var(--muted);margin:1rem 0 .35rem}
+.phase:first-of-type{margin-top:0}
+.step-btn{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:1.6rem 1fr;gap:.6rem;align-items:center;width:100%;padding:.55rem .7rem;border-radius:10px;margin-bottom:.2rem;border:2px solid transparent}
+.step-btn:hover{background:var(--sunk)}
+.step-btn .num{width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;color:#fff}
+.step-btn[data-role="auto"] .num{background:var(--auto)}
+.step-btn[data-role="human"] .num{background:var(--human);color:#2a1a00}
+.step-btn[data-role="rec"] .num{background:var(--rec)}
+.step-btn .t{font-weight:700;line-height:1.25}
+.step-btn[aria-current="step"]{background:var(--surface);border-color:var(--ink)}
+.step-btn.done .t{color:var(--muted)}
+
+.detail{background:var(--surface);border-radius:18px;border:1px solid var(--line);padding:1.5rem 1.5rem 1.25rem;min-height:520px;display:flex;flex-direction:column}
+.detail-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.role-tag{display:inline-block;font-size:.85rem;font-weight:700;padding:.2rem .65rem;border-radius:99px}
+.role-tag.auto{background:var(--auto-soft);color:var(--auto)}
+.role-tag.human{background:var(--human-soft);color:var(--human)}
+.role-tag.rec{background:var(--rec-soft);color:var(--rec)}
+.gate{font-size:.85rem;font-weight:700;padding:.2rem .65rem;border-radius:99px;border:2px solid var(--block);color:var(--block)}
+.gate.soft{border-color:var(--line);color:var(--muted)}
+.detail h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin:.6rem 0 .5rem;letter-spacing:-.01em}
+.detail .why{margin:0 0 1.1rem;max-width:62ch}
+.sub{display:flex;flex-wrap:wrap;align-items:stretch;gap:.4rem;margin:0 0 1.2rem;padding:0;list-style:none}
+.sub li{display:flex;align-items:center;gap:.4rem}
+.sub .chip{background:var(--sunk);border-radius:10px;padding:.55rem .75rem;font-size:.93rem;max-width:22ch;line-height:1.3;opacity:0;transform:translateY(4px);animation:in .35s forwards}
+.sub .arrow{color:var(--muted);font-weight:700;opacity:0;animation:in .35s forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.facts{margin:0;padding-left:1.1rem;max-width:64ch}
+.facts li{margin-bottom:.4rem}
+.files{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.files code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;background:var(--sunk);padding:.15rem .45rem;border-radius:6px;font-size:.88rem}
+.controls{margin-top:auto;padding-top:1.25rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)}
+.btn{all:unset;cursor:pointer;padding:.55rem 1rem;border-radius:10px;font-weight:700;border:2px solid var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--surface)}
+.btn[disabled]{opacity:.35;cursor:not-allowed}
+.counter{margin-left:auto;color:var(--muted);font-size:.9rem}
+.kbd-hint{color:var(--muted);font-size:.85rem;margin-top:.75rem}
+
+/* ---------- risk simulator ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.5rem}
+.card h2{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.card p.note{color:var(--muted);margin:0 0 1rem;max-width:60ch}
+.choices{display:grid;gap:.4rem}
+.choice{all:unset;cursor:pointer;box-sizing:border-box;padding:.65rem .85rem;border-radius:10px;border:2px solid var(--line);display:flex;justify-content:space-between;gap:.75rem}
+.choice small{color:var(--muted)}
+.choice[aria-pressed="true"]{border-color:var(--ink);background:var(--sunk)}
+.toggle{display:flex;align-items:center;gap:.6rem;margin-top:1rem;cursor:pointer;font-weight:700}
+.toggle input{width:1.15rem;height:1.15rem;accent-color:var(--auto)}
+.verdict{display:grid;gap:1rem}
+.people{display:flex;gap:.6rem;align-items:flex-end;min-height:92px}
+.person{width:52px;height:80px;position:relative;opacity:.18;transition:opacity .3s}
+.person.on{opacity:1}
+.person::before{content:"";position:absolute;left:14px;top:0;width:24px;height:24px;border-radius:50%;background:var(--human)}
+.person::after{content:"";position:absolute;left:4px;top:28px;width:44px;height:52px;border-radius:22px 22px 6px 6px;background:var(--human)}
+.robot{width:56px;height:80px;position:relative}
+.robot::before{content:"";position:absolute;left:8px;top:6px;width:40px;height:30px;border-radius:8px;background:var(--auto)}
+.robot::after{content:"";position:absolute;left:4px;top:40px;width:48px;height:40px;border-radius:8px;background:var(--auto)}
+.big{font-family:"Bricolage Grotesque",sans-serif;font-size:2.4rem;font-weight:800;line-height:1}
+.tier{font-weight:700}
+.tier.low{color:var(--auto)} .tier.medium{color:var(--human)} .tier.high{color:var(--block)}
+.rules{margin:0;padding-left:1.1rem;color:var(--ink)}
+.rules li{margin-bottom:.35rem}
+.table-wrap{overflow-x:auto;margin-top:1.5rem}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface);border-radius:14px;overflow:hidden}
+th,td{text-align:left;padding:.75rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:"Bricolage Grotesque",sans-serif;background:var(--sunk)}
+tr.hl td{background:var(--human-soft)}
+
+/* ---------- loops ---------- */
+.cycle{position:relative;width:100%;max-width:420px;aspect-ratio:1;margin:0 auto}
+.cycle svg{width:100%;height:100%}
+.node{cursor:pointer}
+.node rect{fill:var(--sunk);stroke:var(--line);stroke-width:2;transition:fill .25s,stroke .25s}
+.node.on rect{fill:var(--rec-soft);stroke:var(--rec)}
+.node text{fill:var(--ink);font:700 13px "Atkinson Hyperlegible",sans-serif}
+.node text.s{font-weight:400;fill:var(--muted);font-size:11.5px}
+.ring{fill:none;stroke:var(--line);stroke-width:3;stroke-dasharray:6 8}
+.cycle-cap{text-align:center;min-height:3.2em;margin:.5rem auto 0;max-width:42ch}
+.rounds{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0;min-height:44px}
+.round{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:700;background:var(--auto-soft);color:var(--auto)}
+.round.cap{background:var(--human-soft);color:var(--human)}
+.msg{min-height:3em;margin:0 0 1rem}
+.bars{display:grid;gap:1.1rem;margin-top:1.25rem}
+.bar-row .lbl{font-weight:700;margin-bottom:.35rem;display:flex;justify-content:space-between;gap:1rem}
+.bar-row .lbl small{color:var(--muted);font-weight:400}
+.track{background:var(--sunk);border-radius:6px;height:14px;margin-bottom:.3rem;position:relative}
+.fill{height:100%;border-radius:6px;transition:width .8s ease}
+.fill.before{background:var(--line)} .fill.after{background:var(--auto)}
+.keylist{display:flex;gap:1rem;font-size:.88rem;color:var(--muted);margin-top:.5rem}
+.fixes{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem}
+.fixes div{background:var(--sunk);border-radius:10px;padding:.7rem .85rem;font-size:.93rem}
+.fixes b{display:block;margin-bottom:.15rem}
+/* ---------- REVIEW.md ---------- */
+.rv{display:grid;grid-template-columns:320px 1fr;gap:1.5rem;align-items:start}
+.rv-list{display:grid;gap:.4rem}
+.rv-item{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:.7rem;padding:.75rem .85rem;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-size:.93rem;line-height:1.35}
+.rv-item b{display:block;font-size:1rem;margin-bottom:.15rem}
+.rv-item .n{width:1.8rem;height:1.8rem;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--auto-soft);color:var(--auto)}
+.rv-item[aria-pressed="true"]{border-color:var(--auto)}
+.rv-item[aria-pressed="true"] .n{background:var(--auto);color:#fff}
+.rv-code{background:var(--sunk);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.rv-bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem .6rem .6rem 1rem;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.rv-bar .btn{padding:.35rem .8rem;font-size:.88rem}
+#rvPre{margin:0;padding:1rem 0;overflow-x:auto;font:400 .84rem/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);max-height:560px;overflow-y:auto}
+#rvPre .blk{display:block;padding:0 1rem;border-left:4px solid transparent;opacity:.55;transition:opacity .25s,background .25s}
+#rvPre .blk.on{opacity:1;background:var(--auto-soft);border-left-color:var(--auto)}
+.rv-tips{grid-template-columns:repeat(4,1fr);margin-top:1.5rem}
+@media (max-width:820px){.rv{grid-template-columns:1fr}.rv-tips{grid-template-columns:1fr}}
+footer{margin-top:2.5rem;color:var(--muted);font-size:.9rem}
+footer a{color:inherit}
+
+@media (max-width:820px){
+  .flow,.two{grid-template-columns:1fr}
+  .rail{padding-left:0;padding-top:1.5rem;display:flex;overflow-x:auto;gap:.3rem;padding-bottom:.4rem}
+  .pipe{left:.6rem;right:.6rem;top:.55rem;bottom:auto;width:auto;height:4px}
+  .pipe-fill{height:100%!important;top:0}
+  .packet{top:calc(.55rem - 9px)!important}
+  .phase{display:none}
+  .step-btn{width:auto;grid-template-columns:1.6rem;justify-items:center;flex:0 0 auto;padding:.45rem}
+  .step-btn .t{display:none}
+  .detail{min-height:0}
+  .fixes{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.sub .chip,.sub .arrow{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The life of a change, from laptop to users</h1>
+    <p class="lede">An interactive walkthrough of how the Claude Code team reviews code when agents write most of it. Machines do most of the reading; people step in where the risk is, and fast rollback catches what slips through.</p>
+    <div class="legend" aria-label="Legend">
+      <span><i class="sw auto"></i>Automated</span>
+      <span><i class="sw human"></i>A person decides, scaled by risk</span>
+      <span><i class="sw rec"></i>Recovery</span>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" aria-controls="p-flow" id="t-flow">Step-by-step flow</button>
+    <button role="tab" aria-selected="false" aria-controls="p-risk" id="t-risk">Who has to approve?</button>
+    <button role="tab" aria-selected="false" aria-controls="p-loop" id="t-loop">How the reviewer improves</button>
+    <button role="tab" aria-selected="false" aria-controls="p-review" id="t-review">Writing REVIEW.md</button>
+  </div>
+
+  <!-- FLOW -->
+  <section class="panel" id="p-flow" role="tabpanel" aria-labelledby="t-flow">
+    <div class="flow">
+      <nav class="rail" id="rail" aria-label="Steps">
+        <div class="pipe"><div class="pipe-fill" id="pipeFill"></div></div>
+        <div class="packet" id="packet" aria-hidden="true"></div>
+      </nav>
+      <article class="detail" id="detail" aria-live="polite"></article>
+    </div>
+    <p class="kbd-hint">Tip: use the ← and → keys, or press Play to watch a change travel the whole path.</p>
+  </section>
+
+  <!-- RISK -->
+  <section class="panel" id="p-risk" role="tabpanel" aria-labelledby="t-risk" hidden>
+    <div class="two">
+      <div class="card">
+        <h2>Pick a change</h2>
+        <p class="note">The change sets the tier, not the author. A classifier reads the diff and picks one.</p>
+        <div class="choices" id="choices"></div>
+        <label class="toggle"><input type="checkbox" id="trusted" checked> Author is on the repo’s trusted list</label>
+      </div>
+      <div class="card verdict" id="verdict" aria-live="polite"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Typical changes</th><th>Human approvals</th></tr></thead>
+        <tbody id="tierTable">
+          <tr data-tier="low"><td class="tier low">Low</td><td>Docs, copy, internal-only features, additive work behind a flag</td><td>None, once automated review and security checks are green</td></tr>
+          <tr data-tier="medium"><td class="tier medium">Medium</td><td>Ordinary product work; sensitive areas like caching, the auto-updater, system prompts</td><td>One person</td></tr>
+          <tr data-tier="high"><td class="tier high">High</td><td>The riskiest code, plus a few paths that always need two</td><td>Two people</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LOOP -->
+  <section class="panel" id="p-loop" role="tabpanel" aria-labelledby="t-loop" hidden>
+    <div class="two">
+      <div class="card">
+        <h2>Incidents become the eval</h2>
+        <p class="note">Every past incident or revert turns into a test case. Any change to the reviewer is scored against all of them, daily. Click a step or press Next.</p>
+        <div class="cycle"><svg id="cycleSvg" viewBox="0 0 420 420" role="img" aria-label="Eval feedback loop"></svg></div>
+        <p class="cycle-cap" id="cycleCap"></p>
+        <div style="display:flex;justify-content:center"><button class="btn primary" id="cycleNext">Next</button></div>
+      </div>
+      <div class="card">
+        <h2>Review has to converge</h2>
+        <p class="note">An agent author and an agent reviewer can ping-pong forever. One PR ran over fifty rounds overnight. Try it.</p>
+        <div class="rounds" id="rounds"></div>
+        <p class="msg" id="roundMsg">No review rounds yet.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn primary" id="roundBtn">Run a review round</button>
+          <button class="btn" id="roundReset">Reset</button>
+        </div>
+        <div class="fixes">
+          <div><b>Round cap</b>After three rounds, rethink the approach.</div>
+          <div><b>Diff-only re-review</b>Later passes look at new changes only.</div>
+          <div><b>Flag the bug class</b>Fix every instance, not one line.</div>
+          <div><b>No repeats</b>Already-posted findings aren’t posted again.</div>
+        </div>
+        <div class="bars" id="bars"></div>
+        <div class="keylist"><span><i class="sw" style="background:var(--line)"></i> Before</span><span><i class="sw auto"></i> After the convergence work</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEW.md -->
+  <section class="panel" id="p-review" role="tabpanel" aria-labelledby="t-review" hidden>
+    <div class="card" style="margin-bottom:1.5rem">
+      <h2>REVIEW.md sits next to a short CLAUDE.md</h2>
+      <p class="note" style="margin-bottom:0">CLAUDE.md tells the reviewer what the project is: stack, conventions, goals. REVIEW.md, written by code owners, tells it what to worry about in their part of the code. Keep it to about a page. Click any part below to see it in the template.</p>
+    </div>
+    <div class="rv">
+      <div class="rv-list" id="rvList">
+        <button class="rv-item" data-t="rv-fail" aria-pressed="true"><span class="n">1</span><span><b>What failure looks like here</b>One line per area. Docs fail by lying, config fails by misrouting.</span></button>
+        <button class="rv-item" data-t="rv-hard" aria-pressed="false"><span class="n">2</span><span><b>What to look at hard</b>The few things that actually cause incidents in this repo.</span></button>
+        <button class="rv-item" data-t="rv-nits" aria-pressed="false"><span class="n">3</span><span><b>A nit cap</b>An agent author fixes every nit, which means another commit and another review round.</span></button>
+        <button class="rv-item" data-t="rv-skip" aria-pressed="false"><span class="n">4</span><span><b>Paths to skip</b>Generated code, lockfiles, build output, snapshots.</span></button>
+        <button class="rv-item" data-t="rv-evid" aria-pressed="false"><span class="n">5</span><span><b>Evidence rules</b>File and line for every finding, never a guess from a name.</span></button>
+        <button class="rv-item" data-t="rv-out" aria-pressed="false"><span class="n">6</span><span><b>Output format</b>Summary starts with a count and says plainly when there’s nothing to fix.</span></button>
+      </div>
+      <div class="rv-code">
+        <div class="rv-bar"><span>REVIEW.md — example for a Nuxt + Spring Boot service</span><button class="btn" id="rvCopy">Copy</button></div>
+<pre id="rvPre"><span class="blk"># REVIEW.md
+
+Read CLAUDE.md first for stack and conventions. This file says what matters in review.
+</span><span class="blk" id="rv-fail">
+## What failure looks like here
+- API (Spring Boot): it returns the wrong data or leaks data. Wrong article,
+  wrong user, paywalled content served to a non-subscriber.
+- Frontend (Nuxt): it renders differently on server vs client, or breaks
+  for logged-out users.
+- Config / Kong routes / Helm: it misroutes. Traffic goes to the wrong
+  service, or an auth plugin gets dropped.
+- DB migrations / Mongo queries: it locks or scans. A missing index, an
+  unbounded query, a migration that isn't backward compatible.
+- Docs: it lies. The docs describe behaviour the code doesn't have.
+</span><span class="blk" id="rv-hard">
+## Look hard at
+- Auth and subscription checks on every new or changed endpoint
+- Personalization: wrong user's reading history, no fallback without history
+- Null and empty handling on external responses (OpenSearch, upstream APIs)
+- Caching: cache keys that ignore user or subscription state
+- Public API contract changes without versioning
+- Migrations that can't run while the old version is still deployed
+</span><span class="blk" id="rv-nits">
+## Don't comment on
+- Formatting and import order (ESLint and Spotless enforce these)
+- Naming preferences, unless the name is actively misleading
+- Max 2 nits per PR. If there are more, say "plus N similar nits" once.
+</span><span class="blk" id="rv-skip">
+## Skip these paths
+- **/generated/**, **/*.lock, package-lock.json, pnpm-lock.yaml
+- **/__snapshots__/**, dist/, .nuxt/, build/
+- helm/**/values-*.yaml, unless a route, auth plugin or resource limit changes
+</span><span class="blk" id="rv-evid">
+## Evidence rules
+- Every finding cites path/to/file:line and quotes the line.
+- Show the input or path that triggers the bug. "This could be null" isn't
+  enough; say where the null comes from.
+- Don't infer behaviour from a function or variable name. Read the code.
+- If the bug existed before this PR, tag it Pre-existing, not Important.
+</span><span class="blk" id="rv-out">
+## Output format
+Start with one line: N important, N nits, N pre-existing
+If nothing needs fixing, say exactly: No issues found.
+Then list findings by severity: Important, Nit, Pre-existing.
+For a group of the same bug, flag it once and list every location.
+</span></pre>
+      </div>
+    </div>
+    <div class="fixes rv-tips">
+      <div><b>Start from real incidents</b>Anything your team reverted recently becomes the first “look hard at” line.</div>
+      <div><b>Move repeat comments in</b>The same comment twice, from a person or the bot, goes here or into a lint rule.</div>
+      <div><b>Keep the two files apart</b>Conventions and stack live in CLAUDE.md. Worries for the reviewer live in REVIEW.md.</div>
+      <div><b>Check it’s followed</b>Every few weeks, see if the nit cap and file:line rule hold. If not, the file is probably too long.</div>
+    </div>
+  </section>
+
+  <footer>Source: “How the Claude Code team does code review”, claude.dev blog, Oct 2026. Between June and September, merged PRs more than doubled while the share needing a revert dropped by over 40%. <a href="https://claude.dev/blog/solving-code-review-at-anthropic/">Read the post</a>.</footer>
+</div>
+
+<script>
+const STEPS = [
+  {phase:"Before the pull request", role:"auto", title:"The work is verified", gate:"Happens before a PR exists",
+   why:"Most review now happens on the author’s machine. Claude has to run something real and show the output rather than claim it’s done, then a second agent reads the diff with fresh eyes.",
+   sub:["Claude writes the change","Runs tests, build, linter","Shows the output","Fresh-context subagent reviews the diff","Skills: bug hunt, simplify, end-to-end check"],
+   facts:["UI changes are also compared against design guidelines or a reference screenshot.","Recurring reviewer complaints get fixed at the source: a skill, a lint rule, or the instruction files below.","Boris Cherny estimates that giving Claude a way to verify its work makes results two to three times better."],
+   files:["CLAUDE.md — what the project is","REVIEW.md — what owners care about (see the Writing REVIEW.md tab)"]},
+  {phase:"On every pull request", role:"auto", title:"Required CI", gate:"Red blocks the merge",
+   why:"The standard checks, run on every platform. A typical CLI PR may run dozens of them before any person looks.",
+   sub:["Lint","Type checks","Tests on every platform","Build and packaging"],
+   facts:["The PR template asks how the change was tested and how to undo it.","Claude can fill the template in, but the person who asked for the change signs off on it."]},
+  {phase:"On every pull request", role:"auto", title:"Claude code review", gate:"Open findings block the merge",
+   why:"The reviewer reads the diff against the whole repo and the PR’s stated intent: does it solve the problem, fit the system, and avoid breaking something else? For bug fixes it looks for the root cause.",
+   sub:["Several bug-hunting agents in parallel","Verifier agents vote on each finding","Style-only findings dropped","Survivors ranked by severity","Inline: Important, Nit, Pre-existing"],
+   facts:["Every finding needs an answer: fix it, or resolve the thread with a reason. Often an agent picks up the fix overnight.","Pre-existing tags mean a bug the PR didn’t introduce isn’t blamed on the author.","Repos are set to Quick, Standard or Deep. PRs with substantive comments rose from 16% to 54% at launch."]},
+  {phase:"On every pull request", role:"auto", title:"Security review", gate:"Open findings block the merge",
+   why:"A separate automated pass focused on security. Same rule as the bug review: nothing merges while a finding is still open.",
+   sub:["Security pass on the diff","Finding posted","Fix it, or close with a reason","Later commit fixes it → clears itself"],
+   facts:["Closing a thread with a short reason is how a false positive gets cleared.","Available to anyone via the open-source GitHub Action or the /security-review command."]},
+  {phase:"On every pull request", role:"human", title:"Risk-based approval", gate:"Required approvals block the merge",
+   why:"A docs fix and an auto-updater change don’t deserve the same review. A classifier reads the change and sets how many people must approve: zero, one or two.",
+   sub:["Classifier picks the tier","Second classifier can ask for a person anyway","Sensitive paths always need a person","0, 1 or 2 human approvals"],
+   facts:["Only trusted authors get the lighter paths. Everyone else needs a second person.","An agent’s approval never fills a slot that calls for a human.","Whoever prompted an agent-written PR counts as one of its reviewers.","Approval covers one commit. New unvouched commits mean approving again."]},
+  {phase:"Merging", role:"auto", title:"Merge queue", gate:"Red blocks the merge",
+   why:"Two PRs can each pass on their own and still break main together. The queue re-runs every check against the latest main with the change applied.",
+   sub:["Approved PR enters the queue","Rebased on latest main","All checks run again","Lands on main"],
+   facts:["This protects main from combinations nobody tested."]},
+  {phase:"After the merge", role:"auto", title:"Behind a flag, internal first", gate:"Users don’t see it yet",
+   why:"New behavior usually ships behind a feature flag, turned on for Anthropic employees first. Heavy internal use often surfaces regressions before any user meets them.",
+   sub:["Merged behind a flag","Employees use it daily","Regressions show up in telemetry","Flag widened"],
+   facts:["Flags can be switched off without a deploy."]},
+  {phase:"After the merge", role:"auto", title:"Gradual release", gate:"Staged",
+   why:"Public builds go to the latest channel first; the stable channel follows behind, so problems reach a smaller group first.",
+   sub:["latest channel","Watch it","stable channel"],
+   facts:["Small, staged releases keep the blast radius small."]},
+  {phase:"After the merge", role:"rec", title:"Watch, fix forward or roll back", gate:"Safety net",
+   why:"Some mistakes still get through, so the last layer is about noticing and undoing them fast. Speed of recovery beats slowing everyone down.",
+   sub:["Author and on-call watch dashboards","Flag off in seconds","Broken builds reverted","Incident review: which layer should have caught it?"],
+   facts:["“You land it, you own it”: the author usually fixes it, because they have the most context. It isn’t blame.","There’s a weekly on-call rotation for Claude Code.","Not built yet: circuit breakers that tighten approval when revert or incident numbers move."]}
+];
+const ROLE_NAME = {auto:"Automated", human:"A person decides", rec:"Recovery"};
+
+const rail = document.getElementById('rail');
+const detail = document.getElementById('detail');
+const packet = document.getElementById('packet');
+const pipeFill = document.getElementById('pipeFill');
+let cur = 0, timer = null;
+let lastPhase = "";
+const btns = STEPS.map((s,i)=>{
+  if(s.phase!==lastPhase){const p=document.createElement('div');p.className='phase';p.textContent=s.phase;rail.appendChild(p);lastPhase=s.phase;}
+  const b=document.createElement('button');
+  b.className='step-btn'; b.dataset.role=s.role; b.title=s.title;
+  b.innerHTML=`<span class="num">${i+1}</span><span class="t">${s.title}</span>`;
+  b.addEventListener('click',()=>{stop();go(i)});
+  rail.appendChild(b); return b;
+});
+const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function placePacket(){
+  const b=btns[cur]; const mobile=matchMedia('(max-width:820px)').matches;
+  if(mobile){
+    const x=b.offsetLeft+b.offsetWidth/2;
+    packet.style.left=(x-11)+'px'; packet.style.top='';
+    pipeFill.style.width=Math.max(0,x-10)+'px';
+  }else{
+    const y=b.offsetTop+b.offsetHeight/2;
+    packet.style.top=(y-11)+'px'; packet.style.left='';
+    pipeFill.style.width=''; pipeFill.style.height=Math.max(0,y-10)+'px';
+  }
+}
+function go(i){
+  cur=Math.max(0,Math.min(STEPS.length-1,i));
+  const s=STEPS[cur];
+  btns.forEach((b,k)=>{b.toggleAttribute('aria-current',k===cur); if(k===cur)b.setAttribute('aria-current','step'); b.classList.toggle('done',k<cur)});
+  const subHtml=s.sub.map((t,k)=>`<li>${k?`<span class="arrow" style="animation-delay:${k*90}ms">›</span>`:''}<span class="chip" style="animation-delay:${k*90}ms">${esc(t)}</span></li>`).join('');
+  detail.innerHTML=`
+    <div class="detail-top">
+      <div><span class="role-tag ${s.role}">${ROLE_NAME[s.role]}</span> <span style="color:var(--muted);font-size:.9rem;margin-left:.4rem">${s.phase}</span></div>
+      <span class="gate ${/block/i.test(s.gate)?'':'soft'}">${s.gate}</span>
+    </div>
+    <h2>${cur+1}. ${esc(s.title)}</h2>
+    <p class="why">${esc(s.why)}</p>
+    <ul class="sub" aria-label="What happens">${subHtml}</ul>
+    <ul class="facts">${s.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
+    ${s.files?`<div class="files">${s.files.map(f=>{const [a,b]=f.split(' — ');return `<span><code>${a}</code> ${esc(b)}</span>`}).join('')}</div>`:''}
+    <div class="controls">
+      <button class="btn" id="prev" ${cur===0?'disabled':''}>Back</button>
+      <button class="btn primary" id="next">${cur===STEPS.length-1?'Start over':'Next step'}</button>
+      <button class="btn" id="play">${timer?'Pause':'Play'}</button>
+      <span class="counter">Step ${cur+1} of ${STEPS.length}</span>
+    </div>`;
+  detail.querySelector('#prev').onclick=()=>{stop();go(cur-1)};
+  detail.querySelector('#next').onclick=()=>{stop();go(cur===STEPS.length-1?0:cur+1)};
+  detail.querySelector('#play').onclick=()=>timer?stop():play();
+  placePacket();
+}
+function play(){ if(cur===STEPS.length-1)cur=-1; timer=setInterval(()=>{ if(cur>=STEPS.length-1){stop();return;} go(cur+1)},2600); go(cur+1<STEPS.length?cur+1:0) }
+function stop(){ if(timer){clearInterval(timer);timer=null; const p=document.getElementById('play'); if(p)p.textContent='Play';} }
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('p-flow').hidden) return;
+  if(e.target.closest('input'))return;
+  if(e.key==='ArrowRight'){stop();go(cur+1)} if(e.key==='ArrowLeft'){stop();go(cur-1)}
+});
+addEventListener('resize',placePacket);
+document.fonts && document.fonts.ready.then(placePacket);
+go(0);
+
+/* tabs */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  stop();
+  tabs.forEach(x=>{x.setAttribute('aria-selected',x===t);document.getElementById(x.getAttribute('aria-controls')).hidden=x!==t});
+  if(t.id==='t-flow')placePacket();
+  if(t.id==='t-loop')animateBars();
+}));
+
+/* risk simulator */
+const CHANGES=[
+  {name:"Fix a typo in the docs", tier:"low"},
+  {name:"New internal-only feature behind a flag", tier:"low"},
+  {name:"Ordinary product change", tier:"medium"},
+  {name:"Change to caching logic", tier:"medium", sens:true},
+  {name:"Change to the auto-updater", tier:"medium", sens:true},
+  {name:"Edit a CI workflow file", tier:"medium", always:true},
+  {name:"Billing or highest-risk path", tier:"high"}
+];
+const BASE={low:0,medium:1,high:2};
+let pick=0;
+const choices=document.getElementById('choices'), trusted=document.getElementById('trusted'), verdict=document.getElementById('verdict');
+CHANGES.forEach((c,i)=>{
+  const b=document.createElement('button'); b.className='choice';
+  b.innerHTML=`<span>${c.name}</span><small class="tier ${c.tier}">${c.tier[0].toUpperCase()+c.tier.slice(1)}</small>`;
+  b.onclick=()=>{pick=i;renderRisk()}; choices.appendChild(b);
+});
+trusted.onchange=renderRisk;
+function renderRisk(){
+  [...choices.children].forEach((b,i)=>b.setAttribute('aria-pressed',i===pick));
+  const c=CHANGES[pick], tr=trusted.checked;
+  let n=BASE[c.tier]; const why=[];
+  why.push(`Classifier sets the tier to <b class="tier ${c.tier}">${c.tier}</b>.`);
+  if(c.always) why.push("CI workflow files are on the always-needs-a-person list.");
+  if(c.sens) why.push("Owners listed this area as sensitive, so a person must look.");
+  if(!tr){ n=Math.min(2,n+1); why.push("Author isn’t on the trusted list: lighter paths are off, a second person must approve."); }
+  if(n===0) why.push("CI, Claude review and security review all green → can merge on automated checks alone.");
+  why.push("A bot’s approval never counts toward these slots.");
+  verdict.innerHTML=`
+    <h2>Approvals needed</h2>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <span class="big">${n}</span><span>${n===0?'people. Automation clears it.':n===1?'person':'people'}</span>
+    </div>
+    <div class="people" aria-hidden="true">
+      <div class="robot" title="Automated checks"></div>
+      <div class="person ${n>=1?'on':''}"></div><div class="person ${n>=2?'on':''}"></div>
+    </div>
+    <ul class="rules">${why.map(w=>`<li>${w}</li>`).join('')}</ul>
+    <p style="color:var(--muted);font-size:.85rem;margin:0">A simplified model of the rules described in the post.</p>`;
+  document.querySelectorAll('#tierTable tr').forEach(r=>r.classList.toggle('hl',r.dataset.tier===c.tier));
+}
+renderRisk();
+
+/* eval cycle */
+const CYC=[
+  {t:"Incident or revert",s:"a change broke something",c:"A change that reached users caused an incident or had to be reverted."},
+  {t:"Expert-checked case",s:"engineers confirm the bug",c:"Engineers who know that code confirm the bug and exactly where it lived."},
+  {t:"Added to the set",s:"the eval keeps growing",c:"The case joins the eval set, so the set grows with every incident."},
+  {t:"Change the reviewer",s:"prompts, tools or model",c:"Someone proposes a change to the reviewer’s prompts, tools or model."},
+  {t:"Daily eval run",s:"scored on every case",c:"The reviewer runs against every case in the set, every day."},
+  {t:"Score went up?",s:"keep it, or drop it",c:"Better score: keep the change. Otherwise drop it. Then the loop continues."}
+];
+const svg=document.getElementById('cycleSvg'); let cyc=0;
+(function buildCycle(){
+  const cx=210,cy=210,R=150, ns="http://www.w3.org/2000/svg";
+  const ring=document.createElementNS(ns,'circle'); ring.setAttribute('cx',cx);ring.setAttribute('cy',cy);ring.setAttribute('r',R);ring.setAttribute('class','ring');svg.appendChild(ring);
+  const dot=document.createElementNS(ns,'circle'); dot.setAttribute('r',8); dot.setAttribute('fill','var(--rec)'); dot.id='cycDot'; svg.appendChild(dot);
+  CYC.forEach((n,i)=>{
+    const a=-Math.PI/2+i*2*Math.PI/CYC.length, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
+    const g=document.createElementNS(ns,'g'); g.setAttribute('class','node'); g.setAttribute('tabindex','0'); g.setAttribute('role','button'); g.setAttribute('aria-label',n.t);
+    g.innerHTML=`<rect x="${x-74}" y="${y-24}" width="148" height="48" rx="10"/><text x="${x}" y="${y-3}" text-anchor="middle">${n.t}</text><text class="s" x="${x}" y="${y+14}" text-anchor="middle">${n.s}</text>`;
+    g.onclick=()=>setCyc(i); g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setCyc(i)}};
+    svg.appendChild(g);
+  });
+})();
+function setCyc(i){
+  cyc=i%CYC.length;
+  [...svg.querySelectorAll('.node')].forEach((g,k)=>g.classList.toggle('on',k===cyc));
+  const a=-Math.PI/2+(cyc+.5)*2*Math.PI/CYC.length, d=document.getElementById('cycDot');
+  d.setAttribute('cx',210+150*Math.cos(a)); d.setAttribute('cy',210+150*Math.sin(a));
+  document.getElementById('cycleCap').textContent=CYC[cyc].c;
+}
+document.getElementById('cycleNext').onclick=()=>setCyc(cyc+1);
+setCyc(0);
+
+/* rounds */
+let rounds=0; const roundsEl=document.getElementById('rounds'), roundMsg=document.getElementById('roundMsg'), roundBtn=document.getElementById('roundBtn');
+const RMSG=["Round 1: full review of the diff. Findings posted, author fixes them.","Round 2: re-review. A couple of new findings, no repeats of earlier ones.","Round 3: diff-only re-review of the latest fixes."];
+roundBtn.onclick=()=>{
+  rounds++;
+  const el=document.createElement('div'); el.className='round'+(rounds>3?' cap':''); el.textContent=rounds; roundsEl.appendChild(el);
+  if(rounds<=3) roundMsg.textContent=RMSG[rounds-1];
+  if(rounds===3){ roundMsg.textContent+=" That’s the cap."; }
+  if(rounds>3){ roundMsg.textContent="Cap reached: the reviewer asks the author to step back and reconsider the approach instead of another round."; roundBtn.disabled=true; roundBtn.setAttribute('disabled',''); }
+};
+document.getElementById('roundReset').onclick=()=>{rounds=0;roundsEl.innerHTML='';roundMsg.textContent='No review rounds yet.';roundBtn.disabled=false;roundBtn.removeAttribute('disabled')};
+
+/* bars */
+const BARS=[
+  {l:"Pass after one review and fix round",b:65,a:78,max:100,f:v=>v+'%'},
+  {l:"Need five or more rounds",b:8.9,a:1.5,max:10,f:v=>v+'%'},
+  {l:"Mean reviews to pass",b:2.08,a:1.32,max:2.5,f:v=>v}
+];
+const barsEl=document.getElementById('bars');
+barsEl.innerHTML=BARS.map(r=>`<div class="bar-row"><div class="lbl">${r.l}<small>${r.f(r.b)} → ${r.f(r.a)}</small></div>
+  <div class="track"><div class="fill before" data-w="${r.b/r.max*100}" style="width:0"></div></div>
+  <div class="track"><div class="fill after" data-w="${r.a/r.max*100}" style="width:0"></div></div></div>`).join('');
+function animateBars(){ requestAnimationFrame(()=>barsEl.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%')) }
+
+/* REVIEW.md */
+const rvItems=[...document.querySelectorAll('.rv-item')];
+function setRv(id,scroll){
+  rvItems.forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===id));
+  document.querySelectorAll('#rvPre .blk').forEach(s=>s.classList.toggle('on',s.id===id));
+  const el=document.getElementById(id), pre=document.getElementById('rvPre');
+  if(scroll&&el) pre.scrollTo({top:el.offsetTop-pre.offsetTop-12,behavior:'smooth'});
+}
+rvItems.forEach(b=>b.onclick=()=>setRv(b.dataset.t,true));
+setRv('rv-fail',false);
+document.getElementById('rvCopy').onclick=async e=>{
+  const txt=document.getElementById('rvPre').innerText;
+  try{ await navigator.clipboard.writeText(txt); e.target.textContent='Copied'; }
+  catch(err){ const r=document.createRange(); r.selectNodeContents(document.getElementById('rvPre')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent='Selected, press Ctrl+C'; }
+  setTimeout(()=>e.target.textContent='Copy',1800);
+};
+</script>
+<script src="../assets/nav-widget.js" defer data-devlogs-nav></script>
+</body>
+</html>
